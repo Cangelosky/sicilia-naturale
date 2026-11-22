@@ -1,0 +1,20 @@
+name: Dati OSM
+# scarica una volta (a mano) sentieri, percorsi e punti di interesse della Sicilia da OpenStreetMap (Overpass)
+# e li mette sul ramo "osm"; le tile si costruiscono poi con tools/sentieri.py
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  osm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scarica da Overpass
+        run: python3 tools/scarica_osm.py
+      - name: Ramo osm
+        run: |
+          mkdir /tmp/osm && mv osm_*.json.gz /tmp/osm/ && cd /tmp/osm && ls -la && git init -q -b osm && git add . \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "OSM Sicilia $(date -u +%F)" \
+            && git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" osm
