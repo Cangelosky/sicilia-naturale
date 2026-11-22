@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sicilia Naturale</title>
+<link rel="stylesheet" href="maplibre-gl.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* VOICE: atlante sul campo, chiaro e asciutto, stile Wikiloc
+   IDEA: la carta della Sicilia con i perimetri, e la scheda della zona che sale dal basso
+   PICTURE: la mappa stessa, a tutto schermo
+   COLOUR and TYPE: verde bosco #2d6a4f (intestazione, aree protette), azzurro Natura 2000, bianco; Roboto
+   LAYOUT: intestazione verde, ricerca e filtri sopra la mappa, pannello bianco in basso */
+:root{color-scheme:light;--g:#2d6a4f;--gd:#1b4332;--gl:#d8eee2;--n2k:#2f7ea8;--zps:#7a5ea8;--mare:#1d6fa5;--ink:#1f2421;--mute:#5d6862;--line:#e3e7e4;--bg:#fff}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;height:100%;overflow:hidden}
+body{font:15px/1.45 Roboto,system-ui,sans-serif;color:var(--ink);background:#eef1ee;display:flex;flex-direction:column}
+header{background:var(--g);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;flex:none;z-index:5}
+header h1{font-size:19px;font-weight:700;margin:0;flex:1;letter-spacing:.1px}
+.lang{display:flex;border:1px solid rgba(255,255,255,.55);border-radius:16px;overflow:hidden}
+.lang button{background:none;border:0;color:#fff;font:500 13px Roboto,sans-serif;padding:6px 11px;min-height:32px;cursor:pointer}
+.lang button.on{background:#fff;color:var(--g)}
+#wrap{position:relative;flex:1}
+#map{position:absolute;inset:0}
+.top{position:absolute;top:10px;left:10px;right:10px;z-index:3;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.top>*{pointer-events:auto}
+.search{position:relative;max-width:520px}
+.search input{width:100%;height:46px;border-radius:23px;border:0;padding:0 44px 0 18px;font:16px Roboto,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.18);outline:none}
+.search input:focus{box-shadow:0 0 0 2px var(--g),0 2px 8px rgba(0,0,0,.18)}
+.search .x{position:absolute;right:6px;top:5px;width:36px;height:36px;border:0;background:none;font-size:22px;color:var(--mute);cursor:pointer;display:none}
+.res{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.2);max-height:45vh;overflow:auto;max-width:520px;display:none}
+.res button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 16px;border-bottom:1px solid var(--line);font:15px Roboto,sans-serif;cursor:pointer;color:var(--ink)}
+.res button small{display:block;color:var(--mute);font-size:13px}
+.res button:hover,.res button:focus{background:var(--gl)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{flex:none;border:0;border-radius:18px;padding:0 14px;height:36px;font:500 14px Roboto,sans-serif;background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;gap:7px}
+.chip i{width:12px;height:12px;border-radius:3px;display:inline-block;box-shadow:0 0 0 1.5px #fff}
+.chip.on{background:var(--g);color:#fff}
+.chip select{border:0;background:none;font:inherit;color:inherit;outline:none;cursor:pointer;max-width:190px}
+.chip select option{color:var(--ink)}
+#sheet{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.2);max-height:62%;display:none;flex-direction:column;max-width:640px;margin:0 auto}
+#sheet.open{display:flex}
+#sheet.big{max-height:calc(100% - 10px)}
+.grip{flex:none;display:flex;justify-content:center;padding:8px 0 2px;cursor:pointer;border:0;background:none;width:100%}
+.grip span{width:42px;height:5px;border-radius:3px;background:#cfd6d2}
+.sh{flex:none;display:flex;gap:10px;align-items:flex-start;padding:2px 16px 10px;border-bottom:1px solid var(--line)}
+.sh h2{font-size:19px;line-height:1.2;margin:2px 0 4px;text-wrap:balance}
+.sh .close{margin-left:auto;flex:none;width:40px;height:40px;border-radius:20px;border:0;background:#f0f3f1;font-size:20px;cursor:pointer;color:var(--mute)}
+.badge{display:inline-block;font-size:12px;font-weight:500;padding:2px 8px;border-radius:10px;background:var(--gl);color:var(--gd);margin-right:4px}
+.badge.n2k{background:#dcebf4;color:#1c5577}.badge.zps{background:#ece4f6;color:#53407a}.badge.mare{background:#dbe9f5;color:#174f78}
+.body{overflow:auto;padding:4px 16px 24px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.stats div{background:#f4f7f5;border-radius:10px;padding:8px 10px}
+.stats b{display:block;font-size:18px;white-space:nowrap}
+.stats span{font-size:12px;color:var(--mute)}
+h3{font-size:15px;margin:18px 0 8px;color:var(--gd)}
+.note{font-size:13px;color:var(--mute);margin:4px 0 8px}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;margin:8px 0}
+.bar .t{font-weight:500}.bar .t small{display:block;font-weight:400;color:var(--mute);font-size:12.5px}
+.bar .v{white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.bar .tr{grid-column:1/-1;height:7px;background:#edf1ee;border-radius:4px;overflow:hidden}
+.bar .tr i{display:block;height:100%;background:var(--g);border-radius:4px}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;padding:11px 0;font-weight:500;display:flex;justify-content:space-between;gap:8px;list-style:none;min-height:44px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'›';font-size:20px;color:var(--mute);transform:rotate(90deg);transition:transform .15s}
+details[open] summary::after{transform:rotate(-90deg)}
+summary em{font-style:normal;color:var(--mute);font-weight:400;margin-left:auto}
+.list{columns:2 210px;column-gap:18px;font-size:14px;padding-bottom:10px}
+.list div{break-inside:avoid;padding:2px 0}
+.list i{color:var(--mute)}
+.hab{font-size:14px;padding-bottom:10px}
+.hab div{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:8px;padding:4px 0;border-bottom:1px dashed var(--line)}
+.hab code{color:var(--mute);font:13px Roboto,sans-serif}
+.hab span:last-child{white-space:nowrap;text-align:right;color:var(--mute)}
+.links button{display:block;width:100%;text-align:left;border:0;background:#f4f7f5;border-radius:10px;padding:9px 12px;margin:6px 0;font:14px Roboto,sans-serif;cursor:pointer;color:var(--ink)}
+.links button small{color:var(--mute)}
+a{color:var(--g)}
+.src{font-size:13px;color:var(--mute);margin-top:18px}
+.pick button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:11px 2px;font:15px Roboto,sans-serif;cursor:pointer}
+.legend{position:absolute;right:52px;bottom:28px;z-index:2;background:rgba(255,255,255,.94);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.legend div{display:flex;align-items:center;gap:6px;margin:2px 0}
+.legend i{width:14px;height:10px;border-radius:2px;display:inline-block;flex:none}
+.legend .lt{font-weight:500;margin-top:6px}
+.legend{max-height:calc(100% - 150px);overflow:auto}
+.badge.bv{background:#f6e1d4;color:#8a3a0e}.badge.am{background:#ece3d9;color:#5b3a1a}.badge.bs{background:#f1ead6;color:#6b531a}.badge.cf{background:#e1eedb;color:#2f5a1e}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:14px;margin:10px 0}.kv dt{color:var(--mute)}.kv dd{margin:0}
+.maplibregl-ctrl-bottom-left{bottom:0}
+@media(max-width:600px){.legend{display:none}.stats b{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Sicilia Naturale</h1>
+  <div class="lang" role="group" aria-label="Lingua"><button id="l-it" class="on">IT</button><button id="l-en">EN</button></div>
+</header>
+<div id="wrap">
+  <div id="map"></div>
+  <div class="top">
+    <div class="search"><input id="q" type="search" autocomplete="off"><button class="x" id="qx" aria-label="Cancella">×</button></div>
+    <div class="res" id="res"></div>
+    <div class="chips">
+      <button class="chip on" id="c-aree"><i style="background:var(--g)"></i><span></span></button>
+      <button class="chip on" id="c-n2k"><i style="background:var(--n2k)"></i><span></span></button>
+      <label class="chip" id="c-bosco"><select id="bosco"></select></label>
+      <button class="chip on" id="c-bv"><i style="background:#c2571a"></i><span></span></button>
+      <button class="chip on" id="c-am"><i style="background:#5b3a1a;border-radius:50%"></i><span></span></button>
+      <button class="chip" id="c-cf"><i style="background:linear-gradient(90deg,#1f6b3a 0 33%,#8fae3c 33% 66%,#d9a066 66%)"></i><span></span></button>
+      <button class="chip" id="c-bs"><i style="background:#9a7b2f"></i><span></span></button>
+    </div>
+  </div>
+  <div class="legend" id="legend"></div>
+  <div id="sheet"><button class="grip" id="grip" aria-label="Espandi"><span></span></button><div class="sh" id="sh"></div><div class="body" id="sb"></div></div>
+</div>
+<script src="maplibre-gl.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
