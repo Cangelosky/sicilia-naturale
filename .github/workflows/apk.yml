@@ -23,6 +23,13 @@ jobs:
           V=$(node -p "require('./package.json').version")
           N=$(git rev-list --count HEAD)
           sed -i "s/versionName \"1.0\"/versionName \"$V\"/; s/versionCode 1/versionCode $N/" android/app/build.gradle
+      - name: Permessi GPS
+        run: |
+          M=android/app/src/main/AndroidManifest.xml
+          sed -i 's#<application#<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <application#' $M
+          grep -c uses-permission $M
+      - name: Chiave di firma fissa
+        run: mkdir -p ~/.android && cp tools/firma/debug.keystore ~/.android/debug.keystore
       - run: npx cap sync android
       - name: Costruisci APK
         working-directory: android

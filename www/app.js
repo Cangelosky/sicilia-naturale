@@ -857,22 +857,33 @@ function regUI() {
   $('reg').innerHTML = (REG ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${fmt(m.up)} m</b><span>${t('disl')}</span></div></div>` : '')
     + `<button class="big${REG ? ' stop' : ''}" id="regbtn">${REG ? t('regFine') : t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
 }
+let bgId = null;
 function avviaReg() {
-  if (!navigator.geolocation) return alertNota(t('noGps'));
+  if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (!confirm(t('regConfIn'))) return;
   REG = { t0: Date.now(), p: [], ob: [...intSel] };
-  wid = navigator.geolocation.watchPosition(pos => {
-    const c = pos.coords; if (c.accuracy > 40) return;
-    const q = [+c.longitude.toFixed(6), +c.latitude.toFixed(6), c.altitude != null ? Math.round(c.altitude) : null, Date.now()];
+  const punto = (lon, lat, alt, acc) => {
+    if (!REG || acc > 40) return;
+    const q = [+lon.toFixed(6), +lat.toFixed(6), alt != null ? Math.round(alt) : null, Date.now()];
     const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
     REG.p.push(q); disegnaTrk(REG.p); regUI();
-  }, () => { alertNota(t('noGps')); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+  };
+  const BG = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation;
+  if (BG) {
+    BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: LANG === 'it' ? 'Registrazione percorso in corso' : 'Recording route', requestPermissions: true, stale: false, distanceFilter: 4 },
+      (loc, err) => { if (err) { alertNota(t('noGps')); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
+      .then(id => { bgId = id; });
+  } else {
+    wid = navigator.geolocation.watchPosition(pos => { const c = pos.coords; punto(c.longitude, c.latitude, c.altitude, c.accuracy); },
+      () => { alertNota(t('noGps')); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+  }
   try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
   regUI();
 }
 function fermaReg() {
   if (!confirm(t('regConfFine'))) return;
-  navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
+  if (bgId != null) { try { window.Capacitor.Plugins.BackgroundGeolocation.removeWatcher({ id: bgId }); } catch (e) {} bgId = null; }
+  if (wid != null) navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
   if (REG.p.length > 1) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p }); scriviTrk(a); }
   REG = null; regUI(); trkUI();
 }
