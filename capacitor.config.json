@@ -1,0 +1,6 @@
+{
+  "appId": "it.sicilianaturale.app",
+  "appName": "Sicilia Naturale",
+  "webDir": "www",
+  "android": { "backgroundColor": "#2d6a4f" }
+}
