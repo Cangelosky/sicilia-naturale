@@ -857,9 +857,9 @@ async function meteoDati() {
   const TM = new TrailModel.Model({ start: M.time[0], cp: { q: 'p' }, pts: { p: { r: M.precipitation_sum.map(x => x || 0), tx: M.temperature_2m_max, tn: M.temperature_2m_min } }, forecast: {} }, [], []);
   const G = M.time.slice(i0).map((d, n) => { const i = i0 + n, e = punteggioEsc(i, M), f = TM.stima('q', d); return { d, i, e, f }; });
   const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
-  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco(top.map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
+  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
     <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
-      return `<div class="gg${top.includes(g.d) ? ' top' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span><small>${(M.precipitation_sum[g.i] || 0).toFixed(1)} ${t('mm')} · ${Math.round(M.temperature_2m_min[g.i])}–${Math.round(M.temperature_2m_max[g.i])}°</small><small>${esc(sub)}</small></div>`; }).join('')}</div>
+      return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span><small>${(M.precipitation_sum[g.i] || 0).toFixed(1)} ${t('mm')} · ${Math.round(M.temperature_2m_min[g.i])}–${Math.round(M.temperature_2m_max[g.i])}°</small><small>${esc(sub)}</small></div>`; }).join('')}</div>
     <p class="note" style="margin-top:10px">${nota}</p></div>`;
   const mx = Math.max(5, ...M.precipitation_sum.map(x => x || 0));
   $('mtout').innerHTML = box(t('escTit') + ' · ' + esc(q.n), t('escNota'), 'e', topE) + box(t('funTit') + ' · ' + esc(q.n), t('funNota'), 'f', topF)
