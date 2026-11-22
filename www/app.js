@@ -45,9 +45,9 @@ const TX = {
     tEsc: 'Escursioni', lEsc: 'Scegli cosa vuoi cercare: ti proponiamo dove andare, con il meteo dei prossimi giorni. Puoi registrare il percorso mentre cammini.',
     iFunghi: 'Funghi', iAlberi: 'Alberi monumentali e boschi vetusti', iBoschi: 'Boschi', iFlora: 'Piante e fiori', iAlim: 'Piante alimurgiche',
     alimNota: 'Per le piante alimurgiche non abbiamo ancora l’elenco delle specie: per ora non entrano nei suggerimenti.',
-    doveAndare: 'Dove andare', apriMappa: 'Mappa', vediMeteo: 'Meteo', reg: 'Registra il percorso', regInizia: 'Inizia a registrare', regFine: 'Termina la registrazione',
+    doveAndare: 'Dove andare', apriMappa: 'Mappa', vediMeteo: 'Meteo', reg: 'Registra il percorso', regInizia: 'Inizia a registrare', wpAgg: 'Punto', wpFoto: 'Foto', wpNome: 'Nome (facoltativo)', wpSalva: 'Salva punto', wpAnnulla: 'Annulla', wpNoFix: 'Aspetta il segnale GPS: nessuna posizione ancora.', wpOk: 'Punto salvato', wpPunti: 'punti', wpPunto: 'punto', wpFotoAgg: 'Aggiungi foto', wpTipi: { fungo: 'Fungo', albero: 'Albero', pianta: 'Pianta', panorama: 'Panorama', acqua: 'Acqua', rifugio: 'Rifugio', animale: 'Animale', foto: 'Foto', altro: 'Altro' }, regFine: 'Termina la registrazione',
     regConfIn: 'Iniziare la registrazione del percorso? Il telefono userà il GPS finché la pagina resta aperta.', regConfFine: 'Terminare e salvare la registrazione?',
-    regNota: 'La registrazione usa il GPS del telefono e funziona finché la pagina resta aperta. I percorsi restano salvati solo su questo dispositivo.',
+    regNota: 'La registrazione usa il GPS del telefono e continua anche a schermo spento. Percorsi, punti e foto restano salvati solo su questo telefono.',
     noGps: 'Il GPS non è disponibile su questo dispositivo o il permesso è stato negato.',
     dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
     obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri escursionistici, rifugi, bivacchi, aree attrezzate e sorgenti da OpenStreetMap. Visibili da vicino (zoom 11).',
@@ -106,9 +106,9 @@ const TX = {
     tEsc: 'Hikes', lEsc: 'Choose what you want to look for: we suggest where to go, with the weather for the coming days. You can record your route as you walk.',
     iFunghi: 'Fungi', iAlberi: 'Monumental trees and old-growth forests', iBoschi: 'Forests', iFlora: 'Plants and flowers', iAlim: 'Wild edible plants',
     alimNota: 'We do not yet have the species list for wild edible plants: for now they are not part of the suggestions.',
-    doveAndare: 'Where to go', apriMappa: 'Map', vediMeteo: 'Weather', reg: 'Record your route', regInizia: 'Start recording', regFine: 'Stop recording',
+    doveAndare: 'Where to go', apriMappa: 'Map', vediMeteo: 'Weather', reg: 'Record your route', regInizia: 'Start recording', wpAgg: 'Waypoint', wpFoto: 'Photo', wpNome: 'Name (optional)', wpSalva: 'Save waypoint', wpAnnulla: 'Cancel', wpNoFix: 'Wait for GPS: no position yet.', wpOk: 'Waypoint saved', wpPunti: 'waypoints', wpPunto: 'waypoint', wpFotoAgg: 'Add photo', wpTipi: { fungo: 'Mushroom', albero: 'Tree', pianta: 'Plant', panorama: 'View', acqua: 'Water', rifugio: 'Shelter', animale: 'Animal', foto: 'Photo', altro: 'Other' }, regFine: 'Stop recording',
     regConfIn: 'Start recording the route? The phone will use GPS while this page stays open.', regConfFine: 'Stop and save the recording?',
-    regNota: 'Recording uses the phone’s GPS and works while the page stays open. Routes are saved on this device only.',
+    regNota: 'Recording uses the phone’s GPS and keeps going with the screen off. Routes, waypoints and photos stay on this phone only.',
     noGps: 'GPS is not available on this device or permission was denied.',
     dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
     obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Hiking routes, huts, shelters, picnic areas and springs from OpenStreetMap. Visible up close (zoom 11).',
@@ -247,7 +247,10 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'hl-l', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 2.2 } });
   map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
   map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addSource('wpt', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
+  map.addLayer({ id: 'wpt-c', type: 'circle', source: 'wpt', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'tipo'], 'fungo', '#a0522d', 'albero', '#2d6a4f', 'pianta', '#74a12e', 'panorama', '#3a7bd5', 'acqua', '#1e90ff', 'rifugio', '#8b5e3c', 'animale', '#c77d00', 'foto', '#7b4fb3', '#555'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+  map.addLayer({ id: 'wpt-t', type: 'symbol', source: 'wpt', minzoom: 13, layout: { 'text-field': ['get', 'lab'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#10261c', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
   map.on('moveend', () => { if (ON.osm) caricaOSM(); });
   map.addLayer({ id: 'sel', type: 'line', source: 'z', filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   for (const s of ['bv', 'bs']) map.addLayer({ id: 'sel-' + s, type: 'line', source: s, filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
@@ -368,6 +371,8 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 /* ---------- click sulla mappa */
 map.on('click', e => {
   chiudiLiv();
+  const wf = map.getLayer('wpt-c') ? map.queryRenderedFeatures(e.point, { layers: ['wpt-c'] }) : [];
+  if (wf.length) { popupWpt(wf[0]); return; }
   if (document.body.classList.contains('mm')) {
     const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
     if (f.length) { const k = f[0].properties.id; vista === 'meteo' ? apriMeteoZona(k) : apri(k, false); } else chiudi();
@@ -840,6 +845,12 @@ const clickEsc = e => {
   else if (m) { vai('mappa'); apri(m.dataset.map, true); }
   else if (mt) { const k = mt.dataset.mt; modo.meteo = 'mappa'; mt0.area = areaDi(k); vai('meteo'); METP.then(() => apriMeteoZona(k)); }
   else if (rb) { REG ? fermaReg() : avviaReg(); }
+  else if (e.target.closest('#wpadd')) formWpt(null);
+  else if (e.target.closest('#wpfoto')) scattaFoto(null);
+  else if (e.target.closest('[data-wtipo]')) { document.querySelectorAll('[data-wtipo]').forEach(b => b.classList.toggle('on', b === e.target.closest('[data-wtipo]'))); }
+  else if (e.target.closest('#wpok')) salvaWpt();
+  else if (e.target.closest('#wpno')) { WPF = null; regUI(); }
+  else if (e.target.closest('#wpfa')) scattaFoto(WPF);
   else if (tb) azioneTrk(tb.dataset.trk, tb.dataset.az);
 };
 $('cat').addEventListener('click', clickEsc); $('pan').addEventListener('click', clickEsc);
@@ -855,18 +866,19 @@ function regUI() {
   if (!$('reg')) return;
   const m = REG ? misure(REG.p) : null;
   $('reg').innerHTML = (REG ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${fmt(m.up)} m</b><span>${t('disl')}</span></div></div>` : '')
+    + (REG ? `<div class="wpbar"><button id="wpadd">＋ ${t('wpAgg')}</button><button id="wpfoto">◉ ${t('wpFoto')}</button></div><div id="wpform"></div>${REG.w.length ? `<p class="note">${REG.w.length} ${t(REG.w.length === 1 ? 'wpPunto' : 'wpPunti')}</p>` : ''}` : '')
     + `<button class="big${REG ? ' stop' : ''}" id="regbtn">${REG ? t('regFine') : t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
 }
 let bgId = null;
 function avviaReg() {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (!confirm(t('regConfIn'))) return;
-  REG = { t0: Date.now(), p: [], ob: [...intSel] };
+  REG = { t0: Date.now(), p: [], ob: [...intSel], w: [] };
   const punto = (lon, lat, alt, acc) => {
     if (!REG || acc > 40) return;
     const q = [+lon.toFixed(6), +lat.toFixed(6), alt != null ? Math.round(alt) : null, Date.now()];
     const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
-    REG.p.push(q); disegnaTrk(REG.p); regUI();
+    REG.p.push(q); disegnaTrk(REG.p, REG.w); if (!$('wpform') || !$('wpform').innerHTML) regUI();
   };
   const BG = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation;
   if (BG) {
@@ -884,24 +896,71 @@ function fermaReg() {
   if (!confirm(t('regConfFine'))) return;
   if (bgId != null) { try { window.Capacitor.Plugins.BackgroundGeolocation.removeWatcher({ id: bgId }); } catch (e) {} bgId = null; }
   if (wid != null) navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
-  if (REG.p.length > 1) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p }); scriviTrk(a); }
+  if (REG.p.length > 1) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p, w: REG.w }); scriviTrk(a); }
   REG = null; regUI(); trkUI();
 }
 const alertNota = m => { if ($('reg')) $('reg').insertAdjacentHTML('afterbegin', `<p class="avviso">${esc(m)}</p>`); };
 function trkUI() {
   if (!$('trk')) return;
   const a = leggiTrk();
-  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p); return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
+  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p); return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${x.w && x.w.length ? ' · ' + x.w.length + ' ' + t(x.w.length === 1 ? 'wpPunto' : 'wpPunti') : ''}${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
 }
-function disegnaTrk(p) { if (map.getSource('trk')) map.getSource('trk').setData({ type: 'FeatureCollection', features: p.length > 1 ? [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: p.map(q => [q[0], q[1]]) } }] : [] }); }
+function disegnaTrk(p, w) {
+  if (map.getSource('wpt')) map.getSource('wpt').setData({ type: 'FeatureCollection', features: (w || []).map((x, i) => ({ type: 'Feature', id: i, properties: { i, tipo: x.tipo, lab: x.nome || t('wpTipi')[x.tipo], foto: (x.foto || []).join(','), ts: x.t }, geometry: { type: 'Point', coordinates: [x.lon, x.lat] } })) });
+  if (map.getSource('trk')) map.getSource('trk').setData({ type: 'FeatureCollection', features: p.length > 1 ? [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: p.map(q => [q[0], q[1]]) } }] : [] }); }
 function azioneTrk(id, az) {
   const a = leggiTrk(), x = a.find(y => y.id === id); if (!x) return;
-  if (az === 'del') { if (confirm(t('eliminaConf'))) { scriviTrk(a.filter(y => y.id !== id)); trkUI(); } return; }
-  if (az === 'map') { vai('mappa'); disegnaTrk(x.p); const lo = x.p.map(q => q[0]), la = x.p.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, duration: 600 }); return; }
-  const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
+  if (az === 'del') { if (confirm(t('eliminaConf'))) { (x.w || []).forEach(w => (w.foto || []).forEach(fotoDel)); scriviTrk(a.filter(y => y.id !== id)); trkUI(); disegnaTrk([], []); } return; }
+  if (az === 'map') { vai('mappa'); disegnaTrk(x.p, x.w); const lo = x.p.map(q => q[0]), la = x.p.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, duration: 600 }); return; }
+  const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1">${(x.w || []).map(w => `<wpt lat="${w.lat}" lon="${w.lon}">${w.ele != null ? `<ele>${w.ele}</ele>` : ''}<time>${new Date(w.t).toISOString()}</time><name>${esc(w.nome || t('wpTipi')[w.tipo])}</name><type>${esc(t('wpTipi')[w.tipo])}</type></wpt>`).join('')}<trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
   const u = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = `sicilia-naturale-${new Date(x.t0).toISOString().slice(0, 10)}.gpx`; document.body.appendChild(l); l.click(); l.remove();
 }
-setInterval(() => { if (REG && vista === 'escursioni') regUI(); }, 30000);
+setInterval(() => { if (REG && vista === 'escursioni' && !WPF) regUI(); }, 30000);
+// waypoint e foto durante la registrazione (come Wikiloc); le foto restano sul telefono (IndexedDB)
+let WPF = null;
+const dovesono = () => REG && REG.p.length ? REG.p[REG.p.length - 1] : null;
+function formWpt(foto) {
+  const q = dovesono(); if (!q) return alertNota(t('wpNoFix'));
+  WPF = { lon: q[0], lat: q[1], ele: q[2], t: Date.now(), foto: foto ? [foto] : [] };
+  const tp = t('wpTipi'), sel = foto ? 'foto' : 'fungo';
+  $('wpform').innerHTML = `<div class="wpf"><div class="wpt">${Object.keys(tp).map(k => `<button data-wtipo="${k}" class="${k === sel ? 'on' : ''}">${tp[k]}</button>`).join('')}</div><input id="wpn" placeholder="${t('wpNome')}" maxlength="60"><div id="wpth">${foto ? '<span class="ok">◉ 1</span>' : ''}</div><div class="wpbar"><button id="wpfa">◉ ${t('wpFotoAgg')}</button><button id="wpno">${t('wpAnnulla')}</button><button id="wpok" class="pri">${t('wpSalva')}</button></div></div>`;
+}
+function salvaWpt() {
+  if (!WPF || !REG) return;
+  const b = document.querySelector('[data-wtipo].on'); WPF.tipo = b ? b.dataset.wtipo : 'altro';
+  WPF.nome = ($('wpn').value || '').trim();
+  REG.w.push(WPF); WPF = null; disegnaTrk(REG.p, REG.w); regUI(); alertNota(t('wpOk'));
+}
+function scattaFoto(dest) {
+  if (!dovesono()) return alertNota(t('wpNoFix'));
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.setAttribute('capture', 'environment');
+  inp.onchange = async () => {
+    const f = inp.files && inp.files[0]; if (!f) return;
+    const id = await fotoSalva(f);
+    if (dest && WPF === dest) { WPF.foto.push(id); $('wpth').innerHTML = `<span class="ok">◉ ${WPF.foto.length}</span>`; }
+    else formWpt(id);
+  };
+  inp.click();
+}
+const fotoDB = () => new Promise((ok, ko) => { const r = indexedDB.open('sn_foto', 1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); });
+async function fotoSalva(file) {
+  const img = await createImageBitmap(file), k = Math.min(1, 1600 / Math.max(img.width, img.height));
+  const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.82)), id = 'F' + Date.now() + Math.random().toString(36).slice(2, 6);
+  const db = await fotoDB(); await new Promise((ok, ko) => { const tx = db.transaction('f', 'readwrite'); tx.objectStore('f').put(blob, id); tx.oncomplete = ok; tx.onerror = ko; });
+  return id;
+}
+async function fotoURL(id) { try { const db = await fotoDB(); const b = await new Promise(ok => { const r = db.transaction('f').objectStore('f').get(id); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); }); return b ? URL.createObjectURL(b) : null; } catch (e) { return null; } }
+async function fotoDel(id) { try { const db = await fotoDB(); db.transaction('f', 'readwrite').objectStore('f').delete(id); } catch (e) {} }
+let popW = null;
+async function popupWpt(f) {
+  const p = f.properties, ids = p.foto ? String(p.foto).split(',') : [];
+  const urls = (await Promise.all(ids.map(fotoURL))).filter(Boolean);
+  const h = `<div class="wpp"><b>${esc(p.lab)}</b><small>${esc(t('wpTipi')[p.tipo] || '')} · ${new Date(+p.ts).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}</small>${urls.map(u => `<img src="${u}" alt="">`).join('')}</div>`;
+  if (popW) popW.remove();
+  popW = new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(f.geometry.coordinates).setHTML(h).addTo(map);
+}
 
 /* ---------- Meteo: giorni migliori per escursioni e funghi */
 const LUOGHI = () => Object.entries(S).filter(([k, x]) => AREE.includes(x.t) && x.t !== 'amp').sort((a, b) => b[1].ha - a[1].ha);
