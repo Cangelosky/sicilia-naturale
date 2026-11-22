@@ -23,7 +23,7 @@ const TX = {
     tf: 'Tipo forestale', bio: 'Bioclima', sist: 'Area', topo: 'Località (IGM)', spp: 'Specie', sub: 'Substrato', veg: 'Vegetazione', com: 'Comune', dec: 'Decreto',
     circ: 'Circonferenza', alt: 'Altezza', quota: 'Quota', crit: 'Criteri di monumentalità', dm: 'Provvedimento', urb: 'In contesto urbano', dentro: 'Si trova in',
     cat: 'Categoria forestale', varianti: 'Varianti nella categoria', cfnota: 'Tipo di bosco della particella secondo la Carta forestale regionale (Corpo Forestale). Visibile da vicino.',
-    sif: 'Sistema Informativo Forestale (Regione Siciliana)', lsif: 'Corpo Forestale, Regione Siciliana',
+    sif: 'Sistema Informativo Forestale (Regione Siciliana)', elenco: 'Elenco degli Alberi Monumentali di Sicilia (17/07/2026)', lsif: 'Corpo Forestale, Regione Siciliana',
     G: { P: 'Piante', B: 'Uccelli', I: 'Invertebrati', R: 'Rettili', M: 'Mammiferi', A: 'Anfibi', F: 'Pesci', L: 'Licheni' } },
   en: { cerca: 'Search a forest, park or reserve…', aree: 'Parks and reserves', n2k: 'Natura 2000', tutti: 'All forests', solo: 'Only areas with forests',
     pn: 'National park', pr: 'Regional park', rn: 'Nature reserve', amp: 'Marine protected area', ap: 'Protected area', zsc: 'SAC (Natura 2000)', zps: 'SPA (Natura 2000)', zsczps: 'SAC and SPA (Natura 2000)',
@@ -39,7 +39,7 @@ const TX = {
     tf: 'Forest type', bio: 'Bioclimate', sist: 'Area', topo: 'Place (IGM)', spp: 'Species', sub: 'Substrate', veg: 'Vegetation', com: 'Municipality', dec: 'Decree',
     circ: 'Girth', alt: 'Height', quota: 'Elevation', crit: 'Monumentality criteria', dm: 'Listing act', urb: 'In an urban setting', dentro: 'Located in',
     cat: 'Forest category', varianti: 'Variants in this category', cfnota: 'Forest type of the stand according to the regional Forest Map (Forestry Corps). Visible when zoomed in.',
-    sif: 'Forest Information System (Sicilian Region)', lsif: 'Forestry Corps, Sicilian Region',
+    sif: 'Forest Information System (Sicilian Region)', elenco: 'List of Monumental Trees of Sicily (17/07/2026)', lsif: 'Forestry Corps, Sicilian Region',
     G: { P: 'Plants', B: 'Birds', I: 'Invertebrates', R: 'Reptiles', M: 'Mammals', A: 'Amphibians', F: 'Fish', L: 'Lichens' } }
 };
 const BOSCO_EN = { '9180': 'Lime-maple ravine forests', '91AA': 'Downy oak woods', '91B0': 'Narrow-leaved ash woods', '91E0': 'Alder woods', '91M0': 'Turkey oak woods',
@@ -201,9 +201,9 @@ $('q').oninput = () => {
   const v = norm($('q').value.trim()); $('qx').style.display = v ? 'block' : 'none';
   if (v.length < 2) { $('res').style.display = 'none'; return; }
   const w = v.split(/\s+/);
-  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k); return w.every(x => n.includes(x)); })
+  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => n.includes(x)); })
     .sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || b[1].ha - a[1].ha).slice(0, 30);
-  $('res').innerHTML = r.length ? r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
+  $('res').innerHTML = r.length ? r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
   $('res').style.display = 'block';
 };
 $('res').onclick = e => { const b = e.target.closest('button[data-id]'); if (!b) return; $('res').style.display = 'none'; $('q').blur(); apri(b.dataset.id, true); };
@@ -253,6 +253,7 @@ function specieDi(k) {
 const testa = (n, b) => `<div><h2>${esc(n)}</h2>${b}</div><button class="close" aria-label="Chiudi">×</button>`;
 const riga = (k, v) => v || v === 0 ? `<dt>${t(k)}</dt><dd>${v}</dd>` : '';
 const fonteSIF = () => `<p class="src">${t('fonte')}: <a href="https://sifweb.regione.sicilia.it/arcgis/rest/services/SIF_CART_TEMATICA/MapServer" target="_blank" rel="noopener">${t('sif')}</a> · ${t('lsif')}</p>`;
+const fonteElenco = () => `<p class="src">${t('fonte')}: <a href="https://www.regione.sicilia.it/system/files/2026-07/elenco_degli_alberi_monumentali_di_sicilia_aggiornato_al_17.07.2026.pdf" target="_blank" rel="noopener">${t('elenco')}</a> · ${t('lsif')}</p>`;
 const collegate = ids => ids.length ? `<h3>${t('dentro')}</h3><div class="links">${ids.map(c => `<button data-id="${c}">${esc(S[c].n)}<br><small>${t(S[c].t)} · ${fmt(S[c].ha)} ha</small></button>`).join('')}</div>` : '';
 function apriCF(c) {
   cur = null; selez('');
@@ -274,10 +275,11 @@ function apriAmb(k, s) {
     h = `<dl class="kv">${riga('sup', s.ha ? fmt(s.ha) + ' ha' : '')}${riga('spp', s.sp ? '<i>' + esc(s.sp) + '</i>' : '')}${riga('veg', esc(s.veg))}${riga('sub', esc(s.sub))}${riga('com', esc(s.com))}${riga('dec', esc(s.dec))}</dl>`;
   } else {
     $('sh').innerHTML = testa(s.n, b);
-    h = `<div class="stats"><div><b>${s.circ ? fmt(s.circ) + ' cm' : '–'}</b><span>${t('circ')}</span></div><div><b>${s.h ? fmt(s.h) + ' m' : '–'}</b><span>${t('alt')}</span></div><div><b>${s.alt ? fmt(s.alt) + ' m' : '–'}</b><span>${t('quota')}</span></div></div>`;
-    h += `<dl class="kv">${riga('com', esc(s.com + (s.prov ? ' (' + s.prov + ')' : '')))}${riga('crit', (s.crit || []).map(esc).join('<br>'))}${riga('dm', esc(s.prov_dm))}${s.urb ? riga('urb', '✓') : ''}</dl>`;
+    if (s.sp) h = `<p class="sp"><i>${esc(s.sp)}</i>${s.vg ? ' · ' + esc(s.vg) : ''}</p>`;
+    h += `<div class="stats"><div><b>${s.circ ? fmt(s.circ) + ' cm' : '–'}</b><span>${t('circ')}</span></div><div><b>${s.h ? fmt(s.h) + ' m' : '–'}</b><span>${t('alt')}</span></div><div><b>${s.alt ? fmt(s.alt) + ' m' : '–'}</b><span>${t('quota')}</span></div></div>`;
+    h += `<dl class="kv">${riga('com', esc(s.com + (s.prov ? ' (' + s.prov + ')' : '')))}${riga('crit', (s.crit || []).map(esc).join('<br>'))}${riga('dm', esc(s.prov_dm))}</dl>`;
   }
-  $('sb').innerHTML = h + collegate(s.in || []) + fonteSIF(); mostra();
+  $('sb').innerHTML = h + collegate(s.in || []) + (s.fonte === 'elenco' ? fonteElenco() : fonteSIF()); mostra();
 }
 function apri(k, vola) {
   if (k.startsWith('CF:')) return apriCF(k.slice(3));

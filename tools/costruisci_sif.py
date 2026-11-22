@@ -78,21 +78,18 @@ for i, f in enumerate(d['boschi_da_seme']['features']):
                  'veg': pulisci(p['TIPOL_VEG']), 'com': pulisci(p['COM_PROV']), 'dec': pulisci(p['DECRETO']),
                  'in': dentro(g), 'bb': [round(v, 4) for v in g.bounds], 'b': [], 'bha': 0, 'fonte': 'sif'}
 
-# ---- Alberi monumentali (punti)
+# ---- Alberi monumentali (punti): Elenco degli Alberi Monumentali di Sicilia, aggiornato al 17/07/2026
+# (estratto dal PDF ufficiale con tools/estrai_alberi_elenco.py). Ha la specie, che il livello SIF non riporta.
 alb = []
-for i, f in enumerate(d['alberi_monumentali']['features']):
-    p = f['properties']
-    co = (f.get('geometry') or {}).get('coordinates') or []
-    x, y = co if len(co) == 2 else (p['LONGITUDIN'], p['LATITUDINE'])
-    if not x or not y: print('albero senza posizione:', p['COMUNE'], p['LOCALITA']); continue
-    if (p['CONTESTO_U'] or '').strip().lower() == 'si': continue   # contesto urbano: escluso dal progetto (come i parchi urbani)
-    k = 'AM%03d' % i
+for i, a in enumerate(json.load(open(R + 'alberi_elenco.json'))):
+    if a['urbano']: continue   # contesto urbano: escluso dal progetto (come i parchi urbani)
+    x, y = a['lon'], a['lat']
+    k = 'AM%03d' % a['n']
     alb.append({'type': 'Feature', 'id': i, 'properties': {'id': k}, 'geometry': {'type': 'Point', 'coordinates': [round(x, 5), round(y, 5)]}})
-    crit = [pulisci(c) for c in (p['CRITERI_DI'] or '').split('\n') if c.strip()]
-    schede[k] = {'n': pulisci(p['LOCALITA']) or pulisci(p['COMUNE']), 't': 'am', 'ha': 0, 'cod': k, 'com': pulisci(p['COMUNE']), 'prov': pulisci(p['PROVINCIA']),
-                 'alt': p['ALTITUDINE'], 'circ': p['CIRCONFERE'], 'h': p['ALTEZZA_m'], 'crit': crit, 'prov_dm': pulisci(p['PROVVEDIME']),
-                 'urb': 1 if (p['CONTESTO_U'] or '').strip().lower() == 'si' else 0, 'in': dentro(Point(x, y)),
-                 'bb': [round(x, 4), round(y, 4), round(x, 4), round(y, 4)], 'b': [], 'bha': 0, 'fonte': 'sif'}
+    schede[k] = {'n': pulisci(a['localita']) or pulisci(a['comune']), 't': 'am', 'ha': 0, 'cod': k, 'com': pulisci(a['comune']), 'prov': pulisci(a['prov']),
+                 'sp': pulisci(a['specie']), 'vg': pulisci(a['volgare']), 'alt': a['alt'], 'circ': a['circ'], 'h': a['h'],
+                 'crit': [pulisci(c) for c in a['criteri']], 'prov_dm': pulisci(a['provv']), 'scheda': a['scheda'],
+                 'in': dentro(Point(x, y)), 'bb': [round(x, 4), round(y, 4), round(x, 4), round(y, 4)], 'b': [], 'bha': 0, 'fonte': 'elenco'}
 
 # ---- Carta forestale: nomi delle categorie (le geometrie vanno in tile, vedi tools/tiles_carta_forestale.py)
 # Descrizione SIF: "FA - Faggete- Faggeta mesofila...- st. ...- var. ...". Un codice può avere più varianti:
