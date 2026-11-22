@@ -36,6 +36,15 @@ const TX = {
     quiN: n => `Qui si sovrappongono ${n} zone`, quiNota: 'Lo stesso luogo può avere più tutele: tocca una zona per aprirne la scheda.',
     vb: n => n === 1 ? '1 bosco vetusto' : n + ' boschi vetusti', va: n => n === 1 ? '1 albero monumentale' : n + ' alberi monumentali',
     wiki: 'Da Wikipedia', wleggi: 'Leggi su Wikipedia', foto: 'Foto nei dintorni', fotoN: 'Foto da Wikimedia Commons: restano dei loro autori, con la licenza indicata.',
+    vMappa: 'Esplora', vFunghi: 'Micologia', vPiante: 'Botanica',
+    tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
+    tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante dei siti Natura 2000 siciliani, degli alberi monumentali e dei boschi da seme. Tocca una specie per la scheda e i luoghi dove cresce.`,
+    cercaSp: 'Cerca una specie, un genere, una famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
+    GF: { aga: 'A lamelle', bol: 'Boleti', rus: 'Russule e lattari', pol: 'Polipori e funghi del legno', can: 'Cantarelli, idni e clavarie', pez: 'Spugnole, pezize e tartufi', pal: 'Vesce, geastri e falli', gel: 'Gelatinosi', alt: 'Altri' },
+    segn: n => `${fmt(n)} segnalazioni in Sicilia`, nsiti: n => n === 1 ? '1 sito Natura 2000' : `${fmt(n)} siti Natura 2000`,
+    dove: 'Dove si trova', vediMappa: 'Vedi sulla mappa dove è stata segnalata', gbifChip: 'Segnalazioni GBIF:',
+    nocomm: 'Sicilia Naturale non dà indicazioni sulla commestibilità. Per il consumo rivolgiti sempre a un ispettorato micologico.',
+    fotoMic: 'Foto: Micelio, Associazione Micologica G. Inzenga', gbif: 'Scheda su GBIF',
     G: { P: 'Piante', B: 'Uccelli', I: 'Invertebrati', R: 'Rettili', M: 'Mammiferi', A: 'Anfibi', F: 'Pesci', L: 'Licheni' } },
   en: { cerca: 'Search a forest, park or reserve…', aree: 'Parks and reserves', n2k: 'Natura 2000', tutti: 'All forests', solo: 'Only areas with forests',
     pn: 'National park', pr: 'Regional park', rn: 'Nature reserve', amp: 'Marine protected area', ap: 'Protected area', zsc: 'SAC (Natura 2000)', zps: 'SPA (Natura 2000)', zsczps: 'SAC and SPA (Natura 2000)',
@@ -64,6 +73,15 @@ const TX = {
     quiN: n => `${n} areas overlap here`, quiNota: 'The same place can have several kinds of protection: tap one to open it.',
     vb: n => n === 1 ? '1 old-growth forest' : n + ' old-growth forests', va: n => n === 1 ? '1 monumental tree' : n + ' monumental trees',
     wiki: 'From Wikipedia', wleggi: 'Read on Wikipedia', foto: 'Photos nearby', fotoN: 'Photos from Wikimedia Commons: they belong to their authors, under the licence shown.',
+    vMappa: 'Explore', vFunghi: 'Mycology', vPiante: 'Botany',
+    tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
+    tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} plants of Sicily’s Natura 2000 sites, monumental trees and seed stands. Tap a species for its page and the places where it grows.`,
+    cercaSp: 'Search a species, genus or family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
+    GF: { aga: 'Gilled', bol: 'Boletes', rus: 'Russulas and milkcaps', pol: 'Polypores and wood fungi', can: 'Chanterelles, hedgehogs and corals', pez: 'Morels, cups and truffles', pal: 'Puffballs, earthstars and stinkhorns', gel: 'Jelly fungi', alt: 'Others' },
+    segn: n => `${fmt(n)} records in Sicily`, nsiti: n => n === 1 ? '1 Natura 2000 site' : `${fmt(n)} Natura 2000 sites`,
+    dove: 'Where it grows', vediMappa: 'Show on the map where it was recorded', gbifChip: 'GBIF records:',
+    nocomm: 'Sicilia Naturale gives no information on edibility. Always ask a mycological inspectorate before eating any fungus.',
+    fotoMic: 'Photo: Micelio, G. Inzenga Mycological Association', gbif: 'Page on GBIF',
     G: { P: 'Plants', B: 'Birds', I: 'Invertebrates', R: 'Reptiles', M: 'Mammals', A: 'Amphibians', F: 'Fish', L: 'Lichens' } }
 };
 const BOSCO_EN = { '9180': 'Lime-maple ravine forests', '91AA': 'Downy oak woods', '91B0': 'Narrow-leaved ash woods', '91E0': 'Alder woods', '91M0': 'Turkey oak woods',
@@ -132,6 +150,8 @@ const D = Promise.all(['schede', 'specie', 'habitat', 'zone', 'carta_forestale_n
 const CFC = { FA: '#1f6b3a', CE: '#5a8f29', QU: '#8fae3c', CA: '#a0702a', LE: '#2e5e4e', SU: '#b5893c', OS: '#6f9d6a', BA: '#4f9a73', FR: '#3d8fb0',
   PL: '#3f4f7a', PM: '#7a6fb0', RI: '#9b8ea6', AS: '#c3b26a', MM: '#d9a066', BS: '#c9c9a0' };
 const AMB = ['bv', 'bs', 'am'];
+let FUN = null, PIA = null;
+const CAT = Promise.all(['funghi', 'piante'].map(n => fetch('data/' + n + '.json').then(r => r.json()))).then(([f, p]) => { FUN = f; PIA = p; });
 
 map.on('load', () => D.then(() => {
   map.addSource('z', { type: 'geojson', data: GJ, promoteId: 'id' });
@@ -241,6 +261,8 @@ function testi() {
   $('l-it').classList.toggle('on', LANG === 'it'); $('l-en').classList.toggle('on', LANG === 'en');
   $('q').placeholder = t('cerca');
   $('liv-t').textContent = t('livelli');
+  for (const b of document.querySelectorAll('#sez button')) b.querySelector('span').textContent = t({ mappa: 'vMappa', funghi: 'vFunghi', piante: 'vPiante' }[b.dataset.v]);
+  if (vista !== 'mappa') catalogo(true);
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
   if (cur) apri(cur, false);
 }
@@ -351,7 +373,7 @@ function racconto(k) {
   } else if (s.t === 'bs') {
     P.push(it ? `${esc(s.n)} è un bosco da seme: qui il Corpo Forestale raccoglie i semi${s.sp ? ` di <i>${esc(s.sp)}</i>` : ''} per i vivai e i rimboschimenti, perché le piante sono sane e adatte al territorio.`
               : `${esc(s.n)} is a seed stand: the Forestry Corps collects seed here${s.sp ? ` of <i>${esc(s.sp)}</i>` : ''} for nurseries and reforestation, because its trees are healthy and suited to the area.`);
-    P.push(it ? `Copre ${fmt(s.ha)} ettari${s.com ? ` (${esc(s.com)})` : ''}${s.veg ? `; la vegetazione è ${esc(s.veg.toLowerCase())}` : ''}${s.sub ? `, su substrato ${esc(s.sub.toLowerCase())}` : ''}.`
+    P.push(it ? `Copre ${fmt(s.ha)} ettari${s.com ? ` nel territorio di ${esc(s.com.replace(/,?\s*\(.*?\)/g, ''))}` : ''}${s.veg ? `; la vegetazione è ${esc(s.veg.toLowerCase())}` : ''}${s.sub ? `, su substrato ${esc(s.sub.toLowerCase())}` : ''}.`
               : `It covers ${fmt(s.ha)} ha${s.com ? ` (${esc(s.com)})` : ''}${s.veg ? `; vegetation: ${esc(s.veg.toLowerCase())}` : ''}${s.sub ? `; substrate: ${esc(s.sub.toLowerCase())}` : ''}.`);
   } else {
     const area = !k.startsWith('ITA');
@@ -487,5 +509,113 @@ function apri(k, vola) {
   mostra(); arricchisci(k);
 }
 window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && S[h] && h !== cur) apri(h, true); });
+
+/* ---------- sezioni: Esplora, Micologia, Botanica */
+let vista = 'mappa';
+const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60 } };
+const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
+const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
+  piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
+function vai(v) {
+  vista = v;
+  for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v);
+  $('cat').classList.toggle('on', v !== 'mappa'); document.body.classList.toggle('cat-on', v !== 'mappa');
+  chiudiLiv(); $('res').style.display = 'none';
+  if (v === 'mappa') { $('cat').innerHTML = ''; $('cat').dataset.v = ''; map.resize(); } else { chiudi(); catalogo(); }
+}
+$('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
+function elencoCat() {
+  const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
+  if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
+    if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
+    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3]); return w.every(x => n.includes(x)); });
+  return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
+    if (st.g === 'alb' && !r[1]) return false;
+    const n = norm(r[0]); return w.every(x => n.includes(x)); });
+}
+function catalogo(soloTesti) {
+  CAT.then(() => {
+    if (vista === 'mappa') return;
+    const f = vista === 'funghi', st = cs[vista], ids = elencoCat();
+    const gruppi = f ? [['', t('tutte'), FUN.s.length], ['*f', t('conFoto'), FUN.s.filter(r => r[8].length).length], ...FUN.g.map(g => [g, t('GF')[g], FUN.s.filter(r => r[4] === g).length])]
+                     : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length]];
+    const card = i => { const r = (f ? FUN : PIA).s[i];
+      const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : ''].filter(Boolean).join(' · ');
+      const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx"><i>${esc(r[0])}</i><small>${sub}</small>${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+    const griglia = ids.slice(0, st.n).map(card).join('') + '';
+    if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
+      $('cat').dataset.v = vista; $('cat').scrollTop = 0;
+      $('cat').innerHTML = `<div class="in"><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
+        <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
+        <div class="grp" id="cg"></div><p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button></div>`;
+      $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
+    }
+    $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${esc(n)}<em>${fmt(c)}</em></button>`).join('');
+    $('cn').textContent = t('nSp')(ids.length);
+    $('gr').innerHTML = griglia;
+    $('ca').textContent = t('altri'); $('ca').style.display = ids.length > st.n ? 'block' : 'none';
+    fotoLazy();
+  });
+}
+$('cat').addEventListener('click', e => {
+  const g = e.target.closest('#cg button'), c = e.target.closest('.card'), a = e.target.closest('#ca');
+  const st = cs[vista];
+  if (g) { st.g = g.dataset.g; st.n = 60; catalogo(); }
+  else if (a) { st.n += 60; catalogo(); }
+  else if (c) apriSpecie(vista, +c.dataset.sp);
+});
+// foto delle schede senza foto propria: da Wikipedia, solo quando la scheda è visibile
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(en => {
+  if (!en.isIntersecting) return; io.unobserve(en.target);
+  const el = en.target; wikiVoce(el.dataset.n).then(w => { if (w && w.thumbnail) { el.style.backgroundImage = `url('${w.thumbnail.source}')`; el.innerHTML = ''; } });
+}), { root: $('cat'), rootMargin: '300px' }) : null;
+function fotoLazy() { if (io) for (const el of $('cat').querySelectorAll('.ph:not([style])')) io.observe(el); }
+
+function apriSpecie(tipo, i) {
+  const f = tipo === 'funghi', r = (f ? FUN : PIA).s[i], it = LANG === 'it';
+  cur = 'SP:' + tipo + ':' + i; selez('');
+  const badge = f ? `<span class="badge">${esc(t('GF')[r[4]])}</span><span class="badge n2k">${esc(r[2])}</span>` : (r[1] ? `<span class="badge">${t('alberi')}</span>` : '');
+  $('sh').innerHTML = `<div><h2><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
+  let h = '<div class="racconto">';
+  if (f) {
+    h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
+            : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in the southern Italy covered by Micelio` : ''}.</p>`;
+  } else {
+    const am = r[3].filter(k => S[k] && S[k].t === 'am'), bs = r[3].filter(k => S[k] && S[k].t === 'bs');
+    if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
+                             : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
+    if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
+                                        : `<p>In Sicily it is the species of ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
+  }
+  h += '</div>';
+  if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0 · ${t('fotoMic')}</p>`;
+  h += `<button class="btnmap" id="btnmap"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>${t('vediMappa')}</button>`;
+  h += '<div id="wk"></div>';
+  if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
+  if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
+  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}`}</p>`;
+  $('sb').innerHTML = h; mostra();
+  $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : null);
+  wikiVoce(r[0]).then(w => {
+    if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
+    $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
+  });
+}
+/* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
+async function mostraGbif(nome, key) {
+  if (!key) { const m = await getJ('https://api.gbif.org/v1/species/match?name=' + encodeURIComponent(nome)); key = m && m.usageKey; }
+  vai('mappa');
+  if (!key) return;
+  if (map.getLayer('gbif')) map.removeLayer('gbif'); if (map.getSource('gbif')) map.removeSource('gbif');
+  map.addSource('gbif', { type: 'raster', tileSize: 512, attribution: 'GBIF.org',
+    tiles: [`https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@1x.png?srs=EPSG:3857&taxonKey=${key}&bin=hex&hexPerTile=40&style=classic.poly`] });
+  map.addLayer({ id: 'gbif', type: 'raster', source: 'gbif', paint: { 'raster-opacity': 0.85 } }, 'sel');
+  $('gbifchip').innerHTML = `<span>${t('gbifChip')} <i>${esc(nome)}</i></span><button aria-label="Chiudi">×</button>`; $('gbifchip').classList.add('on');
+  map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: 30, duration: 600 });
+}
+$('gbifchip').onclick = e => { if (!e.target.closest('button')) return; if (map.getLayer('gbif')) map.removeLayer('gbif'); if (map.getSource('gbif')) map.removeSource('gbif'); $('gbifchip').classList.remove('on'); };
+// aprire una zona da una scheda specie riporta alla mappa
+$('sheet').addEventListener('click', e => { if (vista !== 'mappa' && e.target.closest('button[data-id]')) { vai('mappa'); } }, true);
 testi();
 }
