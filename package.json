@@ -1,9 +1,10 @@
 {
   "name": "sicilia-naturale-app",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "dependencies": {
     "@capacitor-community/background-geolocation": "^1.2.20",
+    "@capacitor/app": "^6.0.1",
     "@capacitor/android": "^6.1.2",
     "@capacitor/core": "^6.1.2"
   },

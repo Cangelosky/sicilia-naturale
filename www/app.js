@@ -46,7 +46,7 @@ const TX = {
     iFunghi: 'Funghi', iAlberi: 'Alberi monumentali e boschi vetusti', iBoschi: 'Boschi', iFlora: 'Piante e fiori', iAlim: 'Piante alimurgiche',
     alimNota: 'Per le piante alimurgiche non abbiamo ancora l’elenco delle specie: per ora non entrano nei suggerimenti.',
     doveAndare: 'Dove andare', apriMappa: 'Mappa', vediMeteo: 'Meteo', reg: 'Registra il percorso', regInizia: 'Inizia a registrare', wpAgg: 'Punto', wpFoto: 'Foto', wpNome: 'Nome (facoltativo)', wpSalva: 'Salva punto', wpAnnulla: 'Annulla', wpNoFix: 'Aspetta il segnale GPS: nessuna posizione ancora.', wpOk: 'Punto salvato', wpPunti: 'punti', wpPunto: 'punto', wpFotoAgg: 'Aggiungi foto', wpTipi: { fungo: 'Fungo', albero: 'Albero', pianta: 'Pianta', panorama: 'Panorama', acqua: 'Acqua', rifugio: 'Rifugio', animale: 'Animale', foto: 'Foto', altro: 'Altro' }, regFine: 'Termina la registrazione',
-    regConfIn: 'Iniziare la registrazione del percorso? Il telefono userà il GPS finché la pagina resta aperta.', regConfFine: 'Terminare e salvare la registrazione?',
+    regConfIn: 'Iniziare la registrazione del percorso? Il GPS resta attivo anche a schermo spento finché non la termini.', regConfFine: 'Terminare e salvare la registrazione?',
     regNota: 'La registrazione usa il GPS del telefono e continua anche a schermo spento. Percorsi, punti e foto restano salvati solo su questo telefono.',
     noGps: 'Il GPS non è disponibile su questo dispositivo o il permesso è stato negato.',
     dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
@@ -107,7 +107,7 @@ const TX = {
     iFunghi: 'Fungi', iAlberi: 'Monumental trees and old-growth forests', iBoschi: 'Forests', iFlora: 'Plants and flowers', iAlim: 'Wild edible plants',
     alimNota: 'We do not yet have the species list for wild edible plants: for now they are not part of the suggestions.',
     doveAndare: 'Where to go', apriMappa: 'Map', vediMeteo: 'Weather', reg: 'Record your route', regInizia: 'Start recording', wpAgg: 'Waypoint', wpFoto: 'Photo', wpNome: 'Name (optional)', wpSalva: 'Save waypoint', wpAnnulla: 'Cancel', wpNoFix: 'Wait for GPS: no position yet.', wpOk: 'Waypoint saved', wpPunti: 'waypoints', wpPunto: 'waypoint', wpFotoAgg: 'Add photo', wpTipi: { fungo: 'Mushroom', albero: 'Tree', pianta: 'Plant', panorama: 'View', acqua: 'Water', rifugio: 'Shelter', animale: 'Animal', foto: 'Photo', altro: 'Other' }, regFine: 'Stop recording',
-    regConfIn: 'Start recording the route? The phone will use GPS while this page stays open.', regConfFine: 'Stop and save the recording?',
+    regConfIn: 'Start recording the route? GPS stays on, even with the screen off, until you stop.', regConfFine: 'Stop and save the recording?',
     regNota: 'Recording uses the phone’s GPS and keeps going with the screen off. Routes, waypoints and photos stay on this phone only.',
     noGps: 'GPS is not available on this device or permission was denied.',
     dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
@@ -247,10 +247,7 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'hl-l', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 2.2 } });
   map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
   map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
-  map.addSource('wpt', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
-  map.addLayer({ id: 'wpt-c', type: 'circle', source: 'wpt', paint: { 'circle-radius': 7, 'circle-color': ['match', ['get', 'tipo'], 'fungo', '#a0522d', 'albero', '#2d6a4f', 'pianta', '#74a12e', 'panorama', '#3a7bd5', 'acqua', '#1e90ff', 'rifugio', '#8b5e3c', 'animale', '#c77d00', 'foto', '#7b4fb3', '#555'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
-  map.addLayer({ id: 'wpt-t', type: 'symbol', source: 'wpt', minzoom: 13, layout: { 'text-field': ['get', 'lab'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#10261c', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
   map.on('moveend', () => { if (ON.osm) caricaOSM(); });
   map.addLayer({ id: 'sel', type: 'line', source: 'z', filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   for (const s of ['bv', 'bs']) map.addLayer({ id: 'sel-' + s, type: 'line', source: s, filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
@@ -371,8 +368,7 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 /* ---------- click sulla mappa */
 map.on('click', e => {
   chiudiLiv();
-  const wf = map.getLayer('wpt-c') ? map.queryRenderedFeatures(e.point, { layers: ['wpt-c'] }) : [];
-  if (wf.length) { popupWpt(wf[0]); return; }
+  if (document.body.classList.contains('recon')) return;
   if (document.body.classList.contains('mm')) {
     const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
     if (f.length) { const k = f[0].properties.id; vista === 'meteo' ? apriMeteoZona(k) : apri(k, false); } else chiudi();
@@ -844,102 +840,197 @@ const clickEsc = e => {
   if (i) { intSel.has(i.dataset.i) ? intSel.delete(i.dataset.i) : intSel.add(i.dataset.i); escursioni(); }
   else if (m) { vai('mappa'); apri(m.dataset.map, true); }
   else if (mt) { const k = mt.dataset.mt; modo.meteo = 'mappa'; mt0.area = areaDi(k); vai('meteo'); METP.then(() => apriMeteoZona(k)); }
-  else if (rb) { REG ? fermaReg() : avviaReg(); }
-  else if (e.target.closest('#wpadd')) formWpt(null);
-  else if (e.target.closest('#wpfoto')) scattaFoto(null);
-  else if (e.target.closest('[data-wtipo]')) { document.querySelectorAll('[data-wtipo]').forEach(b => b.classList.toggle('on', b === e.target.closest('[data-wtipo]'))); }
-  else if (e.target.closest('#wpok')) salvaWpt();
-  else if (e.target.closest('#wpno')) { WPF = null; regUI(); }
-  else if (e.target.closest('#wpfa')) scattaFoto(WPF);
+  else if (rb) avviaReg();
+  else if (e.target.closest('#regapri')) mostraRec(true);
   else if (tb) azioneTrk(tb.dataset.trk, tb.dataset.az);
 };
 $('cat').addEventListener('click', clickEsc); $('pan').addEventListener('click', clickEsc);
-// registrazione: solo da questa sezione, con conferma all'inizio e alla fine
-let REG = null, wid = null, wake = null;
-const TK = 'sn_percorsi';
+// registrazione (solo nell'app): si avvia da Escursioni, poi schermata a tutta mappa con tempo, distanza, punti e foto (come Wikiloc)
+let REG = null, wid = null, wake = null, bgId = null, segui = true, tick = null;
+const TK = 'sn_percorsi', TKC = 'sn_reg_corrente', TKR = 'sn_wp_recenti';
 const leggiTrk = () => { try { return JSON.parse(localStorage.getItem(TK)) || []; } catch (e) { return []; } };
 const scriviTrk = a => { try { localStorage.setItem(TK, JSON.stringify(a)); } catch (e) {} };
+const salvaCorrente = () => { try { REG ? localStorage.setItem(TKC, JSON.stringify(REG)) : localStorage.removeItem(TKC); } catch (e) {} };
 const hav = (a, b) => { const R = 6371000, r = Math.PI / 180, dl = (b[1] - a[1]) * r, dn = (b[0] - a[0]) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dn / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
 function misure(p) { let d = 0, up = 0; for (let i = 1; i < p.length; i++) { d += hav(p[i - 1], p[i]); if (p[i][2] != null && p[i - 1][2] != null && p[i][2] > p[i - 1][2]) up += p[i][2] - p[i - 1][2]; } return { km: d / 1000, up, min: p.length > 1 ? (p[p.length - 1][3] - p[0][3]) / 60000 : 0 }; }
 const durS = m => Math.floor(m / 60) + ' h ' + String(Math.round(m % 60)).padStart(2, '0');
-function regUI() {
-  if (!$('reg')) return;
-  const m = REG ? misure(REG.p) : null;
-  $('reg').innerHTML = (REG ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${fmt(m.up)} m</b><span>${t('disl')}</span></div></div>` : '')
-    + (REG ? `<div class="wpbar"><button id="wpadd">＋ ${t('wpAgg')}</button><button id="wpfoto">◉ ${t('wpFoto')}</button></div><div id="wpform"></div>${REG.w.length ? `<p class="note">${REG.w.length} ${t(REG.w.length === 1 ? 'wpPunto' : 'wpPunti')}</p>` : ''}` : '')
-    + `<button class="big${REG ? ' stop' : ''}" id="regbtn">${REG ? t('regFine') : t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
+const orologio = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map(x => String(x).padStart(2, '0')).join(':'); };
+const T = (it, en) => LANG === 'it' ? it : en;
+
+/* tipi di punto: gruppi e icone (Tabler Icons, MIT) */
+const WP = [
+  ['natura', ['Natura', 'Nature'], [['fungo', 'mushroom', 'Fungo', 'Mushroom'], ['albero', 'tree', 'Albero', 'Tree'], ['monumentale', 'award', 'Albero monumentale', 'Monumental tree'], ['bosco', 'trees', 'Bosco', 'Woodland'], ['flora', 'flower', 'Fiore', 'Flower'], ['pianta', 'plant-2', 'Pianta', 'Plant'], ['erba', 'leaf', 'Erba, foglie', 'Herb, leaves'], ['animale', 'deer', 'Animale', 'Animal'], ['tracce', 'paw', 'Tracce', 'Tracks'], ['uccello', 'feather', 'Uccello', 'Bird'], ['insetto', 'butterfly', 'Insetto', 'Insect']]],
+  ['geo', ['Geografia', 'Geography'], [['panorama', 'binoculars', 'Panorama', 'Viewpoint'], ['vetta', 'mountain', 'Vetta', 'Summit'], ['grotta', 'building-arch', 'Grotta', 'Cave'], ['sorgente', 'droplet', 'Sorgente', 'Spring'], ['fontana', 'fountain', 'Fontana', 'Fountain'], ['fiume', 'wave-sine', 'Fiume, torrente', 'River, stream'], ['lago', 'ripple', 'Lago', 'Lake'], ['cascata', 'stairs-down', 'Cascata', 'Waterfall']]],
+  ['sent', ['Sentiero', 'Trail'], [['incrocio', 'arrows-split', 'Incrocio', 'Junction'], ['inizio', 'flag', 'Inizio sentiero', 'Trailhead'], ['parcheggio', 'parking', 'Parcheggio', 'Parking'], ['rifugio', 'home', 'Rifugio', 'Hut'], ['riparo', 'tent', 'Riparo, bivacco', 'Shelter'], ['picnic', 'tools-kitchen-2', 'Area picnic', 'Picnic area'], ['abbeveratoio', 'bucket-droplet', 'Abbeveratoio', 'Trough'], ['segnaletica', 'direction-sign', 'Segnaletica', 'Signpost'], ['cancello', 'barrier-block', 'Cancello, sbarra', 'Gate'], ['pericolo', 'alert-triangle', 'Pericolo', 'Danger']]],
+  ['cult', ['Storia e cultura', 'History and culture'], [['rovine', 'columns', 'Rovine', 'Ruins'], ['chiesa', 'building-church', 'Chiesa, edicola', 'Church, shrine'], ['castello', 'building-castle', 'Castello', 'Castle'], ['masseria', 'building-cottage', 'Masseria', 'Farmhouse'], ['mulino', 'windmill', 'Mulino', 'Mill'], ['torre', 'tower', 'Torre', 'Tower']]],
+  ['altro', ['Altro', 'Other'], [['foto', 'camera', 'Foto', 'Photo'], ['altro', 'map-pin', 'Altro', 'Other']]]
+];
+const WPT = {}; for (const g of WP) for (const [k, i, it, en] of g[2]) WPT[k] = { i, it, en, g: g[0] };
+// tipi delle versioni precedenti
+Object.assign(WPT, { acqua: WPT.sorgente });
+const wpNome = k => (WPT[k] || WPT.altro)[LANG === 'it' ? 'it' : 'en'];
+const wpIco = k => (WPT[k] || WPT.altro).i;
+const COLG = { natura: '#3fae6a', geo: '#3a8fd5', sent: '#d08a2b', cult: '#a06bd0', altro: '#5d6b64' };
+const wpCol = k => COLG[(WPT[k] || WPT.altro).g];
+
+/* schermata di registrazione */
+document.body.insertAdjacentHTML('beforeend', `
+<div id="rec" class="rec" aria-live="polite">
+  <div class="rec-top"><button class="rb" id="rec-min" aria-label="Riduci">${ico('chevron-down')}</button>
+    <div class="rec-st"><div><b id="rec-km">0,0</b><span>km</span></div><div class="rec-t"><small id="rec-lab"></small><b id="rec-tm">00:00:00</b></div><div><b id="rec-up">0</b><span>m D+</span></div></div></div>
+  <div class="rec-gps" id="rec-gps"></div>
+  <button class="rb rec-ctr" id="rec-ctr" aria-label="Centra">${ico('current-location')}</button>
+  <div class="rec-bot"><button class="rec-stop" id="rec-stop" aria-label="Termina"><span></span></button>
+    <button class="rec-pt" id="rec-pt">${ico('map-pin-plus')}<span id="rec-pt-l"></span></button>
+    <button class="rec-cam" id="rec-cam" aria-label="Foto">${ico('camera-plus')}</button></div>
+</div>
+<button id="recpill" class="recpill"><i></i><b id="recpill-t">00:00:00</b><span id="recpill-l"></span></button>
+<div id="wps" class="wpfull"></div>
+<div id="wpf" class="wpfull"></div>
+<div id="toast" class="toast"></div>`);
+const toast = m => { const e = $('toast'); e.textContent = m; e.classList.add('on'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('on'), 2600); };
+let dot = null, wpMk = [];
+function mostraRec(on) {
+  document.body.classList.toggle('recon', !!(on && REG));
+  $('recpill').classList.toggle('on', !!(REG && !on));
+  if (on && REG) { if (vista !== 'mappa') vai('mappa'); map.resize(); aggRec(); }
 }
-let bgId = null;
+function aggRec() {
+  if (!REG) return;
+  const m = misure(REG.p), tm = orologio(Date.now() - REG.t0);
+  $('rec-km').textContent = num1(m.km); $('rec-up').textContent = fmt(m.up); $('rec-tm').textContent = tm; $('recpill-t').textContent = tm;
+  $('rec-lab').textContent = T('REGISTRAZIONE IN CORSO', 'RECORDING');
+  $('recpill-l').textContent = T('Registrazione', 'Recording');
+  $('rec-pt-l').textContent = T('Punto', 'Waypoint') + (REG.w.length ? ' · ' + REG.w.length : '');
+  $('rec-gps').textContent = REG.p.length ? '' : T('In attesa del segnale GPS…', 'Waiting for GPS signal…');
+  $('rec-gps').style.display = REG.p.length ? 'none' : '';
+}
+function posizione(q) {
+  if (!dot) { const el = document.createElement('div'); el.className = 'gpsdot'; dot = new maplibregl.Marker({ element: el }).setLngLat([q[0], q[1]]).addTo(map); }
+  else dot.setLngLat([q[0], q[1]]);
+  if (segui && document.body.classList.contains('recon')) map.easeTo({ center: [q[0], q[1]], zoom: Math.max(map.getZoom(), 15), duration: 600 });
+}
+map.on('dragstart', () => { if (REG) segui = false; });
 function avviaReg() {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (!confirm(t('regConfIn'))) return;
   REG = { t0: Date.now(), p: [], ob: [...intSel], w: [] };
+  ascolta(); segui = true; salvaCorrente();
+  try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
+  tick = setInterval(aggRec, 1000);
+  disegnaTrk([], []); mostraRec(true); regUI();
+}
+function ascolta() {
   const punto = (lon, lat, alt, acc) => {
     if (!REG || acc > 40) return;
     const q = [+lon.toFixed(6), +lat.toFixed(6), alt != null ? Math.round(alt) : null, Date.now()];
+    posizione(q);
     const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
-    REG.p.push(q); disegnaTrk(REG.p, REG.w); if (!$('wpform') || !$('wpform').innerHTML) regUI();
+    REG.p.push(q); disegnaTrk(REG.p, REG.w); salvaCorrente(); aggRec();
   };
   const BG = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation;
   if (BG) {
-    BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: LANG === 'it' ? 'Registrazione percorso in corso' : 'Recording route', requestPermissions: true, stale: false, distanceFilter: 4 },
-      (loc, err) => { if (err) { alertNota(t('noGps')); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
+    BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: T('Registrazione percorso in corso', 'Recording route'), requestPermissions: true, stale: false, distanceFilter: 4 },
+      (loc, err) => { if (err) { toast(t('noGps')); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
       .then(id => { bgId = id; });
   } else {
     wid = navigator.geolocation.watchPosition(pos => { const c = pos.coords; punto(c.longitude, c.latitude, c.altitude, c.accuracy); },
-      () => { alertNota(t('noGps')); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+      () => toast(t('noGps')), { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
   }
-  try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
-  regUI();
 }
 function fermaReg() {
-  if (!confirm(t('regConfFine'))) return;
+  if (!REG || !confirm(t('regConfFine'))) return;
   if (bgId != null) { try { window.Capacitor.Plugins.BackgroundGeolocation.removeWatcher({ id: bgId }); } catch (e) {} bgId = null; }
   if (wid != null) navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
-  if (REG.p.length > 1) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p, w: REG.w }); scriviTrk(a); }
-  REG = null; regUI(); trkUI();
+  clearInterval(tick);
+  const fatto = REG.p.length > 1 || REG.w.length;
+  if (fatto) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p, w: REG.w }); scriviTrk(a); }
+  REG = null; salvaCorrente(); if (dot) { dot.remove(); dot = null; }
+  mostraRec(false); toast(fatto ? T('Percorso salvato in Escursioni', 'Route saved in Hikes') : T('Nessun dato da salvare', 'Nothing to save'));
+  regUI(); trkUI();
 }
-const alertNota = m => { if ($('reg')) $('reg').insertAdjacentHTML('afterbegin', `<p class="avviso">${esc(m)}</p>`); };
-function trkUI() {
-  if (!$('trk')) return;
-  const a = leggiTrk();
-  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p); return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${x.w && x.w.length ? ' · ' + x.w.length + ' ' + t(x.w.length === 1 ? 'wpPunto' : 'wpPunti') : ''}${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
+// se l'app è stata chiusa durante una registrazione, il percorso non va perso
+(function recupera() {
+  try { const r = JSON.parse(localStorage.getItem(TKC)); if (r && (r.p.length > 1 || (r.w && r.w.length))) { const a = leggiTrk(); if (!a.some(x => x.id === 'T' + r.t0)) { a.unshift({ id: 'T' + r.t0, t0: r.t0, ob: r.ob, p: r.p, w: r.w || [] }); scriviTrk(a); } } localStorage.removeItem(TKC); } catch (e) {}
+})();
+$('rec-min').onclick = () => mostraRec(false);
+$('recpill').onclick = () => mostraRec(true);
+$('rec-stop').onclick = fermaReg;
+$('rec-ctr').onclick = () => { segui = true; const q = REG && REG.p[REG.p.length - 1]; if (q) map.easeTo({ center: [q[0], q[1]], zoom: Math.max(map.getZoom(), 15), duration: 600 }); };
+$('rec-pt').onclick = () => nuovoWpt(null);
+$('rec-cam').onclick = () => scegliFoto(true, id => nuovoWpt(id));
+
+/* nel pannello Escursioni */
+function regUI() {
+  if (!$('reg')) return;
+  const m = REG ? misure(REG.p) : null;
+  $('reg').innerHTML = REG
+    ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${REG.w.length}</b><span>${T('punti', 'waypoints')}</span></div></div><button class="big" id="regapri">${T('Apri la registrazione', 'Open recording')}</button>`
+    : `<button class="big" id="regbtn">${t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
 }
-function disegnaTrk(p, w) {
-  if (map.getSource('wpt')) map.getSource('wpt').setData({ type: 'FeatureCollection', features: (w || []).map((x, i) => ({ type: 'Feature', id: i, properties: { i, tipo: x.tipo, lab: x.nome || t('wpTipi')[x.tipo], foto: (x.foto || []).join(','), ts: x.t }, geometry: { type: 'Point', coordinates: [x.lon, x.lat] } })) });
-  if (map.getSource('trk')) map.getSource('trk').setData({ type: 'FeatureCollection', features: p.length > 1 ? [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: p.map(q => [q[0], q[1]]) } }] : [] }); }
-function azioneTrk(id, az) {
-  const a = leggiTrk(), x = a.find(y => y.id === id); if (!x) return;
-  if (az === 'del') { if (confirm(t('eliminaConf'))) { (x.w || []).forEach(w => (w.foto || []).forEach(fotoDel)); scriviTrk(a.filter(y => y.id !== id)); trkUI(); disegnaTrk([], []); } return; }
-  if (az === 'map') { vai('mappa'); disegnaTrk(x.p, x.w); const lo = x.p.map(q => q[0]), la = x.p.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, duration: 600 }); return; }
-  const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1">${(x.w || []).map(w => `<wpt lat="${w.lat}" lon="${w.lon}">${w.ele != null ? `<ele>${w.ele}</ele>` : ''}<time>${new Date(w.t).toISOString()}</time><name>${esc(w.nome || t('wpTipi')[w.tipo])}</name><type>${esc(t('wpTipi')[w.tipo])}</type></wpt>`).join('')}<trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
-  const u = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = `sicilia-naturale-${new Date(x.t0).toISOString().slice(0, 10)}.gpx`; document.body.appendChild(l); l.click(); l.remove();
-}
-setInterval(() => { if (REG && vista === 'escursioni' && !WPF) regUI(); }, 30000);
-// waypoint e foto durante la registrazione (come Wikiloc); le foto restano sul telefono (IndexedDB)
+const alertNota = m => toast(m);
+
+/* punti: scelta del tipo, scheda, foto */
 let WPF = null;
 const dovesono = () => REG && REG.p.length ? REG.p[REG.p.length - 1] : null;
-function formWpt(foto) {
-  const q = dovesono(); if (!q) return alertNota(t('wpNoFix'));
-  WPF = { lon: q[0], lat: q[1], ele: q[2], t: Date.now(), foto: foto ? [foto] : [] };
-  const tp = t('wpTipi'), sel = foto ? 'foto' : 'fungo';
-  $('wpform').innerHTML = `<div class="wpf"><div class="wpt">${Object.keys(tp).map(k => `<button data-wtipo="${k}" class="${k === sel ? 'on' : ''}">${tp[k]}</button>`).join('')}</div><input id="wpn" placeholder="${t('wpNome')}" maxlength="60"><div id="wpth">${foto ? '<span class="ok">◉ 1</span>' : ''}</div><div class="wpbar"><button id="wpfa">◉ ${t('wpFotoAgg')}</button><button id="wpno">${t('wpAnnulla')}</button><button id="wpok" class="pri">${t('wpSalva')}</button></div></div>`;
+function nuovoWpt(foto) {
+  const q = dovesono(); if (!q) return toast(t('wpNoFix'));
+  WPF = { lon: q[0], lat: q[1], ele: q[2], t: Date.now(), foto: foto ? [foto] : [], tipo: null, nome: '', desc: '', idx: -1 };
+  sceltaTipo(true);
 }
-function salvaWpt() {
-  if (!WPF || !REG) return;
-  const b = document.querySelector('[data-wtipo].on'); WPF.tipo = b ? b.dataset.wtipo : 'altro';
-  WPF.nome = ($('wpn').value || '').trim();
-  REG.w.push(WPF); WPF = null; disegnaTrk(REG.p, REG.w); regUI(); alertNota(t('wpOk'));
+const recenti = () => { try { return JSON.parse(localStorage.getItem(TKR)) || []; } catch (e) { return []; } };
+function sceltaTipo(nuovo) {
+  const tile = k => `<button class="wpk" data-tk="${k}" style="--c:${wpCol(k)}">${ico(wpIco(k))}<span>${esc(wpNome(k))}</span></button>`;
+  const rc = recenti().filter(k => WPT[k]).slice(0, 6);
+  $('wps').innerHTML = `<div class="wph"><button class="rb" id="wps-x" aria-label="Chiudi">${ico('x')}</button><h2>${T('Che cosa hai trovato?', 'What did you find?')}</h2></div>
+    <div class="wpb">${rc.length ? `<h3>${ico('history', 'sm')} ${T('Recenti', 'Recent')}</h3><div class="wpg">${rc.map(tile).join('')}</div>` : ''}
+    ${WP.map(g => `<h3 style="--c:${COLG[g[0]]}">${esc(T(...g[1]))}</h3><div class="wpg">${g[2].map(x => tile(x[0])).join('')}</div>`).join('')}</div>`;
+  $('wps').classList.add('on'); $('wps').scrollTop = 0;
+  $('wps').dataset.nuovo = nuovo ? '1' : '';
 }
-function scattaFoto(dest) {
-  if (!dovesono()) return alertNota(t('wpNoFix'));
-  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.setAttribute('capture', 'environment');
-  inp.onchange = async () => {
-    const f = inp.files && inp.files[0]; if (!f) return;
-    const id = await fotoSalva(f);
-    if (dest && WPF === dest) { WPF.foto.push(id); $('wpth').innerHTML = `<span class="ok">◉ ${WPF.foto.length}</span>`; }
-    else formWpt(id);
-  };
+$('wps').addEventListener('click', e => {
+  if (e.target.closest('#wps-x')) { $('wps').classList.remove('on'); if ($('wps').dataset.nuovo) { (WPF.foto || []).forEach(fotoDel); WPF = null; } return; }
+  const b = e.target.closest('[data-tk]'); if (!b || !WPF) return;
+  WPF.tipo = b.dataset.tk;
+  try { localStorage.setItem(TKR, JSON.stringify([WPF.tipo, ...recenti().filter(k => k !== WPF.tipo)].slice(0, 6))); } catch (e) {}
+  $('wps').classList.remove('on'); schedaWpt();
+});
+async function schedaWpt() {
+  const w = WPF, urls = await Promise.all(w.foto.map(fotoURL));
+  $('wpf').innerHTML = `<div class="wph"><button class="rb" id="wpf-x" aria-label="Indietro">${ico('arrow-left')}</button><h2>${w.idx < 0 ? T('Nuovo punto', 'New waypoint') : T('Modifica punto', 'Edit waypoint')}</h2></div>
+    <div class="wpb">
+      <div class="wpr"><h3>${T('Foto', 'Photos')}</h3><button class="lnk" id="wpf-add">${ico('photo', 'sm')} ${T('Aggiungi foto', 'Add photo')}</button></div>
+      <div class="wpph">${w.foto.map((id, i) => urls[i] ? `<div class="th"><img src="${urls[i]}" alt=""><button data-del="${i}" aria-label="Togli">${ico('x')}</button></div>` : '').join('') || `<button class="th vuoto" id="wpf-cam">${ico('camera-plus')}</button>`}</div>
+      <button class="wpr tipo" id="wpf-tipo" style="--c:${wpCol(w.tipo)}"><h3>${T('Tipo', 'Type')}</h3><span>${ico(wpIco(w.tipo))}${esc(wpNome(w.tipo))}</span></button>
+      <h3>${T('Nome', 'Name')}</h3><input id="wpf-n" maxlength="80" placeholder="${T('Dai un nome al punto', 'Name this waypoint')}" value="${esc(w.nome || '')}">
+      <h3>${T('Descrizione', 'Description')}</h3><textarea id="wpf-d" rows="4" maxlength="1000" placeholder="${T('Che cosa vedi, come lo riconosci…', 'What you see, how to recognise it…')}">${esc(w.desc || '')}</textarea>
+      <p class="note">${new Date(w.t).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}${w.ele != null ? ' · ' + fmt(w.ele) + ' m' : ''} · ${w.lat.toFixed(5)}, ${w.lon.toFixed(5)}</p>
+    </div>
+    <div class="wpfoot"><button class="cest" id="wpf-del" aria-label="${T('Elimina', 'Delete')}">${ico('trash')}</button><button class="fatto" id="wpf-ok">${T('Fatto', 'Done')}</button></div>`;
+  $('wpf').classList.add('on');
+}
+const leggiForm = () => { if (WPF && $('wpf-n')) { WPF.nome = $('wpf-n').value.trim(); WPF.desc = $('wpf-d').value.trim(); } };
+$('wpf').addEventListener('click', e => {
+  if (!WPF) return;
+  if (e.target.closest('#wpf-add')) { leggiForm(); return scegliFoto(false, id => { WPF.foto.push(id); schedaWpt(); }); }
+  if (e.target.closest('#wpf-cam')) { leggiForm(); return scegliFoto(true, id => { WPF.foto.push(id); schedaWpt(); }); }
+  const d = e.target.closest('[data-del]'); if (d) { leggiForm(); fotoDel(WPF.foto.splice(+d.dataset.del, 1)[0]); return schedaWpt(); }
+  if (e.target.closest('#wpf-tipo')) { leggiForm(); return sceltaTipo(false); }
+  if (e.target.closest('#wpf-x') || e.target.closest('#wpf-ok')) {
+    leggiForm(); const { idx, ...w } = WPF;
+    if (REG) { if (idx < 0) REG.w.push(w); else REG.w[idx] = w; salvaCorrente(); disegnaTrk(REG.p, REG.w); aggRec(); }
+    WPF = null; $('wpf').classList.remove('on'); if (idx < 0) toast(t('wpOk')); return;
+  }
+  if (e.target.closest('#wpf-del')) {
+    if (!confirm(T('Eliminare questo punto e le sue foto?', 'Delete this waypoint and its photos?'))) return;
+    WPF.foto.forEach(fotoDel); if (REG && WPF.idx >= 0) { REG.w.splice(WPF.idx, 1); salvaCorrente(); disegnaTrk(REG.p, REG.w); aggRec(); }
+    WPF = null; $('wpf').classList.remove('on');
+  }
+});
+function scegliFoto(camera, fatto) {
+  const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*';
+  if (camera) inp.setAttribute('capture', 'environment'); else inp.multiple = true;
+  inp.onchange = async () => { for (const f of [...(inp.files || [])].slice(0, 10)) { try { fatto(await fotoSalva(f)); } catch (e) { toast(T('Foto non salvata', 'Photo not saved')); } } };
   inp.click();
 }
 const fotoDB = () => new Promise((ok, ko) => { const r = indexedDB.open('sn_foto', 1); r.onupgradeneeded = () => r.result.createObjectStore('f'); r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); });
@@ -951,16 +1042,53 @@ async function fotoSalva(file) {
   const db = await fotoDB(); await new Promise((ok, ko) => { const tx = db.transaction('f', 'readwrite'); tx.objectStore('f').put(blob, id); tx.oncomplete = ok; tx.onerror = ko; });
   return id;
 }
-async function fotoURL(id) { try { const db = await fotoDB(); const b = await new Promise(ok => { const r = db.transaction('f').objectStore('f').get(id); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); }); return b ? URL.createObjectURL(b) : null; } catch (e) { return null; } }
-async function fotoDel(id) { try { const db = await fotoDB(); db.transaction('f', 'readwrite').objectStore('f').delete(id); } catch (e) {} }
-let popW = null;
-async function popupWpt(f) {
-  const p = f.properties, ids = p.foto ? String(p.foto).split(',') : [];
-  const urls = (await Promise.all(ids.map(fotoURL))).filter(Boolean);
-  const h = `<div class="wpp"><b>${esc(p.lab)}</b><small>${esc(t('wpTipi')[p.tipo] || '')} · ${new Date(+p.ts).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}</small>${urls.map(u => `<img src="${u}" alt="">`).join('')}</div>`;
-  if (popW) popW.remove();
-  popW = new maplibregl.Popup({ maxWidth: '260px' }).setLngLat(f.geometry.coordinates).setHTML(h).addTo(map);
+const URLF = {};
+async function fotoURL(id) { if (URLF[id]) return URLF[id]; try { const db = await fotoDB(); const b = await new Promise(ok => { const r = db.transaction('f').objectStore('f').get(id); r.onsuccess = () => ok(r.result); r.onerror = () => ok(null); }); return b ? (URLF[id] = URL.createObjectURL(b)) : null; } catch (e) { return null; } }
+async function fotoDel(id) { if (!id) return; delete URLF[id]; try { const db = await fotoDB(); db.transaction('f', 'readwrite').objectStore('f').delete(id); } catch (e) {} }
+
+/* percorso e punti sulla mappa */
+function disegnaTrk(p, w) {
+  if (map.getSource('trk')) map.getSource('trk').setData({ type: 'FeatureCollection', features: p.length > 1 ? [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: p.map(q => [q[0], q[1]]) } }] : [] });
+  wpMk.forEach(m => m.remove()); wpMk = [];
+  (w || []).forEach((x, i) => {
+    const el = document.createElement('button'); el.className = 'wpin'; el.style.setProperty('--c', wpCol(x.tipo));
+    el.innerHTML = ico(wpIco(x.tipo)) + (x.foto && x.foto.length ? '<i></i>' : ''); el.title = x.nome || wpNome(x.tipo);
+    el.onclick = ev => { ev.stopPropagation(); if (REG && w === REG.w) { WPF = { ...x, foto: [...(x.foto || [])], idx: i }; schedaWpt(); } else vediWpt(x); };
+    wpMk.push(new maplibregl.Marker({ element: el, anchor: 'bottom' }).setLngLat([x.lon, x.lat]).addTo(map));
+  });
 }
+let popW = null;
+async function vediWpt(x) {
+  const urls = (await Promise.all((x.foto || []).map(fotoURL))).filter(Boolean);
+  const h = `<div class="wpp"><b>${esc(x.nome || wpNome(x.tipo))}</b><small>${esc(wpNome(x.tipo))} · ${new Date(x.t).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}${x.ele != null ? ' · ' + fmt(x.ele) + ' m' : ''}</small>${x.desc ? `<p>${esc(x.desc)}</p>` : ''}${urls.map(u => `<img src="${u}" alt="">`).join('')}</div>`;
+  if (popW) popW.remove();
+  popW = new maplibregl.Popup({ maxWidth: '280px', offset: 30 }).setLngLat([x.lon, x.lat]).setHTML(h).addTo(map);
+}
+function trkUI() {
+  if (!$('trk')) return;
+  const a = leggiTrk();
+  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p), n = (x.w || []).length; return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${n ? ' · ' + n + ' ' + T(n === 1 ? 'punto' : 'punti', n === 1 ? 'waypoint' : 'waypoints') : ''}${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
+}
+function azioneTrk(id, az) {
+  const a = leggiTrk(), x = a.find(y => y.id === id); if (!x) return;
+  if (az === 'del') { if (confirm(t('eliminaConf'))) { (x.w || []).forEach(w => (w.foto || []).forEach(fotoDel)); scriviTrk(a.filter(y => y.id !== id)); trkUI(); disegnaTrk([], []); } return; }
+  if (az === 'map') { vai('mappa'); disegnaTrk(x.p, x.w); const pts = [...x.p, ...(x.w || []).map(w => [w.lon, w.lat])], lo = pts.map(q => q[0]), la = pts.map(q => q[1]); if (pts.length) map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, maxZoom: 16, duration: 600 }); return; }
+  const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1">${(x.w || []).map(w => `<wpt lat="${w.lat}" lon="${w.lon}">${w.ele != null ? `<ele>${w.ele}</ele>` : ''}<time>${new Date(w.t).toISOString()}</time><name>${esc(w.nome || wpNome(w.tipo))}</name>${w.desc ? `<desc>${esc(w.desc)}</desc>` : ''}<type>${esc(wpNome(w.tipo))}</type></wpt>`).join('')}<trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
+  const u = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = `sicilia-naturale-${new Date(x.t0).toISOString().slice(0, 10)}.gpx`; document.body.appendChild(l); l.click(); l.remove();
+}
+setInterval(() => { if (REG && vista === 'escursioni') regUI(); }, 30000);
+// tasto Indietro di Android: chiude le schede aperte; durante la registrazione manda l'app in secondo piano invece di chiuderla
+(function indietro() {
+  const A = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.App; if (!A) return;
+  A.addListener('backButton', () => {
+    if ($('wps').classList.contains('on')) return $('wps-x').click();
+    if ($('wpf').classList.contains('on')) return $('wpf-x').click();
+    if (document.body.classList.contains('recon')) return mostraRec(false);
+    if (vista !== 'mappa') return vai('mappa');
+    if (REG) return A.minimizeApp();
+    A.exitApp();
+  });
+})();
 
 /* ---------- Meteo: giorni migliori per escursioni e funghi */
 const LUOGHI = () => Object.entries(S).filter(([k, x]) => AREE.includes(x.t) && x.t !== 'amp').sort((a, b) => b[1].ha - a[1].ha);
@@ -982,6 +1110,8 @@ function colore10(v) { return v >= 7.5 ? '#2d6a4f' : v >= 5.5 ? '#8fae3c' : v >=
 /* dati meteo di tutti i parchi e le riserve in una sola richiesta (Open-Meteo accetta più coordinate) */
 const mt0 = { k: 'e', day: 0, area: 'tutte' };
 let METP = null, MET = null;
+// cella con pioggia, temperatura e vento del giorno
+const cella = (M, i) => `<span class="wx"><span>${ico('umbrella', 'xs')}${num1(M.precipitation_sum[i] || 0)} mm</span><span>${ico('temperature', 'xs')}${Math.round(M.temperature_2m_min[i])}–${Math.round(M.temperature_2m_max[i])}°</span><span>${ico('wind', 'xs')}${Math.round(M.wind_speed_10m_max[i] || 0)} km/h</span></span>`;
 function serieMeteo(M) {
   const oggi = new Date().toISOString().slice(0, 10), i0 = Math.max(0, M.time.indexOf(oggi));
   const TM = new TrailModel.Model({ start: M.time[0], cp: { q: 'p' }, pts: { p: { r: M.precipitation_sum.map(x => x || 0), tx: M.temperature_2m_max, tn: M.temperature_2m_min } }, forecast: {} }, [], []);
@@ -1014,7 +1144,7 @@ function meteo() {
       <div class="days">${giorni.map((g, n) => `<button data-day="${n}" class="${mt0.day === n ? 'on' : ''}"><small>${n === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>
       <div class="aree">${ORD_AREE.map(a => `<button data-area="${a}" class="${mt0.area === a ? 'on' : ''}">${t('AR')[a]}</button>`).join('')}</div>
       <div class="scala"><span>1</span><i></i><span>10</span></div>`;
-    const riga = k => { const v = valDi(k, mt0.day); return `<button data-mz="${k}"><span class="ring" style="--v:${v * 10};--c:${colore10(v)}">${num1(v)}</span><span><b>${esc(S[k].n)}</b><small>${esc(t('AR')[areaDi(k)])} · ${mt0.k === 'e' ? (MET[k].G[mt0.day].e.perche.join(', ') || t('ok')) : MET[k].G[mt0.day].f.parola}</small></span></button>`; };
+    const riga = k => { const v = valDi(k, mt0.day); return `<button data-mz="${k}"><span class="ring" style="--v:${v * 10};--c:${colore10(v)}">${num1(v)}</span><span class="mzt"><b>${esc(S[k].n)}</b><small>${esc(t('AR')[areaDi(k)])} · ${mt0.k === 'e' ? (MET[k].G[mt0.day].e.perche.join(', ') || t('ok')) : MET[k].G[mt0.day].f.parola}</small></span>${cella(MET[k].M, MET[k].G[mt0.day].i)}</button>`; };
     if (modo.meteo === 'mappa') {
       $('pan').innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div>${ctrl}<p class="pl">${t('toccaZona')}</p><h3>${t('miglioriQui')}</h3><div class="mz">${top.slice(0, 5).map(riga).join('')}</div><p class="src">${t('fonte')}: Open-Meteo (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p>`;
       evidenzia(ks.map(k => ({ k, v: valDi(k, mt0.day), vs: num1(valDi(k, mt0.day)), lab: S[k].n.replace(/^Riserva naturale (orientata |integrale |speciale |regionale )?/i, 'R.N. ') })));
@@ -1041,7 +1171,7 @@ function apriMeteoZona(k) {
   const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
   const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
     <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
-      return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span><small>${(M.precipitation_sum[g.i] || 0).toFixed(1)} ${t('mm')} · ${Math.round(M.temperature_2m_min[g.i])}–${Math.round(M.temperature_2m_max[g.i])}°</small><small>${esc(sub)}</small></div>`; }).join('')}</div>
+      return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span>${cella(M, g.i)}<small>${esc(sub)}</small></div>`; }).join('')}</div>
     <p class="note" style="margin-top:10px">${nota}</p></div>`;
   const mx = Math.max(5, ...M.precipitation_sum.map(x => x || 0));
   $('sh').innerHTML = testa(S[k].n, `<span class="badge">${esc(t('AR')[areaDi(k)])}</span>`);
