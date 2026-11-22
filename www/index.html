@@ -389,6 +389,20 @@ button.spn span{color:var(--mute);font-size:18px}
 .indietro{display:block;border:0;background:none;color:var(--g);font:600 13px 'Space Grotesk',Roboto,sans-serif;padding:0 0 4px;cursor:pointer}
 body.side .regbar{display:none!important}
 body.escreg .pan.big{bottom:72px!important}
+/* satellite */
+.btnsat{bottom:144px;font-size:11.5px;letter-spacing:.5px}.btnsat.on,.btn3d.on{background:var(--gd)!important;color:#fff!important}
+.miapos{bottom:192px}
+@media(max-width:899px){ .mm .btnsat{bottom:auto;top:58px} .mm .miapos{top:106px} }
+body.recon .btnsat{display:none!important}
+/* maniglia di nuovo visibile sul telefono: abbassa, nasconde, allarga */
+@media(max-width:899px){
+  #sheet .grip{display:flex}
+  #sheet.mini{max-height:none}#sheet.mini .body{display:none}
+  .pan .grip{display:flex;margin:-6px 0 2px}
+  .pan.mini{max-height:none}.pan.mini>*:not(.grip):not(.ph-top){display:none!important}.pan.mini .ph-top .switch{display:none}
+  #sheet,.pan{transition:transform .2s ease}
+}
+@media(min-width:900px){ .pan .grip{display:none} }
 </style>
 </head>
 <body>

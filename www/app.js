@@ -181,8 +181,11 @@ const style = {
   ]
 };
 
+// vista satellitare (Esri World Imagery), sotto strade, nomi e livelli dell'app
+style.sources.sat = { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 19, attribution: 'Satellite: Esri, Maxar, Earthstar Geographics' };
+style.layers.splice(style.layers.findIndex(l => l.id === 'wway'), 0, { id: 'sat', type: 'raster', source: 'sat', layout: { visibility: 'none' }, paint: { 'raster-opacity': 1 } });
 style.sources.dem3d = { type: 'raster-dem', tiles: ['loc://d/{z}/{x}/{y}'], encoding: 'terrarium', tileSize: 256, minzoom: 5, maxzoom: 8, bounds: B };
-const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 15, maxPitch: 70, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false });
+const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 17, maxPitch: 70, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false });
 /* mappa 3D: rilievo vero (DEM Terrarium) con esagerazione verticale, inclinazione e rotazione */
 let tre = false;
 const b3 = document.createElement('button'); b3.className = 'btn3d'; b3.textContent = '3D'; b3.setAttribute('aria-pressed', 'false'); document.getElementById('wrap').appendChild(b3);
@@ -191,6 +194,17 @@ b3.onclick = () => {
   if (tre) { map.setTerrain({ source: 'dem3d', exaggeration: 1.8 }); map.easeTo({ pitch: 62, bearing: map.getBearing() || -15, duration: 900 }); }
   else { map.easeTo({ pitch: 0, bearing: 0, duration: 700 }); setTimeout(() => { if (!tre) map.setTerrain(null); }, 720); }
 };
+let satOn = false; try { satOn = localStorage.getItem('sn_sat') === '1'; } catch (e) {}
+const bs = document.createElement('button'); bs.className = 'btn3d btnsat'; bs.textContent = 'SAT'; document.getElementById('wrap').appendChild(bs);
+function satellite(on) {
+  satOn = on; bs.classList.toggle('on', on); bs.setAttribute('aria-pressed', on);
+  try { localStorage.setItem('sn_sat', on ? '1' : '0'); } catch (e) {}
+  if (!map.getLayer('sat')) return;
+  map.setLayoutProperty('sat', 'visibility', on ? 'visible' : 'none');
+  for (const [l, k, v] of [['road', 'line-color', on ? '#f3e6c4' : C.road], ['place', 'text-color', on ? '#ffffff' : C.tx], ['place', 'text-halo-color', on ? 'rgba(0,0,0,.75)' : C.halo], ['wway', 'line-opacity', on ? 0.5 : 1]]) map.setPaintProperty(l, k, v);
+}
+bs.onclick = () => satellite(!satOn);
+map.on('load', () => satellite(satOn));
 map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'bottom-right');
 map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF' }), 'bottom-left');
 
@@ -442,15 +456,31 @@ function selez(k) {
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
-function mostra() { $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
+function mostra() { $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
 function tastoEspandi() {
   const c = $('sh').querySelector('.close'); if (!c || $('sh').querySelector('.espandi')) return;
   const big = $('sheet').classList.contains('big');
   c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
 }
-$('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; $('sheet').classList.toggle('big'); $('sh').querySelector('.espandi').remove(); tastoEspandi(); });
+$('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; altSheet($('sheet').classList.contains('big') ? 1 : 2); });
 function chiudi() { $('sheet').classList.remove('open', 'big'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
-$('grip').onclick = () => $('sheet').classList.toggle('big');
+// schede e pannelli sul telefono: si trascinano dalla maniglia (o dal titolo) per abbassarli, nasconderli o allargarli
+function altezze(el, maniglia, chiudiDelTutto) {
+  const stato = () => el.classList.contains('big') ? 2 : el.classList.contains('mini') ? 0 : 1;
+  const metti = n => {
+    if (n < 0) { el.classList.remove('mini', 'big'); if (chiudiDelTutto) return chiudiDelTutto(); n = 0; }
+    el.classList.toggle('mini', n === 0); el.classList.toggle('big', n === 2);
+    const b = el.querySelector('.espandi'); if (b) b.innerHTML = ico(n === 2 ? 'arrows-minimize' : 'arrows-maximize');
+  };
+  let y0 = null, dy = 0;
+  el.addEventListener('touchstart', e => { if (innerWidth >= 900 || !e.target.closest(maniglia)) return; y0 = e.touches[0].clientY; dy = 0; el.style.transition = 'none'; }, { passive: true });
+  el.addEventListener('touchmove', e => { if (y0 == null) return; dy = e.touches[0].clientY - y0; el.style.transform = `translateY(${Math.max(-40, dy)}px)`; }, { passive: true });
+  el.addEventListener('touchend', () => { if (y0 == null) return; y0 = null; el.style.transform = ''; el.style.transition = '';
+    if (dy > 60) metti(stato() - 1); else if (dy < -60) metti(Math.min(2, stato() + 1)); });
+  el.addEventListener('click', e => { if (e.target.closest('.grip')) metti(stato() === 1 ? 0 : 1); });
+  return metti;
+}
+const altSheet = altezze($('sheet'), '.grip, #sh', () => chiudi());
 $('sheet').addEventListener('click', e => {
   if (e.target.closest('.close')) return chiudi();
   const b = e.target.closest('button[data-id]'); if (b) apri(b.dataset.id, true);
@@ -1200,8 +1230,9 @@ $('pan').addEventListener('click', clickMt); $('cat').addEventListener('click', 
 const cambiaArea = e => { if (e.target.id !== 'mt-area' || vista !== 'meteo') return; mt0.area = e.target.value; meteo(); if (modo.meteo === 'mappa') map.fitBounds(limitiArea(mt0.area), { padding: padMappa(), duration: 700 }); };
 $('pan').addEventListener('change', cambiaArea); $('cat').addEventListener('change', cambiaArea);
 // pannello (Escursioni, Meteo): tasto per aprirlo a tutto schermo
-new MutationObserver(() => { const h = $('pan').querySelector('.ph-top'); if (h && !h.querySelector('.espandi')) h.insertAdjacentHTML('beforeend', `<button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('pan').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button>`); }).observe($('pan'), { childList: true });
-$('pan').addEventListener('click', e => { const b = e.target.closest('.espandi'); if (!b) return; $('pan').classList.toggle('big'); b.innerHTML = ico($('pan').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize'); });
+new MutationObserver(() => { const h = $('pan').querySelector('.ph-top'); if (h && !h.querySelector('.espandi')) { h.insertAdjacentHTML('beforeend', `<button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('pan').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button>`); $('pan').insertAdjacentHTML('afterbegin', '<button class="grip" aria-label="Abbassa"><span></span></button>'); } }).observe($('pan'), { childList: true });
+const altPan = altezze($('pan'), '.grip, .ph-top h2');
+$('pan').addEventListener('click', e => { if (e.target.closest('.espandi')) altPan($('pan').classList.contains('big') ? 1 : 2); });
 /* scheda meteo di una zona: 14 giorni per escursione e funghi, pioggia passata */
 function apriMeteoZona(k) {
   if (!MET || !MET[k]) return;
