@@ -52,6 +52,9 @@ const TX = {
     dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
     obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri escursionistici, rifugi, bivacchi, aree attrezzate e sorgenti da OpenStreetMap. Visibili da vicino (zoom 11).',
     zoomSent: 'Avvicinati per vedere sentieri e rifugi', osmCar: 'Carico sentieri e rifugi da OpenStreetMap…', osmErr: 'I server di OpenStreetMap sono occupati: sentieri e rifugi non caricati. Riprova spostando la mappa tra poco.',
+    vMap: 'Mappa', vList: 'Elenco', AR: { tutte: 'Tutta la Sicilia', pa: 'Palermitano', tp: 'Trapanese', sic: 'Sicani e Agrigentino', mad: 'Madonie', neb: 'Nebrodi', pel: 'Peloritani', etn: 'Etna e Alcantara', cen: 'Sicilia centrale', ibl: 'Iblei e Sud-Est', iso: 'Isole minori' },
+    perEsc: 'Escursione', perFun: 'Funghi', miglioriQui: 'I migliori', schedaZona: 'Scheda della zona', soloApp: 'La registrazione del percorso è disponibile nell’app per telefono.', regApp: 'Registra percorso',
+    toccaZona: 'Tocca una zona sulla mappa per i 14 giorni di previsione.', toccaEsc: 'Tocca una zona per la scheda. I colori indicano quanto è adatta a ciò che cerchi.',
     terTit: 'Il terreno in questo punto', questo: 'Questo punto', quotaT: 'Quota', pend: 'Pendenza', espo: 'Esposizione', geol: 'Geologia', subs: 'Substrato', eta: 'Età',
     terCar: 'Leggo quota, esposizione e geologia…', terNo: 'Dati del terreno non disponibili per questo punto.', pianeggiante: 'pianeggiante',
     SUB: { carb: 'carbonatico (calcari, dolomie)', sil: 'silicatico (arenarie, quarziti, rocce cristalline)', arg: 'argilloso e marnoso', vulc: 'vulcanico', all: 'sabbie, ghiaie e depositi sciolti', ges: 'gessoso ed evaporitico' },
@@ -110,6 +113,9 @@ const TX = {
     dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
     obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Hiking routes, huts, shelters, picnic areas and springs from OpenStreetMap. Visible up close (zoom 11).',
     zoomSent: 'Zoom in to see trails and huts', osmCar: 'Loading trails and huts from OpenStreetMap…', osmErr: 'OpenStreetMap servers are busy: trails and huts not loaded. Move the map to try again shortly.',
+    vMap: 'Map', vList: 'List', AR: { tutte: 'All of Sicily', pa: 'Palermo area', tp: 'Trapani area', sic: 'Sicani and Agrigento', mad: 'Madonie', neb: 'Nebrodi', pel: 'Peloritani', etn: 'Etna and Alcantara', cen: 'Central Sicily', ibl: 'Iblei and South-East', iso: 'Minor islands' },
+    perEsc: 'Hike', perFun: 'Fungi', miglioriQui: 'The best', schedaZona: 'Area page', soloApp: 'Route recording is available in the phone app.', regApp: 'Record route',
+    toccaZona: 'Tap an area on the map for its 14-day forecast.', toccaEsc: 'Tap an area for its page. Colours show how well it suits what you are looking for.',
     terTit: 'The ground at this point', questo: 'This point', quotaT: 'Elevation', pend: 'Slope', espo: 'Aspect', geol: 'Geology', subs: 'Substrate', eta: 'Age',
     terCar: 'Reading elevation, aspect and geology…', terNo: 'Ground data not available for this point.', pianeggiante: 'flat',
     SUB: { carb: 'carbonate (limestone, dolomite)', sil: 'siliceous (sandstone, quartzite, crystalline rock)', arg: 'clay and marl', vulc: 'volcanic', all: 'sand, gravel and loose deposits', ges: 'gypsum and evaporites' },
@@ -233,6 +239,13 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'osm-l', type: 'line', source: 'osm', filter: ['==', ['geometry-type'], 'LineString'], layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#b3261e', 'line-width': 2, 'line-dasharray': [2, 1.6] } });
   map.addLayer({ id: 'osm-p', type: 'circle', source: 'osm', filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none' }, paint: { 'circle-radius': 6, 'circle-color': ['match', ['get', 'k'], 'r', '#7a3e00', 'w', '#1d6fa5', '#2d6a4f'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
   map.addLayer({ id: 'osm-t', type: 'symbol', source: 'osm', minzoom: 12.5, filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
+  map.addSource('hl', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addSource('hlp', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  const scala = ['interpolate', ['linear'], ['get', 'v'], 1, '#d1495b', 4, '#edae49', 6.5, '#8fc93a', 9, '#1f9e6e'];
+  map.addLayer({ id: 'hl-f', type: 'fill', source: 'hl', paint: { 'fill-color': scala, 'fill-opacity': 0.42 } });
+  map.addLayer({ id: 'hl-g', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 9, 'line-opacity': 0.22, 'line-blur': 4 } });
+  map.addLayer({ id: 'hl-l', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 2.2 } });
+  map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
   map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
   map.on('moveend', () => { if (ON.osm) caricaOSM(); });
@@ -267,6 +280,7 @@ function applica() {
   map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
   $('liv-n').textContent = Object.values(ON).filter(Boolean).length;
   if (ON.osm) caricaOSM();
+  if (document.body.classList.contains('mm')) for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', 'none');
   legenda();
 }
 const SW = {
@@ -354,6 +368,11 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 /* ---------- click sulla mappa */
 map.on('click', e => {
   chiudiLiv();
+  if (document.body.classList.contains('mm')) {
+    const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
+    if (f.length) { const k = f[0].properties.id; vista === 'meteo' ? apriMeteoZona(k) : apri(k, false); } else chiudi();
+    return;
+  }
   const L = ['am-c', 'bv-p', 'bv-f', 'bs-f', 'aree-f', 'n2k-f', 'zps-f', 'cf-f'].filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
   const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
   const fp = map.queryRenderedFeatures(box, { layers: L.filter(l => l === 'am-c' || l === 'bv-p') });
@@ -617,13 +636,46 @@ const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60 } };
 const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
 const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
+const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
+const modo = { escursioni: 'mappa', meteo: 'mappa' };
+const mappaVista = v => (v === 'escursioni' || v === 'meteo') && modo[v] === 'mappa';
 function vai(v) {
   vista = v;
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v);
-  $('cat').classList.toggle('on', v !== 'mappa'); document.body.classList.toggle('cat-on', v !== 'mappa');
-  chiudiLiv(); $('res').style.display = 'none';
-  if (v === 'mappa') { $('cat').innerHTML = ''; $('cat').dataset.v = ''; map.resize(); }
-  else { chiudi(); $('cat').dataset.v = ''; $('cat').innerHTML = ''; if (v === 'meteo') meteo(); else if (v === 'escursioni') { if (window.escursioni) escursioni(); } else catalogo(); }
+  const mm = mappaVista(v), lista = v !== 'mappa' && !mm;
+  $('cat').classList.toggle('on', lista); document.body.classList.toggle('cat-on', lista); document.body.classList.toggle('mm', mm);
+  $('pan').classList.toggle('on', mm); if (!mm) $('pan').innerHTML = '';
+  chiudiLiv(); $('res').style.display = 'none'; chiudi();
+  evidenzia(null);
+  $('cat').dataset.v = ''; $('cat').innerHTML = '';
+  if (v === 'mappa' || mm) map.resize();
+  if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v !== 'mappa') catalogo();
+}
+const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
+document.addEventListener('click', e => { const b = e.target.closest('[data-modo]'); if (b && modo[vista] && modo[vista] !== b.dataset.modo) { modo[vista] = b.dataset.modo; vai(vista); } });
+/* aree della Sicilia (per i menu di Meteo ed Escursioni): area più vicina al centro della zona */
+const AC = { pa: [13.35, 38.03], tp: [12.65, 37.9], sic: [13.35, 37.55], mad: [14.05, 37.85], neb: [14.6, 37.95], pel: [15.35, 38.1], etn: [15.0, 37.72], cen: [14.25, 37.45], ibl: [14.85, 36.98] };
+function areaDi(k) {
+  const [lon, lat] = centro(S[k]);
+  if ((lat > 38.33 && lon > 14.2) || lon < 12.2 || lat < 36.2 || lat > 38.6 || (lon < 12.45 && lat < 38.1 && lat > 37.85)) return 'iso';
+  return Object.keys(AC).reduce((a, b) => ((AC[a][0] - lon) ** 2 * 0.62 + (AC[a][1] - lat) ** 2) <= ((AC[b][0] - lon) ** 2 * 0.62 + (AC[b][1] - lat) ** 2) ? a : b);
+}
+const ORD_AREE = ['tutte', 'pa', 'tp', 'mad', 'neb', 'pel', 'etn', 'sic', 'cen', 'ibl', 'iso'];
+function limitiArea(a) {
+  const ks = LUOGHI().map(x => x[0]).filter(k => a === 'tutte' || areaDi(k) === a), bb = [180, 90, -180, -90];
+  for (const k of ks) { const b = S[k].bb; bb[0] = Math.min(bb[0], b[0]); bb[1] = Math.min(bb[1], b[1]); bb[2] = Math.max(bb[2], b[2]); bb[3] = Math.max(bb[3], b[3]); }
+  return ks.length ? [[bb[0], bb[1]], [bb[2], bb[3]]] : [[12.3, 36.55], [15.7, 38.35]];
+}
+const padMappa = () => innerWidth >= 900 ? { top: 40, bottom: 40, left: 40, right: 430 } : { top: 20, bottom: Math.round(innerHeight * 0.44) + 10, left: 16, right: 16 };
+/* zone evidenziate sulla mappa (Escursioni, Meteo): confini colorati per punteggio, nome e numero */
+function evidenzia(items) {
+  if (!map.getSource('hl')) return;
+  const on = !!items;
+  for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', on ? 'none' : (l in base ? ((l.startsWith('aree') ? ON.aree : ON.n2k) ? 'visible' : 'none') : 'visible'));
+  if (!on) { map.getSource('hl').setData({ type: 'FeatureCollection', features: [] }); map.getSource('hlp').setData({ type: 'FeatureCollection', features: [] }); applica(); return; }
+  const byId = {}; for (const f of GJ.features) byId[f.properties.id] = f;
+  map.getSource('hl').setData({ type: 'FeatureCollection', features: items.filter(x => byId[x.k]).map(x => ({ type: 'Feature', properties: { id: x.k, v: x.v }, geometry: byId[x.k].geometry })) });
+  map.getSource('hlp').setData({ type: 'FeatureCollection', features: items.map(x => ({ type: 'Feature', properties: { id: x.k, v: x.v, lab: x.lab, vs: x.vs || '' }, geometry: { type: 'Point', coordinates: centro(S[x.k]) } })) });
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
 function elencoCat() {
@@ -744,7 +796,7 @@ function caricaOSM() {
 /* ---------- Escursioni: obiettivo, dove andare, registrazione del percorso */
 const INT = { funghi: '#a0702a', alberi: '#5b3a1a', boschi: '#2d6a4f', flora: '#7a5ea8', alim: '#8fae3c' };
 let intSel = new Set(['funghi', 'alberi']);
-function suggerimenti() {
+function suggerimenti() {  // le 12 zone più adatte agli interessi scelti
   const out = [];
   for (const [k, z] of LUOGHI()) {
     const d = DENTRO[k] || [], na = d.filter(x => S[x].t === 'am').length, nv = d.filter(x => S[x].t === 'bv').length;
@@ -757,31 +809,40 @@ function suggerimenti() {
     if (intSel.has('flora') && pi) { sc += Math.log10(1 + pi) * 2; why.push(fmt(pi) + (LANG === 'it' ? ' specie di piante segnalate' : ' plant species recorded')); }
     if (sc > 0) out.push({ k, z, sc, why });
   }
-  return out.sort((a, b) => b.sc - a.sc).slice(0, 9);
+  return out.sort((a, b) => b.sc - a.sc).slice(0, 12);
 }
 function escursioni() {
   if (vista !== 'escursioni') return;
   D.then(() => {
-    const sug = suggerimenti();
-    $('cat').innerHTML = `<div class="in"><h2>${t('tEsc')}</h2><p class="lead">${t('lEsc')}</p>
-      <h3>${t('obiettivo')}</h3><div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>
-      ${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}
-      <h3>${t('doveAndare')}</h3><div class="sug">${sug.map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>
-      <h3 style="margin-top:24px">${t('reg')}</h3><div class="reg" id="reg"></div>
-      <h3>${t('miei')}</h3><div class="trk" id="trk"></div></div>`;
-    regUI(); trkUI();
+    const sug = suggerimenti(), mx = Math.max(1, ...sug.map(x => x.sc));
+    const chips = `<div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}`;
+    const reg = isApp ? `<h3>${t('reg')}</h3><div class="reg" id="reg"></div><h3>${t('miei')}</h3><div class="trk" id="trk"></div>` : '';
+    if (modo.escursioni === 'mappa') {
+      $('pan').innerHTML = `<div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="pl">${t('toccaEsc')}</p>${chips}
+        <h3>${t('doveAndare')}</h3><ol class="top5">${sug.slice(0, 6).map(x => `<li><button data-zona="${x.k}"><b>${esc(x.z.n)}</b><small>${esc(x.why.join(' · '))}</small></button></li>`).join('')}</ol>${reg}`;
+      evidenzia(sug.map(x => ({ k: x.k, v: 3 + 6.5 * x.sc / mx, lab: x.z.n })));
+      if (sug.length) { const bb = [180, 90, -180, -90]; for (const x of sug) { const b = x.z.bb; bb[0] = Math.min(bb[0], b[0]); bb[1] = Math.min(bb[1], b[1]); bb[2] = Math.max(bb[2], b[2]); bb[3] = Math.max(bb[3], b[3]); } map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: padMappa(), duration: 700 }); }
+    } else {
+      const per = {}; for (const x of sug) (per[areaDi(x.k)] = per[areaDi(x.k)] || []).push(x);
+      $('cat').innerHTML = `<div class="in"><div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="lead">${isApp ? t('lEsc') : t('lEsc').replace(/ (Puoi registrare|You can record).*$/, '')}</p><h3>${t('obiettivo')}</h3>${chips}
+        <h3>${t('doveAndare')}</h3>${ORD_AREE.filter(a => per[a]).map(a => `<h4 class="area-h">${t('AR')[a]}</h4><div class="sug">${per[a].map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>`).join('')}
+        ${isApp ? reg : `<p class="note" style="margin-top:20px">${t('soloApp')}</p>`}</div>`;
+    }
+    if (isApp) { regUI(); trkUI(); }
   });
 }
 window.escursioni = escursioni;
-$('cat').addEventListener('click', e => {
+const clickEsc = e => {
   if (vista !== 'escursioni') return;
+  const z = e.target.closest('[data-zona]'); if (z) { apri(z.dataset.zona, true); return; }
   const i = e.target.closest('.int button'), m = e.target.closest('[data-map]'), mt = e.target.closest('[data-mt]'), rb = e.target.closest('#regbtn'), tb = e.target.closest('[data-trk]');
   if (i) { intSel.has(i.dataset.i) ? intSel.delete(i.dataset.i) : intSel.add(i.dataset.i); escursioni(); }
   else if (m) { vai('mappa'); apri(m.dataset.map, true); }
-  else if (mt) { const x = S[mt.dataset.mt], [lon, lat] = centro(x); mtLuogo = { k: mt.dataset.mt, n: x.n, lat, lon }; vai('meteo'); }
+  else if (mt) { const k = mt.dataset.mt; modo.meteo = 'mappa'; mt0.area = areaDi(k); vai('meteo'); METP.then(() => apriMeteoZona(k)); }
   else if (rb) { REG ? fermaReg() : avviaReg(); }
   else if (tb) azioneTrk(tb.dataset.trk, tb.dataset.az);
-});
+};
+$('cat').addEventListener('click', clickEsc); $('pan').addEventListener('click', clickEsc);
 // registrazione: solo da questa sezione, con conferma all'inizio e alla fine
 let REG = null, wid = null, wake = null;
 const TK = 'sn_percorsi';
@@ -832,7 +893,6 @@ function azioneTrk(id, az) {
 setInterval(() => { if (REG && vista === 'escursioni') regUI(); }, 30000);
 
 /* ---------- Meteo: giorni migliori per escursioni e funghi */
-let mtLuogo = null;   // { n, lat, lon }
 const LUOGHI = () => Object.entries(S).filter(([k, x]) => AREE.includes(x.t) && x.t !== 'amp').sort((a, b) => b[1].ha - a[1].ha);
 const centro = x => [(x.bb[0] + x.bb[2]) / 2, (x.bb[1] + x.bb[3]) / 2];
 const giorno = (d, o) => new Date(d + 'T12:00:00').toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB', o || { weekday: 'short', day: 'numeric' });
@@ -849,37 +909,76 @@ function punteggioEsc(i, M) {
   return { v: Math.max(1, Math.min(10, Math.round(v * 10) / 10)), perche };
 }
 function colore10(v) { return v >= 7.5 ? '#2d6a4f' : v >= 5.5 ? '#8fae3c' : v >= 3.5 ? '#d9a066' : '#c2571a'; }
+/* dati meteo di tutti i parchi e le riserve in una sola richiesta (Open-Meteo accetta più coordinate) */
+const mt0 = { k: 'e', day: 0, area: 'tutte' };
+let METP = null, MET = null;
+function serieMeteo(M) {
+  const oggi = new Date().toISOString().slice(0, 10), i0 = Math.max(0, M.time.indexOf(oggi));
+  const TM = new TrailModel.Model({ start: M.time[0], cp: { q: 'p' }, pts: { p: { r: M.precipitation_sum.map(x => x || 0), tx: M.temperature_2m_max, tn: M.temperature_2m_min } }, forecast: {} }, [], []);
+  return { M, i0, oggi, G: M.time.slice(i0).map((d, n) => { const i = i0 + n; return { d, i, e: punteggioEsc(i, M), f: TM.stima('q', d) }; }) };
+}
+const URLM = (la, lo) => `https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,weather_code,precipitation_probability_max&past_days=61&forecast_days=14&timezone=Europe%2FRome`;
+function caricaMeteo() {
+  if (METP) return METP;
+  METP = D.then(async () => {
+    const L = LUOGHI(), c = L.map(([k, x]) => centro(x));
+    const j = await getJ(URLM(c.map(p => p[1].toFixed(3)).join(','), c.map(p => p[0].toFixed(3)).join(',')));
+    const arr = Array.isArray(j) ? j : j ? [j] : [];
+    if (arr.length !== L.length || !arr[0].daily) { METP = null; MET = null; return; }
+    MET = {}; L.forEach(([k], i) => MET[k] = serieMeteo(arr[i].daily));
+  });
+  return METP;
+}
+const valDi = (k, d) => { const g = MET[k].G[d]; return mt0.k === 'e' ? g.e.v : g.f.est; };
 function meteo() {
   if (vista !== 'meteo') return;
-  D.then(() => {
-    const L = LUOGHI();
-    if (!mtLuogo) { const k = L.find(([k]) => k === 'EUAP0228') || L[0]; const [lon, lat] = centro(k[1]); mtLuogo = { k: k[0], n: k[1].n, lat, lon }; }
-    $('cat').innerHTML = `<div class="in"><h2>${t('tMeteo')}</h2><p class="lead">${t('lMeteo')}</p>
-      <div class="mt-luogo"><select id="mtsel" aria-label="${t('luogo')}">${mtLuogo.k ? '' : `<option value="" selected>${esc(mtLuogo.n)}</option>`}${L.map(([k, x]) => `<option value="${k}"${k === mtLuogo.k ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}</select><button id="mtpos">${t('posiz')}</button></div>
-      <div id="mtout"><p class="note">${t('carico')}</p></div></div>`;
-    $('mtsel').onchange = e => { const x = S[e.target.value]; if (!x) return; const [lon, lat] = centro(x); mtLuogo = { k: e.target.value, n: x.n, lat, lon }; meteoDati(); };
-    $('mtpos').onclick = () => navigator.geolocation && navigator.geolocation.getCurrentPosition(p => { mtLuogo = { k: '', n: t('posiz'), lat: p.coords.latitude, lon: p.coords.longitude }; meteo(); }, () => {}, { enableHighAccuracy: false, timeout: 10000 });
-    meteoDati();
+  const dove = modo.meteo === 'mappa' ? $('pan') : $('cat');
+  if (!MET) dove.innerHTML = `${modo.meteo === 'mappa' ? '' : '<div class="in">'}<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="note">${t('carico')}</p>${modo.meteo === 'mappa' ? '' : '</div>'}`;
+  caricaMeteo().then(() => {
+    if (vista !== 'meteo') return;
+    if (!MET) { dove.innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="avviso">${t('errMeteo')}</p>`; return; }
+    const ks = LUOGHI().map(x => x[0]).filter(k => mt0.area === 'tutte' || areaDi(k) === mt0.area);
+    const giorni = MET[ks[0] || LUOGHI()[0][0]].G;
+    const top = [...ks].sort((a, b) => valDi(b, mt0.day) - valDi(a, mt0.day));
+    const ctrl = `<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
+      <div class="days">${giorni.map((g, n) => `<button data-day="${n}" class="${mt0.day === n ? 'on' : ''}"><small>${n === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>
+      <div class="aree">${ORD_AREE.map(a => `<button data-area="${a}" class="${mt0.area === a ? 'on' : ''}">${t('AR')[a]}</button>`).join('')}</div>
+      <div class="scala"><span>1</span><i></i><span>10</span></div>`;
+    const riga = k => { const v = valDi(k, mt0.day); return `<button data-mz="${k}"><span class="ring" style="--v:${v * 10};--c:${colore10(v)}">${num1(v)}</span><span><b>${esc(S[k].n)}</b><small>${esc(t('AR')[areaDi(k)])} · ${mt0.k === 'e' ? (MET[k].G[mt0.day].e.perche.join(', ') || t('ok')) : MET[k].G[mt0.day].f.parola}</small></span></button>`; };
+    if (modo.meteo === 'mappa') {
+      $('pan').innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div>${ctrl}<p class="pl">${t('toccaZona')}</p><h3>${t('miglioriQui')}</h3><div class="mz">${top.slice(0, 5).map(riga).join('')}</div><p class="src">${t('fonte')}: Open-Meteo (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p>`;
+      evidenzia(ks.map(k => ({ k, v: valDi(k, mt0.day), vs: num1(valDi(k, mt0.day)), lab: S[k].n.replace(/^Riserva naturale (orientata |integrale |speciale |regionale )?/i, 'R.N. ') })));
+    } else {
+      $('cat').innerHTML = `<div class="in"><div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="lead">${t('lMeteo')}</p>${ctrl}<div class="mz grid">${top.map(riga).join('')}</div>
+        <p class="src">${t('fonte')}: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p></div>`;
+    }
   });
 }
-async function meteoDati() {
-  const q = mtLuogo, u = `https://api.open-meteo.com/v1/forecast?latitude=${q.lat.toFixed(4)}&longitude=${q.lon.toFixed(4)}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,weather_code,precipitation_probability_max&past_days=61&forecast_days=14&timezone=Europe%2FRome`;
-  const j = await getJ(u);
-  if (vista !== 'meteo' || q !== mtLuogo || !$('mtout')) return;
-  if (!j || !j.daily) { delete WCACHE[u]; $('mtout').innerHTML = `<p class="avviso">${t('errMeteo')}</p>`; return; }
-  const M = j.daily, oggi = new Date().toISOString().slice(0, 10), i0 = Math.max(0, M.time.indexOf(oggi));
-  // modello T1 di Sottobosco senza misure di campo: serie di pioggia e temperature dal primo giorno disponibile
-  const TM = new TrailModel.Model({ start: M.time[0], cp: { q: 'p' }, pts: { p: { r: M.precipitation_sum.map(x => x || 0), tx: M.temperature_2m_max, tn: M.temperature_2m_min } }, forecast: {} }, [], []);
-  const G = M.time.slice(i0).map((d, n) => { const i = i0 + n, e = punteggioEsc(i, M), f = TM.stima('q', d); return { d, i, e, f }; });
+const clickMt = e => {
+  if (vista !== 'meteo') return;
+  const a = e.target.closest('[data-area]'), d = e.target.closest('[data-day]'), m = e.target.closest('[data-mk]'), z = e.target.closest('[data-mz]');
+  if (a) { mt0.area = a.dataset.area; meteo(); if (modo.meteo === 'mappa') map.fitBounds(limitiArea(mt0.area), { padding: padMappa(), duration: 700 }); }
+  else if (d) { mt0.day = +d.dataset.day; meteo(); }
+  else if (m) { mt0.k = m.dataset.mk; meteo(); }
+  else if (z) apriMeteoZona(z.dataset.mz);
+};
+$('pan').addEventListener('click', clickMt); $('cat').addEventListener('click', clickMt);
+/* scheda meteo di una zona: 14 giorni per escursione e funghi, pioggia passata */
+function apriMeteoZona(k) {
+  if (!MET || !MET[k]) return;
+  const { M, i0, oggi, G } = MET[k];
+  cur = null; selez('');
   const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
   const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
     <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
       return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span><small>${(M.precipitation_sum[g.i] || 0).toFixed(1)} ${t('mm')} · ${Math.round(M.temperature_2m_min[g.i])}–${Math.round(M.temperature_2m_max[g.i])}°</small><small>${esc(sub)}</small></div>`; }).join('')}</div>
     <p class="note" style="margin-top:10px">${nota}</p></div>`;
   const mx = Math.max(5, ...M.precipitation_sum.map(x => x || 0));
-  $('mtout').innerHTML = box(t('escTit') + ' · ' + esc(q.n), t('escNota'), 'e', topE) + box(t('funTit') + ' · ' + esc(q.n), t('funNota'), 'f', topF)
-    + `<div class="mt-box"><h3>${t('pioggiaTit')}</h3><div class="pioggia">${M.time.map((d, i) => `<div class="${i >= i0 ? 'f' : ''}" style="height:${(M.precipitation_sum[i] || 0) / mx * 100}%" title="${d}: ${(M.precipitation_sum[i] || 0).toFixed(1)} mm"></div>`).join('')}</div><div class="pioggia-l"><span>${giorno(M.time[0], { day: 'numeric', month: 'short' })}</span><span>${t('oggi')}</span><span>${giorno(M.time[M.time.length - 1], { day: 'numeric', month: 'short' })}</span></div>
-      <p class="src">${t('fonte')}: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p></div>`;
+  $('sh').innerHTML = testa(S[k].n, `<span class="badge">${esc(t('AR')[areaDi(k)])}</span>`);
+  $('sb').innerHTML = `<div style="padding-top:10px"></div>` + box(t('escTit'), t('escNota'), 'e', topE) + box(t('funTit'), t('funNota'), 'f', topF)
+    + `<div class="mt-box"><h3>${t('pioggiaTit')}</h3><div class="pioggia">${M.time.map((d, i) => `<div class="${i >= i0 ? 'f' : ''}" style="height:${(M.precipitation_sum[i] || 0) / mx * 100}%" title="${d}: ${(M.precipitation_sum[i] || 0).toFixed(1)} mm"></div>`).join('')}</div><div class="pioggia-l"><span>${giorno(M.time[0], { day: 'numeric', month: 'short' })}</span><span>${t('oggi')}</span><span>${giorno(M.time[M.time.length - 1], { day: 'numeric', month: 'short' })}</span></div></div>
+    <div class="links"><button data-id="${k}">${t('schedaZona')}<br><small>${esc(t(S[k].t))} · ${fmt(S[k].ha)} ha</small></button></div>`;
+  mostra();
 }
 
 /* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
