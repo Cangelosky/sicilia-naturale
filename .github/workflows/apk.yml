@@ -1,9 +1,7 @@
 name: APK
+# solo a mano (Actions > APK > Run workflow), quando Oscar dà l'ok: per seguire i lavori si usa il sito Netlify
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['www/**', 'package.json', 'capacitor.config.json', 'tools/icone.py', '.github/workflows/apk.yml']
 permissions:
   contents: write
 jobs:
