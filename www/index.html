@@ -349,6 +349,45 @@ body.recon .top,body.recon .legend,body.recon .gbifchip,body.recon .btn3d,body.r
 .gg .wx{flex-direction:row;gap:8px;background:none;padding:2px 0}
 body.recon .maplibregl-ctrl-bottom-left,body.recon .maplibregl-ctrl-bottom-right{bottom:auto;top:104px}
 .rec-t small{white-space:nowrap;font-size:9.5px;letter-spacing:1.1px}
+/* schede: niente trascinamento, tasto tutto schermo */
+.sh .espandi{margin-left:auto;flex:none;width:40px;height:40px;border-radius:20px;border:0;background:#f0f3f1;color:var(--gd);display:grid;place-items:center;cursor:pointer}
+.sh .espandi .ico{width:20px;height:20px}.sh .espandi + .close{margin-left:8px}
+#sheet .grip{display:none}
+@media(max-width:899px){ #sheet.big{top:0;max-height:none;border-radius:0;max-width:none} }
+@media(min-width:900px){ #sheet.big{width:min(920px,calc(100% - 20px))} }
+.ph-top{display:flex;align-items:center;gap:10px}.ph-top .switch{margin-left:auto}
+.pan .ph-top .espandi{flex:none;width:36px;height:36px;border-radius:18px;border:0;background:rgba(16,38,28,.07);color:var(--gd);display:grid;place-items:center;cursor:pointer}
+.pan .ph-top .espandi .ico{width:19px;height:19px}
+.pan.big{top:8px!important;max-height:none!important;bottom:8px!important}
+@media(min-width:900px){ .pan.big{width:min(760px,calc(100% - 24px))} }
+/* telefono: menu a tendina o a espansione, niente scorrimento laterale */
+.tendina{width:100%;margin:8px 0 6px;padding:11px 38px 11px 14px;border-radius:14px;border:1px solid rgba(16,38,28,.15);background:rgba(255,255,255,.85) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232d6a4f' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/18px;-webkit-appearance:none;appearance:none;font:500 15px 'Space Grotesk',Roboto,sans-serif;color:var(--ink)}
+.aree-sel{display:none}
+@media(max-width:899px){
+  .pan .int,.pan .aree{flex-wrap:wrap!important;overflow:visible!important;margin-left:0!important;margin-right:0!important;padding:0!important}
+  .aree{display:none!important}.aree-sel{display:block}
+  .days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr));overflow:visible}.days button{width:auto}
+}
+@media(max-width:600px){ .cat .grp{flex-wrap:wrap!important;overflow:visible!important;margin-right:0!important;padding-right:0!important} }
+/* Escursioni nell'app: tasto di registrazione fisso in basso, pannello subito sopra */
+.regbar{display:none;position:absolute;z-index:5;left:8px;right:8px;bottom:8px}
+body.escreg .regbar{display:block}
+.regbar .big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:56px;border:0;border-radius:28px;background:linear-gradient(120deg,#173f2f,#2d6a4f);color:#fff;font:600 17px 'Space Grotesk',Roboto,sans-serif;box-shadow:0 10px 26px rgba(16,38,28,.35);cursor:pointer}
+.regbar .big .ico{color:#ff6b6b}
+body.escreg .pan{bottom:72px}
+body.escreg .cat .in{padding-bottom:84px}
+@media(min-width:900px){ .regbar{left:auto;right:12px;width:400px} body.escreg .pan{max-height:calc(100% - 96px)} }
+.miapos{position:absolute;z-index:3;right:10px;bottom:144px;width:40px;height:40px;border-radius:10px;border:0;background:#fff;color:var(--gd);box-shadow:0 1px 4px rgba(0,0,0,.25);display:grid;place-items:center;cursor:pointer}
+.miapos .ico{width:22px;height:22px}.miapos.cerca .ico{animation:gira 1s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+@media(max-width:899px){ .mm .miapos{bottom:auto;top:58px} }
+body.recon .miapos,body.recon .regbar{display:none!important}
+body.cat-on .miapos{display:none}
+button.spn{display:flex;width:100%;justify-content:space-between;align-items:center;border:0;background:none;padding:5px 0;font:inherit;color:var(--gd);cursor:pointer;text-align:left;border-bottom:1px solid rgba(16,38,28,.06)}
+button.spn span{color:var(--mute);font-size:18px}
+.indietro{display:block;border:0;background:none;color:var(--g);font:600 13px 'Space Grotesk',Roboto,sans-serif;padding:0 0 4px;cursor:pointer}
+body.side .regbar{display:none!important}
+body.escreg .pan.big{bottom:72px!important}
 </style>
 </head>
 <body>

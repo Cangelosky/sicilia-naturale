@@ -4,6 +4,7 @@
 {
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const T = (it, en) => LANG === 'it' ? it : en;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -62,7 +63,7 @@ const TX = {
     terFonte: 'Quota: modello del terreno Copernicus 90 m (Open-Meteo). Geologia: Carta Litologica d’Italia 1:100.000 (ISPRA, CC BY 4.0).',
     piovoso: 'pioggia', ventoso: 'vento forte', caldo: 'caldo', freddo: 'freddo', fango: 'terreno bagnato', temporale: 'temporali', ok: 'buono',
     tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
-    tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante dei siti Natura 2000 siciliani, degli alberi monumentali e dei boschi da seme. Tocca una specie per la scheda e i luoghi dove cresce.`,
+    tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante vascolari della Sicilia: quelle dei siti Natura 2000, degli alberi monumentali e dei boschi da seme, più tutte le altre segnalate in Sicilia su GBIF. Tocca una specie per la scheda e i luoghi dove cresce.`, famiglia: 'Famiglia', tutteFam: 'Tutte le famiglie', inN2k: 'Nei siti Natura 2000', torna: 'Torna a',
     cercaSp: 'Cerca una specie, un genere, una famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
     GF: { aga: 'A lamelle', bol: 'Boleti', rus: 'Russule e lattari', pol: 'Polipori e funghi del legno', can: 'Cantarelli, idni e clavarie', pez: 'Spugnole, pezize e tartufi', pal: 'Vesce, geastri e falli', gel: 'Gelatinosi', alt: 'Altri' },
     segn: n => `${fmt(n)} segnalazioni in Sicilia`, nsiti: n => n === 1 ? '1 sito Natura 2000' : `${fmt(n)} siti Natura 2000`,
@@ -123,7 +124,7 @@ const TX = {
     terFonte: 'Elevation: Copernicus 90 m terrain model (Open-Meteo). Geology: Lithological Map of Italy 1:100,000 (ISPRA, CC BY 4.0).',
     piovoso: 'rain', ventoso: 'strong wind', caldo: 'heat', freddo: 'cold', fango: 'wet ground', temporale: 'thunderstorms', ok: 'good',
     tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
-    tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} plants of Sicily’s Natura 2000 sites, monumental trees and seed stands. Tap a species for its page and the places where it grows.`,
+    tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} vascular plants of Sicily: those of the Natura 2000 sites, monumental trees and seed stands, plus all others recorded in Sicily on GBIF. Tap a species for its page and the places where it grows.`, famiglia: 'Family', tutteFam: 'All families', inN2k: 'In Natura 2000 sites', torna: 'Back to',
     cercaSp: 'Search a species, genus or family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
     GF: { aga: 'Gilled', bol: 'Boletes', rus: 'Russulas and milkcaps', pol: 'Polypores and wood fungi', can: 'Chanterelles, hedgehogs and corals', pez: 'Morels, cups and truffles', pal: 'Puffballs, earthstars and stinkhorns', gel: 'Jelly fungi', alt: 'Others' },
     segn: n => `${fmt(n)} records in Sicily`, nsiti: n => n === 1 ? '1 Natura 2000 site' : `${fmt(n)} Natura 2000 sites`,
@@ -245,7 +246,7 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'hl-f', type: 'fill', source: 'hl', paint: { 'fill-color': scala, 'fill-opacity': 0.42 } });
   map.addLayer({ id: 'hl-g', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 9, 'line-opacity': 0.22, 'line-blur': 4 } });
   map.addLayer({ id: 'hl-l', type: 'line', source: 'hl', paint: { 'line-color': scala, 'line-width': 2.2 } });
-  map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
+  map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }, ['case', ['has', 'wx'], ['concat', '\n', ['get', 'wx']], ''], { 'font-scale': 0.78, 'text-color': '#1d4e89' }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
   map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
   map.on('moveend', () => { if (ON.osm) caricaOSM(); });
@@ -441,7 +442,13 @@ function selez(k) {
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
-function mostra() { $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; }
+function mostra() { $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
+function tastoEspandi() {
+  const c = $('sh').querySelector('.close'); if (!c || $('sh').querySelector('.espandi')) return;
+  const big = $('sheet').classList.contains('big');
+  c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
+}
+$('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; $('sheet').classList.toggle('big'); $('sh').querySelector('.espandi').remove(); tastoEspandi(); });
 function chiudi() { $('sheet').classList.remove('open', 'big'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 $('grip').onclick = () => $('sheet').classList.toggle('big');
 $('sheet').addEventListener('click', e => {
@@ -620,7 +627,7 @@ function apri(k, vola) {
   if (hab.length) h += `<details><summary>${t('hab')}<em>${hab.length}</em></summary><div class="hab">${hab.map(x => `<div><code>${x.c}${x.p ? '*' : ''}</code><span>${esc(H.boschi[x.c] && LANG === 'it' ? H.boschi[x.c][1] : H.hab[x.c] || x.c)}</span><span>${x.ha ? fmt(x.ha) + ' ha' : ''}</span></div>`).join('')}</div></details>`;
   if (sp.length) {
     h += `<h3>${t('specie')} · ${fmt(sp.length)}</h3><p class="note">${area ? t('nspa') : t('nsp')}</p>`;
-    h += Object.keys(TX.it.G).filter(g => byG[g]).map(g => `<details><summary>${t('G')[g]}<em>${byG[g].length}</em></summary><div class="list">${byG[g].sort().map(n => `<div><i>${esc(n)}</i></div>`).join('')}</div></details>`).join('');
+    h += Object.keys(TX.it.G).filter(g => byG[g]).map(g => `<details><summary>${t('G')[g]}<em>${byG[g].length}</em></summary><div class="list">${byG[g].sort().map(n => g === 'P' ? `<button class="spn" data-spn="${esc(n)}"><i>${esc(n)}</i><span>›</span></button>` : `<div><i>${esc(n)}</i></div>`).join('')}</div></details>`).join('');
   }
   const coll = (s.n2k || []).concat(s.aree || []).concat(Object.keys(S).filter(c => (S[c].in || []).includes(k)));
   if (coll.length) h += `<h3>${t('coll')}</h3><div class="links">${coll.map(c => `<button data-id="${c}">${esc(S[c].n)}<br><small>${t(S[c].t)}${S[c].ha ? ' · ' + fmt(S[c].ha) + ' ha' : ''}</small></button>`).join('')}</div>`;
@@ -633,7 +640,7 @@ window.addEventListener('hashchange', () => { const h = location.hash.slice(1); 
 
 /* ---------- sezioni: Esplora, Micologia, Botanica */
 let vista = 'mappa';
-const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60 } };
+const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60, fam: '' } };
 const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
 const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
@@ -641,7 +648,7 @@ const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || wind
 const modo = { escursioni: 'mappa', meteo: 'mappa' };
 const mappaVista = v => (v === 'escursioni' || v === 'meteo') && modo[v] === 'mappa';
 function vai(v) {
-  vista = v;
+  vista = v; document.body.classList.remove('escreg'); document.body.classList.remove('vm-esc', 'vm-met'); document.body.classList.add(v === 'escursioni' ? 'vm-esc' : v === 'meteo' ? 'vm-met' : 'vm-x');
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v);
   const mm = mappaVista(v), lista = v !== 'mappa' && !mm;
   $('cat').classList.toggle('on', lista); document.body.classList.toggle('cat-on', lista); document.body.classList.toggle('mm', mm);
@@ -676,7 +683,7 @@ function evidenzia(items) {
   if (!on) { map.getSource('hl').setData({ type: 'FeatureCollection', features: [] }); map.getSource('hlp').setData({ type: 'FeatureCollection', features: [] }); applica(); return; }
   const byId = {}; for (const f of GJ.features) byId[f.properties.id] = f;
   map.getSource('hl').setData({ type: 'FeatureCollection', features: items.filter(x => byId[x.k]).map(x => ({ type: 'Feature', properties: { id: x.k, v: x.v }, geometry: byId[x.k].geometry })) });
-  map.getSource('hlp').setData({ type: 'FeatureCollection', features: items.map(x => ({ type: 'Feature', properties: { id: x.k, v: x.v, lab: x.lab, vs: x.vs || '' }, geometry: { type: 'Point', coordinates: centro(S[x.k]) } })) });
+  map.getSource('hlp').setData({ type: 'FeatureCollection', features: items.map(x => ({ type: 'Feature', properties: Object.assign({ id: x.k, v: x.v, lab: x.lab, vs: x.vs || '' }, x.wx ? { wx: x.wx } : {}), geometry: { type: 'Point', coordinates: centro(S[x.k]) } })) });
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
 function elencoCat() {
@@ -685,17 +692,18 @@ function elencoCat() {
     if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
     const n = norm(r[0] + ' ' + r[2] + ' ' + r[3]); return w.every(x => n.includes(x)); });
   return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
-    if (st.g === 'alb' && !r[1]) return false;
-    const n = norm(r[0]); return w.every(x => n.includes(x)); });
+    if (st.g === 'alb' && !r[1]) return false; if (st.g === 'n2k' && !r[2].length) return false;
+    if (st.fam && r[5] !== st.fam) return false;
+    const n = norm(r[0] + ' ' + (r[5] || '')); return w.every(x => n.includes(x)); });
 }
 function catalogo(soloTesti) {
   CAT.then(() => {
     if (vista !== 'funghi' && vista !== 'piante') return;
     const f = vista === 'funghi', st = cs[vista], ids = elencoCat();
     const gruppi = f ? [['', t('tutte'), FUN.s.length], ['*f', t('conFoto'), FUN.s.filter(r => r[8].length).length], ...FUN.g.map(g => [g, t('GF')[g], FUN.s.filter(r => r[4] === g).length])]
-                     : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length]];
+                     : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length], ['n2k', t('inN2k'), PIA.s.filter(r => r[2].length).length]];
     const card = i => { const r = (f ? FUN : PIA).s[i];
-      const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : ''].filter(Boolean).join(' · ');
+      const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
       return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx"><i>${esc(r[0])}</i><small>${sub}</small>${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
@@ -703,8 +711,9 @@ function catalogo(soloTesti) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
       $('cat').innerHTML = `<div class="in"><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
-        <div class="grp" id="cg"></div><p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button></div>`;
+        <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button></div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
+      if ($('cf')) $('cf').onchange = e => { cs.piante.fam = e.target.value; cs.piante.n = 60; catalogo(); };
     }
     $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${esc(n)}<em>${fmt(c)}</em></button>`).join('');
     $('cn').textContent = t('nSp')(ids.length);
@@ -727,17 +736,27 @@ const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.
 }), { root: $('cat'), rootMargin: '300px' }) : null;
 function fotoLazy() { if (io) for (const el of $('cat').querySelectorAll('.ph:not([style])')) io.observe(el); }
 
+let daZona = null;
+// nome di una pianta (anche dei formulari, con sottospecie scritta senza "subsp.") -> indice nel catalogo
+function trovaPianta(n) {
+  const b = x => norm(x).replace(/ (subsp|var|ssp)\.? /g, ' ').split(/\s+/).slice(0, 2).join(' ');
+  let i = PIA.s.findIndex(r => r[0] === n); if (i >= 0) return i;
+  const k = b(n); return PIA.s.findIndex(r => b(r[0]) === k);
+}
 function apriSpecie(tipo, i) {
   const f = tipo === 'funghi', r = (f ? FUN : PIA).s[i], it = LANG === 'it';
   cur = 'SP:' + tipo + ':' + i; selez('');
   const badge = f ? `<span class="badge">${esc(t('GF')[r[4]])}</span><span class="badge n2k">${esc(r[2])}</span>` : (r[1] ? `<span class="badge">${t('alberi')}</span>` : '');
-  $('sh').innerHTML = `<div><h2><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
+  const da = daZona && S[daZona] ? `<button class="indietro" data-id="${daZona}">‹ ${t('torna')} ${esc(S[daZona].n)}</button>` : ''; daZona = null;
+  $('sh').innerHTML = `<div>${da}<h2><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
   let h = '<div class="racconto">';
   if (f) {
     h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
             : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in the southern Italy covered by Micelio` : ''}.</p>`;
   } else {
     const am = r[3].filter(k => S[k] && S[k].t === 'am'), bs = r[3].filter(k => S[k] && S[k].t === 'bs');
+    if (r[5]) h += it ? `<p><i>${esc(r[0])}</i> è una pianta della famiglia ${esc(r[5])}${r[6] ? `, con ${fmt(r[6])} segnalazioni in Sicilia nel database mondiale della biodiversità GBIF` : ''}.</p>`
+                      : `<p><i>${esc(r[0])}</i> is a plant of the family ${esc(r[5])}${r[6] ? `, with ${fmt(r[6])} records in Sicily in the GBIF global biodiversity database` : ''}.</p>`;
     if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
                              : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
     if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
@@ -749,9 +768,9 @@ function apriSpecie(tipo, i) {
   h += '<div id="wk"></div>';
   if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
-  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}`}</p>`;
+  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra();
-  $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : null);
+  $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null));
   wikiVoce(r[0]).then(w => {
     if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
     $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(senzaComm(w.extract))}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
@@ -817,7 +836,7 @@ function escursioni() {
   D.then(() => {
     const sug = suggerimenti(), mx = Math.max(1, ...sug.map(x => x.sc));
     const chips = `<div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}`;
-    const reg = isApp ? `<h3>${t('reg')}</h3><div class="reg" id="reg"></div><h3>${t('miei')}</h3><div class="trk" id="trk"></div>` : '';
+    const reg = isApp ? `<h3>${t('miei')}</h3><div class="trk" id="trk"></div><p class="note">${t('regNota')}</p>` : '';
     if (modo.escursioni === 'mappa') {
       $('pan').innerHTML = `<div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="pl">${t('toccaEsc')}</p>${chips}
         <h3>${t('doveAndare')}</h3><ol class="top5">${sug.slice(0, 6).map(x => `<li><button data-zona="${x.k}"><b>${esc(x.z.n)}</b><small>${esc(x.why.join(' · '))}</small></button></li>`).join('')}</ol>${reg}`;
@@ -855,7 +874,6 @@ const hav = (a, b) => { const R = 6371000, r = Math.PI / 180, dl = (b[1] - a[1])
 function misure(p) { let d = 0, up = 0; for (let i = 1; i < p.length; i++) { d += hav(p[i - 1], p[i]); if (p[i][2] != null && p[i - 1][2] != null && p[i][2] > p[i - 1][2]) up += p[i][2] - p[i - 1][2]; } return { km: d / 1000, up, min: p.length > 1 ? (p[p.length - 1][3] - p[0][3]) / 60000 : 0 }; }
 const durS = m => Math.floor(m / 60) + ' h ' + String(Math.round(m % 60)).padStart(2, '0');
 const orologio = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return [Math.floor(s / 3600), Math.floor(s / 60) % 60, s % 60].map(x => String(x).padStart(2, '0')).join(':'); };
-const T = (it, en) => LANG === 'it' ? it : en;
 
 /* tipi di punto: gruppi e icone (Tabler Icons, MIT) */
 const WP = [
@@ -961,12 +979,26 @@ $('rec-pt').onclick = () => nuovoWpt(null);
 $('rec-cam').onclick = () => scegliFoto(true, id => nuovoWpt(id));
 
 /* nel pannello Escursioni */
+document.getElementById('wrap').insertAdjacentHTML('beforeend', `<div id="regbar" class="regbar"><div class="reg" id="reg"></div></div><button id="miapos" class="miapos" aria-label="${T('La mia posizione', 'My location')}">${ico('current-location')}</button>`);
+$('regbar').addEventListener('click', clickEsc);
+let mio = null;
+$('miapos').onclick = () => {
+  if (!navigator.geolocation) return toast(t('noGps'));
+  $('miapos').classList.add('cerca');
+  navigator.geolocation.getCurrentPosition(p => {
+    $('miapos').classList.remove('cerca');
+    const ll = [p.coords.longitude, p.coords.latitude];
+    if (!mio) { const el = document.createElement('div'); el.className = 'gpsdot'; mio = new maplibregl.Marker({ element: el }).setLngLat(ll).addTo(map); } else mio.setLngLat(ll);
+    map.easeTo({ center: ll, zoom: Math.max(map.getZoom(), 14), duration: 800 });
+  }, () => { $('miapos').classList.remove('cerca'); toast(t('noGps')); }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+};
 function regUI() {
+  document.body.classList.toggle('escreg', isApp && vista === 'escursioni' && !REG);
   if (!$('reg')) return;
   const m = REG ? misure(REG.p) : null;
   $('reg').innerHTML = REG
     ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${REG.w.length}</b><span>${T('punti', 'waypoints')}</span></div></div><button class="big" id="regapri">${T('Apri la registrazione', 'Open recording')}</button>`
-    : `<button class="big" id="regbtn">${t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
+    : `<button class="big" id="regbtn">${ico('player-record')}${t('regInizia')}</button>`;
 }
 const alertNota = m => toast(m);
 
@@ -1143,11 +1175,13 @@ function meteo() {
     const ctrl = `<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
       <div class="days">${giorni.map((g, n) => `<button data-day="${n}" class="${mt0.day === n ? 'on' : ''}"><small>${n === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>
       <div class="aree">${ORD_AREE.map(a => `<button data-area="${a}" class="${mt0.area === a ? 'on' : ''}">${t('AR')[a]}</button>`).join('')}</div>
+      <select class="tendina aree-sel" id="mt-area">${ORD_AREE.map(a => `<option value="${a}"${mt0.area === a ? ' selected' : ''}>${t('AR')[a]}</option>`).join('')}</select>
       <div class="scala"><span>1</span><i></i><span>10</span></div>`;
     const riga = k => { const v = valDi(k, mt0.day); return `<button data-mz="${k}"><span class="ring" style="--v:${v * 10};--c:${colore10(v)}">${num1(v)}</span><span class="mzt"><b>${esc(S[k].n)}</b><small>${esc(t('AR')[areaDi(k)])} · ${mt0.k === 'e' ? (MET[k].G[mt0.day].e.perche.join(', ') || t('ok')) : MET[k].G[mt0.day].f.parola}</small></span>${cella(MET[k].M, MET[k].G[mt0.day].i)}</button>`; };
     if (modo.meteo === 'mappa') {
       $('pan').innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div>${ctrl}<p class="pl">${t('toccaZona')}</p><h3>${t('miglioriQui')}</h3><div class="mz">${top.slice(0, 5).map(riga).join('')}</div><p class="src">${t('fonte')}: Open-Meteo (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p>`;
-      evidenzia(ks.map(k => ({ k, v: valDi(k, mt0.day), vs: num1(valDi(k, mt0.day)), lab: S[k].n.replace(/^Riserva naturale (orientata |integrale |speciale |regionale )?/i, 'R.N. ') })));
+      const wxT = k => { const M = MET[k].M, i = MET[k].G[mt0.day].i; return `${num1(M.precipitation_sum[i] || 0)} mm · ${Math.round(M.temperature_2m_min[i])}–${Math.round(M.temperature_2m_max[i])}° · ${Math.round(M.wind_speed_10m_max[i] || 0)} km/h`; };
+      evidenzia(ks.map(k => ({ k, v: valDi(k, mt0.day), vs: num1(valDi(k, mt0.day)), wx: wxT(k), lab: S[k].n.replace(/^Riserva naturale (orientata |integrale |speciale |regionale )?/i, 'R.N. ') })));
     } else {
       $('cat').innerHTML = `<div class="in"><div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="lead">${t('lMeteo')}</p>${ctrl}<div class="mz grid">${top.map(riga).join('')}</div>
         <p class="src">${t('fonte')}: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p></div>`;
@@ -1163,6 +1197,11 @@ const clickMt = e => {
   else if (z) apriMeteoZona(z.dataset.mz);
 };
 $('pan').addEventListener('click', clickMt); $('cat').addEventListener('click', clickMt);
+const cambiaArea = e => { if (e.target.id !== 'mt-area' || vista !== 'meteo') return; mt0.area = e.target.value; meteo(); if (modo.meteo === 'mappa') map.fitBounds(limitiArea(mt0.area), { padding: padMappa(), duration: 700 }); };
+$('pan').addEventListener('change', cambiaArea); $('cat').addEventListener('change', cambiaArea);
+// pannello (Escursioni, Meteo): tasto per aprirlo a tutto schermo
+new MutationObserver(() => { const h = $('pan').querySelector('.ph-top'); if (h && !h.querySelector('.espandi')) h.insertAdjacentHTML('beforeend', `<button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('pan').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button>`); }).observe($('pan'), { childList: true });
+$('pan').addEventListener('click', e => { const b = e.target.closest('.espandi'); if (!b) return; $('pan').classList.toggle('big'); b.innerHTML = ico($('pan').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize'); });
 /* scheda meteo di una zona: 14 giorni per escursione e funghi, pioggia passata */
 function apriMeteoZona(k) {
   if (!MET || !MET[k]) return;
@@ -1196,5 +1235,6 @@ async function mostraGbif(nome, key) {
 $('gbifchip').onclick = e => { if (!e.target.closest('button')) return; if (map.getLayer('gbif')) map.removeLayer('gbif'); if (map.getSource('gbif')) map.removeSource('gbif'); $('gbifchip').classList.remove('on'); };
 // aprire una zona da una scheda specie riporta alla mappa
 $('sheet').addEventListener('click', e => { if (vista !== 'mappa' && e.target.closest('button[data-id]')) { vai('mappa'); } }, true);
+$('sheet').addEventListener('click', e => { const b = e.target.closest('[data-spn]'); if (!b) return; const z = cur; CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) { daZona = z; apriSpecie('piante', i); } }); });
 testi();
 }

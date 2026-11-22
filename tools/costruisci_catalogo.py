@@ -46,12 +46,21 @@ for k, s in S.items():
 ALBERI = {'Abies', 'Acer', 'Alnus', 'Arbutus', 'Betula', 'Carpinus', 'Castanea', 'Celtis', 'Ceratonia', 'Cupressus', 'Fagus', 'Fraxinus', 'Ilex',
           'Juglans', 'Juniperus', 'Laurus', 'Olea', 'Ostrya', 'Phillyrea', 'Pinus', 'Pistacia', 'Platanus', 'Populus', 'Prunus', 'Pyrus', 'Quercus',
           'Salix', 'Sorbus', 'Tamarix', 'Taxus', 'Tilia', 'Ulmus', 'Zelkova', 'Malus', 'Crataegus', 'Ficus', 'Morus', 'Cercis', 'Chamaerops'}
-nomi = sorted(set(siti) | set(amb))
-pia = []
+# tutte le altre piante vascolari segnalate in Sicilia su GBIF (tools/gbif_piante.py): [nome, famiglia, chiave, segnalazioni, nome comune]
+gb = {r[0]: r for r in json.load(open('data/raw/gbif_piante_sicilia.json'))}
+bin2 = lambda n: ' '.join(n.split()[:2])
+gbb = {}
+for n, r in gb.items(): gbb.setdefault(bin2(n), r)
+nomi = sorted(set(siti) | set(amb) | set(gb))
+pia, visti = [], set()
 for n in nomi:
+    g = gb.get(n) or gbb.get(bin2(n))
+    if n in gb and n not in siti and n not in amb and bin2(n) in visti: continue   # già presente con il nome dei formulari
+    visti.add(bin2(n))
     gen = n.split()[0]
-    pia.append([n, 1 if gen in ALBERI else 0, sorted(siti.get(n, []), key=lambda c: -S[c]['ha']), amb.get(n, [])])
-pia.sort(key=lambda r: (-r[1], -(len(r[2]) + 3 * len(r[3])), r[0]))
+    # [nome, albero, siti Natura 2000, alberi monumentali/boschi da seme, chiave GBIF, famiglia, segnalazioni GBIF in Sicilia]
+    pia.append([n, 1 if gen in ALBERI else 0, sorted(siti.get(n, []), key=lambda c: -S[c]['ha']), amb.get(n, []), g[2] if g else 0, g[1] if g else '', g[3] if g else 0])
+pia.sort(key=lambda r: (-r[1], -(len(r[2]) + 3 * len(r[3])), -r[6], r[0]))
 json.dump({'s': pia}, open(OUT + 'piante.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 print('piante', len(pia), 'alberi', sum(r[1] for r in pia), 'con alberi monumentali o boschi da seme', sum(1 for r in pia if r[3]))
 import os
