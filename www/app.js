@@ -36,7 +36,28 @@ const TX = {
     quiN: n => `Qui si sovrappongono ${n} zone`, quiNota: 'Lo stesso luogo può avere più tutele: tocca una zona per aprirne la scheda.',
     vb: n => n === 1 ? '1 bosco vetusto' : n + ' boschi vetusti', va: n => n === 1 ? '1 albero monumentale' : n + ' alberi monumentali',
     wiki: 'Da Wikipedia', wleggi: 'Leggi su Wikipedia', foto: 'Foto nei dintorni', fotoN: 'Foto da Wikimedia Commons: restano dei loro autori, con la licenza indicata.',
-    vMappa: 'Esplora', vFunghi: 'Micologia', vPiante: 'Botanica',
+    vMappa: 'Esplora', vFunghi: 'Micologia', vPiante: 'Botanica', vEsc: 'Escursioni', vMeteo: 'Meteo',
+    tMeteo: 'Meteo per le escursioni', lMeteo: 'I giorni migliori per uscire nei prossimi 14 giorni, calcolati con le previsioni e con la pioggia caduta nei 60 giorni precedenti (dati Open-Meteo).',
+    luogo: 'Luogo', posiz: 'La mia posizione', carico: 'Carico i dati meteo…', errMeteo: 'Dati meteo non disponibili in questo momento. Riprova tra poco.',
+    escTit: 'Escursione', escNota: 'Punteggio da 1 a 10: pioggia prevista, probabilità di pioggia, vento, temperatura e fango dei giorni precedenti.',
+    funTit: 'Funghi', funNota: 'Modello T1 di Sottobosco, nella versione che stima dal meteo e dalla stagione (senza misure sul campo in questa zona): pioggia utile degli ultimi 60 giorni con il giusto ritardo, giorni di secco, notti troppo calde o fredde. Non è ancora validato: è un’indicazione, non una certezza.',
+    migliori: 'Giorni migliori', pioggiaTit: 'Pioggia: 60 giorni passati e previsione', oggi: 'oggi', mm: 'mm',
+    tEsc: 'Escursioni', lEsc: 'Scegli cosa vuoi cercare: ti proponiamo dove andare, con il meteo dei prossimi giorni. Puoi registrare il percorso mentre cammini.',
+    iFunghi: 'Funghi', iAlberi: 'Alberi monumentali e boschi vetusti', iBoschi: 'Boschi', iFlora: 'Piante e fiori', iAlim: 'Piante alimurgiche',
+    alimNota: 'Per le piante alimurgiche non abbiamo ancora l’elenco delle specie: per ora non entrano nei suggerimenti.',
+    doveAndare: 'Dove andare', apriMappa: 'Mappa', vediMeteo: 'Meteo', reg: 'Registra il percorso', regInizia: 'Inizia a registrare', regFine: 'Termina la registrazione',
+    regConfIn: 'Iniziare la registrazione del percorso? Il telefono userà il GPS finché la pagina resta aperta.', regConfFine: 'Terminare e salvare la registrazione?',
+    regNota: 'La registrazione usa il GPS del telefono e funziona finché la pagina resta aperta. I percorsi restano salvati solo su questo dispositivo.',
+    noGps: 'Il GPS non è disponibile su questo dispositivo o il permesso è stato negato.',
+    dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
+    obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri escursionistici, rifugi, bivacchi, aree attrezzate e sorgenti da OpenStreetMap. Visibili da vicino (zoom 11).',
+    zoomSent: 'Avvicinati per vedere sentieri e rifugi',
+    terTit: 'Il terreno in questo punto', questo: 'Questo punto', quotaT: 'Quota', pend: 'Pendenza', espo: 'Esposizione', geol: 'Geologia', subs: 'Substrato', eta: 'Età',
+    terCar: 'Leggo quota, esposizione e geologia…', terNo: 'Dati del terreno non disponibili per questo punto.', pianeggiante: 'pianeggiante',
+    SUB: { carb: 'carbonatico (calcari, dolomie)', sil: 'silicatico (arenarie, quarziti, rocce cristalline)', arg: 'argilloso e marnoso', vulc: 'vulcanico', all: 'sabbie, ghiaie e depositi sciolti', ges: 'gessoso ed evaporitico' },
+    DIR: ['nord', 'nord-est', 'est', 'sud-est', 'sud', 'sud-ovest', 'ovest', 'nord-ovest'],
+    terFonte: 'Quota: modello del terreno Copernicus 90 m (Open-Meteo). Geologia: Carta Litologica d’Italia 1:100.000 (ISPRA, CC BY 4.0).',
+    piovoso: 'pioggia', ventoso: 'vento forte', caldo: 'caldo', freddo: 'freddo', fango: 'terreno bagnato', temporale: 'temporali', ok: 'buono',
     tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
     tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante dei siti Natura 2000 siciliani, degli alberi monumentali e dei boschi da seme. Tocca una specie per la scheda e i luoghi dove cresce.`,
     cercaSp: 'Cerca una specie, un genere, una famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
@@ -73,7 +94,28 @@ const TX = {
     quiN: n => `${n} areas overlap here`, quiNota: 'The same place can have several kinds of protection: tap one to open it.',
     vb: n => n === 1 ? '1 old-growth forest' : n + ' old-growth forests', va: n => n === 1 ? '1 monumental tree' : n + ' monumental trees',
     wiki: 'From Wikipedia', wleggi: 'Read on Wikipedia', foto: 'Photos nearby', fotoN: 'Photos from Wikimedia Commons: they belong to their authors, under the licence shown.',
-    vMappa: 'Explore', vFunghi: 'Mycology', vPiante: 'Botany',
+    vMappa: 'Explore', vFunghi: 'Mycology', vPiante: 'Botany', vEsc: 'Hikes', vMeteo: 'Weather',
+    tMeteo: 'Weather for hikes', lMeteo: 'The best days to go out in the next 14 days, from the forecast and the rain of the previous 60 days (Open-Meteo data).',
+    luogo: 'Place', posiz: 'My location', carico: 'Loading weather data…', errMeteo: 'Weather data not available right now. Please try again shortly.',
+    escTit: 'Hike', escNota: 'Score from 1 to 10: forecast rain, chance of rain, wind, temperature and mud from previous days.',
+    funTit: 'Fungi', funNota: 'Sottobosco’s T1 model, in the version that estimates from weather and season (no field measurements in this area): useful rain of the last 60 days with the right delay, dry spells, nights too warm or too cold. Not yet validated: a hint, not a certainty.',
+    migliori: 'Best days', pioggiaTit: 'Rain: past 60 days and forecast', oggi: 'today', mm: 'mm',
+    tEsc: 'Hikes', lEsc: 'Choose what you want to look for: we suggest where to go, with the weather for the coming days. You can record your route as you walk.',
+    iFunghi: 'Fungi', iAlberi: 'Monumental trees and old-growth forests', iBoschi: 'Forests', iFlora: 'Plants and flowers', iAlim: 'Wild edible plants',
+    alimNota: 'We do not yet have the species list for wild edible plants: for now they are not part of the suggestions.',
+    doveAndare: 'Where to go', apriMappa: 'Map', vediMeteo: 'Weather', reg: 'Record your route', regInizia: 'Start recording', regFine: 'Stop recording',
+    regConfIn: 'Start recording the route? The phone will use GPS while this page stays open.', regConfFine: 'Stop and save the recording?',
+    regNota: 'Recording uses the phone’s GPS and works while the page stays open. Routes are saved on this device only.',
+    noGps: 'GPS is not available on this device or permission was denied.',
+    dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
+    obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Hiking routes, huts, shelters, picnic areas and springs from OpenStreetMap. Visible up close (zoom 11).',
+    zoomSent: 'Zoom in to see trails and huts',
+    terTit: 'The ground at this point', questo: 'This point', quotaT: 'Elevation', pend: 'Slope', espo: 'Aspect', geol: 'Geology', subs: 'Substrate', eta: 'Age',
+    terCar: 'Reading elevation, aspect and geology…', terNo: 'Ground data not available for this point.', pianeggiante: 'flat',
+    SUB: { carb: 'carbonate (limestone, dolomite)', sil: 'siliceous (sandstone, quartzite, crystalline rock)', arg: 'clay and marl', vulc: 'volcanic', all: 'sand, gravel and loose deposits', ges: 'gypsum and evaporites' },
+    DIR: ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'],
+    terFonte: 'Elevation: Copernicus 90 m terrain model (Open-Meteo). Geology: Lithological Map of Italy 1:100,000 (ISPRA, CC BY 4.0).',
+    piovoso: 'rain', ventoso: 'strong wind', caldo: 'heat', freddo: 'cold', fango: 'wet ground', temporale: 'thunderstorms', ok: 'good',
     tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
     tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} plants of Sicily’s Natura 2000 sites, monumental trees and seed stands. Tap a species for its page and the places where it grows.`,
     cercaSp: 'Search a species, genus or family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
@@ -132,9 +174,17 @@ const style = {
   ]
 };
 
-const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 15, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false, dragRotate: false, pitchWithRotate: false });
-map.touchZoomRotate.disableRotation();
-map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+style.sources.dem3d = { type: 'raster-dem', tiles: ['loc://d/{z}/{x}/{y}'], encoding: 'terrarium', tileSize: 256, minzoom: 5, maxzoom: 8, bounds: B };
+const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 15, maxPitch: 70, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false });
+/* mappa 3D: rilievo vero (DEM Terrarium) con esagerazione verticale, inclinazione e rotazione */
+let tre = false;
+const b3 = document.createElement('button'); b3.className = 'btn3d'; b3.textContent = '3D'; b3.setAttribute('aria-pressed', 'false'); document.getElementById('wrap').appendChild(b3);
+b3.onclick = () => {
+  tre = !tre; b3.classList.toggle('on', tre); b3.setAttribute('aria-pressed', tre);
+  if (tre) { map.setTerrain({ source: 'dem3d', exaggeration: 1.8 }); map.easeTo({ pitch: 62, bearing: map.getBearing() || -15, duration: 900 }); }
+  else { map.easeTo({ pitch: 0, bearing: 0, duration: 700 }); setTimeout(() => { if (!tre) map.setTerrain(null); }, 720); }
+};
+map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'bottom-right');
 map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF' }), 'bottom-left');
 
 /* ---------- dati */
@@ -179,6 +229,13 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'bv-p', type: 'circle', source: 'bv', maxzoom: 11, paint: { 'circle-radius': 5, 'circle-color': '#c2571a', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
   map.addSource('am', { type: 'geojson', data: GA });
   map.addLayer({ id: 'am-c', type: 'circle', source: 'am', paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.5, 11, 5.5], 'circle-color': '#5b3a1a', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.2 } });
+  map.addSource('osm', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: '© OpenStreetMap (ODbL)' });
+  map.addLayer({ id: 'osm-l', type: 'line', source: 'osm', filter: ['==', ['geometry-type'], 'LineString'], layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#b3261e', 'line-width': 2, 'line-dasharray': [2, 1.6] } });
+  map.addLayer({ id: 'osm-p', type: 'circle', source: 'osm', filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none' }, paint: { 'circle-radius': 6, 'circle-color': ['match', ['get', 'k'], 'r', '#7a3e00', 'w', '#1d6fa5', '#2d6a4f'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+  map.addLayer({ id: 'osm-t', type: 'symbol', source: 'osm', minzoom: 12.5, filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
+  map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
+  map.on('moveend', () => { if (ON.osm) caricaOSM(); });
   map.addLayer({ id: 'sel', type: 'line', source: 'z', filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   for (const s of ['bv', 'bs']) map.addLayer({ id: 'sel-' + s, type: 'line', source: s, filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   map.addLayer({ id: 'sel-am', type: 'circle', source: 'am', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': 9, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#e76f51', 'circle-stroke-width': 3 } });
@@ -190,9 +247,9 @@ let base = {};
 
 /* ---------- livelli e filtri */
 let bosco = '';
-const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false };
+const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
-const LIV = { cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
+const LIV = { osm: ['osm-l', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 function applica() {
   if (!map.getLayer('aree-f')) return;
   let ids = null;
@@ -209,6 +266,7 @@ function applica() {
   map.setPaintProperty('n2k-f', 'fill-opacity', ON.cf ? 0.03 : 0.12);
   map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
   $('liv-n').textContent = Object.values(ON).filter(Boolean).length;
+  if (ON.osm) caricaOSM();
   legenda();
 }
 const SW = {
@@ -217,7 +275,8 @@ const SW = {
   bv: '<i style="width:18px;height:14px;border-radius:3px;background:#c2571a99;border:2px solid #8a3a0e"></i>',
   am: '<i style="width:12px;height:12px;border-radius:50%;background:#5b3a1a;box-shadow:0 0 0 2px #fff,0 0 0 3px #5b3a1a"></i>',
   bs: '<i style="width:18px;height:14px;border-radius:3px;background:#9a7b2f44;border:2px dashed #7a5f1f"></i>',
-  cf: '<i style="width:20px;height:16px;border-radius:4px;background:linear-gradient(135deg,#1f6b3a 0 33%,#8fae3c 33% 66%,#a0702a 66%)"></i>'
+  cf: '<i style="width:20px;height:16px;border-radius:4px;background:linear-gradient(135deg,#1f6b3a 0 33%,#8fae3c 33% 66%,#a0702a 66%)"></i>',
+  osm: '<i style="width:20px;height:0;border-top:3px dashed #b3261e"></i>'
 };
 const riga_lv = (k, tit, d) => `<div class="lv${ON[k] ? ' on' : ''}" data-lv="${k}" role="switch" aria-checked="${ON[k]}" tabindex="0"><span class="sw" style="background:#f1f4f2">${SW[k]}</span><span><b>${tit}</b><small>${d}</small></span><span class="sw-t"></span></div>`;
 function pannello() {
@@ -229,7 +288,7 @@ function pannello() {
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
     + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
-    + riga_lv('bs', t('bss'), t('dBs'));
+    + riga_lv('bs', t('bss'), t('dBs')) + `<h4>${t('vEsc')}</h4>` + riga_lv('osm', t('sent'), t('dSent'));
   $('bosco').value = bosco;
   $('bosco').onchange = e => { bosco = e.target.value; applica(); };
 }
@@ -261,8 +320,8 @@ function testi() {
   $('l-it').classList.toggle('on', LANG === 'it'); $('l-en').classList.toggle('on', LANG === 'en');
   $('q').placeholder = t('cerca');
   $('liv-t').textContent = t('livelli');
-  for (const b of document.querySelectorAll('#sez button')) b.querySelector('span').textContent = t({ mappa: 'vMappa', funghi: 'vFunghi', piante: 'vPiante' }[b.dataset.v]);
-  if (vista !== 'mappa') catalogo(true);
+  for (const b of document.querySelectorAll('#sez button')) b.querySelector('span').textContent = t({ mappa: 'vMappa', funghi: 'vFunghi', piante: 'vPiante', escursioni: 'vEsc', meteo: 'vMeteo' }[b.dataset.v]);
+  if (vista === 'funghi' || vista === 'piante') catalogo(true); else if (vista === 'meteo') meteo(); else if (vista === 'escursioni' && window.escursioni) escursioni();
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
   if (cur) apri(cur, false);
 }
@@ -301,8 +360,9 @@ map.on('click', e => {
   const f = fp.length ? fp : map.queryRenderedFeatures(e.point, { layers: L });
   const ids = [...new Set(f.map(x => x.layer.id === 'cf-f' ? 'CF:' + x.properties.c : x.properties.id))].filter(k => S[k] || k.startsWith('CF:'));
   $('res').style.display = 'none';
-  if (!ids.length) return chiudi();
-  if (ids.length === 1) return apri(ids[0], false);
+  punto = e.lngLat;
+  if (!ids.length) { cur = null; selez(''); $('sh').innerHTML = `<div><h2>${t('questo')}</h2><small class="note">${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}</small></div><button class="close" aria-label="Chiudi">×</button>`; $('sb').innerHTML = '<div id="ter"></div>'; mostra(); return terreno(e.lngLat); }
+  if (ids.length === 1) { apri(ids[0], false); $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); return terreno(e.lngLat); }
   const rank = k => k.startsWith('CF:') ? 9 : AMB.includes(S[k].t) ? 0 : AREE.includes(S[k].t) ? 1 : 2;
   ids.sort((a, b) => rank(a) - rank(b) || (S[a] && S[b] ? S[a].ha - S[b].ha : 0));
   cur = null; selez('');
@@ -310,9 +370,46 @@ map.on('click', e => {
   $('sb').innerHTML = `<div class="pick"><p class="intro">${t('quiNota')}</p>` + ids.map(k => {
     const c = colore(k), ty = k.startsWith('CF:') ? t('cf') : t(S[k].t), nm = k.startsWith('CF:') ? tipoCF(k.slice(3)) : S[k].n;
     return `<button data-id="${k}"><span class="bar5" style="background:${c}"></span><span><span class="ty" style="color:${c}">${esc(ty)}</span><span class="nm">${esc(nm)}</span><span class="su">${sintesi(k)}</span></span><span class="go">›</span></button>`;
-  }).join('') + '</div>';
-  mostra();
+  }).join('') + '</div><div id="ter"></div>';
+  mostra(); terreno(e.lngLat);
 });
+let punto = null;
+/* lente del terreno: quota, pendenza ed esposizione (9 punti attorno), geologia e substrato (ISPRA) */
+function substrato(tx) {
+  tx = (tx || '').toLowerCase();
+  if (/lav|basalt|tuf|vulcan|piroclast|ialoclast/.test(tx)) return 'vulc';
+  if (/gess|evapor|salgem/.test(tx)) return 'ges';
+  if (/calcar|dolom|calcaren|travertin/.test(tx)) return 'carb';
+  if (/argill|marn|flysch|pelit/.test(tx)) return 'arg';
+  if (/arenar|quarz|granit|gneiss|scist|filladi|metamorf|conglomer|siltit/.test(tx)) return 'sil';
+  if (/sabbi|ghiai|alluvi|detrit|depositi|limi|ciottol/.test(tx)) return 'all';
+  return '';
+}
+async function terreno(ll) {
+  const box = $('ter'); if (!box) return;
+  box.innerHTML = `<h3>${t('terTit')}</h3><p class="note">${t('terCar')}</p>`;
+  const dy = 0.0009, dx = 0.00114, la = [], lo = [];
+  for (const j of [1, 0, -1]) for (const i of [-1, 0, 1]) { la.push((ll.lat + j * dy).toFixed(5)); lo.push((ll.lng + i * dx).toFixed(5)); }
+  const [el, ge] = await Promise.all([
+    getJ(`https://api.open-meteo.com/v1/elevation?latitude=${la.join(',')}&longitude=${lo.join(',')}`),
+    getJ(`https://sinacloud.isprambiente.it/arcgisgeo/rest/services/geo/SGI_ISPRA_Litologica100k/MapServer/identify?geometry=${ll.lng.toFixed(5)},${ll.lat.toFixed(5)}&geometryType=esriGeometryPoint&sr=4326&layers=all:1&tolerance=0&mapExtent=${(ll.lng - 0.05).toFixed(3)},${(ll.lat - 0.05).toFixed(3)},${(ll.lng + 0.05).toFixed(3)},${(ll.lat + 0.05).toFixed(3)}&imageDisplay=400,400,96&returnGeometry=false&f=json`)
+  ]);
+  if (punto !== ll || !$('ter')) return;
+  const r = [];
+  const z = el && el.elevation;
+  if (z && z.length === 9 && z.every(v => v != null)) {
+    const gx = ((z[2] + 2 * z[5] + z[8]) - (z[0] + 2 * z[3] + z[6])) / (8 * 100), gy = ((z[0] + 2 * z[1] + z[2]) - (z[6] + 2 * z[7] + z[8])) / (8 * 100);
+    const pend = Math.atan(Math.hypot(gx, gy)) * 180 / Math.PI, az = (Math.atan2(-gx, -gy) * 180 / Math.PI + 360) % 360;
+    r.push(['quotaT', fmt(z[4]) + ' m'], ['pend', Math.round(pend) + '°'], ['espo', pend < 3 ? t('pianeggiante') : t('DIR')[Math.round(az / 45) % 8]]);
+  }
+  const g = ge && (ge.results || []).find(x => x.layerId === 1);
+  if (g) {
+    const a = g.attributes, sb = substrato(a.LITOLOGIA + ' ' + a.CLASSI_LITOLOGICHE + ' ' + a.NOME_FORMAZIONE);
+    r.push(['geol', esc(a.NOME_FORMAZIONE || a.LITOLOGIA)], ['eta', esc(a.ETA_GEOLOGICA || '')]);
+    if (sb) r.push(['subs', t('SUB')[sb]]);
+  }
+  $('ter').innerHTML = `<h3>${t('terTit')}</h3>` + (r.length ? `<dl class="kv">${r.map(([k, v]) => riga(k, v)).join('')}</dl><p class="src">${t('terFonte')}</p>` : `<p class="note">${t('terNo')}</p>`);
+}
 
 /* ---------- scheda zona */
 let cur = null;
@@ -525,7 +622,8 @@ function vai(v) {
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v);
   $('cat').classList.toggle('on', v !== 'mappa'); document.body.classList.toggle('cat-on', v !== 'mappa');
   chiudiLiv(); $('res').style.display = 'none';
-  if (v === 'mappa') { $('cat').innerHTML = ''; $('cat').dataset.v = ''; map.resize(); } else { chiudi(); catalogo(); }
+  if (v === 'mappa') { $('cat').innerHTML = ''; $('cat').dataset.v = ''; map.resize(); }
+  else { chiudi(); $('cat').dataset.v = ''; $('cat').innerHTML = ''; if (v === 'meteo') meteo(); else if (v === 'escursioni') { if (window.escursioni) escursioni(); } else catalogo(); }
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
 function elencoCat() {
@@ -539,7 +637,7 @@ function elencoCat() {
 }
 function catalogo(soloTesti) {
   CAT.then(() => {
-    if (vista === 'mappa') return;
+    if (vista !== 'funghi' && vista !== 'piante') return;
     const f = vista === 'funghi', st = cs[vista], ids = elencoCat();
     const gruppi = f ? [['', t('tutte'), FUN.s.length], ['*f', t('conFoto'), FUN.s.filter(r => r[8].length).length], ...FUN.g.map(g => [g, t('GF')[g], FUN.s.filter(r => r[4] === g).length])]
                      : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length]];
@@ -606,6 +704,169 @@ function apriSpecie(tipo, i) {
     $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(senzaComm(w.extract))}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
   });
 }
+/* ---------- Sentieri e rifugi da OpenStreetMap (Overpass), caricati per la zona visibile */
+let osmT = null, osmB = '';
+function caricaOSM() {
+  clearTimeout(osmT);
+  osmT = setTimeout(async () => {
+    if (!ON.osm || map.getZoom() < 11) return;
+    const b = map.getBounds(), bb = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map(x => x.toFixed(3)).join(',');
+    if (bb === osmB) return; osmB = bb;
+    const q = `[out:json][timeout:25];(relation["route"="hiking"](${bb});way["highway"="path"]["sac_scale"](${bb});node["tourism"~"alpine_hut|wilderness_hut|picnic_site"](${bb});node["amenity"="shelter"](${bb});node["natural"="spring"](${bb});node["amenity"="drinking_water"](${bb}););out geom 4000;`;
+    const j = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(q) }).then(r => r.ok ? r.json() : null).catch(() => null);
+    if (!j || bb !== osmB) return;
+    const F = [];
+    for (const e of j.elements) {
+      const tg = e.tags || {};
+      if (e.type === 'node') F.push({ type: 'Feature', properties: { k: tg.natural === 'spring' || tg.amenity === 'drinking_water' ? 'w' : /hut|shelter/.test(tg.tourism || tg.amenity || '') ? 'r' : 'p', n: tg.name || '' }, geometry: { type: 'Point', coordinates: [e.lon, e.lat] } });
+      else if (e.type === 'way' && e.geometry) F.push({ type: 'Feature', properties: { n: tg.name || '' }, geometry: { type: 'LineString', coordinates: e.geometry.map(g => [g.lon, g.lat]) } });
+      else if (e.type === 'relation') for (const m of e.members || []) if (m.type === 'way' && m.geometry) F.push({ type: 'Feature', properties: { n: tg.name || '' }, geometry: { type: 'LineString', coordinates: m.geometry.map(g => [g.lon, g.lat]) } });
+    }
+    if (map.getSource('osm')) map.getSource('osm').setData({ type: 'FeatureCollection', features: F });
+  }, 500);
+}
+
+/* ---------- Escursioni: obiettivo, dove andare, registrazione del percorso */
+const INT = { funghi: '#a0702a', alberi: '#5b3a1a', boschi: '#2d6a4f', flora: '#7a5ea8', alim: '#8fae3c' };
+let intSel = new Set(['funghi', 'alberi']);
+function suggerimenti() {
+  const out = [];
+  for (const [k, z] of LUOGHI()) {
+    const d = DENTRO[k] || [], na = d.filter(x => S[x].t === 'am').length, nv = d.filter(x => S[x].t === 'bv').length;
+    const pi = specieDi(k).filter(i => SP.gr[i] === 'P').length;
+    const fungB = z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).reduce((a, b) => a + b[1], 0);
+    let sc = 0; const why = [];
+    if (intSel.has('funghi') && fungB) { sc += Math.log10(1 + fungB) * 2; why.push((LANG === 'it' ? 'boschi adatti ai funghi: ' : 'forests good for fungi: ') + elenco(z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).slice(0, 2).map(b => nb(b[0]).toLowerCase()))); }
+    if (intSel.has('alberi') && (na || nv)) { sc += Math.log10(1 + na + 3 * nv) * 3; why.push([na ? t('va')(na) : '', nv ? t('vb')(nv) : ''].filter(Boolean).join(', ')); }
+    if (intSel.has('boschi') && z.bha) { sc += Math.log10(1 + z.bha) * 1.5; why.push(fmt(z.bha) + (LANG === 'it' ? ' ha di bosco' : ' ha of forest')); }
+    if (intSel.has('flora') && pi) { sc += Math.log10(1 + pi) * 2; why.push(fmt(pi) + (LANG === 'it' ? ' specie di piante segnalate' : ' plant species recorded')); }
+    if (sc > 0) out.push({ k, z, sc, why });
+  }
+  return out.sort((a, b) => b.sc - a.sc).slice(0, 9);
+}
+function escursioni() {
+  if (vista !== 'escursioni') return;
+  D.then(() => {
+    const sug = suggerimenti();
+    $('cat').innerHTML = `<div class="in"><h2>${t('tEsc')}</h2><p class="lead">${t('lEsc')}</p>
+      <h3>${t('obiettivo')}</h3><div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>
+      ${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}
+      <h3>${t('doveAndare')}</h3><div class="sug">${sug.map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>
+      <h3 style="margin-top:24px">${t('reg')}</h3><div class="reg" id="reg"></div>
+      <h3>${t('miei')}</h3><div class="trk" id="trk"></div></div>`;
+    regUI(); trkUI();
+  });
+}
+window.escursioni = escursioni;
+$('cat').addEventListener('click', e => {
+  if (vista !== 'escursioni') return;
+  const i = e.target.closest('.int button'), m = e.target.closest('[data-map]'), mt = e.target.closest('[data-mt]'), rb = e.target.closest('#regbtn'), tb = e.target.closest('[data-trk]');
+  if (i) { intSel.has(i.dataset.i) ? intSel.delete(i.dataset.i) : intSel.add(i.dataset.i); escursioni(); }
+  else if (m) { vai('mappa'); apri(m.dataset.map, true); }
+  else if (mt) { const x = S[mt.dataset.mt], [lon, lat] = centro(x); mtLuogo = { k: mt.dataset.mt, n: x.n, lat, lon }; vai('meteo'); }
+  else if (rb) { REG ? fermaReg() : avviaReg(); }
+  else if (tb) azioneTrk(tb.dataset.trk, tb.dataset.az);
+});
+// registrazione: solo da questa sezione, con conferma all'inizio e alla fine
+let REG = null, wid = null, wake = null;
+const TK = 'sn_percorsi';
+const leggiTrk = () => { try { return JSON.parse(localStorage.getItem(TK)) || []; } catch (e) { return []; } };
+const scriviTrk = a => { try { localStorage.setItem(TK, JSON.stringify(a)); } catch (e) {} };
+const hav = (a, b) => { const R = 6371000, r = Math.PI / 180, dl = (b[1] - a[1]) * r, dn = (b[0] - a[0]) * r; const h = Math.sin(dl / 2) ** 2 + Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dn / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+function misure(p) { let d = 0, up = 0; for (let i = 1; i < p.length; i++) { d += hav(p[i - 1], p[i]); if (p[i][2] != null && p[i - 1][2] != null && p[i][2] > p[i - 1][2]) up += p[i][2] - p[i - 1][2]; } return { km: d / 1000, up, min: p.length > 1 ? (p[p.length - 1][3] - p[0][3]) / 60000 : 0 }; }
+const durS = m => Math.floor(m / 60) + ' h ' + String(Math.round(m % 60)).padStart(2, '0');
+function regUI() {
+  if (!$('reg')) return;
+  const m = REG ? misure(REG.p) : null;
+  $('reg').innerHTML = (REG ? `<div class="live"><div><b>${num1(m.km)} km</b><span>${t('dist')}</span></div><div><b>${durS((Date.now() - REG.t0) / 60000)}</b><span>${t('durata')}</span></div><div><b>${fmt(m.up)} m</b><span>${t('disl')}</span></div></div>` : '')
+    + `<button class="big${REG ? ' stop' : ''}" id="regbtn">${REG ? t('regFine') : t('regInizia')}</button><p class="note" style="margin-top:8px">${t('regNota')}</p>`;
+}
+function avviaReg() {
+  if (!navigator.geolocation) return alertNota(t('noGps'));
+  if (!confirm(t('regConfIn'))) return;
+  REG = { t0: Date.now(), p: [], ob: [...intSel] };
+  wid = navigator.geolocation.watchPosition(pos => {
+    const c = pos.coords; if (c.accuracy > 40) return;
+    const q = [+c.longitude.toFixed(6), +c.latitude.toFixed(6), c.altitude != null ? Math.round(c.altitude) : null, Date.now()];
+    const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
+    REG.p.push(q); disegnaTrk(REG.p); regUI();
+  }, () => { alertNota(t('noGps')); }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+  try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
+  regUI();
+}
+function fermaReg() {
+  if (!confirm(t('regConfFine'))) return;
+  navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
+  if (REG.p.length > 1) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p }); scriviTrk(a); }
+  REG = null; regUI(); trkUI();
+}
+const alertNota = m => { if ($('reg')) $('reg').insertAdjacentHTML('afterbegin', `<p class="avviso">${esc(m)}</p>`); };
+function trkUI() {
+  if (!$('trk')) return;
+  const a = leggiTrk();
+  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p); return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
+}
+function disegnaTrk(p) { if (map.getSource('trk')) map.getSource('trk').setData({ type: 'FeatureCollection', features: p.length > 1 ? [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: p.map(q => [q[0], q[1]]) } }] : [] }); }
+function azioneTrk(id, az) {
+  const a = leggiTrk(), x = a.find(y => y.id === id); if (!x) return;
+  if (az === 'del') { if (confirm(t('eliminaConf'))) { scriviTrk(a.filter(y => y.id !== id)); trkUI(); } return; }
+  if (az === 'map') { vai('mappa'); disegnaTrk(x.p); const lo = x.p.map(q => q[0]), la = x.p.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, duration: 600 }); return; }
+  const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
+  const u = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = `sicilia-naturale-${new Date(x.t0).toISOString().slice(0, 10)}.gpx`; document.body.appendChild(l); l.click(); l.remove();
+}
+setInterval(() => { if (REG && vista === 'escursioni') regUI(); }, 30000);
+
+/* ---------- Meteo: giorni migliori per escursioni e funghi */
+let mtLuogo = null;   // { n, lat, lon }
+const LUOGHI = () => Object.entries(S).filter(([k, x]) => AREE.includes(x.t) && x.t !== 'amp').sort((a, b) => b[1].ha - a[1].ha);
+const centro = x => [(x.bb[0] + x.bb[2]) / 2, (x.bb[1] + x.bb[3]) / 2];
+const giorno = (d, o) => new Date(d + 'T12:00:00').toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB', o || { weekday: 'short', day: 'numeric' });
+function punteggioEsc(i, M) {
+  const r = M.precipitation_sum[i] || 0, p = M.precipitation_probability_max[i] ?? 0, w = M.wind_speed_10m_max[i] || 0, tx = M.temperature_2m_max[i], tn = M.temperature_2m_min[i], c = M.weather_code[i] || 0;
+  const prima = (M.precipitation_sum[i - 1] || 0) + (M.precipitation_sum[i - 2] || 0) * 0.5;
+  let v = 10; const perche = [];
+  const pr = Math.min(5, r * 0.5 + p / 30); if (pr >= 1) perche.push(t('piovoso')); v -= pr;
+  if (w > 30) { v -= Math.min(3, (w - 30) / 8); perche.push(t('ventoso')); }
+  if (tx > 30) { v -= Math.min(3, (tx - 30) / 2); perche.push(t('caldo')); }
+  if (tn != null && tn < 2) { v -= Math.min(2, (2 - tn) / 2); perche.push(t('freddo')); }
+  if (prima > 10) { v -= Math.min(1.5, (prima - 10) / 15); perche.push(t('fango')); }
+  if (c >= 95) { v -= 3; perche.push(t('temporale')); }
+  return { v: Math.max(1, Math.min(10, Math.round(v * 10) / 10)), perche };
+}
+function colore10(v) { return v >= 7.5 ? '#2d6a4f' : v >= 5.5 ? '#8fae3c' : v >= 3.5 ? '#d9a066' : '#c2571a'; }
+function meteo() {
+  if (vista !== 'meteo') return;
+  D.then(() => {
+    const L = LUOGHI();
+    if (!mtLuogo) { const k = L.find(([k]) => k === 'EUAP0228') || L[0]; const [lon, lat] = centro(k[1]); mtLuogo = { k: k[0], n: k[1].n, lat, lon }; }
+    $('cat').innerHTML = `<div class="in"><h2>${t('tMeteo')}</h2><p class="lead">${t('lMeteo')}</p>
+      <div class="mt-luogo"><select id="mtsel" aria-label="${t('luogo')}">${mtLuogo.k ? '' : `<option value="" selected>${esc(mtLuogo.n)}</option>`}${L.map(([k, x]) => `<option value="${k}"${k === mtLuogo.k ? ' selected' : ''}>${esc(x.n)}</option>`).join('')}</select><button id="mtpos">${t('posiz')}</button></div>
+      <div id="mtout"><p class="note">${t('carico')}</p></div></div>`;
+    $('mtsel').onchange = e => { const x = S[e.target.value]; if (!x) return; const [lon, lat] = centro(x); mtLuogo = { k: e.target.value, n: x.n, lat, lon }; meteoDati(); };
+    $('mtpos').onclick = () => navigator.geolocation && navigator.geolocation.getCurrentPosition(p => { mtLuogo = { k: '', n: t('posiz'), lat: p.coords.latitude, lon: p.coords.longitude }; meteo(); }, () => {}, { enableHighAccuracy: false, timeout: 10000 });
+    meteoDati();
+  });
+}
+async function meteoDati() {
+  const q = mtLuogo, u = `https://api.open-meteo.com/v1/forecast?latitude=${q.lat.toFixed(4)}&longitude=${q.lon.toFixed(4)}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,weather_code,precipitation_probability_max&past_days=61&forecast_days=14&timezone=Europe%2FRome`;
+  const j = await getJ(u);
+  if (vista !== 'meteo' || q !== mtLuogo || !$('mtout')) return;
+  if (!j || !j.daily) { delete WCACHE[u]; $('mtout').innerHTML = `<p class="avviso">${t('errMeteo')}</p>`; return; }
+  const M = j.daily, oggi = new Date().toISOString().slice(0, 10), i0 = Math.max(0, M.time.indexOf(oggi));
+  // modello T1 di Sottobosco senza misure di campo: serie di pioggia e temperature dal primo giorno disponibile
+  const TM = new TrailModel.Model({ start: M.time[0], cp: { q: 'p' }, pts: { p: { r: M.precipitation_sum.map(x => x || 0), tx: M.temperature_2m_max, tn: M.temperature_2m_min } }, forecast: {} }, [], []);
+  const G = M.time.slice(i0).map((d, n) => { const i = i0 + n, e = punteggioEsc(i, M), f = TM.stima('q', d); return { d, i, e, f }; });
+  const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
+  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco(top.map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
+    <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
+      return `<div class="gg${top.includes(g.d) ? ' top' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span><small>${(M.precipitation_sum[g.i] || 0).toFixed(1)} ${t('mm')} · ${Math.round(M.temperature_2m_min[g.i])}–${Math.round(M.temperature_2m_max[g.i])}°</small><small>${esc(sub)}</small></div>`; }).join('')}</div>
+    <p class="note" style="margin-top:10px">${nota}</p></div>`;
+  const mx = Math.max(5, ...M.precipitation_sum.map(x => x || 0));
+  $('mtout').innerHTML = box(t('escTit') + ' · ' + esc(q.n), t('escNota'), 'e', topE) + box(t('funTit') + ' · ' + esc(q.n), t('funNota'), 'f', topF)
+    + `<div class="mt-box"><h3>${t('pioggiaTit')}</h3><div class="pioggia">${M.time.map((d, i) => `<div class="${i >= i0 ? 'f' : ''}" style="height:${(M.precipitation_sum[i] || 0) / mx * 100}%" title="${d}: ${(M.precipitation_sum[i] || 0).toFixed(1)} mm"></div>`).join('')}</div><div class="pioggia-l"><span>${giorno(M.time[0], { day: 'numeric', month: 'short' })}</span><span>${t('oggi')}</span><span>${giorno(M.time[M.time.length - 1], { day: 'numeric', month: 'short' })}</span></div>
+      <p class="src">${t('fonte')}: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · ${LANG === 'it' ? 'modello T1 di Sottobosco' : 'Sottobosco T1 model'}</p></div>`;
+}
+
 /* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
 async function mostraGbif(nome, key) {
   if (!key) { const m = await getJ('https://api.gbif.org/v1/species/match?name=' + encodeURIComponent(nome)); key = m && m.usageKey; }
