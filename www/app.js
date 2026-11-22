@@ -51,7 +51,7 @@ const TX = {
     noGps: 'Il GPS non è disponibile su questo dispositivo o il permesso è stato negato.',
     dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
     obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri escursionistici, rifugi, bivacchi, aree attrezzate e sorgenti da OpenStreetMap. Visibili da vicino (zoom 11).',
-    zoomSent: 'Avvicinati per vedere sentieri e rifugi',
+    zoomSent: 'Avvicinati per vedere sentieri e rifugi', osmCar: 'Carico sentieri e rifugi da OpenStreetMap…', osmErr: 'I server di OpenStreetMap sono occupati: sentieri e rifugi non caricati. Riprova spostando la mappa tra poco.',
     terTit: 'Il terreno in questo punto', questo: 'Questo punto', quotaT: 'Quota', pend: 'Pendenza', espo: 'Esposizione', geol: 'Geologia', subs: 'Substrato', eta: 'Età',
     terCar: 'Leggo quota, esposizione e geologia…', terNo: 'Dati del terreno non disponibili per questo punto.', pianeggiante: 'pianeggiante',
     SUB: { carb: 'carbonatico (calcari, dolomie)', sil: 'silicatico (arenarie, quarziti, rocce cristalline)', arg: 'argilloso e marnoso', vulc: 'vulcanico', all: 'sabbie, ghiaie e depositi sciolti', ges: 'gessoso ed evaporitico' },
@@ -109,7 +109,7 @@ const TX = {
     noGps: 'GPS is not available on this device or permission was denied.',
     dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
     obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Hiking routes, huts, shelters, picnic areas and springs from OpenStreetMap. Visible up close (zoom 11).',
-    zoomSent: 'Zoom in to see trails and huts',
+    zoomSent: 'Zoom in to see trails and huts', osmCar: 'Loading trails and huts from OpenStreetMap…', osmErr: 'OpenStreetMap servers are busy: trails and huts not loaded. Move the map to try again shortly.',
     terTit: 'The ground at this point', questo: 'This point', quotaT: 'Elevation', pend: 'Slope', espo: 'Aspect', geol: 'Geology', subs: 'Substrate', eta: 'Age',
     terCar: 'Reading elevation, aspect and geology…', terNo: 'Ground data not available for this point.', pianeggiante: 'flat',
     SUB: { carb: 'carbonate (limestone, dolomite)', sil: 'siliceous (sandstone, quartzite, crystalline rock)', arg: 'clay and marl', vulc: 'volcanic', all: 'sand, gravel and loose deposits', ges: 'gypsum and evaporites' },
@@ -706,15 +706,30 @@ function apriSpecie(tipo, i) {
 }
 /* ---------- Sentieri e rifugi da OpenStreetMap (Overpass), caricati per la zona visibile */
 let osmT = null, osmB = '';
+const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.private.coffee/api/interpreter', 'https://overpass.kumi.systems/api/interpreter'];
+let avT = null;
+function avvisoMappa(m, ms) {
+  let el = $('avmap'); if (!el) { el = document.createElement('div'); el.id = 'avmap'; el.className = 'avmap'; $('wrap').appendChild(el); }
+  clearTimeout(avT); el.textContent = m; el.style.display = m ? 'block' : 'none'; if (m && ms) avT = setTimeout(() => el.style.display = 'none', ms);
+}
 function caricaOSM() {
   clearTimeout(osmT);
   osmT = setTimeout(async () => {
-    if (!ON.osm || map.getZoom() < 11) return;
+    if (!ON.osm) return;
+    if (map.getZoom() < 11) { avvisoMappa(t('zoomSent'), 3500); return; }
     const b = map.getBounds(), bb = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map(x => x.toFixed(3)).join(',');
     if (bb === osmB) return; osmB = bb;
     const q = `[out:json][timeout:25];(relation["route"="hiking"](${bb});way["highway"="path"]["sac_scale"](${bb});node["tourism"~"alpine_hut|wilderness_hut|picnic_site"](${bb});node["amenity"="shelter"](${bb});node["natural"="spring"](${bb});node["amenity"="drinking_water"](${bb}););out geom 4000;`;
-    const j = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(q) }).then(r => r.ok ? r.json() : null).catch(() => null);
-    if (!j || bb !== osmB) return;
+    avvisoMappa(t('osmCar'));
+    let j = null;
+    for (const srv of OVERPASS) {   // server pubblici di OpenStreetMap: se uno è occupato si prova il successivo
+      const ac = new AbortController(), to = setTimeout(() => ac.abort(), 20000);
+      j = await fetch(srv, { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ac.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
+      clearTimeout(to); if (j || bb !== osmB) break;
+    }
+    if (bb !== osmB) return;
+    if (!j) { osmB = ''; avvisoMappa(t('osmErr'), 6000); return; }
+    avvisoMappa('');
     const F = [];
     for (const e of j.elements) {
       const tg = e.tags || {};
