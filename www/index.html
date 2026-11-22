@@ -33,13 +33,37 @@ header h1{font-size:19px;font-weight:700;margin:0;flex:1;letter-spacing:.1px}
 .res button{display:block;width:100%;text-align:left;border:0;background:none;padding:10px 16px;border-bottom:1px solid var(--line);font:15px Roboto,sans-serif;cursor:pointer;color:var(--ink)}
 .res button small{display:block;color:var(--mute);font-size:13px}
 .res button:hover,.res button:focus{background:var(--gl)}
-.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.chip{flex:none;border:0;border-radius:18px;padding:0 14px;height:36px;font:500 14px Roboto,sans-serif;background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;gap:7px}
-.chip i{width:12px;height:12px;border-radius:3px;display:inline-block;box-shadow:0 0 0 1.5px #fff}
-.chip.on{background:var(--g);color:#fff}
-.chip select{border:0;background:none;font:inherit;color:inherit;outline:none;cursor:pointer;max-width:190px}
-.chip select option{color:var(--ink)}
+.riga{display:flex;gap:8px;align-items:center;max-width:620px}
+.riga .search{flex:1}
+.livbtn{flex:none;height:46px;border:0;border-radius:23px;background:#fff;color:var(--gd);box-shadow:0 2px 8px rgba(0,0,0,.18);display:flex;align-items:center;gap:7px;padding:0 16px 0 13px;font:500 15px Roboto,sans-serif;cursor:pointer}
+.livbtn[aria-expanded=true]{background:var(--g);color:#fff}
+.livbtn b{font-size:12px;font-weight:500;background:var(--gl);color:var(--gd);border-radius:9px;padding:1px 7px}
+.liv{display:none;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.22);max-width:620px;max-height:calc(100vh - 190px);overflow:auto;padding:6px 14px 14px}
+.liv.open{display:block}
+.liv h4{font-size:12.5px;font-weight:500;color:var(--mute);margin:14px 0 4px;letter-spacing:.2px}
+.liv .perche{font-size:13px;color:var(--mute);background:#f4f7f5;border-radius:10px;padding:8px 11px;margin:6px 0 4px;line-height:1.45}
+.lv{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.lv:last-child{border-bottom:0}
+.lv .sw{width:30px;height:30px;border-radius:9px;display:grid;place-items:center}
+.lv .sw i{display:block}
+.lv b{display:block;font-weight:500;font-size:15px}
+.lv small{display:block;color:var(--mute);font-size:12.8px;line-height:1.4;margin-top:1px}
+.sw-t{position:relative;width:42px;height:24px;border-radius:12px;background:#cdd5d0;border:0;flex:none;transition:background .15s;pointer-events:none}
+.sw-t::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .15s}
+.lv.on .sw-t{background:var(--g)}.lv.on .sw-t::after{transform:translateX(18px)}
+.cft{display:flex;flex-wrap:wrap;gap:6px;padding:4px 0 6px 40px}
+.cft button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:5px 10px 5px 8px;font:13px Roboto,sans-serif;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:6px;min-height:32px}
+.cft button i{width:11px;height:11px;border-radius:3px}
+.cft button.on{border-color:var(--gd);background:#eef6f1;font-weight:500}
+.cft .tutti{font-weight:500;color:var(--g)}
+.liv select{width:100%;margin:4px 0 0;height:40px;border:1.5px solid var(--line);border-radius:10px;padding:0 10px;font:14px Roboto,sans-serif;background:#fff;color:var(--ink)}
 #sheet{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.2);max-height:62%;display:none;flex-direction:column;max-width:640px;margin:0 auto}
+@media(min-width:900px){
+  #sheet{top:10px;bottom:10px;left:10px;right:auto;width:430px;max-width:none;max-height:none;margin:0;border-radius:18px;box-shadow:0 6px 28px rgba(0,0,0,.24)}
+  #sheet .grip{display:none}
+  .side .top{left:450px}
+  .sh{padding-top:14px}
+}
 #sheet.open{display:flex}
 #sheet.big{max-height:calc(100% - 10px)}
 .grip{flex:none;display:flex;justify-content:center;padding:8px 0 2px;cursor:pointer;border:0;background:none;width:100%}
@@ -79,14 +103,31 @@ summary em{font-style:normal;color:var(--mute);font-weight:400;margin-left:auto}
 .links button small{color:var(--mute)}
 a{color:var(--g)}
 .src{font-size:13px;color:var(--mute);margin-top:18px}
-.pick button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;padding:11px 2px;font:15px Roboto,sans-serif;cursor:pointer;color:var(--ink)}
-.legend{position:absolute;right:52px;bottom:28px;z-index:2;background:rgba(255,255,255,.94);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.pick .intro{font-size:13.5px;color:var(--mute);margin:10px 0 6px;line-height:1.45}
+.pick button{display:grid;grid-template-columns:5px minmax(0,1fr) auto;gap:12px;width:100%;text-align:left;border:0;background:#f6f8f7;border-radius:12px;padding:11px 12px 11px 0;margin:8px 0;font:15px Roboto,sans-serif;cursor:pointer;color:var(--ink);overflow:hidden}
+.pick button:hover{background:#edf3ef}
+.pick .bar5{border-radius:0 4px 4px 0}
+.pick .ty{font-size:12px;font-weight:500;letter-spacing:.2px}
+.pick .nm{display:block;font-weight:500;font-size:15.5px;margin:1px 0 3px}
+.pick .su{display:block;font-size:13px;color:var(--mute);line-height:1.4}
+.pick .go{align-self:center;color:var(--mute);font-size:20px}
+.legend{position:absolute;right:52px;bottom:28px;pointer-events:none;z-index:2;background:rgba(255,255,255,.94);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.18)}
 .legend div{display:flex;align-items:center;gap:6px;margin:2px 0}
 .legend i{width:14px;height:10px;border-radius:2px;display:inline-block;flex:none}
 .legend .lt{font-weight:500;margin-top:6px}
 .legend{max-height:calc(100% - 150px);overflow:auto}
 .badge.bv{background:#f6e1d4;color:#8a3a0e}.badge.am{background:#ece3d9;color:#5b3a1a}.badge.bs{background:#f1ead6;color:#6b531a}.badge.cf{background:#e1eedb;color:#2f5a1e}
 .sp{font-size:16px;margin:12px 0 0;color:var(--gd)}
+.racconto{font-size:15.5px;line-height:1.62;margin:12px 0 4px;color:#2a302c}
+.racconto p{margin:0 0 9px}
+.wiki{margin:14px 0 6px;border-radius:14px;background:#f4f7f5;overflow:hidden}
+.wiki img{display:block;width:100%;max-height:240px;object-fit:cover;background:#e3e9e5}
+.wiki .wt{padding:10px 13px 12px;font-size:14.5px;line-height:1.55}
+.wiki .wt b{display:block;font-size:12px;font-weight:500;color:var(--mute);margin-bottom:3px}
+.wiki .cr{font-size:12px;color:var(--mute);margin-top:6px}
+.gal{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin}
+.gal a{flex:none;display:block;width:150px;text-decoration:none;color:var(--mute);font-size:11.5px;line-height:1.3}
+.gal img{display:block;width:150px;height:110px;object-fit:cover;border-radius:10px;background:#e3e9e5;margin-bottom:3px}
 .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;font-size:14px;margin:10px 0}.kv dt{color:var(--mute)}.kv dd{margin:0}
 .maplibregl-ctrl-bottom-left{bottom:0}
 @media(max-width:600px){.legend{display:none}.stats b{font-size:16px}}
@@ -100,17 +141,12 @@ a{color:var(--g)}
 <div id="wrap">
   <div id="map"></div>
   <div class="top">
-    <div class="search"><input id="q" type="search" autocomplete="off"><button class="x" id="qx" aria-label="Cancella">×</button></div>
-    <div class="res" id="res"></div>
-    <div class="chips">
-      <button class="chip on" id="c-aree"><i style="background:var(--g)"></i><span></span></button>
-      <button class="chip on" id="c-n2k"><i style="background:var(--n2k)"></i><span></span></button>
-      <label class="chip" id="c-bosco"><select id="bosco"></select></label>
-      <button class="chip on" id="c-bv"><i style="background:#c2571a"></i><span></span></button>
-      <button class="chip on" id="c-am"><i style="background:#5b3a1a;border-radius:50%"></i><span></span></button>
-      <button class="chip" id="c-cf"><i style="background:linear-gradient(90deg,#1f6b3a 0 33%,#8fae3c 33% 66%,#d9a066 66%)"></i><span></span></button>
-      <button class="chip" id="c-bs"><i style="background:#9a7b2f"></i><span></span></button>
+    <div class="riga">
+      <div class="search"><input id="q" type="search" autocomplete="off"><button class="x" id="qx" aria-label="Cancella">×</button></div>
+      <button class="livbtn" id="btn-liv" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5Z" fill="currentColor"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span id="liv-t"></span><b id="liv-n"></b></button>
     </div>
+    <div class="res" id="res"></div>
+    <div class="liv" id="liv"></div>
   </div>
   <div class="legend" id="legend"></div>
   <div id="sheet"><button class="grip" id="grip" aria-label="Espandi"><span></span></button><div class="sh" id="sh"></div><div class="body" id="sb"></div></div>

@@ -24,6 +24,18 @@ const TX = {
     circ: 'Circonferenza', alt: 'Altezza', quota: 'Quota', crit: 'Criteri di monumentalità', dm: 'Provvedimento', urb: 'In contesto urbano', dentro: 'Si trova in',
     cat: 'Categoria forestale', varianti: 'Varianti nella categoria', cfnota: 'Tipo di bosco della particella secondo la Carta forestale regionale (Corpo Forestale). Visibile da vicino.',
     sif: 'Sistema Informativo Forestale (Regione Siciliana)', elenco: 'Elenco degli Alberi Monumentali di Sicilia (17/07/2026)', lsif: 'Corpo Forestale, Regione Siciliana',
+    livelli: 'Livelli', gTut: 'Aree tutelate', gBos: 'Boschi e alberi', gHab: 'Zone con un tipo di bosco',
+    perche: 'Un parco o una riserva è un’area con un ente che la gestisce e regole proprie. Natura 2000 è la rete europea che indica cosa va conservato: le ZSC tutelano habitat e specie, le ZPS gli uccelli. Lo stesso luogo può essere parco, ZSC e ZPS insieme.',
+    dAree: 'Parchi regionali e nazionali, riserve naturali e aree marine protette, con un ente gestore e un regolamento.',
+    dN2k: 'Rete europea Natura 2000. ZSC: habitat e specie rari (linea continua). ZPS: uccelli selvatici (tratteggio).',
+    dBv: 'Boschi rimasti a lungo senza tagli, con alberi vecchi e legno morto: i più vicini alla foresta naturale (censimento 2026).',
+    dAm: 'Alberi tutelati per età, dimensioni, rarità o valore storico, iscritti nell’elenco ufficiale della Regione.',
+    dBs: 'Boschi scelti dal Corpo Forestale per raccogliere semi di qualità per vivai e rimboschimenti.',
+    dCf: 'Il tipo di bosco di ogni particella forestale. Scegli i tipi che cerchi: da lontano sono punti, da vicino le particelle.',
+    tuttiTipi: 'Tutti', nessunTipo: 'Nessuno',
+    quiN: n => `Qui si sovrappongono ${n} zone`, quiNota: 'Lo stesso luogo può avere più tutele: tocca una zona per aprirne la scheda.',
+    vb: n => n === 1 ? '1 bosco vetusto' : n + ' boschi vetusti', va: n => n === 1 ? '1 albero monumentale' : n + ' alberi monumentali',
+    wiki: 'Da Wikipedia', wleggi: 'Leggi su Wikipedia', foto: 'Foto nei dintorni', fotoN: 'Foto da Wikimedia Commons: restano dei loro autori, con la licenza indicata.',
     G: { P: 'Piante', B: 'Uccelli', I: 'Invertebrati', R: 'Rettili', M: 'Mammiferi', A: 'Anfibi', F: 'Pesci', L: 'Licheni' } },
   en: { cerca: 'Search a forest, park or reserve…', aree: 'Parks and reserves', n2k: 'Natura 2000', tutti: 'All forests', solo: 'Only areas with forests',
     pn: 'National park', pr: 'Regional park', rn: 'Nature reserve', amp: 'Marine protected area', ap: 'Protected area', zsc: 'SAC (Natura 2000)', zps: 'SPA (Natura 2000)', zsczps: 'SAC and SPA (Natura 2000)',
@@ -40,6 +52,18 @@ const TX = {
     circ: 'Girth', alt: 'Height', quota: 'Elevation', crit: 'Monumentality criteria', dm: 'Listing act', urb: 'In an urban setting', dentro: 'Located in',
     cat: 'Forest category', varianti: 'Variants in this category', cfnota: 'Forest type of the stand according to the regional Forest Map (Forestry Corps). Visible when zoomed in.',
     sif: 'Forest Information System (Sicilian Region)', elenco: 'List of Monumental Trees of Sicily (17/07/2026)', lsif: 'Forestry Corps, Sicilian Region',
+    livelli: 'Layers', gTut: 'Protected areas', gBos: 'Forests and trees', gHab: 'Areas with a forest type',
+    perche: 'A park or reserve is an area with a managing body and its own rules. Natura 2000 is the European network that says what must be conserved: SACs protect habitats and species, SPAs protect birds. The same place can be a park, an SAC and an SPA at once.',
+    dAree: 'Regional and national parks, nature reserves and marine protected areas, each with a managing body and rules.',
+    dN2k: 'European Natura 2000 network. SAC: rare habitats and species (solid line). SPA: wild birds (dashed).',
+    dBv: 'Forests left uncut for a long time, with old trees and deadwood: the closest to natural forest (2026 survey).',
+    dAm: 'Trees protected for age, size, rarity or historical value, on the Region’s official list.',
+    dBs: 'Forests chosen by the Forestry Corps to collect quality seed for nurseries and reforestation.',
+    dCf: 'The forest type of every forest stand. Pick the types you are looking for: points from afar, stands up close.',
+    tuttiTipi: 'All', nessunTipo: 'None',
+    quiN: n => `${n} areas overlap here`, quiNota: 'The same place can have several kinds of protection: tap one to open it.',
+    vb: n => n === 1 ? '1 old-growth forest' : n + ' old-growth forests', va: n => n === 1 ? '1 monumental tree' : n + ' monumental trees',
+    wiki: 'From Wikipedia', wleggi: 'Read on Wikipedia', foto: 'Photos nearby', fotoN: 'Photos from Wikimedia Commons: they belong to their authors, under the licence shown.',
     G: { P: 'Plants', B: 'Birds', I: 'Invertebrates', R: 'Reptiles', M: 'Mammals', A: 'Amphibians', F: 'Fish', L: 'Lichens' } }
 };
 const BOSCO_EN = { '9180': 'Lime-maple ravine forests', '91AA': 'Downy oak woods', '91B0': 'Narrow-leaved ash woods', '91E0': 'Alder woods', '91M0': 'Turkey oak woods',
@@ -96,9 +120,14 @@ map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom
 map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF' }), 'bottom-left');
 
 /* ---------- dati */
-let S = {}, SP = { nomi: [], gr: [] }, H = { boschi: {}, hab: {} }, GJ, CFN = { tipi: {}, macro: {} }, GV, GS, GA;
-const D = Promise.all(['schede', 'specie', 'habitat', 'zone', 'carta_forestale_nomi', 'vetusti', 'seme', 'alberi'].map(n => fetch('data/' + n + '.json').then(r => r.json())))
-  .then(([a, b, c, g, n, v, s, al]) => { S = a; SP = b; H = c; GJ = g; CFN = n; GV = v; GS = s; GA = al; });
+let S = {}, SP = { nomi: [], gr: [] }, H = { boschi: {}, hab: {} }, GJ, CFN = { tipi: {}, macro: {} }, GV, GS, GA, CFP;
+const DENTRO = {};   // zona -> boschi vetusti, boschi da seme e alberi che contiene
+const D = Promise.all(['schede', 'specie', 'habitat', 'zone', 'carta_forestale_nomi', 'vetusti', 'seme', 'alberi', 'cf_punti'].map(n => fetch('data/' + n + '.json').then(r => r.json())))
+  .then(([a, b, c, g, n, v, s, al, cp]) => {
+    S = a; SP = b; H = c; GJ = g; CFN = n; GV = v; GS = s; GA = al;
+    CFP = { type: 'FeatureCollection', features: cp.p.map(q => ({ type: 'Feature', properties: { m: cp.m[q[2]], h: q[3] }, geometry: { type: 'Point', coordinates: [q[0], q[1]] } })) };
+    for (const [k, x] of Object.entries(S)) for (const z of x.in || []) (DENTRO[z] = DENTRO[z] || []).push(k);
+  });
 /* colori della carta forestale per macrocategoria (codici SIF) */
 const CFC = { FA: '#1f6b3a', CE: '#5a8f29', QU: '#8fae3c', CA: '#a0702a', LE: '#2e5e4e', SU: '#b5893c', OS: '#6f9d6a', BA: '#4f9a73', FR: '#3d8fb0',
   PL: '#3f4f7a', PM: '#7a6fb0', RI: '#9b8ea6', AS: '#c3b26a', MM: '#d9a066', BS: '#c9c9a0' };
@@ -117,6 +146,9 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'cf-f', type: 'fill', source: 'cf', 'source-layer': 'cf', layout: { visibility: 'none' },
     paint: { 'fill-color': ['match', ['get', 'm'], ...Object.entries(CFC).flat(), '#999'], 'fill-opacity': 0.6 } }, 'n2k-f');
   map.addLayer({ id: 'cf-l', type: 'line', source: 'cf', 'source-layer': 'cf', minzoom: 11, layout: { visibility: 'none' }, paint: { 'line-color': '#ffffff', 'line-width': 0.4, 'line-opacity': 0.7 } }, 'n2k-f');
+  map.addSource('cfp', { type: 'geojson', data: CFP });
+  map.addLayer({ id: 'cf-p', type: 'circle', source: 'cfp', maxzoom: 9, layout: { visibility: 'none' },
+    paint: { 'circle-color': ['match', ['get', 'm'], ...Object.entries(CFC).flat(), '#999'], 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, ['min', 3, ['max', 0.8, ['/', ['sqrt', ['get', 'h']], 4]]], 8.9, ['min', 6, ['max', 1.6, ['/', ['sqrt', ['get', 'h']], 2]]]], 'circle-opacity': 0.8 } }, 'n2k-f');
   map.addSource('bs', { type: 'geojson', data: GS });
   map.addLayer({ id: 'bs-f', type: 'fill', source: 'bs', layout: { visibility: 'none' }, paint: { 'fill-color': '#9a7b2f', 'fill-opacity': 0.25 } });
   map.addLayer({ id: 'bs-l', type: 'line', source: 'bs', layout: { visibility: 'none' }, paint: { 'line-color': '#7a5f1f', 'line-width': 1.4, 'line-dasharray': [2, 1.5] } });
@@ -136,34 +168,71 @@ map.on('load', () => D.then(() => {
 }));
 let base = {};
 
-/* ---------- filtri */
-let showA = true, showN = true, bosco = '';
+/* ---------- livelli e filtri */
+let bosco = '';
+const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false };
+let cfSel = null;   // macrocategorie scelte; null = tutte
+const LIV = { cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 function applica() {
   if (!map.getLayer('aree-f')) return;
   let ids = null;
   if (bosco) ids = Object.keys(S).filter(k => bosco === '*' ? S[k].bha > 0 : S[k].b.some(b => b[0] === bosco));
   for (const [l, f] of Object.entries(base)) {
-    const vis = l.startsWith('aree') ? showA : showN;
+    const vis = l.startsWith('aree') ? ON.aree : ON.n2k;
     map.setLayoutProperty(l, 'visibility', vis ? 'visible' : 'none');
     map.setFilter(l, ids ? ['all', f, ['in', ['get', 'id'], ['literal', ids]]] : f);
   }
-}
-$('c-aree').onclick = () => { showA = !showA; $('c-aree').classList.toggle('on', showA); applica(); };
-$('c-n2k').onclick = () => { showN = !showN; $('c-n2k').classList.toggle('on', showN); applica(); };
-$('bosco').onchange = e => { bosco = e.target.value; $('c-bosco').classList.toggle('on', !!bosco); applica(); };
-/* livelli forestali della Regione: acceso/spento */
-const LIV = { cf: ['cf-f', 'cf-l'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
-const ON = { cf: false, bv: true, am: true, bs: false };
-for (const k of Object.keys(LIV)) $('c-' + k).onclick = () => {
-  ON[k] = !ON[k]; $('c-' + k).classList.toggle('on', ON[k]);
-  for (const l of LIV[k]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', ON[k] ? 'visible' : 'none');
-  if (k === 'cf') {  // con la carta forestale accesa le campiture delle zone si attenuano, restano i contorni
-    map.setPaintProperty('n2k-f', 'fill-opacity', ON.cf ? 0.03 : 0.12);
-    map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
-    if (ON.cf && map.getZoom() < 9) map.easeTo({ zoom: 9.5, duration: 600 });
-  }
+  for (const [k, ls] of Object.entries(LIV)) for (const l of ls) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', ON[k] ? 'visible' : 'none');
+  const fm = cfSel ? ['in', ['get', 'm'], ['literal', [...cfSel]]] : null;
+  for (const l of ['cf-f', 'cf-l', 'cf-p']) if (map.getLayer(l)) map.setFilter(l, fm);
+  // con la carta forestale accesa le campiture delle zone si attenuano, restano i contorni
+  map.setPaintProperty('n2k-f', 'fill-opacity', ON.cf ? 0.03 : 0.12);
+  map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
+  $('liv-n').textContent = Object.values(ON).filter(Boolean).length;
   legenda();
+}
+const SW = {
+  aree: '<i style="width:18px;height:14px;border-radius:3px;background:#2d6a4f55;border:2px solid #1b4332"></i>',
+  n2k: '<i style="width:18px;height:14px;border-radius:3px;background:#2f7ea822;border:2px solid #2f7ea8;box-shadow:3px 3px 0 -1px #fff,3px 3px 0 0 #7a5ea8"></i>',
+  bv: '<i style="width:18px;height:14px;border-radius:3px;background:#c2571a99;border:2px solid #8a3a0e"></i>',
+  am: '<i style="width:12px;height:12px;border-radius:50%;background:#5b3a1a;box-shadow:0 0 0 2px #fff,0 0 0 3px #5b3a1a"></i>',
+  bs: '<i style="width:18px;height:14px;border-radius:3px;background:#9a7b2f44;border:2px dashed #7a5f1f"></i>',
+  cf: '<i style="width:20px;height:16px;border-radius:4px;background:linear-gradient(135deg,#1f6b3a 0 33%,#8fae3c 33% 66%,#a0702a 66%)"></i>'
 };
+const riga_lv = (k, tit, d) => `<div class="lv${ON[k] ? ' on' : ''}" data-lv="${k}" role="switch" aria-checked="${ON[k]}" tabindex="0"><span class="sw" style="background:#f1f4f2">${SW[k]}</span><span><b>${tit}</b><small>${d}</small></span><span class="sw-t"></span></div>`;
+function pannello() {
+  const cnt = {}; for (const x of Object.values(S)) for (const b of x.b || []) cnt[b[0]] = (cnt[b[0]] || 0) + 1;
+  const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
+  const mac = Object.keys(CFC).filter(m => CFN.macro[m]);
+  $('liv').innerHTML = `<h4>${t('gTut')}</h4><div class="perche">${t('perche')}</div>`
+    + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
+    + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
+    + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
+    + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
+    + riga_lv('bs', t('bss'), t('dBs'));
+  $('bosco').value = bosco;
+  $('bosco').onchange = e => { bosco = e.target.value; applica(); };
+}
+$('liv').addEventListener('click', e => {
+  const r = e.target.closest('.lv'), m = e.target.closest('.cft button');
+  if (r) { const k = r.dataset.lv; ON[k] = !ON[k]; if (k === 'cf' && ON.cf && map.getZoom() < 7.5) map.easeTo({ zoom: 7.5, duration: 500 }); }
+  else if (m) {
+    const all = Object.keys(CFC).filter(x => CFN.macro[x]);
+    if (m.dataset.m === '*') cfSel = null;
+    else if (m.dataset.m === '-') cfSel = new Set();
+    else {
+      // primo tocco su un tipo: si vede solo quello; poi si aggiungono o tolgono gli altri
+      if (!ON.cf || !cfSel) cfSel = new Set();
+      cfSel.has(m.dataset.m) ? cfSel.delete(m.dataset.m) : cfSel.add(m.dataset.m);
+      if (cfSel.size === all.length) cfSel = null;
+    }
+    ON.cf = !cfSel || cfSel.size > 0;
+  } else return;
+  applica(); const st = $('liv').scrollTop; pannello(); $('liv').scrollTop = st;
+});
+$('liv').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('lv')) { e.preventDefault(); e.target.click(); } });
+$('btn-liv').onclick = () => { const o = !$('liv').classList.contains('open'); $('liv').classList.toggle('open', o); $('btn-liv').setAttribute('aria-expanded', o); if (o) { $('res').style.display = 'none'; pannello(); } };
+const chiudiLiv = () => { $('liv').classList.remove('open'); $('btn-liv').setAttribute('aria-expanded', false); };
 
 /* ---------- testi */
 const nb = c => LANG === 'it' ? (H.boschi[c] || [c])[0] : (BOSCO_EN[c] || c);
@@ -171,25 +240,16 @@ function testi() {
   document.documentElement.lang = LANG;
   $('l-it').classList.toggle('on', LANG === 'it'); $('l-en').classList.toggle('on', LANG === 'en');
   $('q').placeholder = t('cerca');
-  $('c-aree').querySelector('span').textContent = t('aree');
-  $('c-n2k').querySelector('span').textContent = t('n2k');
-  for (const k of ['bv', 'am', 'bs']) $('c-' + k).querySelector('span').textContent = t(k + 's');
-  $('c-cf').querySelector('span').textContent = t('cf');
-  D.then(() => {
-    const cnt = {}; for (const s of Object.values(S)) for (const b of s.b) cnt[b[0]] = (cnt[b[0]] || 0) + 1;
-    const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
-    $('bosco').innerHTML = `<option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>` + opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('');
-    $('bosco').value = bosco;
-  });
-  legenda();
+  $('liv-t').textContent = t('livelli');
+  D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
   if (cur) apri(cur, false);
 }
 function legenda() {
-  let h = [['#2d6a4f', 'legA', 1], ['#1d6fa5', 'legM', 1], ['#2f7ea8', 'legZ', 0], ['#7a5ea8', 'legP', 0]].map(([c, k, f]) => `<div><i style="background:${c}${f ? '55' : '22'};border:1.5px ${k === 'legP' ? 'dashed' : 'solid'} ${c}"></i>${t(k)}</div>`).join('');
+  let h = [['#2d6a4f', 'legA', 1, ON.aree], ['#1d6fa5', 'legM', 1, ON.aree], ['#2f7ea8', 'legZ', 0, ON.n2k], ['#7a5ea8', 'legP', 0, ON.n2k]].filter(x => x[3]).map(([c, k, f]) => `<div><i style="background:${c}${f ? '55' : '22'};border:1.5px ${k === 'legP' ? 'dashed' : 'solid'} ${c}"></i>${t(k)}</div>`).join('');
   if (ON.bv) h += `<div><i style="background:#c2571a99;border:1.5px solid #8a3a0e"></i>${t('bvs')}</div>`;
   if (ON.am) h += `<div><i style="background:#5b3a1a;border-radius:50%;width:10px;margin:0 2px;border:1.5px solid #fff;box-shadow:0 0 0 1px #5b3a1a"></i>${t('ams')}</div>`;
   if (ON.bs) h += `<div><i style="background:#9a7b2f44;border:1.5px dashed #7a5f1f"></i>${t('bss')}</div>`;
-  if (ON.cf) h += `<div class="lt">${t('cf')}</div>` + Object.entries(CFC).filter(([m]) => CFN.macro[m]).map(([m, c]) => `<div><i style="background:${c}"></i>${esc(CFN.macro[m])}</div>`).join('');
+  if (ON.cf) h += `<div class="lt">${t('cf')}</div>` + Object.entries(CFC).filter(([m]) => CFN.macro[m] && (!cfSel || cfSel.has(m))).map(([m, c]) => `<div><i style="background:${c}"></i>${esc(CFN.macro[m])}</div>`).join('');
   $('legend').innerHTML = h;
 }
 const setLang = l => { LANG = l; try { localStorage.setItem('sn_lang', l); } catch (e) {} testi(); };
@@ -200,6 +260,7 @@ const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 $('q').oninput = () => {
   const v = norm($('q').value.trim()); $('qx').style.display = v ? 'block' : 'none';
   if (v.length < 2) { $('res').style.display = 'none'; return; }
+  chiudiLiv();
   const w = v.split(/\s+/);
   const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => n.includes(x)); })
     .sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || b[1].ha - a[1].ha).slice(0, 30);
@@ -211,6 +272,7 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 
 /* ---------- click sulla mappa */
 map.on('click', e => {
+  chiudiLiv();
   const L = ['am-c', 'bv-p', 'bv-f', 'bs-f', 'aree-f', 'n2k-f', 'zps-f', 'cf-f'].filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
   const box = [[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]];
   const fp = map.queryRenderedFeatures(box, { layers: L.filter(l => l === 'am-c' || l === 'bv-p') });
@@ -222,10 +284,11 @@ map.on('click', e => {
   const rank = k => k.startsWith('CF:') ? 9 : AMB.includes(S[k].t) ? 0 : AREE.includes(S[k].t) ? 1 : 2;
   ids.sort((a, b) => rank(a) - rank(b) || (S[a] && S[b] ? S[a].ha - S[b].ha : 0));
   cur = null; selez('');
-  $('sh').innerHTML = `<div><h2>${t('qui')}</h2></div><button class="close" aria-label="Chiudi">×</button>`;
-  $('sb').innerHTML = '<div class="pick">' + ids.map(k => k.startsWith('CF:')
-    ? `<button data-id="${k}">${esc(tipoCF(k.slice(3)))}<br><span class="badge cf">${t('cf')}</span></button>`
-    : `<button data-id="${k}">${esc(S[k].n)}<br><span class="badge ${cls(S[k].t)}">${t(S[k].t)}</span></button>`).join('') + '</div>';
+  $('sh').innerHTML = `<div><h2>${t('quiN')(ids.length)}</h2></div><button class="close" aria-label="Chiudi">×</button>`;
+  $('sb').innerHTML = `<div class="pick"><p class="intro">${t('quiNota')}</p>` + ids.map(k => {
+    const c = colore(k), ty = k.startsWith('CF:') ? t('cf') : t(S[k].t), nm = k.startsWith('CF:') ? tipoCF(k.slice(3)) : S[k].n;
+    return `<button data-id="${k}"><span class="bar5" style="background:${c}"></span><span><span class="ty" style="color:${c}">${esc(ty)}</span><span class="nm">${esc(nm)}</span><span class="su">${sintesi(k)}</span></span><span class="go">›</span></button>`;
+  }).join('') + '</div>';
   mostra();
 });
 
@@ -239,13 +302,121 @@ function selez(k) {
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
-function mostra() { $('sheet').classList.add('open'); $('sb').scrollTop = 0; }
-function chiudi() { $('sheet').classList.remove('open', 'big'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+function mostra() { $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; }
+function chiudi() { $('sheet').classList.remove('open', 'big'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 $('grip').onclick = () => $('sheet').classList.toggle('big');
 $('sheet').addEventListener('click', e => {
   if (e.target.closest('.close')) return chiudi();
   const b = e.target.closest('button[data-id]'); if (b) apri(b.dataset.id, true);
 });
+const COL = { pn: '#1b4332', pr: '#2d6a4f', rn: '#2d6a4f', ap: '#2d6a4f', amp: '#1d6fa5', zsc: '#2f7ea8', zsczps: '#2f7ea8', zps: '#7a5ea8', bv: '#c2571a', am: '#5b3a1a', bs: '#9a7b2f' };
+const colore = k => k.startsWith('CF:') ? (CFC[k.slice(3, 5)] || '#5a8f29') : (COL[S[k].t] || '#2d6a4f');
+const nomiBoschi = (b, n) => b.slice(0, n).map(x => nb(x[0]).toLowerCase());
+const elenco = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + (LANG === 'it' ? ' e ' : ' and ') + a[a.length - 1];
+function sintesi(k) {
+  if (k.startsWith('CF:')) { const c = k.slice(3); return esc(CFN.macro[c.slice(0, 2)] || '') + ' · ' + (LANG === 'it' ? 'tipo di bosco della particella' : 'forest type of the stand'); }
+  const s = S[k], p = [];
+  if (s.t === 'am') return esc([s.vg, s.circ ? fmt(s.circ) + ' cm' : '', s.alt ? fmt(s.alt) + ' m' : ''].filter(Boolean).join(' · '));
+  if (s.ha) p.push(fmt(s.ha) + ' ha');
+  if (s.t === 'bv' || s.t === 'bs') { p.push(esc(s.tf || s.sp || '')); return p.filter(Boolean).join(' · '); }
+  if (s.b && s.b.length) p.push(esc(elenco(nomiBoschi(s.b, 2))));
+  const d = DENTRO[k] || [], nv = d.filter(x => S[x].t === 'bv').length, na = d.filter(x => S[x].t === 'am').length;
+  if (nv) p.push(t('vb')(nv)); if (na) p.push(t('va')(na));
+  p.push(N2K.includes(s.t) ? (s.t === 'zps' ? (LANG === 'it' ? 'tutela gli uccelli' : 'protects birds') : (LANG === 'it' ? 'tutela habitat e specie' : 'protects habitats and species')) : (LANG === 'it' ? 'ente e regolamento propri' : 'own managing body and rules'));
+  return p.join(' · ');
+}
+const num1 = x => (Math.round(x * 10) / 10).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
+const DESC = {
+  it: { pn: 'È un parco nazionale, l’area protetta di livello più alto, con un ente che ne cura la tutela.', pr: 'È un parco regionale: un’area protetta con un ente che la gestisce e regole su ciò che si può fare.', rn: 'È una riserva naturale, istituita dalla Regione per proteggere un ambiente particolare.', amp: 'È un’area marina protetta, che tutela fondali, coste e vita del mare.', ap: 'È un’area naturale protetta.',
+    zsc: 'È una Zona Speciale di Conservazione della rete europea Natura 2000: un luogo scelto per proteggere habitat e specie rari in Europa.', zsczps: 'È insieme Zona Speciale di Conservazione e Zona di Protezione Speciale della rete Natura 2000: tutela habitat, specie rare e uccelli selvatici.', zps: 'È una Zona di Protezione Speciale della rete Natura 2000, dedicata agli uccelli selvatici e ai loro ambienti.' },
+  en: { pn: 'It is a national park, the highest level of protected area, with its own managing body.', pr: 'It is a regional park: a protected area with a managing body and rules on what can be done.', rn: 'It is a nature reserve, set up by the Region to protect a special environment.', amp: 'It is a marine protected area, protecting seabeds, coasts and sea life.', ap: 'It is a protected natural area.',
+    zsc: 'It is a Special Area of Conservation of the European Natura 2000 network: a place chosen to protect habitats and species that are rare in Europe.', zsczps: 'It is both a Special Area of Conservation and a Special Protection Area of Natura 2000: it protects habitats, rare species and wild birds.', zps: 'It is a Special Protection Area of the Natura 2000 network, for wild birds and their habitats.' }
+};
+function racconto(k) {
+  const s = S[k], it = LANG === 'it', P = [];
+  if (s.t === 'am') {
+    const sp = s.sp ? ` (<i>${esc(s.sp)}</i>)` : '';
+    P.push(it ? `Questo albero${s.vg ? `, <b>${esc(s.vg)}</b>` : ''}${sp}, si trova in località ${esc(s.n)}, nel comune di ${esc(s.com)}${s.alt ? `, a ${fmt(s.alt)} metri di quota` : ''}.`
+              : `This tree${s.vg ? `, <b>${esc(s.vg)}</b>` : ''}${sp}, stands at ${esc(s.n)}, in the municipality of ${esc(s.com)}${s.alt ? `, at ${fmt(s.alt)} m above sea level` : ''}.`);
+    if (s.circ) P.push(it ? `Il tronco misura ${fmt(s.circ)} cm di circonferenza, cioè circa ${num1(s.circ / Math.PI / 100)} metri di diametro${s.h ? `, e l’albero è alto ${fmt(s.h)} metri` : ''}.`
+                          : `Its trunk is ${fmt(s.circ)} cm around, about ${num1(s.circ / Math.PI / 100)} m across${s.h ? `, and the tree is ${fmt(s.h)} m tall` : ''}.`);
+    if ((s.crit || []).length) P.push(it ? `È iscritto tra gli alberi monumentali di Sicilia per: ${esc(s.crit.join(', ').toLowerCase())}.` : `It is listed among Sicily’s monumental trees for: ${esc(s.crit.join(', ').toLowerCase())}.`);
+    const z = (s.in || []).filter(x => AREE.includes(S[x].t));
+    if (z.length) P.push(it ? `Si trova dentro ${esc(S[z[0]].n)}.` : `It lies within ${esc(S[z[0]].n)}.`);
+  } else if (s.t === 'bv') {
+    P.push(it ? `${esc(s.n)} è uno dei boschi vetusti censiti in Sicilia nel 2026: un bosco rimasto a lungo senza tagli, dove crescono alberi molto vecchi e il legno morto resta a terra, come in una foresta naturale.`
+              : `${esc(s.n)} is one of the old-growth forests surveyed in Sicily in 2026: a forest left uncut for a long time, with very old trees and deadwood left on the ground, as in a natural forest.`);
+    P.push(it ? `Occupa ${num1(s.ha)} ettari${s.area ? ` nell’area ${esc(s.area)}` : ''}. Il tipo forestale è ${esc((s.tf || '').toLowerCase())}${s.bio ? `, in un clima ${esc(s.bio.toLowerCase())}` : ''}.`
+              : `It covers ${num1(s.ha)} ha${s.area ? ` in the ${esc(s.area)} area` : ''}. Forest type: ${esc((s.tf || '').toLowerCase())}${s.bio ? `; bioclimate: ${esc(s.bio.toLowerCase())}` : ''}.`);
+  } else if (s.t === 'bs') {
+    P.push(it ? `${esc(s.n)} è un bosco da seme: qui il Corpo Forestale raccoglie i semi${s.sp ? ` di <i>${esc(s.sp)}</i>` : ''} per i vivai e i rimboschimenti, perché le piante sono sane e adatte al territorio.`
+              : `${esc(s.n)} is a seed stand: the Forestry Corps collects seed here${s.sp ? ` of <i>${esc(s.sp)}</i>` : ''} for nurseries and reforestation, because its trees are healthy and suited to the area.`);
+    P.push(it ? `Copre ${fmt(s.ha)} ettari${s.com ? ` (${esc(s.com)})` : ''}${s.veg ? `; la vegetazione è ${esc(s.veg.toLowerCase())}` : ''}${s.sub ? `, su substrato ${esc(s.sub.toLowerCase())}` : ''}.`
+              : `It covers ${fmt(s.ha)} ha${s.com ? ` (${esc(s.com)})` : ''}${s.veg ? `; vegetation: ${esc(s.veg.toLowerCase())}` : ''}${s.sub ? `; substrate: ${esc(s.sub.toLowerCase())}` : ''}.`);
+  } else {
+    const area = !k.startsWith('ITA');
+    P.push(DESC[LANG][s.t] || '');
+    P.push(it ? `Si estende per ${fmt(s.ha)} ettari${s.anno && /^\d{4}/.test(String(s.anno)) ? ` ed è tutelato dal ${String(s.anno).slice(0, 4)}` : ''}.` : `It covers ${fmt(s.ha)} ha${s.anno && /^\d{4}/.test(String(s.anno)) ? ` and was established in ${String(s.anno).slice(0, 4)}` : ''}.`);
+    if (s.b && s.b.length) P.push(it ? `I boschi coprono circa ${fmt(s.bha)} ettari${area ? ' nei siti Natura 2000 collegati' : ''}: i più estesi sono ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`
+                                     : `Forests cover about ${fmt(s.bha)} ha${area ? ' in the linked Natura 2000 sites' : ''}; the largest are ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`);
+    const sp = specieDi(k), pi = sp.filter(i => SP.gr[i] === 'P');
+    if (pi.length) P.push(it ? `Tra le specie segnalate ci sono ${fmt(pi.length)} piante, come ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.` : `Recorded species include ${fmt(pi.length)} plants, such as ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.`);
+    const d = DENTRO[k] || [], v = d.filter(x => S[x].t === 'bv'), a = d.filter(x => S[x].t === 'am').sort((x, y) => (S[y].circ || 0) - (S[x].circ || 0));
+    if (v.length || a.length) {
+      const pz = [];
+      if (v.length) pz.push(t('vb')(v.length) + (v.length <= 3 ? ` (${esc(elenco(v.map(x => S[x].n)))})` : ''));
+      if (a.length) pz.push(t('va')(a.length));
+      let f = (it ? 'Al suo interno ci sono ' : 'Inside there are ') + elenco(pz) + '.';
+      if (a.length) { const g = S[a[0]]; f += it ? ` Il più grande è ${g.vg ? `<b>${esc(g.vg)}</b> ` : ''}in località ${esc(g.n)}, con un tronco di ${fmt(g.circ)} cm di circonferenza.` : ` The largest is ${g.vg ? `<b>${esc(g.vg)}</b> ` : 'the tree '}at ${esc(g.n)}, with a trunk ${fmt(g.circ)} cm around.`; }
+      P.push(f);
+    }
+  }
+  return `<div class="racconto">${P.filter(Boolean).map(x => '<p>' + x + '</p>').join('')}</div><div id="wk"></div><div id="gal"></div>`;
+}
+/* testi e foto dalla fonte (Wikipedia, Wikimedia Commons), senza salvarli: si caricano quando si apre la scheda */
+const WCACHE = {};
+const getJ = u => WCACHE[u] || (WCACHE[u] = fetch(u).then(r => r.ok ? r.json() : null).catch(() => null));
+const pulito = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const binomio = sp => { const w = (sp || '').replace(/\(.*?\)/g, ' ').split(/[\s,;]+/).filter(Boolean); if (w.length < 2) return ''; return w[1] === 'x' && w[2] ? w.slice(0, 3).join(' ') : w.slice(0, 2).join(' '); };
+async function wikiVoce(titolo) {
+  for (const L of LANG === 'it' ? ['it', 'en'] : ['en', 'it']) {
+    const j = await getJ(`https://${L}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(titolo.replace(/ /g, '_'))}`);
+    if (j && j.type === 'standard' && j.extract) return j;
+  }
+  return null;
+}
+async function wikiCerca(nome) {
+  const L = LANG === 'it' ? 'it' : 'en';
+  const j = await getJ(`https://${L}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(nome)}&srlimit=3&format=json&origin=*`);
+  const parole = norm(nome).split(/[^a-z0-9]+/).filter(w => w.length > 3);
+  for (const r of (j && j.query && j.query.search) || []) {
+    const tt = norm(r.title), ok = parole.filter(w => tt.includes(w)).length;
+    if (parole.length && ok / parole.length >= 0.6) return wikiVoce(r.title);
+  }
+  return null;
+}
+async function arricchisci(k) {
+  const s = S[k]; if (!s) return;
+  let w = null;
+  if (s.t === 'am' || s.t === 'bs') { const b = binomio(s.sp); if (b) w = await wikiVoce(b); }
+  else if (AREE.includes(s.t) || s.t === 'bv') w = await wikiCerca(s.n);
+  if (cur !== k) return;
+  if (w && $('wk')) {
+    const img = w.thumbnail ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : '';
+    $('wk').innerHTML = `<div class="wiki">${img}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA${w.thumbnail ? ' · ' + (LANG === 'it' ? 'foto: Wikimedia Commons' : 'photo: Wikimedia Commons') : ''}</div></div></div>`;
+  }
+  // foto dei luoghi: Wikimedia Commons attorno al punto
+  const lon = (s.bb[0] + s.bb[2]) / 2, lat = (s.bb[1] + s.bb[3]) / 2;
+  const diag = Math.hypot((s.bb[2] - s.bb[0]) * 88000, (s.bb[3] - s.bb[1]) * 111000);
+  const rag = s.t === 'am' ? 600 : Math.round(Math.min(10000, Math.max(1500, diag / 2)));
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=12&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
+  if (cur !== k || !$('gal')) return;
+  const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => p.imageinfo && /\.(jpe?g|png|webp)$/i.test(p.title)).slice(0, 10);
+  if (!ph.length) return;
+  $('gal').innerHTML = `<h3>${t('foto')}</h3><div class="gal">${ph.map(p => { const i = p.imageinfo[0], m = i.extmetadata || {};
+    const aut = pulito((m.Artist || {}).value).slice(0, 40), lic = pulito((m.LicenseShortName || {}).value);
+    return `<a href="${esc(i.descriptionurl)}" target="_blank" rel="noopener"><img src="${esc(i.thumburl)}" alt="${esc(p.title.replace(/^File:|\.\w+$/g, ''))}" loading="lazy">${esc(aut)}${lic ? ' · ' + esc(lic) : ''}</a>`; }).join('')}</div><p class="note">${t('fotoN')}</p>`;
+}
 function specieDi(k) {
   const s = S[k]; if (s.s) return s.s;
   const set = new Set(); for (const c of s.n2k || []) for (const i of S[c].s) set.add(i); return [...set];
@@ -263,7 +434,7 @@ function apriCF(c) {
   if (v.length) h += `<details><summary>${t('varianti')}<em>${v.length}</em></summary><div class="hab">${v.map(x => `<div style="grid-template-columns:1fr"><span>${esc(x)}</span></div>`).join('')}</div></details>`;
   $('sb').innerHTML = h + fonteSIF(); mostra();
 }
-function apriAmb(k, s) {
+function apriAmb(k, s) {  // boschi vetusti, boschi da seme, alberi monumentali
   const b = `<span class="badge ${s.t}">${t(s.t)}</span>`;
   let h = '';
   if (s.t === 'bv') {
@@ -275,20 +446,21 @@ function apriAmb(k, s) {
     h = `<dl class="kv">${riga('sup', s.ha ? fmt(s.ha) + ' ha' : '')}${riga('spp', s.sp ? '<i>' + esc(s.sp) + '</i>' : '')}${riga('veg', esc(s.veg))}${riga('sub', esc(s.sub))}${riga('com', esc(s.com))}${riga('dec', esc(s.dec))}</dl>`;
   } else {
     $('sh').innerHTML = testa(s.n, b);
-    if (s.sp) h = `<p class="sp"><i>${esc(s.sp)}</i>${s.vg ? ' · ' + esc(s.vg) : ''}</p>`;
+    if (s.sp) $('sh').innerHTML = testa(s.n, b + `<p class="sp" style="margin:6px 0 0"><i>${esc(s.sp)}</i>${s.vg ? ' · ' + esc(s.vg) : ''}</p>`);
     h += `<div class="stats"><div><b>${s.circ ? fmt(s.circ) + ' cm' : '–'}</b><span>${t('circ')}</span></div><div><b>${s.h ? fmt(s.h) + ' m' : '–'}</b><span>${t('alt')}</span></div><div><b>${s.alt ? fmt(s.alt) + ' m' : '–'}</b><span>${t('quota')}</span></div></div>`;
     h += `<dl class="kv">${riga('com', esc(s.com + (s.prov ? ' (' + s.prov + ')' : '')))}${riga('crit', (s.crit || []).map(esc).join('<br>'))}${riga('dm', esc(s.prov_dm))}</dl>`;
   }
-  $('sb').innerHTML = h + collegate(s.in || []) + (s.fonte === 'elenco' ? fonteElenco() : fonteSIF()); mostra();
+  $('sb').innerHTML = racconto(k) + h + collegate(s.in || []) + (s.fonte === 'elenco' ? fonteElenco() : fonteSIF()); mostra(); arricchisci(k);
 }
 function apri(k, vola) {
   if (k.startsWith('CF:')) return apriCF(k.slice(3));
   const s = S[k]; if (!s) return; cur = k;
   selez(k);
   try { history.replaceState(null, '', '#' + k); } catch (e) {}
-  if (vola) map.fitBounds([[s.bb[0], s.bb[1]], [s.bb[2], s.bb[3]]], { padding: { top: 120, bottom: Math.min(innerHeight * 0.45, 380), left: 30, right: 30 }, maxZoom: s.t === 'am' ? 12 : 13, duration: 700 });
+  const lato = innerWidth >= 900;
+  if (vola) map.fitBounds([[s.bb[0], s.bb[1]], [s.bb[2], s.bb[3]]], { padding: lato ? { top: 90, bottom: 40, left: 480, right: 60 } : { top: 120, bottom: Math.min(innerHeight * 0.45, 380), left: 30, right: 30 }, maxZoom: s.t === 'am' ? 12 : 13, duration: 700 });
   if (AMB.includes(s.t)) {
-    if (!ON[s.t]) $('c-' + s.t).click();
+    if (!ON[s.t]) { ON[s.t] = true; applica(); }
     return apriAmb(k, s);
   }
   const area = !k.startsWith('ITA');
@@ -297,7 +469,7 @@ function apri(k, vola) {
   for (const i of sp) (byG[SP.gr[i]] = byG[SP.gr[i]] || []).push(SP.nomi[i]);
   const max = s.b.length ? s.b[0][1] || 1 : 1;
   const hab = s.h || [];
-  let h = `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
+  let h = racconto(k) + `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
   h += `<h3>${t('boschi')}</h3>`;
   if (s.b.length) {
     h += `<p class="note">${area ? t('nba') : t('nb')}</p>` + s.b.map(([c, ha]) => `<div class="bar"><span class="t">${esc(nb(c))}<small>${c} · ${esc(LANG === 'it' ? H.boschi[c][1] : H.hab[c])}</small></span><span class="v">${ha ? fmt(ha) + ' ha' : '< 1 ha'}</span><span class="tr"><i style="width:${Math.max(2, ha / max * 100)}%"></i></span></div>`).join('');
@@ -312,7 +484,7 @@ function apri(k, vola) {
   if (s.fonte === 'sif') h += `<p class="src">${t('fonte')}: <a href="https://sifweb.regione.sicilia.it/arcgis/rest/services/Parchi_Riserve/MapServer" target="_blank" rel="noopener">${t('sif')}</a> · ${t('lsif')}</p>`;
   else h += `<p class="src">${t('fonte')}: ${area ? `EEA NatDA v24 · <a href="https://regione.sicilia.it/istituzioni/regione/strutture-regionali/assessorato-territorio-ambiente/dipartimento-ambiente/aree-naturali-protette" target="_blank" rel="noopener">${t('reg')}</a>` : `<a href="https://natura2000.eea.europa.eu/Natura2000/SDF.aspx?site=${k}" target="_blank" rel="noopener">${t('sdf')} ${k}</a>`}</p>`;
   $('sb').innerHTML = h;
-  mostra();
+  mostra(); arricchisci(k);
 }
 window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && S[h] && h !== cur) apri(h, true); });
 testi();

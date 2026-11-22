@@ -76,3 +76,16 @@ for nome, el in pacchi.items():
     open(OUT + nome + '.txt', 'w').write(base64.b64encode(struct.pack('<I', len(j)) + j + b''.join(dati)).decode())
     tot += os.path.getsize(OUT + nome + '.txt')
 print(len(pacchi), 'pacchetti,', round(tot / 1e6, 1), 'MB in tutto')
+
+# ---- punti per la vista da lontano (zoom < 9): un punto per particella, con la macrocategoria
+# formato compatto: { m: [macro...], p: [[lon, lat, i_macro, ettari], ...] }
+from shapely.ops import transform as tr
+def wgs(x, y):
+    return x * 180 / 20037508.342789244, math.degrees(2 * math.atan(math.exp(y / 6378137)) - math.pi / 2)
+mac = sorted({p['m'] for p in props})
+pts = []
+for g, p in zip(geoms, props):
+    c = tr(wgs, g.representative_point())
+    pts.append([round(c.x, 3), round(c.y, 3), mac.index(p['m']), max(1, round(g.area / 1e4 * 0.62))])  # area in mercatore → ettari (cos 37,5°² ≈ 0,62)
+json.dump({'m': mac, 'p': pts}, open('www/data/cf_punti.json', 'w'), separators=(',', ':'))
+print('punti', len(pts), round(os.path.getsize('www/data/cf_punti.json') / 1e6, 2), 'MB')
