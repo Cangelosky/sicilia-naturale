@@ -397,6 +397,10 @@ function racconto(k) {
 }
 /* testi e foto dalla fonte (Wikipedia, Wikimedia Commons), senza salvarli: si caricano quando si apre la scheda */
 const WCACHE = {};
+/* regola del progetto: nessuna informazione sulla commestibilità (né funghi né piante).
+   Dai testi di Wikipedia si tolgono le frasi che parlano di commestibilità, tossicità, cucina o consumo. */
+const NOCOMM = /commestib|non commest|edul|eduli|mangerecc|mangiar|mangia|cucin|culinar|gastronom|ricett|prelibat|apprezzat[oi] (in|per|come)|sapore|consum|velen|tossic|mortal|letal|avvelen|intossic|allucinog|psicoattiv|edible|inedible|eaten|eating|cook|culinary|recipe|taste|poison|toxic|deadly|lethal|hallucinog|psychoactive|consum/i;
+const senzaComm = tx => { const f = String(tx || '').split(/(?<=[.!?])\s+/).filter(x => x && !NOCOMM.test(x)); return f.join(' '); };
 const getJ = u => WCACHE[u] || (WCACHE[u] = fetch(u).then(r => r.ok ? r.json() : null).catch(() => null));
 const pulito = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const binomio = sp => { const w = (sp || '').replace(/\(.*?\)/g, ' ').split(/[\s,;]+/).filter(Boolean); if (w.length < 2) return ''; return w[1] === 'x' && w[2] ? w.slice(0, 3).join(' ') : w.slice(0, 2).join(' '); };
@@ -425,7 +429,7 @@ async function arricchisci(k) {
   if (cur !== k) return;
   if (w && $('wk')) {
     const img = w.thumbnail ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : '';
-    $('wk').innerHTML = `<div class="wiki">${img}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA${w.thumbnail ? ' · ' + (LANG === 'it' ? 'foto: Wikimedia Commons' : 'photo: Wikimedia Commons') : ''}</div></div></div>`;
+    $('wk').innerHTML = `<div class="wiki">${img}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(senzaComm(w.extract))}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA${w.thumbnail ? ' · ' + (LANG === 'it' ? 'foto: Wikimedia Commons' : 'photo: Wikimedia Commons') : ''}</div></div></div>`;
   }
   // foto dei luoghi: Wikimedia Commons attorno al punto
   const lon = (s.bb[0] + s.bb[2]) / 2, lat = (s.bb[1] + s.bb[3]) / 2;
@@ -599,7 +603,7 @@ function apriSpecie(tipo, i) {
   $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : null);
   wikiVoce(r[0]).then(w => {
     if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
-    $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
+    $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(senzaComm(w.extract))}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
   });
 }
 /* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
