@@ -1,0 +1,10 @@
+# Sito di prova su Netlify: pubblica la cartella dell'app così com'è, senza build.
+[build]
+  publish = "www"
+  command = ""
+
+# non indicizzare su Google e simili
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
