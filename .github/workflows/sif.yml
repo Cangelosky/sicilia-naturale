@@ -1,0 +1,19 @@
+name: Dati SIF
+# esplora il servizio ArcGIS del SIF (Regione Siciliana) e scarica i livelli di parchi, riserve e zone sul ramo "sif"
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sif:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scarica
+        run: python3 tools/sif_zone.py
+      - name: Ramo sif
+        run: |
+          mkdir /tmp/sif && mv sif_* /tmp/sif/ && cd /tmp/sif && ls -la && git init -q -b sif && git add . \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "SIF $(date -u +%F)" \
+            && git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" sif
