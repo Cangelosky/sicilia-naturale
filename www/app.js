@@ -6,7 +6,8 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (it, en) => LANG === 'it' ? it : en;
 // nota di proprietà, in fondo alle pagine e ai Livelli
-const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
+let UPD = '';  // stato degli aggiornamenti automatici, mostrato nel piè di pagina
+const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -745,6 +746,8 @@ const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
 const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
 const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
+// plugin del telefono: da Capacitor 3 non sempre compaiono in Capacitor.Plugins, vanno registrati per nome
+const plug = n => { if (!isApp) return null; const C = window.Capacitor; try { return (C.Plugins && C.Plugins[n]) || (C.registerPlugin ? (C.Plugins[n] = C.registerPlugin(n)) : null); } catch (e) { return null; } };
 const modo = { escursioni: 'mappa', meteo: 'mappa', registra: 'mappa' };
 const mappaVista = v => (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
 let ultimaSpecie = 'funghi';
@@ -1293,7 +1296,7 @@ function ascolta() {
     const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
     REG.p.push(q); disegnaTrk(REG.p, REG.w); salvaCorrente(); aggRec();
   };
-  const BG = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation;
+  const BG = plug('BackgroundGeolocation');
   if (BG) {
     BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: T('Registrazione percorso in corso', 'Recording route'), requestPermissions: true, stale: false, distanceFilter: 4 },
       (loc, err) => { if (err) { erroreGps(err); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
@@ -1305,7 +1308,7 @@ function ascolta() {
 }
 function fermaReg() {
   if (!REG || !confirm(t('regConfFine'))) return;
-  if (bgId != null) { try { window.Capacitor.Plugins.BackgroundGeolocation.removeWatcher({ id: bgId }); } catch (e) {} bgId = null; }
+  if (bgId != null) { try { plug('BackgroundGeolocation').removeWatcher({ id: bgId }); } catch (e) {} bgId = null; }
   if (wid != null) navigator.geolocation.clearWatch(wid); wid = null; try { wake && wake.release(); } catch (e) {}
   clearInterval(tick);
   const fatto = REG.p.length > 1 || REG.w.length;
@@ -1503,7 +1506,7 @@ function azioneTrk(id, az) {
 setInterval(() => { if (REG && vista === 'escursioni') regUI(); }, 30000);
 // tasto Indietro di Android: chiude le schede aperte; durante la registrazione manda l'app in secondo piano invece di chiuderla
 (function indietro() {
-  const A = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.App; if (!A) return;
+  const A = plug('App'); if (!A) return;
   A.addListener('backButton', () => {
     if ($('wps').classList.contains('on')) return $('wps-x').click();
     if ($('wpf').classList.contains('on')) return $('wpf-x').click();
@@ -1647,22 +1650,22 @@ testi();
 // aggiornamenti automatici dell'app (Capgo updater, modalità manuale): all'avvio controlla version.json sul ramo "ota" del repository,
 // scarica il nuovo codice in sottofondo e lo applica alla prossima apertura. Serve un APK nuovo solo se cambia la parte nativa (apkMin).
 (async function aggiornamenti() {
-  const U = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater; if (!U) return;
+  if (!isApp) return; const U = plug('CapacitorUpdater'); if (!U) { UPD = 'plugin assente'; return; }
   try { await U.notifyAppReady(); } catch (e) {}
   try {
-    const r = await fetch('https://raw.githubusercontent.com/Cangelosky/sicilia-naturale/ota/version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+    const r = await fetch('https://raw.githubusercontent.com/Cangelosky/sicilia-naturale/ota/version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) { UPD = 'rete ' + r.status; return; }
     const m = await r.json(), io = (window.SN_VER || {}).v;
-    if (!m.v || m.v === io) return;
+    if (!m.v || m.v === io) { UPD = 'aggiornata'; return; }
     const num = v => String(v || '0').split(/[.+-]/).slice(0, 3).map(Number);
     const meno = (a, b) => { a = num(a); b = num(b); for (let i = 0; i < 3; i++) { if ((a[i] || 0) !== (b[i] || 0)) return (a[i] || 0) < (b[i] || 0); } return false; };
-    const A = window.Capacitor.Plugins.App, apk = A && A.getInfo ? (await A.getInfo()).version : '0';
+    const A = plug('App'), apk = A && A.getInfo ? (await A.getInfo()).version : '0';
     if (m.apkMin && meno(apk, m.apkMin)) { toast(T('C’è una versione nuova che richiede di installare l’APK aggiornato.', 'A new version needs the updated APK.')); return; }
     const gia = ((await U.list()).bundles || []).find(b => b.version === m.v && b.status !== 'error');
-    if (!gia) toast(T('Scarico l’aggiornamento…', 'Downloading the update…'));
+    UPD = 'scarico ' + m.v; if (!gia) toast(T('Scarico l’aggiornamento…', 'Downloading the update…'));
     const b = gia || await U.download({ url: m.url, version: m.v });
     await U.next({ id: b.id });
-    toast(T('Aggiornamento pronto: chiudi l’app e riaprila.', 'Update ready: close and reopen the app.'));
-  } catch (e) { toast(T('Aggiornamento non riuscito: ', 'Update failed: ') + String(e && e.message || e).slice(0, 80)); }
+    UPD = 'pronta ' + m.v; toast(T('Aggiornamento pronto: chiudi l’app e riaprila.', 'Update ready: close and reopen the app.'));
+  } catch (e) { UPD = 'errore: ' + String(e && e.message || e).slice(0, 120); toast(T('Aggiornamento non riuscito: ', 'Update failed: ') + String(e && e.message || e).slice(0, 80)); }
 })();
 /* ---------- mappe offline: scaricare una zona (dettaglio ed eventualmente satellite) */
 const ZK = 'sn_zone_off';
