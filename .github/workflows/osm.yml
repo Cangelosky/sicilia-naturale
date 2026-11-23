@@ -3,6 +3,11 @@ name: Dati OSM
 # e li mette sul ramo "osm"; le tile si costruiscono poi con tools/sentieri.py
 on:
   workflow_dispatch:
+    inputs:
+      cosa:
+        description: 'Cosa scaricare (vuoto = tutto; es. "punti")'
+        required: false
+        default: ''
 permissions:
   contents: write
 jobs:
@@ -11,8 +16,11 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+      - name: File già scaricati (ramo osm)
+        run: git fetch --depth 1 origin osm && git checkout FETCH_HEAD -- . 2>/dev/null; git reset -q; ls osm_*.json.gz || true
+        continue-on-error: true
       - name: Scarica da Overpass
-        run: python3 tools/scarica_osm.py
+        run: python3 tools/scarica_osm.py ${{ inputs.cosa }}
       - name: Ramo osm
         run: |
           mkdir /tmp/osm && mv osm_*.json.gz /tmp/osm/ && cd /tmp/osm && ls -la && git init -q -b osm && git add . \
