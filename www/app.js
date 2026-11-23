@@ -658,9 +658,12 @@ async function arricchisci(k) {
   const lon = (s.bb[0] + s.bb[2]) / 2, lat = (s.bb[1] + s.bb[3]) / 2;
   const diag = Math.hypot((s.bb[2] - s.bb[0]) * 88000, (s.bb[3] - s.bb[1]) * 111000);
   const rag = s.t === 'am' ? 600 : Math.round(Math.min(10000, Math.max(1500, diag / 2)));
-  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=12&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
   if (cur !== k || !$('gal')) return;
-  const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => p.imageinfo && /\.(jpe?g|png|webp)$/i.test(p.title)).slice(0, 10);
+  // via immagini da satellite, mappe, carte e foto dallo spazio: non mostrano il luogo come lo vede chi ci va
+  const NOFOTO = /satellit|sentinel|landsat|copernicus|nasa|\besa\b|\biss\d|\biss\b|view of earth|earth observation|astronaut|from space|dallo spazio|aerial|aerea|ortofoto|orthophoto|\bmaps?\b|mappa|cartina|carta |locator|topograph|\bplan\b|planimetr|diagram|schema|\bsvg\b|terra ?aqua|modis|worldview|google earth|openstreetmap|\bosm\b|stemma|coat of arms|flag|bandiera|logo|museo|musée|museum|targa|busto/i;
+  const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
+    return !NOFOTO.test([p.title, pulito((m.ImageDescription || {}).value), pulito((m.Categories || {}).value), pulito((m.Artist || {}).value)].join(' ')); }).sort((a, b) => (a.index || 0) - (b.index || 0)).slice(0, 10);
   if (!ph.length) return;
   $('gal').innerHTML = `<h3>${t('foto')}</h3><div class="gal">${ph.map(p => { const i = p.imageinfo[0], m = i.extmetadata || {};
     const aut = pulito((m.Artist || {}).value).slice(0, 40), lic = pulito((m.LicenseShortName || {}).value);
