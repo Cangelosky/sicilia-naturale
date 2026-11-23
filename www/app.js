@@ -6,7 +6,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (it, en) => LANG === 'it' ? it : en;
 // nota di proprietà, in fondo alle pagine e ai Livelli
-const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
+const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -1658,10 +1658,11 @@ testi();
     const A = window.Capacitor.Plugins.App, apk = A && A.getInfo ? (await A.getInfo()).version : '0';
     if (m.apkMin && meno(apk, m.apkMin)) { toast(T('C’è una versione nuova che richiede di installare l’APK aggiornato.', 'A new version needs the updated APK.')); return; }
     const gia = ((await U.list()).bundles || []).find(b => b.version === m.v && b.status !== 'error');
+    if (!gia) toast(T('Scarico l’aggiornamento…', 'Downloading the update…'));
     const b = gia || await U.download({ url: m.url, version: m.v });
     await U.next({ id: b.id });
-    toast(T('Aggiornamento scaricato: sarà attivo alla prossima apertura dell’app.', 'Update downloaded: active next time you open the app.'));
-  } catch (e) {}
+    toast(T('Aggiornamento pronto: chiudi l’app e riaprila.', 'Update ready: close and reopen the app.'));
+  } catch (e) { toast(T('Aggiornamento non riuscito: ', 'Update failed: ') + String(e && e.message || e).slice(0, 80)); }
 })();
 /* ---------- mappe offline: scaricare una zona (dettaglio ed eventualmente satellite) */
 const ZK = 'sn_zone_off';
