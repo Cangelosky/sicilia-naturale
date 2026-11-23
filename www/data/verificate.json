@@ -1,0 +1,6 @@
+{
+  "_come": "Schede controllate da esperti. Chiave = nome scientifico esatto della specie nel catalogo. Campi: da (nome dell'esperto), ruolo (es. micologo, botanico), data (AAAA-MM-GG), testo (facoltativo, testo semplice, MAI indicazioni sulla commestibilità), foto (facoltativo, file in data/foto/ con autore e licenza).",
+  "_esempio": { "Nome scientifico": { "da": "Nome Cognome", "ruolo": "micologo", "data": "2026-11-23", "testo": "", "foto": [{ "f": "nomefile.webp", "autore": "Nome Cognome", "lic": "CC BY 4.0" }] } },
+  "funghi": {},
+  "piante": {}
+}

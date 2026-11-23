@@ -885,6 +885,7 @@ function apriSpecie(tipo, i) {
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
   h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
+  verificata(tipo, r[0], cur);
   $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null), !f && sensibile('piante', i));
   wikiVoce(r[0]).then(w => {
     if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
@@ -915,7 +916,11 @@ const caricaPercorsi = () => PRC || (PRC = fetch('data/percorsi.json').then(r =>
 const areaPt = (lon, lat) => ((lat > 38.33 && lon > 14.2) || lon < 12.2 || lat < 36.2 || lat > 38.6 || (lon < 12.45 && lat < 38.1 && lat > 37.85)) ? 'iso' : Object.keys(AC).reduce((a, b) => ((AC[a][0] - lon) ** 2 * 0.62 + (AC[a][1] - lat) ** 2) <= ((AC[b][0] - lon) ** 2 * 0.62 + (AC[b][1] - lat) ** 2) ? a : b);
 const CAI = { T: ['Turistico', 'Easy'], E: ['Escursionistico', 'Hiking'], EE: ['Per escursionisti esperti', 'Expert hikers'], EEA: ['Esperti con attrezzatura', 'Experts with gear'] };
 const durata = d => { const m = /^(\d+):(\d+)/.exec(d || ''); return m ? `${+m[1]} h ${m[2] !== '00' ? m[2] : ''}`.trim() : (d || ''); };
-const pctTag = p => [`${num1(p.km)} km`, p.up ? `+${fmt(p.up)} m` : '', p.dur ? durata(p.dur) : '', p.c ? `<span class="cai c-${p.c}">${p.c}</span>` : ''].filter(Boolean).join(' · ');
+/* sentieri ufficiali: Sentiero Italia CAI, sezioni CAI, parchi ed enti pubblici (dai dati OpenStreetMap: sigla e gestore) */
+const uff = p => /^SI\b/i.test(p.r || '') || /^sentiero italia\b/i.test(p.n || '') ? 'si' : /\bc\.?a\.?i\.?\b|club alpino/i.test(p.op || '') ? 'cai' : /parco|riserva|foreste|dipartimento|demanio|comune|regione|ente /i.test(p.op || '') ? 'ente' : '';
+const UFF = { si: ['Sentiero Italia CAI', 'Sentiero Italia CAI'], cai: ['Sentiero CAI', 'CAI trail'], ente: ['Ente gestore', 'Official body'] };
+const uffTag = p => { const u = uff(p); return u ? `<span class="uff">${ico('shield-check', 'xs')}${T(...UFF[u])}</span>` : ''; };
+const pctTag = p => [uffTag(p), `${num1(p.km)} km`, p.up ? `+${fmt(p.up)} m` : '', p.dur ? durata(p.dur) : '', p.c ? `<span class="cai c-${p.c}">${p.c}</span>` : ''].filter(Boolean).join(' · ');
 function evidenziaPercorso(p) {
   if (!map.getSource('prc')) return;
   map.getSource('prc').setData({ type: 'FeatureCollection', features: p ? [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: p.g } }] : [] });
@@ -927,7 +932,7 @@ async function apriPercorso(id) {
   evidenziaPercorso(p); cur = null;
   map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: padMappa(), duration: 800, maxZoom: 15 });
   const it = LANG === 'it', c = CAI[p.c];
-  $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}</div><div class="avv" id="pc-avv"></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+  $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}${uff(p) ? `<span class="badge uffb">${ico('shield-check', 'xs')} ${T(...UFF[uff(p)])}</span>` : ''}</div><div class="avv" id="pc-avv"></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
   $('sb').innerHTML = `<div class="kpi"><div><b>${num1(p.km)}</b><span>km</span></div><div><b id="pc-up">${p.up ? '+' + fmt(p.up) : '…'}</b><span>m D+</span></div><div><b id="pc-dn">${p.dn ? '−' + fmt(p.dn) : '…'}</b><span>m D−</span></div><div><b>${p.dur ? durata(p.dur) : '–'}</b><span>${T('tempo', 'time')}</span></div></div>
     <div class="profilo" id="pc-prof"><small>${T('Profilo altimetrico…', 'Elevation profile…')}</small></div>
     ${p.da || p.a ? `<p>${it ? 'Da' : 'From'} <b>${esc(p.da || '–')}</b> ${it ? 'a' : 'to'} <b>${esc(p.a || '–')}</b>${p.giro ? (it ? ' (ad anello)' : ' (loop)') : ''}.</p>` : ''}
@@ -1105,6 +1110,7 @@ function escursioni() {
     <div class="prc-f quando">${ico('calendar')}${opt('prc-q', quando, [['oggi', T('Quando vai? Oggi', 'When? Today')], ['we', T('Questo fine settimana', 'This weekend')], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(m => [String(m), T('A ', 'In ') + nomeMese(m)])])}</div>
     <div class="prc-f">${opt('prc-a', prcSel.area, ORD_AREE.map(a => [a, t('AR')[a]]))}${opt('prc-d', prcSel.diff, [['', T('Ogni difficoltà', 'Any difficulty')], ...Object.keys(CAI).map(k => [k, k + ' · ' + T(...CAI[k])])])}</div>
     <div class="prc-f">${opt('prc-i', prcSel.int, [['', T('Ogni interesse', 'Any interest')], ['funghi', t('iFunghi')], ['alberi', t('iAlberi')], ['boschi', t('iBoschi')], ['flora', t('iFlora')]])}${opt('prc-l', prcSel.len, [['', T('Ogni lunghezza', 'Any length')], ['c', T('Fino a 5 km', 'Up to 5 km')], ['m', T('5–12 km', '5–12 km')], ['l', T('Oltre 12 km', 'Over 12 km')]])}</div>
+    <label class="chk"><input type="checkbox" id="prc-u"${prcSel.uff ? ' checked' : ''}> ${T('Solo sentieri ufficiali (CAI, Sentiero Italia, parchi)', 'Official trails only (CAI, Sentiero Italia, parks)')}</label>
     <div class="prc" id="prc"><p class="note">…</p></div>`;
   elencoPercorsi();
 }
@@ -1127,7 +1133,7 @@ function zoneDi(p) {
   return ZPRC[p.id] = out.sort((a, b) => (ord[S[a].t] ?? 9) - (ord[S[b].t] ?? 9) || S[a].ha - S[b].ha);
 }
 // percorsi consigliati: prima quelli con più informazioni (nome, difficoltà, dislivello, descrizione, gestore)
-let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8 };
+let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8, uff: false };
 async function elencoPercorsi() {
   const A = await caricaPercorsi(); if (!$('prc')) return;
   const punti = p => (p.n && p.n !== p.r ? 2 : 0) + (p.c ? 2 : 0) + (p.up ? 1 : 0) + (p.desc ? 2 : 0) + (p.op ? 1 : 0) + (p.net === 'rwn' || p.net === 'nwn' ? 1 : 0) + Math.min(2, p.km / 6);
@@ -1136,11 +1142,11 @@ async function elencoPercorsi() {
   if (prcSel.int) { const salva = intSel; intSel = new Set([prcSel.int]); zsc = {}; for (const x of suggerimenti(true)) zsc[x.k] = x.sc; intSel = salva; }
   const lenOk = p => !prcSel.len || (prcSel.len === 'c' ? p.km <= 5 : prcSel.len === 'm' ? p.km > 5 && p.km <= 12 : p.km > 12);
   const interesse = p => zsc ? Math.max(0, ...zoneDi(p).map(k => zsc[k] || 0)) : 0;
-  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff) && lenOk(p) && (!zsc || interesse(p) > 0))
+  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff) && (!prcSel.uff || uff(p)) && lenOk(p) && (!zsc || interesse(p) > 0))
     .sort((a, b) => (zsc ? interesse(b) - interesse(a) : 0) || punti(b) - punti(a));
   $('prc').innerHTML = L.length ? L.slice(0, prcSel.n).map(p => `<button class="pc" data-prc="${p.id}"><b>${esc(p.n)}</b><small>${p.r ? `<span class="ref">${esc(p.r)}</span> ` : ''}${pctTag(p)}</small></button>`).join('') + (L.length > prcSel.n ? `<button class="piu" id="prc-piu">${T('Mostra altri', 'Show more')} (${L.length - prcSel.n})</button>` : '') : `<p class="note">${T('Nessun percorso segnato qui con questi filtri.', 'No marked trails here with these filters.')}</p>`;
 }
-const filtroPrc = e => { if (vista !== 'escursioni') return; if (e.target.id === 'prc-q') { quando = e.target.value; return; } const k = { 'prc-a': 'area', 'prc-d': 'diff', 'prc-i': 'int', 'prc-l': 'len' }[e.target.id]; if (!k) return; prcSel[k] = e.target.value; prcSel.n = 8; elencoPercorsi(); if (k === 'area') map.fitBounds(limitiArea(prcSel.area), { padding: padMappa(), duration: 700 }); };
+const filtroPrc = e => { if (vista !== 'escursioni') return; if (e.target.id === 'prc-q') { quando = e.target.value; return; } if (e.target.id === 'prc-u') { prcSel.uff = e.target.checked; prcSel.n = 8; return elencoPercorsi(); } const k = { 'prc-a': 'area', 'prc-d': 'diff', 'prc-i': 'int', 'prc-l': 'len' }[e.target.id]; if (!k) return; prcSel[k] = e.target.value; prcSel.n = 8; elencoPercorsi(); if (k === 'area') map.fitBounds(limitiArea(prcSel.area), { padding: padMappa(), duration: 700 }); };
 $('pan').addEventListener('change', filtroPrc); $('cat').addEventListener('change', filtroPrc);
 window.escursioni = escursioni;
 const clickEsc = e => {
@@ -1594,6 +1600,14 @@ document.addEventListener('click', async e => { const b = e.target.closest('[dat
   specieDi(k).map(i => [t('G')[SP.gr[i]] || SP.gr[i], SP.nomi[i]]).sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1])).forEach(([g, n]) => { const j = trovaPianta(n); ri.push([g, n, j >= 0 ? nomeC('piante', j) : '', z.n, k]); });
   scarica(csv(ri), `specie-${k}.csv`, 'text/csv');
 });
+/* schede verificate da esperti (data/verificate.json): firma, testo e foto proprie in cima alla scheda */
+let VER = null;
+async function verificata(tipo, nome, k) {
+  VER = VER || fetch('data/verificate.json').then(r => r.ok ? r.json() : {}).catch(() => ({}));
+  const e = ((await VER)[tipo] || {})[nome]; if (!e || cur !== k) return;
+  const d = e.data ? new Date(e.data).toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB', { month: 'long', year: 'numeric' }) : '';
+  $('sb').insertAdjacentHTML('afterbegin', `<div class="verif">${ico('user-check', 'sm')}<span>${T('Scheda verificata da', 'Sheet checked by')} <b>${esc(e.da)}</b>${e.ruolo ? ', ' + esc(e.ruolo) : ''}${d ? ' · ' + esc(d) : ''}</span></div>${e.testo ? `<p>${esc(senzaComm(e.testo))}</p>` : ''}${(e.foto || []).length ? `<div class="ownph">${e.foto.map(f => `<img src="data/foto/${encodeURIComponent(f.f)}" alt="${esc(nome)}" loading="lazy">`).join('')}</div><p class="note">${e.foto.map(f => `© ${esc(f.autore || '')}${f.lic ? ' · ' + esc(f.lic) : ''}`).filter((v, i, a) => a.indexOf(v) === i).join(' · ')}</p>` : ''}`);
+}
 /* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
 async function mostraGbif(nome, key, sens) {
   if (!key) { const m = await getJ('https://api.gbif.org/v1/species/match?name=' + encodeURIComponent(nome)); key = m && m.usageKey; }
