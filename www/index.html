@@ -479,6 +479,22 @@ body.livon .oggibtn{display:none}
 .vic h3{display:flex;align-items:center;gap:6px}.vic h3 .ico{width:18px;height:18px}
 .vlist{display:flex;flex-direction:column}.vlist button{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:none;padding:8px 0;border-bottom:1px solid var(--line);text-align:left;cursor:pointer;font:inherit;color:var(--ink)}.vlist button b{display:block;font-weight:600;font-size:14.5px}.vlist button small{color:var(--mute);font-size:12.5px}.vlist button em{font-style:normal;color:var(--mute);font-size:12.5px;white-space:nowrap}
 .cal .mesesel{max-width:320px}
+
+/* itinerari: barra di disegno e schede */
+.pian{display:none;position:absolute;z-index:7;left:8px;right:8px;bottom:calc(72px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:12px 16px 14px}
+@media(min-width:900px){ .pian{left:auto;right:12px;width:400px;bottom:16px} }
+body.pianon .pian{display:block}
+body.pianon .top,body.pianon .pan,body.pianon #sheet,body.pianon .legend,body.pianon .regbar,body.pianon .cat,body.pianon .gbifchip{display:none!important}
+.pi-h{display:flex;align-items:center;justify-content:space-between}.pi-h b{font:600 18px 'Space Grotesk',Roboto,sans-serif}
+.pian .note{margin:4px 0 8px}.pian .kpi div{background:rgba(190,24,93,.07)}
+.pian input{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:16px Roboto,sans-serif;margin-bottom:10px}
+.pi-b{display:flex;gap:8px}.pi-b button{flex:1;height:46px;border-radius:23px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font:600 15px 'Space Grotesk',Roboto,sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.pi-b .fatto{border:0;background:linear-gradient(120deg,#9d174d,#db2777);color:#fff}.pi-b button:disabled{opacity:.45}
+.pan .lnk,#sheet .lnk{color:var(--g)}.ph-top .lnk{margin-left:auto;font-size:14px}
+details.miei{margin:6px 0 4px}details.miei summary{display:flex;align-items:center;gap:6px;cursor:pointer;font:600 15px 'Space Grotesk',Roboto,sans-serif;list-style:none;padding:8px 0}details.miei summary em{margin-left:auto;font-style:normal;color:var(--mute)}
+.prc .pc.it{background:rgba(190,24,93,.07);box-shadow:inset 3px 0 0 #be185d}
+.badge.it{background:#fce7f3;color:#9d174d}
+.az2{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}.az2 button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:6px 12px;font:500 13px Roboto,sans-serif;color:var(--g);cursor:pointer;min-height:34px;display:flex;align-items:center;gap:4px}
 </style>
 </head>
 <body>
@@ -508,6 +524,7 @@ body.livon .oggibtn{display:none}
   <div class="gbifchip" id="gbifchip"></div>
   <section class="cat" id="cat" aria-live="polite"></section>
   <aside class="pan" id="pan" aria-live="polite"></aside>
+  <div class="pian" id="pian"></div>
   <div id="sheet"><button class="grip" id="grip" aria-label="Espandi"><span></span></button><div class="sh" id="sh"></div><div class="body" id="sb"></div></div>
 </div>
 <script src="maplibre-gl.js"></script>

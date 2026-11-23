@@ -238,6 +238,7 @@ map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePi
 map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ['© 2026 Oscar Cangelosi · Sicilia Naturale', 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF'] }), 'bottom-left');
 
 /* ---------- dati */
+let PIAN = null;  // itinerario in disegno (vedi "itinerari")
 let S = {}, SP = { nomi: [], gr: [] }, H = { boschi: {}, hab: {} }, GJ, CFN = { tipi: {}, macro: {} }, GV, GS, GA, CFP;
 const DENTRO = {};   // zona -> boschi vetusti, boschi da seme e alberi che contiene
 const D = Promise.all(['schede', 'specie', 'habitat', 'zone', 'carta_forestale_nomi', 'vetusti', 'seme', 'alberi', 'cf_punti'].map(n => fetch('data/' + n + '.json').then(r => r.json())))
@@ -433,6 +434,7 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 map.on('click', e => {
   chiudiLiv();
   if (document.body.classList.contains('recon')) return;
+  if (PIAN) return pianClick(e);
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
@@ -520,7 +522,7 @@ function tastoEspandi() {
   c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
 }
 $('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; altSheet($('sheet').classList.contains('big') ? 1 : 2); });
-function chiudi() { evidenziaPercorso(null); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+function chiudi() { evidenziaPercorso(null); if (!PIAN && map.getSource('pian')) disegnaIt([], []); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 // schede e pannelli sul telefono: si trascinano dalla maniglia (o dal titolo) per abbassarli, nasconderli o allargarli
 function altezze(el, maniglia, chiudiDelTutto) {
   const stato = () => el.classList.contains('big') ? 2 : el.classList.contains('mini') ? 0 : 1;
@@ -1097,7 +1099,9 @@ function escursioni() {
   if (vista !== 'escursioni') return;
   if (!ON.osm) { ON.osm = true; applica(); }
   const opt = (id, val, lista) => `<select class="tendina" id="${id}">${lista.map(([v, l]) => `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
-  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Percorsi', 'Trails')}</h2></div>
+  const miei = leggiIt();
+  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Percorsi', 'Trails')}</h2><button class="lnk" id="it-nuovo">${ico('pencil', 'sm')} ${T('Crea itinerario', 'Plan a route')}</button></div>
+    ${miei.length ? `<details class="miei"><summary>${ico('route-2', 'sm')} ${T('I miei itinerari', 'My itineraries')}<em>${miei.length}</em></summary><div class="prc">${miei.map(x => `<button class="pc it" data-iti="${x.id}"><b>${esc(x.n)}</b><small>${num1(x.km)} km · +${fmt(x.up)} m · ${oreS(x.km / 4 + x.up / 400)}</small></button>`).join('')}</div></details>` : ''}
     <div class="prc-f quando">${ico('calendar')}${opt('prc-q', quando, [['oggi', T('Quando vai? Oggi', 'When? Today')], ['we', T('Questo fine settimana', 'This weekend')], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(m => [String(m), T('A ', 'In ') + nomeMese(m)])])}</div>
     <div class="prc-f">${opt('prc-a', prcSel.area, ORD_AREE.map(a => [a, t('AR')[a]]))}${opt('prc-d', prcSel.diff, [['', T('Ogni difficoltà', 'Any difficulty')], ...Object.keys(CAI).map(k => [k, k + ' · ' + T(...CAI[k])])])}</div>
     <div class="prc-f">${opt('prc-i', prcSel.int, [['', T('Ogni interesse', 'Any interest')], ['funghi', t('iFunghi')], ['alberi', t('iAlberi')], ['boschi', t('iBoschi')], ['flora', t('iFlora')]])}${opt('prc-l', prcSel.len, [['', T('Ogni lunghezza', 'Any length')], ['c', T('Fino a 5 km', 'Up to 5 km')], ['m', T('5–12 km', '5–12 km')], ['l', T('Oltre 12 km', 'Over 12 km')]])}</div>
@@ -1797,4 +1801,177 @@ async function oggiQui() {
   else usa(ll0);
 }
 $('oggi').onclick = oggiQui;
+/* ---------- itinerari per guide ed escursionisti: si disegnano toccando la mappa, il percorso segue sentieri e strade (BRouter, dati OpenStreetMap) */
+const ITK = 'sn_itinerari', SITO = 'https://sicilia-naturale.netlify.app/';
+const leggiIt = () => { try { return JSON.parse(localStorage.getItem(ITK)) || []; } catch (e) { return []; } };
+const scriviIt = a => { try { localStorage.setItem(ITK, JSON.stringify(a)); return true; } catch (e) { toast(T('Memoria del telefono piena', 'Phone storage full')); return false; } };
+const misIt = segs => { let km = 0, up = 0, dn = 0; for (const s of segs) { for (let i = 1; i < s.c.length; i++) km += hav(s.c[i - 1], s.c[i]) / 1000; up += s.up; dn += s.dn; } return { km, up: Math.round(up), dn: Math.round(dn), ore: km / 4 + up / 400 }; };
+const oreS = h => { const m = Math.round(h * 60); return Math.floor(m / 60) + ' h ' + String(m % 60).padStart(2, '0'); };
+async function tratto(a, b) {
+  const j = await fetch(`https://brouter.de/brouter?lonlats=${a[0].toFixed(5)},${a[1].toFixed(5)}|${b[0].toFixed(5)},${b[1].toFixed(5)}&profile=hiking-mountain&alternativeidx=0&format=geojson`).then(r => r.ok ? r.json() : null).catch(() => null);
+  const f = j && j.features && j.features[0];
+  if (!f) return { c: [[a[0], a[1], null], [b[0], b[1], null]], up: 0, dn: 0, dritto: true };
+  const up = +f.properties['filtered ascend'] || 0, net = +f.properties['plain-ascend'] || 0;
+  return { c: f.geometry.coordinates.map(q => [+q[0].toFixed(5), +q[1].toFixed(5), q[2] != null ? Math.round(q[2]) : null]), up, dn: Math.max(0, up - net) };
+}
+function pianSorg() {
+  if (map.getSource('pian')) return;
+  map.addSource('pian', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'pian-c', type: 'line', source: 'pian', filter: ['==', '$type', 'LineString'], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 9, 'line-opacity': 0.9 } });
+  map.addLayer({ id: 'pian-l', type: 'line', source: 'pian', filter: ['all', ['==', '$type', 'LineString'], ['!=', 'dritto', true]], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#be185d', 'line-width': 5 } });
+  map.addLayer({ id: 'pian-d', type: 'line', source: 'pian', filter: ['all', ['==', '$type', 'LineString'], ['==', 'dritto', true]], layout: { 'line-join': 'round' }, paint: { 'line-color': '#be185d', 'line-width': 4, 'line-dasharray': [1.5, 1.5] } });
+  map.addLayer({ id: 'pian-p', type: 'circle', source: 'pian', filter: ['==', '$type', 'Point'], paint: { 'circle-radius': 8, 'circle-color': ['case', ['==', ['get', 'i'], 0], '#15803d', '#be185d'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5 } });
+  map.addLayer({ id: 'pian-n', type: 'symbol', source: 'pian', filter: ['==', '$type', 'Point'], layout: { 'text-field': ['to-string', ['+', ['get', 'i'], 1]], 'text-size': 10, 'text-font': ['Noto Sans Regular'], 'text-allow-overlap': true }, paint: { 'text-color': '#fff' } });
+}
+function disegnaIt(tappe, segs) {
+  pianSorg();
+  map.getSource('pian').setData({ type: 'FeatureCollection', features: [...segs.map(s => ({ type: 'Feature', properties: { dritto: !!s.dritto }, geometry: { type: 'LineString', coordinates: s.c.map(q => [q[0], q[1]]) } })),
+    ...tappe.map((q, i) => ({ type: 'Feature', properties: { i }, geometry: { type: 'Point', coordinates: q } }))] });
+}
+function pianUI() {
+  const m = misIt(PIAN.segs), n = PIAN.tappe.length;
+  $('pian').innerHTML = `<div class="pi-h"><b>${PIAN.id ? T('Modifica itinerario', 'Edit itinerary') : T('Nuovo itinerario', 'New itinerary')}</b><button class="close" id="pi-x" aria-label="${t('chiudi')}">×</button></div>
+    <p class="note">${PIAN.calc ? T('Calcolo il percorso…', 'Working out the route…') : n ? T('Tocca la mappa per la tappa successiva. Il percorso segue sentieri e strade.', 'Tap the map for the next stop. The route follows trails and roads.') : T('Tocca la mappa nel punto di partenza.', 'Tap the map at the starting point.')}</p>
+    ${n > 1 ? `<div class="kpi"><div><b>${num1(m.km)}</b><span>km</span></div><div><b>+${fmt(m.up)}</b><span>m D+</span></div><div><b>−${fmt(m.dn)}</b><span>m D−</span></div><div><b>${oreS(m.ore)}</b><span>${T('tempo', 'time')}</span></div></div>` : ''}
+    ${PIAN.segs.some(s => s.dritto) ? `<p class="note">${T('Tratteggio: senza rete o sentiero non trovato, linea dritta.', 'Dashed: no network or no trail found, straight line.')}</p>` : ''}
+    ${n > 1 ? `<input id="pi-n" maxlength="80" placeholder="${T('Nome dell’itinerario', 'Itinerary name')}" value="${esc(PIAN.n || '')}">` : ''}
+    <div class="pi-b"><button id="pi-u"${n ? '' : ' disabled'}>${ico('arrow-back-up', 'sm')} ${T('Togli tappa', 'Undo stop')}</button><button class="fatto" id="pi-ok"${n > 1 && !PIAN.calc ? '' : ' disabled'}>${T('Salva', 'Save')}</button></div>`;
+}
+function nuovoIt(dati) {
+  chiudi(); PIAN = Object.assign({ tappe: [], segs: [], n: '', id: null, calc: false }, dati || {});
+  document.body.classList.add('pianon'); pianUI(); disegnaIt(PIAN.tappe, PIAN.segs);
+  if (PIAN.tappe.length) { const lo = PIAN.tappe.map(q => q[0]), la = PIAN.tappe.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: { top: 60, bottom: 260, left: 40, right: 40 }, maxZoom: 15, duration: 600 }); }
+  else if (map.getZoom() < 12) toast(T('Avvicinati alla zona e tocca il punto di partenza', 'Zoom in and tap the starting point'));
+}
+function esciIt() { PIAN = null; document.body.classList.remove('pianon'); if (map.getSource('pian')) disegnaIt([], []); if (vista === 'escursioni') escursioni(); }
+async function pianClick(e) {
+  if (PIAN.calc) return;
+  const q = [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)], prev = PIAN.tappe[PIAN.tappe.length - 1];
+  PIAN.tappe.push(q); disegnaIt(PIAN.tappe, PIAN.segs);
+  if (prev) { PIAN.calc = true; pianUI(); const s = await tratto(prev, q); if (!PIAN) return; PIAN.segs.push(s); PIAN.calc = false; disegnaIt(PIAN.tappe, PIAN.segs); }
+  pianUI();
+}
+async function ricalcolaIt(tappe) { const segs = []; for (let i = 1; i < tappe.length; i++) segs.push(await tratto(tappe[i - 1], tappe[i])); return segs; }
+$('pian').addEventListener('input', e => { if (e.target.id === 'pi-n' && PIAN) PIAN.n = e.target.value; });
+$('pian').addEventListener('click', e => {
+  if (!PIAN) return;
+  if (e.target.closest('#pi-x')) { if (PIAN.tappe.length > 1 && !confirm(T('Uscire senza salvare?', 'Leave without saving?'))) return; return esciIt(); }
+  if (e.target.closest('#pi-u')) { PIAN.tappe.pop(); if (PIAN.segs.length >= PIAN.tappe.length && PIAN.segs.length) PIAN.segs.pop(); disegnaIt(PIAN.tappe, PIAN.segs); return pianUI(); }
+  if (e.target.closest('#pi-ok')) {
+    const a = leggiIt(), m = misIt(PIAN.segs), x = { id: PIAN.id || 'I' + Date.now(), n: (PIAN.n || '').trim() || T('Itinerario del ', 'Itinerary of ') + new Date().toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB'), t: Date.now(), tappe: PIAN.tappe, segs: PIAN.segs, km: m.km, up: m.up, dn: m.dn };
+    const i = a.findIndex(y => y.id === x.id); if (i >= 0) a[i] = x; else a.unshift(x);
+    if (!scriviIt(a)) return;
+    esciIt(); toast(T('Itinerario salvato', 'Itinerary saved')); apriIt(x.id);
+  }
+});
+// l'itinerario come "percorso" per riusare meteo, zona e "Cosa puoi trovare" della scheda percorso
+function comePercorso(x) {
+  const g = x.segs.flatMap(s => s.c), lo = g.map(q => q[0]), la = g.map(q => q[1]);
+  return { id: x.id + '-' + x.t, n: x.n, g: [g.map(q => [q[0], q[1]])], s: x.tappe[0], bb: [Math.min(...lo), Math.min(...la), Math.max(...lo), Math.max(...la)], km: x.km, up: x.up, dn: x.dn };
+}
+function profiloIt(x) {
+  const g = x.segs.flatMap(s => s.c); let d = 0; const xs = [], z = [];
+  g.forEach((q, i) => { if (i) d += hav(g[i - 1], q) / 1000; if (q[2] != null) { xs.push(d); z.push(q[2]); } });
+  return { d: xs, z };
+}
+function svgProfilo(pr) {
+  if (pr.z.length < 2) return '';
+  const W = 320, H = 90, mn = Math.min(...pr.z), mx = Math.max(...pr.z), L = pr.d[pr.d.length - 1] || 1, X = v => 4 + (W - 8) * v / L, Y = v => H - 14 - (H - 26) * (v - mn) / Math.max(1, mx - mn);
+  const step = Math.max(1, Math.floor(pr.z.length / 160)), lin = pr.z.map((v, i) => i % step ? null : `${X(pr.d[i]).toFixed(1)},${Y(v).toFixed(1)}`).filter(Boolean).join(' ');
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polygon points="${X(0)},${H - 14} ${lin} ${X(L)},${H - 14}" fill="rgba(190,24,93,.15)"/><polyline points="${lin}" fill="none" stroke="#be185d" stroke-width="2"/><text x="4" y="10" font-size="9" fill="#667">${fmt(Math.round(mx))} m</text><text x="4" y="${H - 2}" font-size="9" fill="#667">${fmt(Math.round(mn))} m</text><text x="${W - 4}" y="${H - 2}" font-size="9" fill="#667" text-anchor="end">${num1(L)} km</text></svg>`;
+}
+function apriIt(id) {
+  const x = leggiIt().find(y => y.id === id); if (!x) return;
+  const p = comePercorso(x), ore = x.km / 4 + x.up / 400;
+  cur = null; disegnaIt(x.tappe, x.segs);
+  $('sh').innerHTML = `<div><h2>${esc(x.n)}</h2><div class="badges"><span class="badge it">${T('Il mio itinerario', 'My itinerary')}</span></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+  $('sb').innerHTML = `<div class="kpi"><div><b>${num1(x.km)}</b><span>km</span></div><div><b>+${fmt(x.up)}</b><span>m D+</span></div><div><b>−${fmt(x.dn)}</b><span>m D−</span></div><div><b>${oreS(ore)}</b><span>${T('tempo', 'time')}</span></div></div>
+    <div class="profilo">${svgProfilo(profiloIt(x))}</div>
+    <p class="note">${T(`${x.tappe.length} tappe. Tempo stimato per un escursionista medio: 4 km/h in piano più 1 ora ogni 400 m di salita, soste escluse.`, `${x.tappe.length} stops. Estimated time for an average hiker: 4 km/h on the flat plus 1 hour every 400 m of ascent, breaks excluded.`)}</p>
+    <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${x.tappe[0][1]},${x.tappe[0][0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" data-itaz="pdf">${ico('printer')} ${T('Scheda PDF', 'PDF sheet')}</button></div>
+    <div class="az2"><button data-itaz="link">${ico('link', 'sm')} ${T('Copia link', 'Copy link')}</button><button data-itaz="wa">WhatsApp</button><button data-itaz="gpx">GPX</button><button data-itaz="mod">${ico('pencil', 'sm')} ${T('Modifica', 'Edit')}</button><button data-itaz="del">${t('elimina')}</button></div>
+    <h3>${T('Meteo alla partenza', 'Weather at the start')}</h3><div class="pcmeteo" id="pc-met"><small class="note">${t('carico')}</small></div>
+    <div id="pc-zona"></div>
+    <h3>${T('Cosa puoi trovare', 'What you may find')}</h3><div id="pc-trova"><small class="note">${t('carico')}</small></div>
+    <p class="note">${T('Percorso calcolato su sentieri e strade di OpenStreetMap (ODbL) con BRouter. Verifica sempre sul posto segnaletica, meteo e condizioni del sentiero.', 'Route calculated on OpenStreetMap trails and roads (ODbL) with BRouter. Always check signs, weather and trail conditions on site.')}</p>
+    ${isApp ? `<div class="cta"><button id="it-segui">${ico('navigation')}${T('Segui l’itinerario', 'Follow this itinerary')}</button></div>` : ''}`;
+  $('sb').dataset.it = id; mostra();
+  meteoPercorso(p); zonaPercorso(p); trovaPercorso(p);
+  if ($('it-segui')) $('it-segui').onclick = () => avviaReg({ id: p.id, n: x.n, g: p.g, prof: profiloIt(x) });
+  inquadra(p.bb, 15.5);
+}
+const linkIt = x => (isApp || !/^https?:/.test(location.protocol) ? SITO : location.origin + location.pathname) + '#it=' + encodeURIComponent(x.n) + '@' + x.tappe.map(q => q[0].toFixed(5) + ',' + q[1].toFixed(5)).join(';');
+function gpxIt(x) {
+  const g = x.segs.flatMap(s => s.c);
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><metadata><name>${esc(x.n)}</name></metadata>${x.tappe.map((q, i) => `<wpt lat="${q[1]}" lon="${q[0]}"><name>${i + 1}</name></wpt>`).join('')}<trk><name>${esc(x.n)}</name><trkseg>${g.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}</trkpt>`).join('')}</trkseg></trk></gpx>`;
+}
+document.addEventListener('click', async e => {
+  const nb = e.target.closest('#it-nuovo'); if (nb) return nuovoIt();
+  const ob = e.target.closest('[data-iti]'); if (ob) return apriIt(ob.dataset.iti);
+  const b = e.target.closest('[data-itaz]'); if (!b) return;
+  const id = $('sb').dataset.it, x = leggiIt().find(y => y.id === id); if (!x) return;
+  const az = b.dataset.itaz, file = x.n.replace(/[^\w\-àèéìòù ]+/gi, '').trim().replace(/\s+/g, '-').toLowerCase() || 'itinerario';
+  if (az === 'gpx') return scarica(gpxIt(x), file + '.gpx', 'application/gpx+xml');
+  if (az === 'link') { const u = linkIt(x); try { await navigator.clipboard.writeText(u); toast(T('Link copiato', 'Link copied')); } catch (er) { prompt(T('Copia il link', 'Copy the link'), u); } return; }
+  if (az === 'wa') { const a = document.createElement('a'); a.href = 'https://wa.me/?text=' + encodeURIComponent(x.n + ' · ' + num1(x.km) + ' km, +' + fmt(x.up) + ' m\n' + linkIt(x)); a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); return; }
+  if (az === 'mod') return nuovoIt({ id: x.id, n: x.n, tappe: x.tappe.map(q => [...q]), segs: x.segs });
+  if (az === 'del') { if (!confirm(T('Eliminare questo itinerario?', 'Delete this itinerary?'))) return; scriviIt(leggiIt().filter(y => y.id !== id)); chiudi(); disegnaIt([], []); if (vista === 'escursioni') escursioni(); return; }
+  if (az === 'pdf') { b.disabled = true; try { await pdfIt(x); } catch (er) { toast(T('PDF non riuscito', 'PDF failed')); } b.disabled = false; }
+});
+// link condiviso: #it=Nome@lon,lat;lon,lat… → si ricalcola il percorso e si può salvare
+async function apriLinkIt(s) {
+  const at = s.lastIndexOf('@'); if (at < 0) return;
+  const n = decodeURIComponent(s.slice(0, at)), tappe = s.slice(at + 1).split(';').map(c => c.split(',').map(Number)).filter(q => q.length === 2 && q.every(isFinite)).slice(0, 60);
+  if (tappe.length < 2) return;
+  try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  if (vista !== 'escursioni') vai('escursioni');
+  nuovoIt({ n, tappe, segs: [], calc: true }); pianUI();
+  const segs = await ricalcolaIt(tappe); if (!PIAN) return; PIAN.segs = segs; PIAN.calc = false; disegnaIt(PIAN.tappe, segs); pianUI();
+  toast(T('Itinerario condiviso: salvalo per ritrovarlo', 'Shared itinerary: save it to keep it'));
+}
+// scheda PDF stampabile: mappa, numeri, profilo, tappe, avvertenze
+const libPdf = () => window.jspdf ? Promise.resolve(window.jspdf) : new Promise((ok, ko) => { const s = document.createElement('script'); s.src = 'lib/jspdf.umd.min.js'; s.onload = () => ok(window.jspdf); s.onerror = ko; document.head.appendChild(s); });
+function fotoMappa(x) {
+  return new Promise(ok => {
+    const p = comePercorso(x), r = map.getContainer().getBoundingClientRect(), R = 1.5, banda = Math.min(r.height, r.width / R), pv = Math.max(20, (r.height - banda) / 2 + 20);
+    disegnaIt(x.tappe, x.segs);
+    map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: { top: pv, bottom: pv, left: 24, right: 24 }, maxZoom: 15, duration: 0 });
+    const fine = setTimeout(() => ok(null), 12000);
+    map.once('idle', () => { map.once('render', () => { clearTimeout(fine); try {
+      const c = map.getCanvas(), k = c.width / r.width, ch = Math.round(banda * k), o = document.createElement('canvas'); o.width = c.width; o.height = ch;
+      o.getContext('2d').drawImage(c, 0, Math.round((c.height - ch) / 2), c.width, ch, 0, 0, c.width, ch);
+      ok({ u: o.toDataURL('image/jpeg', 0.85), w: o.width, h: o.height });
+    } catch (e) { ok(null); } }); map.triggerRepaint(); });
+  });
+}
+async function pdfIt(x) {
+  toast(T('Preparo la scheda…', 'Preparing the sheet…'));
+  const [{ jsPDF }, img] = await Promise.all([libPdf(), fotoMappa(x)]);
+  const d = new jsPDF({ unit: 'mm', format: 'a4' }), W = 210, M = 14, it = LANG === 'it', ore = x.km / 4 + x.up / 400, pr = profiloIt(x);
+  const txt = s => String(s).replace(/−/g, '-');
+  d.setFillColor(20, 61, 43); d.rect(0, 0, W, 24, 'F'); d.setTextColor(255); d.setFont('helvetica', 'bold'); d.setFontSize(9); d.text('SICILIA NATURALE', M, 9);
+  d.setFontSize(16); d.text(txt(d.splitTextToSize(x.n, W - 2 * M)[0]), M, 18);
+  d.setTextColor(30); d.setFontSize(10); d.setFont('helvetica', 'normal');
+  const k = [[num1(x.km) + ' km', it ? 'lunghezza' : 'length'], ['+' + fmt(x.up) + ' m', it ? 'salita' : 'ascent'], ['-' + fmt(x.dn) + ' m', it ? 'discesa' : 'descent'], [oreS(ore), it ? 'tempo stimato' : 'est. time']];
+  k.forEach(([v, l], i) => { const xx = M + i * (W - 2 * M) / 4; d.setFont('helvetica', 'bold'); d.setFontSize(14); d.text(v, xx, 34); d.setFont('helvetica', 'normal'); d.setFontSize(8); d.setTextColor(110); d.text(l, xx, 39); d.setTextColor(30); });
+  let y = 44;
+  if (img) { const w = W - 2 * M, h = w * img.h / img.w; d.addImage(img.u, 'JPEG', M, y, w, h); d.setDrawColor(200); d.rect(M, y, w, h); y += h + 3; d.setFontSize(7); d.setTextColor(120); d.text('Mappa: OpenStreetMap, OpenFreeMap, Mapzen Terrarium · Sicilia Naturale', M, y + 2); d.setTextColor(30); y += 7; }
+  if (pr.z.length > 1) {
+    const h = 30, w = W - 2 * M, mn = Math.min(...pr.z), mx = Math.max(...pr.z), L = pr.d[pr.d.length - 1] || 1, step = Math.max(1, Math.floor(pr.z.length / 300));
+    d.setFont('helvetica', 'bold'); d.setFontSize(10); d.text(it ? 'Profilo altimetrico' : 'Elevation profile', M, y); y += 3;
+    d.setDrawColor(220); d.rect(M, y, w, h); d.setDrawColor(190, 24, 93); d.setLineWidth(0.5);
+    let pv = null; pr.z.forEach((v, i) => { if (i % step) return; const px = M + w * pr.d[i] / L, py = y + h - 2 - (h - 4) * (v - mn) / Math.max(1, mx - mn); if (pv) d.line(pv[0], pv[1], px, py); pv = [px, py]; });
+    d.setLineWidth(0.2); d.setFont('helvetica', 'normal'); d.setFontSize(7); d.setTextColor(110); d.text(fmt(Math.round(mx)) + ' m', M + 1, y + 3.5); d.text(fmt(Math.round(mn)) + ' m', M + 1, y + h - 1); d.text(num1(L) + ' km', M + w - 1, y + h - 1, { align: 'right' }); d.setTextColor(30); y += h + 8;
+  }
+  const riga = (s, sz, bold) => { d.setFont('helvetica', bold ? 'bold' : 'normal'); d.setFontSize(sz); for (const l of d.splitTextToSize(txt(s), W - 2 * M)) { if (y > 282) { d.addPage(); y = 18; } d.text(l, M, y); y += sz * 0.45; } };
+  riga(it ? 'Tappe' : 'Stops', 10, true); y += 1;
+  let km = 0; x.tappe.forEach((q, i) => { if (i) km += x.segs[i - 1] ? x.segs[i - 1].c.reduce((s, c, j, a) => j ? s + hav(a[j - 1], c) / 1000 : 0, 0) : 0; const z = i ? (x.segs[i - 1].c[x.segs[i - 1].c.length - 1] || [])[2] : (x.segs[0].c[0] || [])[2]; riga(`${i + 1}.  ${q[1].toFixed(5)}, ${q[0].toFixed(5)}   ·   km ${num1(km)}${z != null ? '   ·   ' + fmt(z) + ' m' : ''}`, 9); });
+  y += 2; d.setTextColor(29, 78, 216); d.setFontSize(9); d.textWithLink(it ? 'Indicazioni per la partenza (Google Maps)' : 'Directions to the start (Google Maps)', M, y, { url: `https://www.google.com/maps/dir/?api=1&destination=${x.tappe[0][1]},${x.tappe[0][0]}` }); y += 5;
+  d.textWithLink(it ? 'Apri l’itinerario in Sicilia Naturale' : 'Open the itinerary in Sicilia Naturale', M, y, { url: linkIt(x) }); d.setTextColor(30); y += 7;
+  riga(it ? 'Tempo stimato per un escursionista medio: 4 km/h in piano più 1 ora ogni 400 m di salita, soste escluse. Percorso calcolato su sentieri e strade di OpenStreetMap (ODbL) con BRouter: verifica sempre segnaletica, meteo e condizioni del sentiero. In emergenza chiama il 112 e comunica la tua posizione.' : 'Estimated time for an average hiker: 4 km/h on the flat plus 1 hour every 400 m of ascent, breaks excluded. Route calculated on OpenStreetMap trails and roads (ODbL) with BRouter: always check signs, weather and trail conditions. In an emergency call 112 and give your position.', 8);
+  const pg = d.getNumberOfPages(); for (let i = 1; i <= pg; i++) { d.setPage(i); d.setFontSize(7); d.setTextColor(130); d.text(`© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${new Date().toLocaleDateString(it ? 'it-IT' : 'en-GB')}`, M, 291); d.text(`${i}/${pg}`, W - M, 291, { align: 'right' }); }
+  const blob = d.output('blob'), u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = (x.n.replace(/[^\w\-àèéìòù ]+/gi, '').trim().replace(/\s+/g, '-').toLowerCase() || 'itinerario') + '.pdf'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 10000);
+  inquadra(comePercorso(x).bb, 15.5);
+}
+{ const h = location.hash.slice(1); if (h.startsWith('it=')) D.then(() => setTimeout(() => apriLinkIt(h.slice(3)), 600)); }
 }
