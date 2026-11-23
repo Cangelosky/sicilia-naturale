@@ -963,10 +963,14 @@ function avviaReg() {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (!confirm(t('regConfIn'))) return;
   REG = { t0: Date.now(), p: [], ob: [...intSel], w: [] };
-  ascolta(); segui = true; salvaCorrente();
+  segui = true; salvaCorrente(); avviaVista();
+}
+// schermata e GPS: prima la schermata, poi il GPS (la richiesta dei permessi può mandare l'app in secondo piano)
+function avviaVista() {
+  clearInterval(tick); tick = setInterval(aggRec, 1000);
+  disegnaTrk(REG.p, REG.w); mostraRec(true); regUI();
   try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
-  tick = setInterval(aggRec, 1000);
-  disegnaTrk([], []); mostraRec(true); regUI();
+  try { ascolta(); } catch (e) { toast('GPS: ' + (e && e.message || e)); }
 }
 function ascolta() {
   const punto = (lon, lat, alt, acc) => {
@@ -980,7 +984,7 @@ function ascolta() {
   if (BG) {
     BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: T('Registrazione percorso in corso', 'Recording route'), requestPermissions: true, stale: false, distanceFilter: 4 },
       (loc, err) => { if (err) { toast(t('noGps')); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
-      .then(id => { bgId = id; });
+      .then(id => { bgId = id; }).catch(e => toast('GPS: ' + (e && e.message || e)));
   } else {
     wid = navigator.geolocation.watchPosition(pos => { const c = pos.coords; punto(c.longitude, c.latitude, c.altitude, c.accuracy); },
       () => toast(t('noGps')), { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
@@ -998,8 +1002,12 @@ function fermaReg() {
   regUI(); trkUI();
 }
 // se l'app è stata chiusa durante una registrazione, il percorso non va perso
+// se l'app si è riavviata durante la registrazione (permessi, memoria), la registrazione riprende da dove era
 (function recupera() {
-  try { const r = JSON.parse(localStorage.getItem(TKC)); if (r && (r.p.length > 1 || (r.w && r.w.length))) { const a = leggiTrk(); if (!a.some(x => x.id === 'T' + r.t0)) { a.unshift({ id: 'T' + r.t0, t0: r.t0, ob: r.ob, p: r.p, w: r.w || [] }); scriviTrk(a); } } localStorage.removeItem(TKC); } catch (e) {}
+  let r = null; try { r = JSON.parse(localStorage.getItem(TKC)); } catch (e) {}
+  if (!r) return;
+  if (isApp && Date.now() - r.t0 < 24 * 3600e3) { REG = { t0: r.t0, p: r.p || [], ob: r.ob || [], w: r.w || [] }; segui = true; setTimeout(() => { avviaVista(); toast(T('Registrazione ripresa', 'Recording resumed')); }, 800); return; }
+  try { if (r.p.length > 1 || (r.w && r.w.length)) { const a = leggiTrk(); if (!a.some(x => x.id === 'T' + r.t0)) { a.unshift({ id: 'T' + r.t0, t0: r.t0, ob: r.ob, p: r.p, w: r.w || [] }); scriviTrk(a); } } localStorage.removeItem(TKC); } catch (e) {}
 })();
 $('rec-min').onclick = () => mostraRec(false);
 $('recpill').onclick = () => mostraRec(true);
