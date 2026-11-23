@@ -238,6 +238,7 @@ map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePi
 map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ['© 2026 Oscar Cangelosi · Sicilia Naturale', 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF'] }), 'bottom-left');
 
 /* ---------- dati */
+let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8, uff: false, zona: '' };
 let PIAN = null;  // itinerario in disegno (vedi "itinerari")
 let S = {}, SP = { nomi: [], gr: [] }, H = { boschi: {}, hab: {} }, GJ, CFN = { tipi: {}, macro: {} }, GV, GS, GA, CFP;
 const DENTRO = {};   // zona -> boschi vetusti, boschi da seme e alberi che contiene
@@ -718,7 +719,7 @@ function apri(k, vola) {
   for (const i of sp) (byG[SP.gr[i]] = byG[SP.gr[i]] || []).push(SP.nomi[i]);
   const max = s.b.length ? s.b[0][1] || 1 : 1;
   const hab = s.h || [];
-  let h = racconto(k) + regole(s) + `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
+  let h = `<div class="cta trovaprc"><button data-trovaprc="${k}">${ico('route')}${T('Trova un percorso qui', 'Find a trail here')}</button></div>` + racconto(k) + regole(s) + `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
   h += `<h3>${t('boschi')}</h3>`;
   if (s.b.length) {
     h += `<p class="note">${area ? t('nba') : t('nb')}</p>` + s.b.map(([c, ha]) => `<div class="bar"><span class="t">${esc(nb(c))}<small>${c} · ${esc(LANG === 'it' ? H.boschi[c][1] : H.hab[c])}</small></span><span class="v">${ha ? fmt(ha) + ' ha' : '< 1 ha'}</span><span class="tr"><i style="width:${Math.max(2, ha / max * 100)}%"></i></span></div>`).join('');
@@ -751,6 +752,7 @@ if (isApp) document.body.classList.add('app');
 function vai(v) {
   vista = v; document.body.classList.remove('escreg'); document.body.classList.remove('vm-esc', 'vm-met'); document.body.classList.add(v === 'escursioni' ? 'vm-esc' : v === 'meteo' ? 'vm-met' : 'vm-x');
   if (v === 'specie') return vai(ultimaSpecie);
+  if (v !== 'escursioni') prcSel.zona = '';
   if (v === 'funghi' || v === 'piante') ultimaSpecie = v;
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v || (b.dataset.v === 'specie' && (v === 'funghi' || v === 'piante')));
   const mm = mappaVista(v), lista = v !== 'mappa' && !mm;
@@ -1106,6 +1108,7 @@ function escursioni() {
   const opt = (id, val, lista) => `<select class="tendina" id="${id}">${lista.map(([v, l]) => `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
   const miei = leggiIt();
   $('pan').innerHTML = `<div class="ph-top"><h2>${T('Percorsi', 'Trails')}</h2><button class="lnk" id="it-nuovo">${ico('pencil', 'sm')} ${T('Crea itinerario', 'Plan a route')}</button></div>
+    ${prcSel.zona && S[prcSel.zona] ? `<div class="zchip">${T('Nella zona', 'In')}: <b>${esc(S[prcSel.zona].n)}</b><button id="prc-z" aria-label="${t('chiudi')}">×</button></div>` : ''}
     ${miei.length ? `<details class="miei"><summary>${ico('route-2', 'sm')} ${T('I miei itinerari', 'My itineraries')}<em>${miei.length}</em></summary><div class="prc">${miei.map(x => `<button class="pc it" data-iti="${x.id}"><b>${esc(x.n)}</b><small>${num1(x.km)} km · +${fmt(x.up)} m · ${oreS(x.km / 4 + x.up / 400)}</small></button>`).join('')}</div></details>` : ''}
     <div class="prc-f quando">${ico('calendar')}${opt('prc-q', quando, [['oggi', T('Quando vai? Oggi', 'When? Today')], ['we', T('Questo fine settimana', 'This weekend')], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(m => [String(m), T('A ', 'In ') + nomeMese(m)])])}</div>
     <div class="prc-f">${opt('prc-a', prcSel.area, ORD_AREE.map(a => [a, t('AR')[a]]))}${opt('prc-d', prcSel.diff, [['', T('Ogni difficoltà', 'Any difficulty')], ...Object.keys(CAI).map(k => [k, k + ' · ' + T(...CAI[k])])])}</div>
@@ -1114,6 +1117,11 @@ function escursioni() {
     <div class="prc" id="prc"><p class="note">…</p></div>`;
   elencoPercorsi(); panoramica();
 }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-trovaprc]');
+  if (b) { prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8, uff: false, zona: b.dataset.trovaprc }; vai('escursioni'); const z = S[prcSel.zona]; if (z && z.bb) setTimeout(() => inquadra(z.bb, 12), 400); return; }
+  if (e.target.closest('#prc-z')) { prcSel.zona = ''; prcSel.n = 8; escursioni(); }
+});
 /* panoramica dei percorsi segnati sulla mappa intera (sotto lo zoom 9, poi subentrano i sentieri dettagliati) */
 async function panoramica() {
   if (!map.getSource('prv')) {
@@ -1144,7 +1152,6 @@ function zoneDi(p) {
   return ZPRC[p.id] = out.sort((a, b) => (ord[S[a].t] ?? 9) - (ord[S[b].t] ?? 9) || S[a].ha - S[b].ha);
 }
 // percorsi consigliati: prima quelli con più informazioni (nome, difficoltà, dislivello, descrizione, gestore)
-let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8, uff: false };
 async function elencoPercorsi() {
   const A = await caricaPercorsi(); if (!$('prc')) return;
   const punti = p => (p.n && p.n !== p.r ? 2 : 0) + (p.c ? 2 : 0) + (p.up ? 1 : 0) + (p.desc ? 2 : 0) + (p.op ? 1 : 0) + (p.net === 'rwn' || p.net === 'nwn' ? 1 : 0) + Math.min(2, p.km / 6);
@@ -1153,7 +1160,8 @@ async function elencoPercorsi() {
   if (prcSel.int) { const salva = intSel; intSel = new Set([prcSel.int]); zsc = {}; for (const x of suggerimenti(true)) zsc[x.k] = x.sc; intSel = salva; }
   const lenOk = p => !prcSel.len || (prcSel.len === 'c' ? p.km <= 5 : prcSel.len === 'm' ? p.km > 5 && p.km <= 12 : p.km > 12);
   const interesse = p => zsc ? Math.max(0, ...zoneDi(p).map(k => zsc[k] || 0)) : 0;
-  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff) && (!prcSel.uff || uff(p)) && lenOk(p) && (!zsc || interesse(p) > 0))
+  const zz = prcSel.zona && S[prcSel.zona], nellaZona = p => !zz || (zz.bb && !(zz.bb[2] < p.bb[0] || zz.bb[0] > p.bb[2] || zz.bb[3] < p.bb[1] || zz.bb[1] > p.bb[3]) && zoneDi(p).includes(prcSel.zona));
+  const L = A.filter(p => nellaZona(p) && (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff) && (!prcSel.uff || uff(p)) && lenOk(p) && (!zsc || interesse(p) > 0))
     .sort((a, b) => (zsc ? interesse(b) - interesse(a) : 0) || punti(b) - punti(a));
   $('prc').innerHTML = L.length ? L.slice(0, prcSel.n).map(p => `<button class="pc" data-prc="${p.id}"><b>${esc(p.n)}</b><small>${p.r ? `<span class="ref">${esc(p.r)}</span> ` : ''}${pctTag(p)}</small></button>`).join('') + (L.length > prcSel.n ? `<button class="piu" id="prc-piu">${T('Mostra altri', 'Show more')} (${L.length - prcSel.n})</button>` : '') : `<p class="note">${T('Nessun percorso segnato qui con questi filtri.', 'No marked trails here with these filters.')}</p>`;
 }
