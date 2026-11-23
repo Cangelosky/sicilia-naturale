@@ -448,7 +448,7 @@ map.on('click', e => {
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
-    if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small></div>`).addTo(map); return; }
+    if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small>${gmapsLink(po[0].geometry.coordinates)}</div>`).addTo(map); return; }
     const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r', ...(map.getLayer('prv') && vista === 'escursioni' ? ['prv'] : [])] });
     if (pr.length) { apriPercorso(pr[0].properties.id); return; }
   }
@@ -922,6 +922,8 @@ function avvisoMappa(m, ms) {
 const POI = { rifugio: 'home', riparo: 'tent', picnic: 'tools-kitchen-2', panorama: 'binoculars', campeggio: 'tent', fontana: 'fountain', sorgente: 'droplet', vetta: 'mountain', grotta: 'building-arch', cascata: 'stairs-down', castello: 'building-castle', chiesa: 'building-church', torre: 'tower', rovine: 'columns', segnaletica: 'direction-sign', pannello: 'direction-sign' };
 const POIC = { rifugio: '#c2570c', riparo: '#c2570c', picnic: '#2b8a3e', campeggio: '#2b8a3e', segnaletica: '#8d7a3a', pannello: '#8d7a3a', panorama: '#e8590c', fontana: '#1c7ed6', sorgente: '#1c7ed6', cascata: '#0b7285', vetta: '#495057', grotta: '#6b4226', castello: '#7048e8', chiesa: '#7048e8', torre: '#7048e8', rovine: '#7048e8' };
 const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
+// foto e recensioni dei punti di interesse: si aprono in Google Maps (nessun dato di Google dentro l'app)
+const gmapsLink = (c, cl) => `<a class="gml ${cl || ''}" href="https://www.google.com/maps/search/?api=1&query=${(+c[1]).toFixed(5)},${(+c[0]).toFixed(5)}" target="_blank" rel="noopener">${ico('map-pin', 'xs')} ${T('Apri in Google Maps', 'Open in Google Maps')}</a>`;
 function iconePoi() {
   for (const [k, i] of Object.entries(POI)) {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="${POIC[k]}" stroke="#fff" stroke-width="5"/><g transform="translate(17 17) scale(1.25)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICO[i]}</g></svg>`;
@@ -1691,7 +1693,7 @@ testi();
     if (m.apkMin && meno(apk, m.apkMin)) { toast(T('C’è una versione nuova che richiede di installare l’APK aggiornato.', 'A new version needs the updated APK.')); return; }
     const gia = ((await U.list()).bundles || []).find(b => b.version === m.v && b.status !== 'error');
     UPD = 'scarico ' + m.v; if (!gia) toast(T('Scarico l’aggiornamento…', 'Downloading the update…'));
-    const b = gia || await U.download({ url: m.url, version: m.v });
+    const b = gia || await U.download({ url: m.url, version: m.v, checksum: m.checksum || '' });
     await U.next({ id: b.id });
     UPD = 'pronta ' + m.v; toast(T('Aggiornamento pronto: chiudi l’app e riaprila.', 'Update ready: close and reopen the app.'));
   } catch (e) { UPD = 'errore: ' + String(e && e.message || e).slice(0, 120); toast(T('Aggiornamento non riuscito: ', 'Update failed: ') + String(e && e.message || e).slice(0, 80)); }

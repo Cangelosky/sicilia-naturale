@@ -34,7 +34,8 @@ jobs:
           fi
           mv /tmp/ota/www.zip "$F"
           { echo "$F"; cat /tmp/resto 2>/dev/null; } > elenco.txt
-          echo "{\"v\":\"$V\",\"apkMin\":\"$(cat /tmp/ota_min)\",\"url\":\"https://raw.githubusercontent.com/${{ github.repository }}/ota/$F\"}" > version.json
+          SUM=$(sha256sum "$F" | cut -d' ' -f1)
+          echo "{\"v\":\"$V\",\"apkMin\":\"$(cat /tmp/ota_min)\",\"url\":\"https://raw.githubusercontent.com/${{ github.repository }}/ota/$F\",\"checksum\":\"$SUM\"}" > version.json
           cat version.json elenco.txt; ls -la
           git init -q -b ota && git add . \
             && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Aggiornamento $V" \
