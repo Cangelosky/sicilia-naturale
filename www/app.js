@@ -331,13 +331,19 @@ let base = {};
 
 /* ---------- livelli e filtri */
 let bosco = '';
-const ON = { aree: true, n2k: true, bv: false, am: false, bs: false, cf: false, osm: false };
+const ON = { aree: true, n2k: true, zi: false, bv: false, am: false, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
-const LIV = { osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
+const LIV = { zi: ['zall-f', 'zall-l'], osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 // in Escursioni i sentieri restano visibili anche quando le zone sono evidenziate
 const sentInEsc = l => vista === 'escursioni' && ON.osm && LIV.osm.includes(l);
 function applica() {
   if (!map.getLayer('aree-f')) return;
+  if (ON.zi && !map.getSource('zall')) { caricaZI().then(z => { if (map.getSource('zall')) return;
+    const col = ['match', ['get', 'z'], 'A', ZCOL.A, 'B', ZCOL.B, 'B1', ZCOL.B1, 'B2', ZCOL.B2, 'B3', ZCOL.B3, 'C', ZCOL.C, 'D', ZCOL.D, '#888'];
+    map.addSource('zall', { type: 'geojson', data: { type: 'FeatureCollection', features: z.features.filter(f => !(RP[f.properties.k] || {}).nonvig) } });
+    map.addLayer({ id: 'zall-f', type: 'fill', source: 'zall', paint: { 'fill-color': col, 'fill-opacity': 0.18 } }, map.getLayer('prc-c') ? 'prc-c' : undefined);
+    map.addLayer({ id: 'zall-l', type: 'line', source: 'zall', paint: { 'line-color': col, 'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 12, 1.8] } }, map.getLayer('prc-c') ? 'prc-c' : undefined);
+    applica(); }); }
   let ids = null;
   if (bosco) ids = Object.keys(S).filter(k => bosco === '*' ? S[k].bha > 0 : S[k].b.some(b => b[0] === bosco));
   for (const [l, f] of Object.entries(base)) {
@@ -357,6 +363,7 @@ function applica() {
 }
 const SW = {
   aree: '<i style="width:18px;height:14px;border-radius:3px;background:#2d6a4f55;border:2px solid #1b4332"></i>',
+  zi: '<i style="width:20px;height:16px;border-radius:4px;background:linear-gradient(90deg,#b91c1c 0 25%,#ea580c 25% 50%,#ca8a04 50% 75%,#16a34a 75%)"></i>',
   n2k: '<i style="width:18px;height:14px;border-radius:3px;background:#2f7ea822;border:2px solid #2f7ea8;box-shadow:3px 3px 0 -1px #fff,3px 3px 0 0 #7a5ea8"></i>',
   bv: '<i style="width:18px;height:14px;border-radius:3px;background:#c2571a99;border:2px solid #8a3a0e"></i>',
   am: '<i style="width:12px;height:12px;border-radius:50%;background:#5b3a1a;box-shadow:0 0 0 2px #fff,0 0 0 3px #5b3a1a"></i>',
@@ -370,7 +377,7 @@ function pannello() {
   const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
   const mac = Object.keys(CFC).filter(m => CFN.macro[m]);
   $('liv').innerHTML = `<button class="grip" aria-label="Abbassa"><span></span></button><div class="lvh"><h3>${t('livelli')}</h3><button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('liv').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button><button class="close" aria-label="${t('chiudi')}">×</button></div><h4>${T('Sentieri', 'Trails')}</h4>` + riga_lv('osm', t('sent'), t('dSent')) + `<h4>${t('gTut')}</h4>`
-    + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
+    + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('zi', T('Visualizza zone', 'Show zones'), T('Zone A, B, C, D dei parchi e riserva / preriserva delle riserve (Regione Siciliana).', 'Park zones A, B, C, D and reserve / pre-reserve areas (Regione Siciliana).')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
     + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
