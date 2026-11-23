@@ -5,6 +5,8 @@
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const T = (it, en) => LANG === 'it' ? it : en;
+// nota di proprietà, in fondo alle pagine e ai Livelli
+const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -207,7 +209,7 @@ function satellite(on) {
 bs.onclick = () => satellite(!satOn);
 map.on('load', () => satellite(satOn));
 map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'bottom-right');
-map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF' }), 'bottom-left');
+map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ['© 2026 Oscar Cangelosi · Sicilia Naturale', 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF'] }), 'bottom-left');
 
 /* ---------- dati */
 let S = {}, SP = { nomi: [], gr: [] }, H = { boschi: {}, hab: {} }, GJ, CFN = { tipi: {}, macro: {} }, GV, GS, GA, CFP;
@@ -331,7 +333,7 @@ function pannello() {
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
     + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
-    + riga_lv('bs', t('bss'), t('dBs'));
+    + riga_lv('bs', t('bss'), t('dBs')) + COPY();
   $('bosco').value = bosco;
   $('bosco').onchange = e => { bosco = e.target.value; applica(); };
 }
@@ -786,7 +788,7 @@ function catalogo(soloTesti) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
       $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : T('Piante', 'Plants')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
-        <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button></div>`;
+        <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button>${COPY()}</div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
       if ($('cf')) $('cf').onchange = e => { cs.piante.fam = e.target.value; cs.piante.n = 60; catalogo(); };
     }
