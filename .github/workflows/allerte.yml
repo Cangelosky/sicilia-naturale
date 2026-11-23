@@ -1,0 +1,23 @@
+name: Allerte
+# ogni giorno, dopo il bollettino nazionale di criticità (ore 14-16), copia le allerte della Sicilia per oggi e domani
+# sul ramo "dati" (allerte.json), letto dall'app e dal sito
+on:
+  schedule:
+    - cron: '47 13 * * *'
+    - cron: '17 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  allerte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install shapely
+      - name: Allerte Sicilia
+        run: mkdir /tmp/a && cd /tmp/a && python3 $GITHUB_WORKSPACE/tools/allerte.py
+      - name: Ramo dati
+        run: |
+          mkdir /tmp/dati && cp /tmp/a/allerte.json /tmp/dati/ && cd /tmp/dati && git init -q -b dati && git add . \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Allerte $(date -u +%F)" \
+            && git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" dati

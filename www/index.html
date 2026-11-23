@@ -460,6 +460,25 @@ details.fuoris summary{font-size:13px;color:var(--mute);cursor:pointer;margin:6p
 .mesi .mb span.on{background:#cfe8d6;color:#1f5a37}.mesi .mb span.qui{outline:2px solid var(--gd);outline-offset:-2px}.mesi small{display:block;margin-top:5px;color:var(--mute);font-size:12px}
 .tag.st{background:#d8f0df;color:#1f5a37}
 .copy{font-size:11.5px;color:var(--mute);line-height:1.45;margin:18px 0 6px;padding-top:10px;border-top:1px solid var(--line)}
+.card .tx b.nc{display:block;font:600 15px 'Space Grotesk',Roboto,sans-serif;color:var(--ink);margin-bottom:1px}
+.sh p.sci{margin:2px 0 4px;font-size:14px;color:var(--mute)}
+.sos-card{margin:12px 0 4px;padding:10px 12px;border-radius:14px;background:#fdeceb}.sos-card b{display:flex;align-items:center;gap:6px;color:#a61b1b}.sos-card .ico{width:20px;height:20px}
+.btnl.rosso{background:#c92a2a}
+.sosb{width:auto!important;padding:0 10px;border-radius:14px!important;background:#c92a2a!important;font:700 13px 'Space Grotesk',Roboto,sans-serif}
+.sos112{display:flex;align-items:center;justify-content:center;gap:10px;height:60px;border-radius:30px;background:#c92a2a;color:#fff!important;text-decoration:none;font:700 20px 'Space Grotesk',Roboto,sans-serif;margin:8px 0 12px}.sos112 .ico{width:26px;height:26px}
+.coord{background:#f4f6f5;border-radius:14px;padding:12px;margin-bottom:10px;text-align:center}.coord b{display:block;font:600 22px 'Space Grotesk',Roboto,sans-serif;letter-spacing:.5px}.coord small{color:var(--mute)}
+.allerta{border-left:5px solid var(--c);background:color-mix(in srgb,var(--c) 14%,#fff);border-radius:10px;padding:8px 10px;margin:6px 0}.allerta b{display:block;font-size:14px}.allerta small{font-size:12px;color:#444}
+.note.ok{color:#2f7a4a}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;margin:8px 0}
+.offl{display:flex;flex-direction:column;gap:6px;margin-top:12px}.offl>div{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}.offl span{flex:1}.offl b{display:block}.offl small{color:var(--mute);font-size:12px}
+.offl button{border:0;background:#f0f3f1;border-radius:10px;padding:6px 10px;cursor:pointer;color:var(--gd)}.offl .ico{width:16px;height:16px}
+.btnl .ico{width:17px;height:17px;vertical-align:-3px}
+details.regole{margin:10px 0;border-radius:14px;background:#f2f6f3;padding:8px 12px}details.regole summary{cursor:pointer;font:600 14px 'Space Grotesk',Roboto,sans-serif;color:var(--gd)}details.regole ul{margin:8px 0 4px;padding-left:18px;font-size:14px;line-height:1.45}details.regole li{margin:3px 0}
+.oggibtn{margin-top:8px;border:0;border-radius:18px;padding:7px 14px 7px 10px;background:rgba(255,255,255,.95);box-shadow:0 2px 8px rgba(0,0,0,.15);display:inline-flex;align-items:center;gap:6px;font:600 13.5px 'Space Grotesk',Roboto,sans-serif;color:var(--gd);cursor:pointer}.oggibtn .ico{width:18px;height:18px;color:#d08a2b}
+body.livon .oggibtn{display:none}
+.vic h3{display:flex;align-items:center;gap:6px}.vic h3 .ico{width:18px;height:18px}
+.vlist{display:flex;flex-direction:column}.vlist button{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:none;padding:8px 0;border-bottom:1px solid var(--line);text-align:left;cursor:pointer;font:inherit;color:var(--ink)}.vlist button b{display:block;font-weight:600;font-size:14.5px}.vlist button small{color:var(--mute);font-size:12.5px}.vlist button em{font-style:normal;color:var(--mute);font-size:12.5px;white-space:nowrap}
+.cal .mesesel{max-width:320px}
 </style>
 </head>
 <body>
@@ -481,6 +500,7 @@ details.fuoris summary{font-size:13px;color:var(--mute);cursor:pointer;margin:6p
       <div class="search"><input id="q" type="search" autocomplete="off"><button class="x" id="qx" aria-label="Cancella">×</button></div>
       <button class="livbtn" id="btn-liv" aria-expanded="false"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3 2 8l10 5 10-5-10-5Z" fill="currentColor"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span id="liv-t"></span><b id="liv-n"></b></button>
     </div>
+    <button class="oggibtn" id="oggi"></button>
     <div class="res" id="res"></div>
     <div class="liv" id="liv"></div>
   </div>

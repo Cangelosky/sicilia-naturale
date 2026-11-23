@@ -66,7 +66,7 @@ const TX = {
     piovoso: 'pioggia', ventoso: 'vento forte', caldo: 'caldo', freddo: 'freddo', fango: 'terreno bagnato', temporale: 'temporali', ok: 'buono',
     tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
     tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante vascolari della Sicilia: quelle dei siti Natura 2000, degli alberi monumentali e dei boschi da seme, più tutte le altre segnalate in Sicilia su GBIF. Tocca una specie per la scheda e i luoghi dove cresce.`, famiglia: 'Famiglia', tutteFam: 'Tutte le famiglie', inN2k: 'Nei siti Natura 2000', torna: 'Torna a',
-    cercaSp: 'Cerca una specie, un genere, una famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
+    cercaSp: 'Cerca per nome comune o scientifico, genere, famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
     GF: { aga: 'A lamelle', bol: 'Boleti', rus: 'Russule e lattari', pol: 'Polipori e funghi del legno', can: 'Cantarelli, idni e clavarie', pez: 'Spugnole, pezize e tartufi', pal: 'Vesce, geastri e falli', gel: 'Gelatinosi', alt: 'Altri' },
     segn: n => `${fmt(n)} segnalazioni in Sicilia`, nsiti: n => n === 1 ? '1 sito Natura 2000' : `${fmt(n)} siti Natura 2000`,
     dove: 'Dove si trova', vediMappa: 'Vedi sulla mappa dove è stata segnalata', gbifChip: 'Segnalazioni GBIF:',
@@ -127,7 +127,7 @@ const TX = {
     piovoso: 'rain', ventoso: 'strong wind', caldo: 'heat', freddo: 'cold', fango: 'wet ground', temporale: 'thunderstorms', ok: 'good',
     tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
     tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} vascular plants of Sicily: those of the Natura 2000 sites, monumental trees and seed stands, plus all others recorded in Sicily on GBIF. Tap a species for its page and the places where it grows.`, famiglia: 'Family', tutteFam: 'All families', inN2k: 'In Natura 2000 sites', torna: 'Back to',
-    cercaSp: 'Search a species, genus or family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
+    cercaSp: 'Search by common or scientific name, genus, family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
     GF: { aga: 'Gilled', bol: 'Boletes', rus: 'Russulas and milkcaps', pol: 'Polypores and wood fungi', can: 'Chanterelles, hedgehogs and corals', pez: 'Morels, cups and truffles', pal: 'Puffballs, earthstars and stinkhorns', gel: 'Jelly fungi', alt: 'Others' },
     segn: n => `${fmt(n)} records in Sicily`, nsiti: n => n === 1 ? '1 Natura 2000 site' : `${fmt(n)} Natura 2000 sites`,
     dove: 'Where it grows', vediMappa: 'Show on the map where it was recorded', gbifChip: 'GBIF records:',
@@ -163,6 +163,22 @@ maplibregl.addProtocol('loc', async params => {
   if (!e) { if (p[0] === 'd') throw new Error('no tile'); return { data: new ArrayBuffer(0) }; }
   return { data: P.b.slice(P.o + e[0], P.o + e[0] + e[1]) };
 });
+/* ---------- mappe offline: dettaglio (OpenFreeMap, zoom 12-14) e satellite passano da qui; prima la cache delle zone scaricate */
+const CACHE_OFF = 'sn-mappe';
+let OFM = null; try { OFM = localStorage.getItem('sn_ofm'); } catch (e) {}
+async function urlDettaglio() {
+  if (OFM) return OFM;
+  const j = await fetch('https://tiles.openfreemap.org/planet').then(r => r.json());
+  OFM = j.tiles[0]; try { localStorage.setItem('sn_ofm', OFM); } catch (e) {} return OFM;
+}
+const urlSat = (z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${z}/${y}/${x}`;
+async function urlTile(tipo, z, x, y) { return tipo === 'sat' ? urlSat(z, x, y) : (await urlDettaglio()).replace('{z}', z).replace('{x}', x).replace('{y}', y); }
+maplibregl.addProtocol('off', async params => {
+  const [tipo, z, x, y] = params.url.slice(6).split('/'), chiave = `https://sn.offline/${tipo}/${z}/${x}/${y}`;
+  try { const c = await caches.open(CACHE_OFF), m = await c.match(chiave); if (m) return { data: await m.arrayBuffer() }; } catch (e) {}
+  try { const r = await fetch(await urlTile(tipo, z, x, y)); if (r.ok) return { data: await r.arrayBuffer() }; } catch (e) {}
+  return { data: new ArrayBuffer(0) };
+});
 const B = [11.9, 35.4, 15.7, 38.9];
 const C = { bg: '#f6f3ec', wood: '#cfe0c0', grass: '#e4ead6', water: '#b4d3e6', ww: '#7fb0cf', road: '#c4b9a0', tx: '#2a2620', halo: '#f6f3ec' };
 const style = {
@@ -185,8 +201,17 @@ const style = {
 };
 
 // vista satellitare (Esri World Imagery), sotto strade, nomi e livelli dell'app
-style.sources.sat = { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, maxzoom: 19, attribution: 'Satellite: Esri, Maxar, Earthstar Geographics' };
+style.sources.sat = { type: 'raster', tiles: ['off://sat/{z}/{x}/{y}'], tileSize: 256, maxzoom: 19, attribution: 'Satellite: Esri, Maxar, Earthstar Geographics' };
 style.layers.splice(style.layers.findIndex(l => l.id === 'wway'), 0, { id: 'sat', type: 'raster', source: 'sat', layout: { visibility: 'none' }, paint: { 'raster-opacity': 1 } });
+// dettaglio da zoom 12: strade minori, carrarecce, sentieri, edifici, nomi delle località
+style.sources.omd = { type: 'vector', tiles: ['off://ofm/{z}/{x}/{y}'], minzoom: 12, maxzoom: 14, bounds: B, attribution: '© OpenStreetMap · OpenFreeMap' };
+style.layers.splice(style.layers.findIndex(l => l.id === 'place'), 0,
+  { id: 'd-bld', type: 'fill', source: 'omd', 'source-layer': 'building', minzoom: 14, paint: { 'fill-color': '#d8cfbf', 'fill-opacity': 0.7 } },
+  { id: 'd-road', type: 'line', source: 'omd', 'source-layer': 'transportation', minzoom: 12, filter: ['in', ['get', 'class'], ['literal', ['minor', 'service', 'tertiary', 'secondary', 'primary', 'trunk', 'motorway']]], layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fffdf7', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 1, 16, 5] } },
+  { id: 'd-track', type: 'line', source: 'omd', 'source-layer': 'transportation', minzoom: 12, filter: ['==', ['get', 'class'], 'track'], paint: { 'line-color': '#8d6e46', 'line-width': ['interpolate', ['linear'], ['zoom'], 12, 0.8, 16, 2], 'line-dasharray': [3, 1.5] } },
+  { id: 'd-path', type: 'line', source: 'omd', 'source-layer': 'transportation', minzoom: 13, filter: ['==', ['get', 'class'], 'path'], paint: { 'line-color': '#7a5a3a', 'line-width': ['interpolate', ['linear'], ['zoom'], 13, 0.7, 16, 1.6], 'line-dasharray': [1, 1.4] } },
+  { id: 'd-name', type: 'symbol', source: 'omd', 'source-layer': 'place', minzoom: 12, filter: ['in', ['get', 'class'], ['literal', ['hamlet', 'isolated_dwelling', 'locality', 'neighbourhood', 'suburb']]], layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Regular'], 'text-size': 11 }, paint: { 'text-color': '#4a4236', 'text-halo-color': '#fff', 'text-halo-width': 1.3 } }
+);
 style.sources.dem3d = { type: 'raster-dem', tiles: ['loc://d/{z}/{x}/{y}'], encoding: 'terrarium', tileSize: 256, minzoom: 5, maxzoom: 8, bounds: B };
 const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 17, maxPitch: 70, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false });
 /* mappa 3D: rilievo vero (DEM Terrarium) con esagerazione verticale, inclinazione e rotazione */
@@ -204,6 +229,7 @@ function satellite(on) {
   try { localStorage.setItem('sn_sat', on ? '1' : '0'); } catch (e) {}
   if (!map.getLayer('sat')) return;
   map.setLayoutProperty('sat', 'visibility', on ? 'visible' : 'none');
+  for (const l of ['d-bld', 'd-road']) if (map.getLayer(l)) map.setPaintProperty(l, l === 'd-bld' ? 'fill-opacity' : 'line-opacity', on ? 0.35 : (l === 'd-bld' ? 0.7 : 1));
   for (const [l, k, v] of [['road', 'line-color', on ? '#f3e6c4' : C.road], ['place', 'text-color', on ? '#ffffff' : C.tx], ['place', 'text-halo-color', on ? 'rgba(0,0,0,.75)' : C.halo], ['wway', 'line-opacity', on ? 0.5 : 1]]) map.setPaintProperty(l, k, v);
 }
 bs.onclick = () => satellite(!satOn);
@@ -225,7 +251,11 @@ const CFC = { FA: '#1f6b3a', CE: '#5a8f29', QU: '#8fae3c', CA: '#a0702a', LE: '#
   PL: '#3f4f7a', PM: '#7a6fb0', RI: '#9b8ea6', AS: '#c3b26a', MM: '#d9a066', BS: '#c9c9a0' };
 const AMB = ['bv', 'bs', 'am'];
 let FUN = null, PIA = null;
-const CAT = Promise.all(['funghi', 'piante'].map(n => fetch('data/' + n + '.json').then(r => r.json()))).then(([f, p]) => { FUN = f; PIA = p; });
+let NOMI = {};
+const CAT = Promise.all(['funghi', 'piante', 'nomi'].map(n => fetch('data/' + n + '.json').then(r => r.json()).catch(() => ({})))).then(([f, p, nm]) => { FUN = f; PIA = p; NOMI = nm || {}; });
+// nome comune (italiano; in siciliano se c'è) di una specie del catalogo
+const nomeC = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? (LANG === 'it' ? n[0] : n[0]) : ''; };
+const nomeScn = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? n[1] : ''; };
 
 map.on('load', () => D.then(() => {
   map.addSource('z', { type: 'geojson', data: GJ, promoteId: 'id' });
@@ -367,6 +397,7 @@ function testi() {
   $('l-it').classList.toggle('on', LANG === 'it'); $('l-en').classList.toggle('on', LANG === 'en');
   $('q').placeholder = t('cerca');
   $('liv-t').textContent = t('livelli');
+  if ($('oggi')) $('oggi').innerHTML = ico('sparkles') + T('Cosa vedere oggi qui', 'What to see here today');
   for (const b of document.querySelectorAll('#sez button')) { b.querySelector('span').textContent = t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[b.dataset.v]); if (!b.querySelector('svg')) b.insertAdjacentHTML('afterbegin', ico(b.dataset.ic)); }
   if (vista === 'funghi' || vista === 'piante') catalogo(true); else if (vista === 'meteo') meteo(); else if (vista === 'escursioni' && window.escursioni) escursioni();
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
@@ -685,7 +716,7 @@ function apri(k, vola) {
   for (const i of sp) (byG[SP.gr[i]] = byG[SP.gr[i]] || []).push(SP.nomi[i]);
   const max = s.b.length ? s.b[0][1] || 1 : 1;
   const hab = s.h || [];
-  let h = racconto(k) + `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
+  let h = racconto(k) + regole(s) + `<div class="stats"><div><b>${fmt(s.ha)} ha</b><span>${t('sup')}</span></div><div><b>${s.bha ? fmt(s.bha) + ' ha' : '–'}</b><span>${t('boschi')}</span></div><div><b>${s.anno || sp.length || '–'}</b><span>${s.anno ? t('istit') : t('specie')}</span></div></div>`;
   h += `<h3>${t('boschi')}</h3>`;
   if (s.b.length) {
     h += `<p class="note">${area ? t('nba') : t('nb')}</p>` + s.b.map(([c, ha]) => `<div class="bar"><span class="t">${esc(nb(c))}<small>${c} · ${esc(LANG === 'it' ? H.boschi[c][1] : H.hab[c])}</small></span><span class="v">${ha ? fmt(ha) + ' ha' : '< 1 ha'}</span><span class="tr"><i style="width:${Math.max(2, ha / max * 100)}%"></i></span></div>`).join('');
@@ -756,7 +787,7 @@ function evidenzia(items) {
   map.getSource('hlp').setData({ type: 'FeatureCollection', features: items.map(x => ({ type: 'Feature', properties: Object.assign({ id: x.k, v: x.v, lab: x.lab, vs: x.vs || '' }, x.wx ? { wx: x.wx } : {}), geometry: { type: 'Point', coordinates: centro(S[x.k]) } })) });
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
-$('cat').addEventListener('click', e => { const b = e.target.closest('[data-specie]'); if (b && b.dataset.specie !== vista) vai(b.dataset.specie); });
+$('cat').addEventListener('click', e => { const b = e.target.closest('[data-specie]'); if (!b) return; if (b.dataset.specie === 'cal') return calendario(); if (b.dataset.specie !== vista || $('cat').dataset.v === 'cal') { $('cat').dataset.v = ''; vai(b.dataset.specie); } });
 // tipi di pianta per i filtri di Botanica
 const FELCI = new Set(['Aspleniaceae','Polypodiaceae','Pteridaceae','Dryopteridaceae','Athyriaceae','Dennstaedtiaceae','Ophioglossaceae','Osmundaceae','Woodsiaceae','Cystopteridaceae','Blechnaceae','Thelypteridaceae','Equisetaceae','Selaginellaceae','Isoetaceae','Marsileaceae','Salviniaceae','Lycopodiaceae','Hymenophyllaceae','Sinopteridaceae','Aspidiaceae']);
 const TIPI_P = [['alb', 'Alberi e arbusti', 'Trees and shrubs'], ['ali', 'Alimurgiche', 'Wild food plants'], ['orc', 'Orchidee', 'Orchids'], ['fel', 'Felci', 'Ferns'], ['gra', 'Graminacee', 'Grasses'], ['erb', 'Altre erbacee', 'Other herbs']];
@@ -765,11 +796,11 @@ function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
     if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
-    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3]); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3] + ' ' + (NOMI[r[7]] || []).join(' ')); return w.every(x => n.includes(x)); });
   return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
     if (st.g === 'alb' && !r[1]) return false; if (st.g === 'ali' && !r[7]) return false; if (['orc', 'fel', 'gra', 'erb'].includes(st.g) && tipoP(r) !== st.g) return false; if (st.g === 'n2k' && !r[2].length) return false;
     if (st.fam && r[5] !== st.fam) return false;
-    const n = norm(r[0] + ' ' + (r[5] || '')); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + (r[5] || '') + ' ' + (NOMI[r[4]] || []).join(' ')); return w.every(x => n.includes(x)); });
 }
 function catalogo(soloTesti) {
   Promise.all([CAT, caricaStag()]).then(([, S2]) => {
@@ -782,11 +813,11 @@ function catalogo(soloTesti) {
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
-      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx"><i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
-      $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : T('Piante', 'Plants')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
+      $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>${f ? REGOLE_FUNGHI() : ''}
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
         <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button>${COPY()}</div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
@@ -828,7 +859,8 @@ function apriSpecie(tipo, i) {
   cur = 'SP:' + tipo + ':' + i; selez('');
   const badge = f ? `<span class="badge">${esc(t('GF')[r[4]])}</span><span class="badge n2k">${esc(r[2])}</span>` : (r[1] ? `<span class="badge">${t('alberi')}</span>` : '');
   const da = daZona && S[daZona] ? `<button class="indietro" data-id="${daZona}">‹ ${t('torna')} ${esc(S[daZona].n)}</button>` : ''; daZona = null;
-  $('sh').innerHTML = `<div>${da}<h2><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
+  const nc = nomeC(tipo, i), ns = nomeScn(tipo, i);
+  $('sh').innerHTML = `<div>${da}${nc ? `<h2>${esc(nc)}</h2><p class="sci"><i>${esc(r[0])}</i>${ns ? ` · ${T('in siciliano', 'in Sicilian')} <b>${esc(ns)}</b>` : ''}</p>` : ''}<h2${nc ? ' hidden' : ''}><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
   let h = '<div class="racconto">';
   if (f) {
     h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
@@ -847,6 +879,7 @@ function apriSpecie(tipo, i) {
   h += `<button class="btnmap" id="btnmap"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>${t('vediMappa')}</button>`;
   h += '<div id="wk"></div>';
   if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
+  if (f) h += REGOLE_FUNGHI();
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
   h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
@@ -902,13 +935,14 @@ async function apriPercorso(id) {
     <h3>${T('Cosa puoi trovare', 'What you may find')}</h3><div id="pc-trova"><small class="note">${t('carico')}</small></div>
     <div id="pc-poi"></div>
     ${p.op ? `<p class="note">${T('Gestione', 'Managed by')}: ${esc(p.op)}</p>` : ''}
-    <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${p.s[1]},${p.s[0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" id="pc-gpx">GPX</button></div>
+    <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${p.s[1]},${p.s[0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" id="pc-gpx">GPX</button>${isApp ? `<button class="btnl" data-offprc="${p.id}">${ico('download')} ${T('Offline', 'Offline')}</button>` : ''}</div>
     <p class="note">${T('Tracciato e dati: OpenStreetMap (ODbL), volontari e sezioni CAI. Controlla sempre segnaletica, meteo e condizioni del sentiero.', 'Track and data: OpenStreetMap (ODbL), volunteers and CAI sections. Always check signs, weather and trail conditions.')} <a href="https://www.openstreetmap.org/relation/${p.id}" target="_blank" rel="noopener">OSM</a></p>
     ${isApp ? `<div class="cta"><button id="pc-segui">${ico('navigation')}${T('Segui il percorso', 'Follow this trail')}</button></div>` : ''}`;
   mostra();
   $('pc-gpx').onclick = () => { const g = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(p.n)}</name>${p.g.map(l => `<trkseg>${l.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}"/>`).join('')}</trkseg>`).join('')}</trk></gpx>`; const u = URL.createObjectURL(new Blob([g], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = (p.r || 'percorso') + '.gpx'; document.body.appendChild(l); l.click(); l.remove(); };
   profilo(p); vicini(p); meteoPercorso(p); zonaPercorso(p); trovaPercorso(p);
-  if ($('pc-segui')) $('pc-segui').onclick = () => avviaReg({ id: p.id, n: p.n, g: p.g });
+  caricaAllerte().then(A => { if (!A) return; const z = allertaIn(p.s, A.oggi), y = allertaIn(p.s, A.domani); const x = z ? { n: z.n, quando: T('oggi', 'today') } : y ? { n: y.n, quando: T('domani', 'tomorrow') } : null; if (x) { PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { allerta: x }); avvisiPercorso(p); } });
+  if ($('pc-segui')) $('pc-segui').onclick = () => avviaReg({ id: p.id, n: p.n, g: p.g, prof: (PRCQ[p.id] || {}).prof || null });
   // il percorso intero in primo piano, sopra la scheda
   inquadra(p.bb, 15.5);
 }
@@ -940,7 +974,7 @@ async function trovaPercorso(p) {
   const kf = {}; FUN.s.forEach((r, i) => kf[r[7]] = i); const kp = {}; PIA.s.forEach((r, i) => { if (r[4]) kp[r[4]] = i; });
   const pick = (j, idx, max) => ((j && j.facets && j.facets[0] && j.facets[0].counts) || []).map(c => [idx[+c.name], c.count]).filter(x => x[0] != null).slice(0, max);
   const S2 = await caricaStag(), mq = meseQ();
-  const lista = (tipo, arr) => arr.map(([i, n]) => ({ tipo, i, n, st: stagione(tipo, i, mq, S2), nome: (tipo === 'funghi' ? FUN.s : PIA.s)[i][0] }));
+  const lista = (tipo, arr) => arr.map(([i, n]) => ({ tipo, i, n, st: stagione(tipo, i, mq, S2), nome: nomeC(tipo, i) || (tipo === 'funghi' ? FUN.s : PIA.s)[i][0] }));
   const tutte = [...lista('piante', pick(jp, kp, 60)), ...lista('funghi', pick(jf, kf, 40))];
   const grp = v => tutte.filter(x => x.st.on === v);
   const bt = x => `<button data-sp="${x.tipo}:${x.i}" class="${x.st.on === false ? 'fuori' : ''}" title="${fmt(x.n)} ${T('segnalazioni', 'records')}">${x.tipo === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(x.nome)}${x.st.lab ? `<small>${esc(x.st.lab)}</small>` : ''}</button>`;
@@ -1002,6 +1036,7 @@ function avvisiPercorso(p) {
   if (met.G) { const gg = quando === 'we' ? met.G.filter(g => [0, 6].includes(new Date(g.d + 'T12:00').getDay())).slice(0, 2) : met.G.slice(0, 2); pioggia = gg.some(g => (met.M.precipitation_sum[g.i] || 0) >= 5); }
   if (met.C) pioggia = met.C.gp >= 9;
   if (pioggia && (p.c === 'EE' || p.c === 'EEA' || q.acqua)) a.push(['r', T('Sconsigliato con la pioggia', 'Not advised in rain')]);
+  if (q.allerta) a.unshift(['r', T(`Allerta ${LIVN[q.allerta.n][0]} ${q.allerta.quando}`, `${LIVN[q.allerta.n][1]} alert ${q.allerta.quando}`)]);
   if (q.funghi >= 3) a.push(['f', T('Stagione dei funghi', 'Mushroom season')]);
   if (q.fiori >= 5) a.push(['v', T('Fioriture', 'Flowers in bloom')]);
   el.innerHTML = a.map(([c, l]) => `<span class="av av-${c}">${esc(l)}</span>`).join('');
@@ -1032,7 +1067,7 @@ async function profilo(p) {
   if (!j || !j.elevation) { el.innerHTML = ''; if (!p.up && $('pc-up')) $('pc-up').textContent = '–'; if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '–'; return; }
   const z = j.elevation, xs = sel.map(i => tot[i] / 1000), mn = Math.min(...z), mx = Math.max(...z);
   let up = 0, dn = 0; for (let i = 1; i < z.length; i++) { const dz = z[i] - z[i - 1]; if (dz > 0) up += dz; else dn -= dz; }
-  PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { mx }); avvisiPercorso(p);
+  PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { mx, prof: { d: xs, z } }); avvisiPercorso(p);
   if (!p.up && $('pc-up')) $('pc-up').textContent = '+' + fmt(Math.round(up)); if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '−' + fmt(Math.round(dn));
   const W = 320, H = 90, X = x => 4 + (W - 8) * x / (xs[xs.length - 1] || 1), Y = v => H - 14 - (H - 26) * (v - mn) / Math.max(1, mx - mn);
   const lin = xs.map((x, i) => `${X(x).toFixed(1)},${Y(z[i]).toFixed(1)}`).join(' ');
@@ -1149,7 +1184,7 @@ const wpCol = k => COLG[(WPT[k] || WPT.altro).g];
 /* schermata di registrazione */
 document.body.insertAdjacentHTML('beforeend', `
 <div id="rec" class="rec" aria-live="polite">
-  <div class="rec-top"><button class="rb" id="rec-min" aria-label="Riduci">${ico('chevron-down')}</button>
+  <div class="rec-top"><button class="rb" id="rec-min" aria-label="Riduci">${ico('chevron-down')}</button><button class="rb sosb" data-sos="1" aria-label="SOS">SOS</button>
     <div class="rec-st"><div><b id="rec-km">0,0</b><span>km</span></div><div class="rec-t"><small id="rec-lab"></small><b id="rec-tm">00:00:00</b></div><div><b id="rec-up">0</b><span>m D+</span></div></div></div>
   <div class="rec-gps" id="rec-gps"></div><div class="rec-guida" id="rec-guida" style="display:none"></div>
   <button class="rb rec-ctr" id="rec-ctr" aria-label="Centra">${ico('current-location')}</button>
@@ -1173,6 +1208,15 @@ function disegnaGuida(g) {
   const el = $('rec-guida'); if (el) el.style.display = g ? '' : 'none';
 }
 function distGuida(q) { let d = 1e9; for (const l of REG.guida.g) for (const r of l) { const x = hav(r, q); if (x < d) d = x; } return d; }
+// avanzamento sul percorso da seguire: km e dislivello che mancano, arrivo stimato (4 km/h in piano + 1 h ogni 400 m di salita)
+function avanzamento(q) {
+  const G = REG.guida; if (!G._pt) { G._pt = G.g.flat(); G._cum = []; let d = 0; G._pt.forEach((r, i) => { if (i) d += hav(G._pt[i - 1], r); G._cum.push(d); }); }
+  let bi = 0, bd = 1e9; G._pt.forEach((r, i) => { const x = hav(r, q); if (x < bd) { bd = x; bi = i; } });
+  const tot = G._cum[G._cum.length - 1], fatto = G._cum[bi], km = Math.max(0, (tot - fatto) / 1000);
+  let up = 0; if (G.prof) { const z = G.prof.z, dk = G.prof.d, k0 = fatto / 1000; for (let i = 1; i < z.length; i++) if (dk[i] > k0 && z[i] > z[i - 1]) up += z[i] - z[i - 1]; }
+  const ore = km / 4 + up / 400, arr = new Date(Date.now() + ore * 3600e3);
+  return { km, up: Math.round(up), arr: arr.toLocaleTimeString(LANG === 'it' ? 'it-IT' : 'en-GB', { hour: '2-digit', minute: '2-digit' }), fine: km < 0.05 };
+}
 // gli errori del GPS si mostrano solo se dopo 25 secondi non è arrivata nessuna posizione (all'avvio il telefono chiede i permessi)
 let errGps = null;
 function erroreGps(e) {
@@ -1182,7 +1226,7 @@ function erroreGps(e) {
 }
 function aggRec() {
   if (!REG) return;
-  if (REG.guida && $('rec-guida')) { const q = REG.p[REG.p.length - 1], d = q ? distGuida(q) : 0, fuori = d > 80; $('rec-guida').classList.toggle('fuori', fuori); $('rec-guida').textContent = fuori ? T(`Fuori percorso: ${fmt(Math.round(d))} m`, `Off trail: ${fmt(Math.round(d))} m`) : `${ico('route').length ? '' : ''}${REG.guida.n}`; }
+  if (REG.guida && $('rec-guida')) { const q = REG.p[REG.p.length - 1], d = q ? distGuida(q) : 0, fuori = d > 80; $('rec-guida').classList.toggle('fuori', fuori); const av = q && !fuori ? avanzamento(q) : null; $('rec-guida').textContent = fuori ? T(`Fuori percorso: ${fmt(Math.round(d))} m`, `Off trail: ${fmt(Math.round(d))} m`) : av ? (av.fine ? T('Arrivato!', 'Arrived!') : T(`Mancano ${num1(av.km)} km${av.up ? ' · +' + fmt(av.up) + ' m' : ''} · arrivo ${av.arr}`, `${num1(av.km)} km left${av.up ? ' · +' + fmt(av.up) + ' m' : ''} · arrive ${av.arr}`)) : REG.guida.n; }
   const m = misure(REG.p), tm = orologio(Date.now() - REG.t0);
   $('rec-km').textContent = num1(m.km); $('rec-up').textContent = fmt(m.up); $('rec-tm').textContent = tm; $('recpill-t').textContent = tm;
   $('rec-lab').textContent = T('REGISTRAZIONE IN CORSO', 'RECORDING');
@@ -1273,10 +1317,11 @@ $('miapos').onclick = () => {
 let regTab = 'reg';
 function registra() {
   if (vista !== 'registra') return;
-  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Registra', 'Record')}</h2><div class="switch" role="tablist">${[['reg', T('Registra', 'Record')], ['uscite', T('Le mie uscite', 'My outings')]].map(([k, l]) => `<button role="tab" data-regtab="${k}" class="${regTab === k ? 'on' : ''}" aria-selected="${regTab === k}">${l}</button>`).join('')}</div></div>`
+  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Registra', 'Record')}</h2><div class="switch" role="tablist">${[['reg', T('Registra', 'Record')], ['uscite', T('Uscite', 'Outings')], ['off', T('Offline', 'Offline')]].map(([k, l]) => `<button role="tab" data-regtab="${k}" class="${regTab === k ? 'on' : ''}" aria-selected="${regTab === k}">${l}</button>`).join('')}</div></div>`
     + (regTab === 'reg' ? `<div class="gpsst" id="gpsst">${ico('gps')}<span>${T('Cerco il segnale GPS…', 'Looking for GPS…')}</span></div><p class="note">${T('Registra un percorso libero: traccia, punti e foto restano sul telefono. Per seguire un percorso segnato, aprilo in Percorsi e tocca "Segui il percorso".', 'Record a free route: track, waypoints and photos stay on your phone. To follow a marked trail, open it in Trails and tap "Follow this trail".')}</p>`
-      : `<div class="trk" id="trk"></div>`);
-  regUI(); if (regTab === 'uscite') trkUI();
+      + `<div class="sos-card"><b>${ico('sos')} ${T('Sicurezza', 'Safety')}</b><p class="note">${T('In caso di emergenza chiama il 112 e invia la tua posizione.', 'In an emergency call 112 and send your position.')}</p><button class="btnl rosso" data-sos="1">${T('Emergenza e posizione', 'Emergency and position')}</button></div>`
+      : regTab === 'off' ? `<div id="offz"></div>` : `<div class="trk" id="trk"></div>`);
+  regUI(); if (regTab === 'uscite') trkUI(); if (regTab === 'off') offUI();
   if (regTab === 'reg' && navigator.geolocation) navigator.geolocation.getCurrentPosition(q => {
     const el = $('gpsst'); if (!el) return; const a = Math.round(q.coords.accuracy);
     el.innerHTML = `${ico('gps')}<span>${a <= 25 ? T('Segnale GPS buono', 'Good GPS signal') : T('Segnale GPS debole', 'Weak GPS signal')} (± ${a} m)</span>`; el.style.color = a <= 25 ? '#2f9e44' : '#d9480f';
@@ -1457,6 +1502,7 @@ function caricaMeteo() {
 const valDi = (k, d) => { const g = MET[k].G[d]; return mt0.k === 'e' ? g.e.v : g.f.est; };
 function meteo() {
   if (vista !== 'meteo') return;
+  setTimeout(() => { const d = modo.meteo === 'mappa' ? $('pan') : $('cat'); if (d && !d.querySelector('#allerte')) { const h = d.querySelector('.ph-top'); if (h) { h.insertAdjacentHTML('afterend', '<div id="allerte"></div>'); bannerAllerte($('allerte')); } } }, 400);
   const dove = modo.meteo === 'mappa' ? $('pan') : $('cat');
   if (!MET) dove.innerHTML = `${modo.meteo === 'mappa' ? '' : '<div class="in">'}<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="note">${t('carico')}</p>${modo.meteo === 'mappa' ? '' : '</div>'}`;
   caricaMeteo().then(() => {
@@ -1531,7 +1577,6 @@ $('gbifchip').onclick = e => { if (!e.target.closest('button')) return; if (map.
 $('sheet').addEventListener('click', e => { if (vista !== 'mappa' && e.target.closest('button[data-id]')) { vai('mappa'); } }, true);
 $('sheet').addEventListener('click', e => { const b = e.target.closest('[data-spn]'); if (!b) return; const z = cur; CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) { daZona = z; apriSpecie('piante', i); } }); });
 testi();
-}
 // aggiornamenti automatici dell'app (Capgo updater, modalità manuale): all'avvio controlla version.json sul ramo "ota" del repository,
 // scarica il nuovo codice in sottofondo e lo applica alla prossima apertura. Serve un APK nuovo solo se cambia la parte nativa (apkMin).
 (async function aggiornamenti() {
@@ -1551,3 +1596,175 @@ testi();
     toast(T('Aggiornamento scaricato: sarà attivo alla prossima apertura dell’app.', 'Update downloaded: active next time you open the app.'));
   } catch (e) {}
 })();
+/* ---------- mappe offline: scaricare una zona (dettaglio ed eventualmente satellite) */
+const ZK = 'sn_zone_off';
+const zoneOff = () => { try { return JSON.parse(localStorage.getItem(ZK)) || []; } catch (e) { return []; } };
+const tileXY = (lon, lat, z) => { const n = 2 ** z, r = lat * Math.PI / 180; return [Math.floor((lon + 180) / 360 * n), Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n)]; };
+function tileZona(bb, sat) {
+  const L = [];
+  const giro = (tipo, z0, z1) => { for (let z = z0; z <= z1; z++) { const [x0, y0] = tileXY(bb[0], bb[3], z), [x1, y1] = tileXY(bb[2], bb[1], z); for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) L.push([tipo, z, x, y]); } };
+  giro('ofm', 12, 14); if (sat) giro('sat', 12, 16);
+  return L;
+}
+let scaricando = false;
+async function scaricaZona(bb, nome, sat) {
+  if (scaricando) return;
+  const L = tileZona(bb, sat);
+  if (L.length > 6000) return toast(T('Zona troppo grande: avvicinati un po’ e riprova.', 'Area too large: zoom in and try again.'));
+  scaricando = true; const c = await caches.open(CACHE_OFF); let ok = 0, byte = 0, fatti = 0;
+  const pr = $('off-pr'); const agg = () => { if (pr) pr.textContent = T(`Scarico… ${Math.round(fatti / L.length * 100)}%`, `Downloading… ${Math.round(fatti / L.length * 100)}%`); };
+  const coda = [...L];
+  await Promise.all(Array.from({ length: 6 }, async () => {
+    while (coda.length) {
+      const [tipo, z, x, y] = coda.shift(), k = `https://sn.offline/${tipo}/${z}/${x}/${y}`;
+      try { if (!(await c.match(k))) { const r = await fetch(await urlTile(tipo, z, x, y)); if (r.ok) { const b = await r.arrayBuffer(); byte += b.byteLength; await c.put(k, new Response(b)); } } ok++; } catch (e) {}
+      fatti++; if (fatti % 20 === 0) agg();
+    }
+  }));
+  const a = zoneOff().filter(z => z.nome !== nome); a.unshift({ id: 'Z' + Date.now(), nome, bb, sat, n: ok, mb: Math.round(byte / 1e5) / 10, d: Date.now() });
+  try { localStorage.setItem(ZK, JSON.stringify(a)); } catch (e) {}
+  scaricando = false; toast(T(`Zona scaricata: ${nome}`, `Area downloaded: ${nome}`)); offUI();
+}
+async function eliminaZona(id) {
+  const a = zoneOff(), z = a.find(x => x.id === id); if (!z) return;
+  const resto = a.filter(x => x.id !== id), tieni = new Set(resto.flatMap(x => tileZona(x.bb, x.sat).map(t => t.join('/'))));
+  const c = await caches.open(CACHE_OFF);
+  for (const t of tileZona(z.bb, z.sat)) if (!tieni.has(t.join('/'))) await c.delete(`https://sn.offline/${t.join('/')}`);
+  try { localStorage.setItem(ZK, JSON.stringify(resto)); } catch (e) {} offUI();
+}
+// sezione "Mappe offline" (in Registra)
+function offUI() {
+  const el = $('offz'); if (!el) return;
+  const a = zoneOff();
+  el.innerHTML = `<p class="note">${T('La mappa di base, il rilievo e i sentieri funzionano già senza rete. Qui scarichi il dettaglio (stradine, carrarecce, edifici) e, se vuoi, il satellite della zona.', 'The base map, terrain and trails already work offline. Here you download detail (small roads, tracks, buildings) and, if you want, satellite imagery.')}</p>
+    <label class="chk"><input type="checkbox" id="off-sat"> ${T('Anche il satellite (molto più pesante)', 'Satellite too (much heavier)')}</label>
+    <button class="btnl" id="off-dl">${ico('download')} ${T('Scarica la zona che vedi', 'Download the visible area')}</button> <small class="note" id="off-pr"></small>
+    ${a.length ? `<div class="offl">${a.map(z => `<div><span><b>${esc(z.nome)}</b><small>${z.mb} MB${z.sat ? ' · ' + T('con satellite', 'with satellite') : ''} · ${new Date(z.d).toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB')}</small></span><button data-offvai="${z.id}">${T('Vedi', 'View')}</button><button data-offdel="${z.id}" aria-label="${T('Elimina', 'Delete')}">${ico('trash')}</button></div>`).join('')}</div>` : ''}`;
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('#off-dl')) {
+    const b = map.getBounds(), bb = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+    if (map.getZoom() < 10.5) return toast(T('Avvicinati alla zona che vuoi scaricare (almeno una valle o un monte).', 'Zoom in to the area you want (a valley or a mountain).'));
+    const c = map.getCenter(), nome = prompt(T('Nome della zona', 'Area name'), T('Zona ', 'Area ') + c.lat.toFixed(2) + ', ' + c.lng.toFixed(2)); if (nome === null) return;
+    return scaricaZona(bb, nome || 'Zona', $('off-sat') && $('off-sat').checked);
+  }
+  const v = e.target.closest('[data-offvai]'), d = e.target.closest('[data-offdel]');
+  if (v) { const z = zoneOff().find(x => x.id === v.dataset.offvai); if (z) map.fitBounds([[z.bb[0], z.bb[1]], [z.bb[2], z.bb[3]]], { padding: 40, duration: 700 }); }
+  if (d && confirm(T('Eliminare questa zona dal telefono?', 'Delete this area from the phone?'))) eliminaZona(d.dataset.offdel);
+});
+/* ---------- sicurezza: 112 e invio della posizione (SMS, WhatsApp, copia) */
+function sos() {
+  const mostraSos = (q, acc) => {
+    const ll = q ? `${q[1].toFixed(5)}, ${q[0].toFixed(5)}` : '', link = q ? `https://maps.google.com/?q=${q[1].toFixed(5)},${q[0].toFixed(5)}` : '';
+    const msg = T(`Ho bisogno di aiuto. La mia posizione: ${ll} ${link}`, `I need help. My position: ${ll} ${link}`);
+    $('sh').innerHTML = `<div><h2>${T('Emergenza', 'Emergency')}</h2></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+    $('sb').innerHTML = `<a class="sos112" href="tel:112">${ico('phone')} ${T('Chiama il 112', 'Call 112')}</a>
+      <div class="coord">${q ? `<b>${ll}</b><small>${T('Precisione', 'Accuracy')} ± ${Math.round(acc || 0)} m · ${T('Latitudine, longitudine', 'Latitude, longitude')}</small>` : `<small>${T('Posizione non disponibile: esci all’aperto e riprova.', 'Position not available: go outside and try again.')}</small>`}</div>
+      ${q ? `<div class="az"><a class="btnl" href="sms:?body=${encodeURIComponent(msg)}">SMS</a><a class="btnl" href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">WhatsApp</a><button class="btnl" id="sos-cp">${T('Copia', 'Copy')}</button></div>` : ''}
+      <p class="note">${T('Al 112 di’ chi sei, cosa è successo, quante persone sono coinvolte e leggi le coordinate. In montagna risponde anche il Soccorso Alpino (CNSAS) tramite il 112.', 'Tell 112 who you are, what happened, how many people are involved and read the coordinates. In the mountains the Alpine Rescue (CNSAS) is reached through 112.')}</p>`;
+    mostra(); $('sheet').classList.add('big');
+    if ($('sos-cp')) $('sos-cp').onclick = () => { try { navigator.clipboard.writeText(msg); toast(T('Copiato', 'Copied')); } catch (e) {} };
+  };
+  const ult = REG && REG.p.length ? REG.p[REG.p.length - 1] : null;
+  if (ult) return mostraSos(ult, 10);
+  mostraSos(null);
+  if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => mostraSos([p.coords.longitude, p.coords.latitude], p.coords.accuracy), () => {}, { enableHighAccuracy: true, timeout: 20000, maximumAge: 30000 });
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-sos]')) { mostraRec(false); sos(); } });
+/* ---------- allerte meteo della Protezione Civile (bollettino nazionale di criticità, copiato ogni giorno sul ramo "dati") */
+let ALL = null;
+const caricaAllerte = () => ALL || (ALL = fetch('https://raw.githubusercontent.com/Cangelosky/sicilia-naturale/dati/allerte.json?t=' + new Date().toISOString().slice(0, 13), { cache: 'no-store' }).then(r => r.json()).catch(() => null));
+const LIVN = { 1: ['gialla', 'yellow'], 2: ['arancione', 'orange'], 3: ['rossa', 'red'] };
+function allertaIn(pt, lista) { return (lista || []).filter(z => z.n > 0 && dentroPoligono(pt, z.g)).sort((a, b) => b.n - a.n)[0] || null; }
+async function bannerAllerte(el) {
+  const A = await caricaAllerte(); if (!A || !el) return;
+  const riga = (giorno, l) => { const z = (l || []).filter(x => x.n > 0); if (!z.length) return ''; const mx = Math.max(...z.map(x => x.n)); return `<div class="allerta" style="--c:${z.find(x => x.n === mx).c}"><b>${giorno}: ${T('allerta', 'alert')} ${T(...LIVN[mx])}</b><small>${esc(z.map(x => x.zona + (x.rischi.length ? ' (' + x.rischi.join(', ') + ')' : '')).join(' · '))}</small></div>`; };
+  const h = riga(T('Oggi', 'Today'), A.oggi) + riga(T('Domani', 'Tomorrow'), A.domani);
+  el.innerHTML = h ? h + `<small class="note">${T('Protezione Civile, bollettino di criticità idrogeologica e idraulica.', 'Civil Protection, hydro-geological bulletin.')} <a href="https://www.protezionecivilesicilia.it" target="_blank" rel="noopener">protezionecivilesicilia.it</a></small>`
+    : `<small class="note ok">${T('Nessuna allerta meteo in Sicilia oggi e domani (Protezione Civile).', 'No weather alerts in Sicily today and tomorrow (Civil Protection).')}</small>`;
+}
+/* ---------- percorso: scaricare la zona per l'uso offline */
+document.addEventListener('click', e => { const b = e.target.closest('[data-offprc]'); if (!b) return; caricaPercorsi().then(A => { const p = A.find(x => x.id === +b.dataset.offprc); if (p) { const m = 0.01; scaricaZona([p.bb[0] - m, p.bb[1] - m, p.bb[2] + m, p.bb[3] + m], p.n, false); b.textContent = T('Scarico la zona…', 'Downloading area…'); } }); });
+/* ---------- regole: aree protette e raccolta dei funghi in Sicilia */
+function regole(z) {
+  const prot = ['pn', 'pr', 'rn', 'amp', 'ap'].includes(z.t), n2k = !prot && ['zsc', 'zsczps', 'zps'].includes(z.t);
+  if (!prot && !n2k) return '';
+  const it = LANG === 'it';
+  const voci = prot ? (it ? ['Resta sui sentieri segnati, soprattutto nelle zone di riserva integrale (zona A).', 'Non raccogliere né danneggiare piante, fiori, funghi, rocce e fossili, se il regolamento non lo permette.', 'Niente fuochi, campeggio libero e rifiuti; i cani al guinzaglio.', 'Niente mezzi a motore fuori dalle strade aperte al traffico.', 'Non disturbare gli animali, soprattutto nel periodo dei nidi.']
+    : ['Stay on marked trails, especially in strict reserve zones (zone A).', 'Do not pick or damage plants, flowers, fungi, rocks and fossils unless the rules allow it.', 'No fires, wild camping or litter; dogs on a lead.', 'No motor vehicles off roads open to traffic.', 'Do not disturb animals, especially during nesting.'])
+    : (it ? ['È un sito protetto dall’Unione europea: vale il buon senso del visitatore rispettoso.', 'Non raccogliere specie rare e non uscire dai sentieri negli habitat delicati (dune, zone umide, rupi).'] : ['It is a site protected by the European Union: behave as a respectful visitor.', 'Do not pick rare species or leave trails in delicate habitats (dunes, wetlands, cliffs).']);
+  return `<details class="regole"><summary>${ico('shield-check', 'sm')} ${T('Regole per chi visita', 'Rules for visitors')}</summary><ul>${voci.map(v => `<li>${esc(v)}</li>`).join('')}</ul><p class="note">${prot ? T('Sono le regole più comuni nei parchi e nelle riserve siciliane. Ogni ente gestore ha il suo regolamento e le sue zone: controlla i cartelli all’ingresso e il sito dell’ente.', 'These are the most common rules in Sicilian parks and reserves. Each managing body has its own rules and zones: check the signs at the entrance and the body’s website.') : T('Se il sito è anche dentro un parco o una riserva valgono le regole di quell’area.', 'If the site is also inside a park or reserve, that area’s rules apply.')}</p></details>`;
+}
+const REGOLE_FUNGHI = () => `<details class="regole"><summary>${ico('scale', 'sm')} ${T('Raccolta dei funghi in Sicilia: le regole', 'Mushroom picking in Sicily: the rules')}</summary><ul>${(LANG === 'it' ? [
+  'Serve il tesserino regionale, rilasciato dal Comune di residenza dopo un corso di almeno 15 ore con un micologo; si rinnova ogni 5 anni. I non residenti chiedono l’autorizzazione al Comune dove raccolgono (annuale, 30 €).',
+  'Limiti al giorno: 4 kg con il tesserino amatoriale (30 € l’anno), 12 kg con quello professionale.',
+  'Vietato raccogliere di notte, usare rastrelli o uncini e danneggiare i funghi di qualsiasi specie.',
+  'Usa contenitori aerati, meglio cesti in fibre naturali: la plastica è vietata.',
+  'I funghi vanno raccolti interi (riconoscibili) e puliti sommariamente sul posto.',
+  'L’ovolo buono (Amanita caesarea) non si raccoglie chiuso.',
+  'Vietato nelle riserve integrali e nelle zone dei parchi indicate dagli enti; nelle aziende faunistico-venatorie solo nei giorni di silenzio venatorio.',
+  'Sotto i 14 anni si raccoglie solo con un adulto munito di tesserino.'] : [
+  'You need the regional permit, issued by your town after a course of at least 15 hours with a mycologist; renewed every 5 years. Non-residents ask the town where they pick (yearly, €30).',
+  'Daily limits: 4 kg with the amateur permit (€30 a year), 12 kg with the professional one.',
+  'No picking at night, no rakes or hooks, no damaging fungi of any species.',
+  'Use ventilated containers, ideally natural-fibre baskets: plastic is forbidden.',
+  'Pick fungi whole (identifiable) and roughly clean them on the spot.',
+  'Caesar’s mushroom (Amanita caesarea) must not be picked closed.',
+  'Forbidden in strict reserves and in park zones set by the managing bodies; in hunting estates only on non-hunting days.',
+  'Under 14s may pick only with an adult holding a permit.']).map(v => `<li>${esc(v)}</li>`).join('')}</ul><p class="note">${T('Fonte: legge regionale 1 febbraio 2006, n. 3 (sintesi ISPRA). Qui non diamo indicazioni sulla commestibilità: fai controllare sempre i funghi da un micologo (ispettorati micologici delle ASP).', 'Source: Sicilian regional law no. 3 of 1 February 2006 (ISPRA summary). We give no edibility advice: always have fungi checked by a mycologist (local health authority).')} <a href="https://development.isprambiente.gov.it/files/biodiversita/raccolta-dei-funghi-epigei-regione-sicilia.pdf" target="_blank" rel="noopener">ISPRA</a></p></details>`;
+const uniciNome = l => { const v = new Set(); return l.filter(x => { const n = nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0]; if (v.has(n)) return false; v.add(n); return true; }); };
+/* ---------- calendario naturalistico: cosa si vede in Sicilia mese per mese */
+let calMese = new Date().getMonth();
+async function calendario() {
+  const [, S2] = await Promise.all([CAT, caricaStag()]); if (vista !== 'funghi' && vista !== 'piante') return;
+  const m = calMese, prima = (m + 11) % 12;
+  const tutte = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].map(([tp, i, n]) => ({ tp, i, n, st: stagione(tp, i, m, S2) }));
+  const on = tutte.filter(x => x.st.on === true).sort((a, b) => b.n - a.n);
+  const k = x => x.tp === 'funghi' ? FUN.s[x.i][7] : PIA.s[x.i][4], nuove = on.filter(x => { const mk = S2[k(x)]; return mk && mk[prima] === '0'; });
+  const sez = (tit, ic, l, max) => l.length ? `<h3>${ico(ic, 'sm')} ${tit} <em>${fmt(l.length)}</em></h3><div class="trova">${uniciNome(l).slice(0, max).map(x => `<button data-sp="${x.tp}:${x.i}">${x.tp === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}</button>`).join('')}</div>` : '';
+  $('cat').dataset.v = 'cal'; $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="in cal"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
+    <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p>
+    <select class="tendina mesesel" id="cal-m">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(j => `<option value="${j}"${j === m ? ' selected' : ''}>${nomeMese(j)[0].toUpperCase() + nomeMese(j).slice(1)}${j === new Date().getMonth() ? T(' (ora)', ' (now)') : ''}</option>`).join('')}</select>
+    ${sez(T('Iniziano questo mese', 'Starting this month'), 'sparkles', nuove, 16)}
+    ${sez(T('Fioriture', 'In flower'), 'flower', on.filter(x => x.tp === 'piante' && x.st.lab === T('in fioritura', 'in flower')), 30)}
+    ${sez(T('Funghi in fruttificazione', 'Fungi fruiting'), 'mushroom', on.filter(x => x.tp === 'funghi'), 24)}
+    ${sez(T('Foliage d’autunno', 'Autumn foliage'), 'leaf', on.filter(x => x.st.lab === T('foliage autunnale', 'autumn foliage')), 20)}
+    <p class="note">${T('La stagione è stimata dalle osservazioni: il clima dell’anno e la quota possono anticiparla o ritardarla.', 'The season is estimated from records: the year’s weather and altitude can make it earlier or later.')}</p>${COPY()}</div>`;
+  $('cal-m').onchange = e => { calMese = +e.target.value; calendario(); };
+}
+$('cat').addEventListener('click', e => { if ($('cat').dataset.v !== 'cal') return; const b = e.target.closest('[data-sp]'); if (!b) return; e.stopPropagation(); const [tp, i] = b.dataset.sp.split(':'); apriSpecie(tp, +i); }, true);
+/* ---------- cosa vedere oggi qui (posizione del telefono o centro della mappa) */
+async function oggiQui() {
+  $('sh').innerHTML = `<div><h2>${T('Oggi qui intorno', 'Around here today')}</h2></div><button class="close" aria-label="${t('chiudi')}">×</button>`; $('sb').innerHTML = `<p class="note">${t('carico')}</p>`; mostra();
+  const usa = async ll => {
+    await Promise.all([D, CAT]); const S2 = await caricaStag(), A = await caricaPercorsi(), m = new Date().getMonth();
+    const dist = (a, b) => hav(a, b) / 1000, R = 15;
+    const vic = Object.entries(S).map(([k, z]) => ({ k, z, d: dist(ll, centro(z)) })).filter(x => x.d < R);
+    const alberi = vic.filter(x => x.z.t === 'am' || x.z.t === 'bv').sort((a, b) => a.d - b.d).slice(0, 6);
+    const aree = vic.filter(x => ['pn', 'pr', 'rn', 'ap'].includes(x.z.t)).sort((a, b) => a.d - b.d).slice(0, 4);
+    const prc = A.map(p => ({ p, d: dist(ll, p.s) })).filter(x => x.d < R).sort((a, b) => a.d - b.d).slice(0, 5);
+    const g = 0.09, q = tk => getJ(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(ll[1] - g).toFixed(3)},${(ll[1] + g).toFixed(3)}&decimalLongitude=${(ll[0] - g * 1.3).toFixed(3)},${(ll[0] + g * 1.3).toFixed(3)}&taxonKey=${tk}&limit=0&facet=speciesKey&facetLimit=80`);
+    const [jf, jp] = await Promise.all([q(5), q(7707728)]);
+    const kf = {}; FUN.s.forEach((r, i) => kf[r[7]] = i); const kp = {}; PIA.s.forEach((r, i) => { if (r[4]) kp[r[4]] = i; });
+    const sp = (j, idx, tp) => ((j && j.facets && j.facets[0] && j.facets[0].counts) || []).map(c => idx[+c.name]).filter(i => i != null).map(i => ({ tp, i, st: stagione(tp, i, m, S2) })).filter(x => x.st.on === true);
+    const specie = [...sp(jp, kp, 'piante'), ...sp(jf, kf, 'funghi')];
+    const bt = x => `<button data-sp="${x.tp}:${x.i}">${x.tp === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}<small>${esc(x.st.lab)}</small></button>`;
+    const riga = (attr, tit, sub, d) => `<button ${attr}><span><b>${esc(tit)}</b><small>${esc(sub)}</small></span><em>${num1(d)} km</em></button>`;
+    $('sh').innerHTML = `<div><h2>${T('Oggi qui intorno', 'Around here today')}</h2><div class="badges"><span class="badge">${T('entro', 'within')} ${R} km · ${nomeMese(m)}</span></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+    $('sb').innerHTML = `<div class="vic">
+      ${specie.length ? `<h3>${ico('flower')} ${T('In stagione, segnalate qui', 'In season, recorded here')}</h3><div class="trova">${uniciNome(specie).slice(0, 20).map(bt).join('')}</div>` : ''}
+      ${alberi.length ? `<h3>${ico('award')} ${T('Alberi monumentali e boschi antichi', 'Monumental trees and old forests')}</h3><div class="vlist">${alberi.map(x => riga(`data-id="${x.k}"`, x.z.n, t(x.z.t), x.d)).join('')}</div>` : ''}
+      ${prc.length ? `<h3>${ico('route')} ${T('Percorsi che partono vicino', 'Trails starting nearby')}</h3><div class="vlist">${prc.map(x => riga(`data-prcv="${x.p.id}"`, x.p.n, `${num1(x.p.km)} km${x.p.c ? ' · ' + x.p.c : ''}`, x.d)).join('')}</div>` : ''}
+      ${aree.length ? `<h3>${ico('trees')} ${T('Parchi e riserve', 'Parks and reserves')}</h3><div class="vlist">${aree.map(x => riga(`data-id="${x.k}"`, x.z.n, t(x.z.t), x.d)).join('')}</div>` : ''}
+      ${!specie.length && !alberi.length && !prc.length && !aree.length ? `<p class="note">${T('Qui intorno non abbiamo trovato nulla: sposta la mappa su un’altra zona e riprova.', 'Nothing found around here: move the map to another area and try again.')}</p>` : ''}
+      <p class="note">${T('Specie: segnalazioni GBIF entro circa 10 km, in stagione questo mese.', 'Species: GBIF records within about 10 km, in season this month.')}</p></div>`;
+    mostra();
+    $('sb').querySelector('.vic').onclick = e => { const b = e.target.closest('[data-sp]'), r = e.target.closest('[data-prcv]'); if (b) { const [tp, i] = b.dataset.sp.split(':'); apriSpecie(tp, +i); } else if (r) { modo.escursioni = 'mappa'; vai('escursioni'); setTimeout(() => apriPercorso(r.dataset.prcv), 300); } };
+  };
+  const c = map.getCenter(), ll0 = [c.lng, c.lat];
+  if (navigator.geolocation) navigator.geolocation.getCurrentPosition(p => { const ll = [p.coords.longitude, p.coords.latitude]; usa(ll[0] > 11.9 && ll[0] < 15.7 && ll[1] > 35.4 && ll[1] < 38.9 ? ll : ll0); }, () => usa(ll0), { timeout: 8000, maximumAge: 60000 });
+  else usa(ll0);
+}
+$('oggi').onclick = oggiQui;
+}
