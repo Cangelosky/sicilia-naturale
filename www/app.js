@@ -331,19 +331,13 @@ let base = {};
 
 /* ---------- livelli e filtri */
 let bosco = '';
-const ON = { aree: true, n2k: true, zi: false, bv: false, am: false, bs: false, cf: false, osm: false };
+const ON = { aree: true, n2k: true, bv: false, am: false, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
-const LIV = { zi: ['zall-f', 'zall-l'], osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
+const LIV = { osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 // in Escursioni i sentieri restano visibili anche quando le zone sono evidenziate
 const sentInEsc = l => vista === 'escursioni' && ON.osm && LIV.osm.includes(l);
 function applica() {
   if (!map.getLayer('aree-f')) return;
-  if (ON.zi && !map.getSource('zall')) { caricaZI().then(z => { if (map.getSource('zall')) return;
-    const col = ['match', ['get', 'z'], 'A', ZCOL.A, 'B', ZCOL.B, 'B1', ZCOL.B1, 'B2', ZCOL.B2, 'B3', ZCOL.B3, 'C', ZCOL.C, 'D', ZCOL.D, '#888'];
-    map.addSource('zall', { type: 'geojson', data: { type: 'FeatureCollection', features: z.features.filter(f => !(RP[f.properties.k] || {}).nonvig) } });
-    map.addLayer({ id: 'zall-f', type: 'fill', source: 'zall', paint: { 'fill-color': col, 'fill-opacity': 0.18 } }, map.getLayer('prc-c') ? 'prc-c' : undefined);
-    map.addLayer({ id: 'zall-l', type: 'line', source: 'zall', paint: { 'line-color': col, 'line-width': ['interpolate', ['linear'], ['zoom'], 7, 0.6, 12, 1.8] } }, map.getLayer('prc-c') ? 'prc-c' : undefined);
-    applica(); }); }
   let ids = null;
   if (bosco) ids = Object.keys(S).filter(k => bosco === '*' ? S[k].bha > 0 : S[k].b.some(b => b[0] === bosco));
   for (const [l, f] of Object.entries(base)) {
@@ -363,7 +357,6 @@ function applica() {
 }
 const SW = {
   aree: '<i style="width:18px;height:14px;border-radius:3px;background:#2d6a4f55;border:2px solid #1b4332"></i>',
-  zi: '<i style="width:20px;height:16px;border-radius:4px;background:linear-gradient(90deg,#b91c1c 0 25%,#ea580c 25% 50%,#ca8a04 50% 75%,#16a34a 75%)"></i>',
   n2k: '<i style="width:18px;height:14px;border-radius:3px;background:#2f7ea822;border:2px solid #2f7ea8;box-shadow:3px 3px 0 -1px #fff,3px 3px 0 0 #7a5ea8"></i>',
   bv: '<i style="width:18px;height:14px;border-radius:3px;background:#c2571a99;border:2px solid #8a3a0e"></i>',
   am: '<i style="width:12px;height:12px;border-radius:50%;background:#5b3a1a;box-shadow:0 0 0 2px #fff,0 0 0 3px #5b3a1a"></i>',
@@ -377,7 +370,7 @@ function pannello() {
   const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
   const mac = Object.keys(CFC).filter(m => CFN.macro[m]);
   $('liv').innerHTML = `<button class="grip" aria-label="Abbassa"><span></span></button><div class="lvh"><h3>${t('livelli')}</h3><button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('liv').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button><button class="close" aria-label="${t('chiudi')}">×</button></div><h4>${T('Sentieri', 'Trails')}</h4>` + riga_lv('osm', t('sent'), t('dSent')) + `<h4>${t('gTut')}</h4>`
-    + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('zi', T('Visualizza zone', 'Show zones'), T('Zone A, B, C, D dei parchi e riserva / preriserva delle riserve (Regione Siciliana).', 'Park zones A, B, C, D and reserve / pre-reserve areas (Regione Siciliana).')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
+    + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
     + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
@@ -1310,7 +1303,7 @@ map.on('dragstart', () => { if (REG) segui = false; });
 function avviaReg(guida) {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (REG) return mostraRec(true);
-  ZREC = { q: null, k: [] }; caricaZI().then(z => ZI_ok = z);
+  ZREC = { q: null, k: [] }; caricaZI().then(z => ZI_ok = z); const zp = $('zprompt'); if (zp) zp.remove();
   if (!confirm(guida ? T(`Seguire "${guida.n}" e registrare l'uscita? Il GPS resta attivo anche a schermo spento finché non la termini.`, `Follow "${guida.n}" and record the outing? GPS stays on, even with the screen off, until you stop.`) : t('regConfIn'))) return;
   chiudi();
   REG = { t0: Date.now(), p: [], ob: [...intSel], w: [], guida: guida || null };
@@ -1352,11 +1345,12 @@ async function zoneInterne(k) {
   const z = await caricaZI(); if (cur !== k || !$('zint')) return;
   const L = z.features.filter(f => f.properties.k === k).map(f => f.properties).sort((a, b) => a.z.localeCompare(b.z)); if (!L.length) return;
   const tot = L.reduce((a, x) => a + x.ha, 0), pz = parcoZ(k);
-  $('zint').innerHTML = `<h3>${pz ? T('Zone del parco', 'Park zones') : T('Zone della riserva', 'Reserve zones')}</h3><div class="zint">${L.map(x => { const d = pz ? ZDESC[x.z[0]] : ZDESC[x.z.startsWith('B') ? 'RB' : 'RA'];
+  $('zint').innerHTML = `<h3>${pz ? T('Zone del parco', 'Park zones') : T('Zone della riserva', 'Reserve zones')}</h3>
+    <div class="lv zsw" id="zsw" role="switch" aria-checked="false" tabindex="0"><span><b>${T('Visualizza zone', 'Show zones')}</b><small>${T('Colora le zone sulla mappa', 'Colour the zones on the map')}</small></span><span class="sw-t"></span></div><div class="zint">${L.map(x => { const d = pz ? ZDESC[x.z[0]] : ZDESC[x.z.startsWith('B') ? 'RB' : 'RA'];
     return `<div class="zi"><i style="background:${ZCOL[x.z] || '#888'}"></i><div><b>${esc(zNome(k, x.z))}</b><span>${fmt(x.ha)} ha · ${Math.round(x.ha / tot * 100)}%</span>${d ? `<small>${T(...d)}</small>` : ''}</div></div>`; }).join('')}</div>
     ${(RP[k] || {}).nonvig ? `<p class="avvz">${T('Attenzione: il parco è stato annullato nel 2019 e queste zone oggi non sono in vigore. È in corso una nuova istituzione.', 'Note: the park was annulled in 2019 and these zones are not in force today. A new designation is under way.')}</p>` : ''}
-    <p class="note">${T('Zone colorate sulla mappa. Fonte: Regione Siciliana, SIF (servizio Parchi e Riserve). Superfici calcolate dai confini.', 'Zones coloured on the map. Source: Regione Siciliana, SIF (Parks and Reserves service). Areas computed from the boundaries.')}</p>`;
-  vediZint(k);
+    <p class="note">${T('Fonte: Regione Siciliana, SIF (servizio Parchi e Riserve). Superfici calcolate dai confini.', 'Source: Regione Siciliana, SIF (Parks and Reserves service). Areas computed from the boundaries.')}</p>`;
+  $('zsw').onclick = () => { const on = !$('zsw').classList.contains('on'); $('zsw').classList.toggle('on', on); $('zsw').setAttribute('aria-checked', on); vediZint(on ? k : null); };
 }
 /* durante la registrazione: in quale parco o riserva sei, con avviso quando entri o esci */
 let ZREC = { q: null, k: [] }, ZI_ok = null;
@@ -1365,15 +1359,26 @@ function zoneQui(q) {
   return GJ.features.filter(f => { const z = S[f.properties.id]; return z && AREE.includes(z.t) && z.bb && q[0] >= z.bb[0] && q[0] <= z.bb[2] && q[1] >= z.bb[1] && q[1] <= z.bb[3] && dentroPoligono(q, f.geometry); })
     .map(f => f.properties.id).sort((a, b) => S[a].ha - S[b].ha);
 }
+function chiediZone(k) {
+  const d = document.createElement('div'); d.id = 'zprompt'; d.className = 'zprompt';
+  d.innerHTML = `<div class="zpc"><b>${esc(S[k].n)}</b><p>${T('Il parco è diviso in zone con regole diverse. Nella zona A, riserva integrale, la natura va lasciata intatta: resta sui sentieri segnati e non portare via nulla. Rispetta le regole di ogni zona: le trovi nella scheda del parco, alla voce Regole del parco.', 'The park is divided into zones with different rules. In zone A, the strict reserve, nature must be left untouched: stay on marked trails and take nothing away. Respect the rules of each zone: see Park rules in the park sheet.')}</p>
+    <p><b>${T('Vuoi un avviso (suono e vibrazione) quando entri in una zona diversa?', 'Do you want an alert (sound and vibration) when you enter a different zone?')}</b></p>
+    <div class="pi-b"><button data-zp="0">${T('No', 'No')}</button><button class="fatto" data-zp="1">${T('Sì, avvisami', 'Yes, alert me')}</button></div></div>`;
+  d.onclick = e => { const b = e.target.closest('[data-zp]'); if (!b) return; if (REG) { REG.avvZ = b.dataset.zp === '1'; salvaCorrente(); } d.remove(); };
+  document.body.appendChild(d);
+}
 function zonaRec(q) {
   if (ZREC.q && hav(ZREC.q, q) < 25) return; ZREC.q = q;
   const ora = zoneQui(q), prima = ZREC.k, entra = ora.filter(k => !prima.includes(k));
-  if (prima.length || ora.length) { const msg = entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n + ((RP[k] || {}).nonvig ? T(' (parco non in vigore)', ' (park not in force)') : '')); /* avviso solo all'ingresso (scelta di Oscar) */ if (msg.length && ZREC.init) { const zz = ZI_ok ? ZI_ok.features.filter(f => entra.includes(f.properties.k) && !(RP[f.properties.k] || {}).nonvig && dentroPoligono(q, f.geometry)) : []; if (zz.length) msg[0] += ' · ' + zNome(zz[0].properties.k, zz[0].properties.z); toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
+  if (prima.length || ora.length) { const msg = entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n + ((RP[k] || {}).nonvig ? T(' (parco non in vigore)', ' (park not in force)') : '')); /* avviso solo all'ingresso (scelta di Oscar) */ if (msg.length && ZREC.init) { const zz = ZI_ok ? ZI_ok.features.filter(f => entra.includes(f.properties.k) && !(RP[f.properties.k] || {}).nonvig && dentroPoligono(q, f.geometry)) : []; if (zz.length && REG && REG.avvZ) msg[0] += ' · ' + zNome(zz[0].properties.k, zz[0].properties.z); toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
   ZREC.k = ora;
+  // nei parchi divisi in zone: avviso di rispetto e scelta dell'avviso di ingresso in zona (una volta per registrazione)
+  const pz = ora.find(k => parcoZ(k) && !(RP[k] || {}).nonvig && ZI_ok && ZI_ok.features.some(f => f.properties.k === k));
+  if (pz && REG && REG.avvZ === undefined && !$('zprompt')) chiediZone(pz);
   // zona interna (A, B, C, D) del parco o della riserva in cui sei
   const zf = ZI_ok ? ZI_ok.features.filter(f => ora.includes(f.properties.k) && !(RP[f.properties.k] || {}).nonvig && dentroPoligono(q, f.geometry)) : [];
   const zk = zf.map(f => f.properties.k + ':' + f.properties.z), nuovo = zk.filter(x => !(ZREC.z || []).includes(x));
-  if (nuovo.length && ZREC.init && !entra.length) { toast(T('Entri in: ', 'Entering: ') + nuovo.map(x => { const [k, z] = x.split(':'); return zNome(k, z) + ' (' + S[k].n + ')'; }).join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} }
+  if (nuovo.length && ZREC.init && !entra.length && REG && REG.avvZ) { toast(T('Entri in: ', 'Entering: ') + nuovo.map(x => { const [k, z] = x.split(':'); return zNome(k, z) + ' (' + S[k].n + ')'; }).join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} }
   ZREC.z = zk; ZREC.init = true;
   const el = $('rec-zona'); if (!el) return;
   el.style.display = ora.length ? '' : 'none'; el.textContent = ora.length ? ora.map(k => { const f = zf.find(x => x.properties.k === k); return S[k].n + (f ? ' · ' + T('zona ', 'zone ') + f.properties.z : ''); }).join(' · ') : '';
