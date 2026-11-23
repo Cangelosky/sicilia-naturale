@@ -9,11 +9,11 @@ Q = {
   'percorsi': f'[out:json][timeout:600];{AREA}relation["route"~"^(hiking|foot)$"](area.s);out geom;',
   'sentieri': f'[out:json][timeout:600];{AREA}(way["highway"~"^(path|bridleway)$"](area.s);way["highway"="track"]["sac_scale"](area.s);way["highway"="footway"]["sac_scale"](area.s););out geom tags;',
   # punti di interesse: una richiesta per gruppo, poi uniti (una sola richiesta grande tornava vuota)
-  'punti_tur': f'[out:json][timeout:300][bbox:{BB}];nwr["tourism"~"^(alpine_hut|wilderness_hut|picnic_site|viewpoint|camp_site)$"]out center;',
-  'punti_ame': f'[out:json][timeout:300][bbox:{BB}];nwr["amenity"~"^(shelter|drinking_water|water_point)$"]out center;',
-  'punti_nat': f'[out:json][timeout:300][bbox:{BB}];(nwr["natural"~"^(spring|peak|cave_entrance|volcano)$"]nwr["waterway"="waterfall"]);out center;',
-  'punti_sto': f'[out:json][timeout:300][bbox:{BB}];nwr["historic"~"^(ruins|castle|archaeological_site|monastery|tower|fort)$"]out center;',
-  'punti_inf': f'[out:json][timeout:300][bbox:{BB}];nwr["tourism"="information"]["information"~"^(board|guidepost)$"]out center;',
+  'punti_tur': f'[out:json][timeout:300][bbox:{BB}];nwr["tourism"~"^(alpine_hut|wilderness_hut|picnic_site|viewpoint|camp_site)$"];out center;',
+  'punti_ame': f'[out:json][timeout:300][bbox:{BB}];nwr["amenity"~"^(shelter|drinking_water|water_point)$"];out center;',
+  'punti_nat': f'[out:json][timeout:300][bbox:{BB}];(nwr["natural"~"^(spring|peak|cave_entrance|volcano)$"];nwr["waterway"="waterfall"];);out center;',
+  'punti_sto': f'[out:json][timeout:300][bbox:{BB}];nwr["historic"~"^(ruins|castle|archaeological_site|monastery|tower|fort)$"];out center;',
+  'punti_inf': f'[out:json][timeout:300][bbox:{BB}];nwr["tourism"="information"]["information"~"^(board|guidepost)$"];out center;',
 }
 import sys
 SOLO = sys.argv[1:]
