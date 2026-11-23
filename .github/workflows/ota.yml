@@ -13,9 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Pacchetto
         run: |
-          V="$(node -p "require('./package.json').version")+${GITHUB_SHA::7}"
+          V="$(node -p "require('./package.json').version")+$(git log -1 --format=%h -- www package.json)"
           MIN="$(node -p "require('./package.json').apkMin || '0'")"
           echo "window.SN_VER = { v: '$V' };" > www/versione.js
           mkdir /tmp/ota && (cd www && zip -q -r -X /tmp/ota/www.zip . -x '.*')
