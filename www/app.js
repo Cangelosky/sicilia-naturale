@@ -27,17 +27,17 @@ const TX = {
     sif: 'Sistema Informativo Forestale (Regione Siciliana)', elenco: 'Elenco degli Alberi Monumentali di Sicilia (17/07/2026)', lsif: 'Corpo Forestale, Regione Siciliana',
     livelli: 'Livelli', gTut: 'Aree tutelate', gBos: 'Boschi e alberi', gHab: 'Zone con un tipo di bosco',
     perche: 'Un parco o una riserva è un’area con un ente che la gestisce e regole proprie. Natura 2000 è la rete europea che indica cosa va conservato: le ZSC tutelano habitat e specie, le ZPS gli uccelli. Lo stesso luogo può essere parco, ZSC e ZPS insieme.',
-    dAree: 'Parchi regionali e nazionali, riserve naturali e aree marine protette, con un ente gestore e un regolamento.',
-    dN2k: 'Rete europea Natura 2000. ZSC: habitat e specie rari (linea continua). ZPS: uccelli selvatici (tratteggio).',
-    dBv: 'Boschi rimasti a lungo senza tagli, con alberi vecchi e legno morto: i più vicini alla foresta naturale (censimento 2026).',
-    dAm: 'Alberi tutelati per età, dimensioni, rarità o valore storico, iscritti nell’elenco ufficiale della Regione.',
-    dBs: 'Boschi scelti dal Corpo Forestale per raccogliere semi di qualità per vivai e rimboschimenti.',
-    dCf: 'Il tipo di bosco di ogni particella forestale. Scegli i tipi che cerchi: da lontano sono punti, da vicino le particelle.',
+    dAree: 'Parchi e riserve naturali: luoghi protetti, con regole da rispettare.',
+    dN2k: 'Luoghi protetti dall’Europa per piante e animali rari (linea piena) e per gli uccelli (linea tratteggiata).',
+    dBv: 'Boschi antichi, quasi mai tagliati: i più selvaggi della Sicilia.',
+    dAm: 'Alberi speciali per età o grandezza, protetti dalla Regione.',
+    dBs: 'Boschi dove si raccolgono i semi per piantare nuovi alberi.',
+    dCf: 'Che bosco c’è in ogni punto: faggi, querce, pini… Scegli quelli che ti interessano.',
     tuttiTipi: 'Tutti', nessunTipo: 'Nessuno',
     quiN: n => `Qui si sovrappongono ${n} zone`, quiNota: 'Lo stesso luogo può avere più tutele: tocca una zona per aprirne la scheda.',
     vb: n => n === 1 ? '1 bosco vetusto' : n + ' boschi vetusti', va: n => n === 1 ? '1 albero monumentale' : n + ' alberi monumentali',
     wiki: 'Da Wikipedia', wleggi: 'Leggi su Wikipedia', foto: 'Foto nei dintorni', fotoN: 'Foto da Wikimedia Commons: restano dei loro autori, con la licenza indicata.',
-    vMappa: 'Esplora', vFunghi: 'Micologia', vPiante: 'Botanica', vEsc: 'Escursioni', vMeteo: 'Meteo',
+    vMappa: 'Esplora', vFunghi: 'Micologia', vPiante: 'Botanica', vEsc: 'Percorsi', vMeteo: 'Meteo', vReg: 'Registra', vSpecie: 'Specie',
     tMeteo: 'Meteo per le escursioni', lMeteo: 'I giorni migliori per uscire nei prossimi 14 giorni, calcolati con le previsioni e con la pioggia caduta nei 60 giorni precedenti (dati Open-Meteo).',
     luogo: 'Luogo', posiz: 'La mia posizione', carico: 'Carico i dati meteo…', errMeteo: 'Dati meteo non disponibili in questo momento. Riprova tra poco.',
     escTit: 'Escursione', escNota: 'Punteggio da 1 a 10: pioggia prevista, probabilità di pioggia, vento, temperatura e fango dei giorni precedenti.',
@@ -51,7 +51,7 @@ const TX = {
     regNota: 'La registrazione usa il GPS del telefono e continua anche a schermo spento. Percorsi, punti e foto restano salvati solo su questo telefono.',
     noGps: 'Il GPS non è disponibile su questo dispositivo o il permesso è stato negato.',
     dist: 'Distanza', durata: 'Durata', disl: 'Dislivello +', miei: 'I miei percorsi', nessunTrk: 'Nessun percorso registrato.', gpx: 'GPX', elimina: 'Elimina', eliminaConf: 'Eliminare questo percorso? Non si potrà recuperare.',
-    obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri escursionistici, rifugi, bivacchi, aree attrezzate e sorgenti da OpenStreetMap. Visibili da vicino (zoom 11).',
+    obiettivo: 'Obiettivo', sent: 'Sentieri e rifugi', dSent: 'Sentieri, percorsi segnati, rifugi, sorgenti e panorami. Si vedono avvicinandosi.',
     zoomSent: 'Avvicinati per vedere sentieri e rifugi', osmCar: 'Carico sentieri e rifugi da OpenStreetMap…', osmErr: 'I server di OpenStreetMap sono occupati: sentieri e rifugi non caricati. Riprova spostando la mappa tra poco.',
     vMap: 'Mappa', vList: 'Elenco', AR: { tutte: 'Tutta la Sicilia', pa: 'Palermitano', tp: 'Trapanese', sic: 'Sicani e Agrigentino', mad: 'Madonie', neb: 'Nebrodi', pel: 'Peloritani', etn: 'Etna e Alcantara', cen: 'Sicilia centrale', ibl: 'Iblei e Sud-Est', iso: 'Isole minori' },
     perEsc: 'Escursione', perFun: 'Funghi', miglioriQui: 'I migliori', schedaZona: 'Scheda della zona', soloApp: 'La registrazione del percorso è disponibile nell’app per telefono.', regApp: 'Registra percorso',
@@ -88,17 +88,17 @@ const TX = {
     sif: 'Forest Information System (Sicilian Region)', elenco: 'List of Monumental Trees of Sicily (17/07/2026)', lsif: 'Forestry Corps, Sicilian Region',
     livelli: 'Layers', gTut: 'Protected areas', gBos: 'Forests and trees', gHab: 'Areas with a forest type',
     perche: 'A park or reserve is an area with a managing body and its own rules. Natura 2000 is the European network that says what must be conserved: SACs protect habitats and species, SPAs protect birds. The same place can be a park, an SAC and an SPA at once.',
-    dAree: 'Regional and national parks, nature reserves and marine protected areas, each with a managing body and rules.',
-    dN2k: 'European Natura 2000 network. SAC: rare habitats and species (solid line). SPA: wild birds (dashed).',
-    dBv: 'Forests left uncut for a long time, with old trees and deadwood: the closest to natural forest (2026 survey).',
-    dAm: 'Trees protected for age, size, rarity or historical value, on the Region’s official list.',
-    dBs: 'Forests chosen by the Forestry Corps to collect quality seed for nurseries and reforestation.',
-    dCf: 'The forest type of every forest stand. Pick the types you are looking for: points from afar, stands up close.',
+    dAree: 'Parks and nature reserves: protected places with rules to follow.',
+    dN2k: 'Places protected by Europe for rare plants and animals (solid line) and for birds (dashed line).',
+    dBv: 'Ancient forests, hardly ever cut: the wildest in Sicily.',
+    dAm: 'Special trees for age or size, protected by the Region.',
+    dBs: 'Forests where seeds are collected to plant new trees.',
+    dCf: 'Which forest grows at each spot: beech, oak, pine… Pick the ones you like.',
     tuttiTipi: 'All', nessunTipo: 'None',
     quiN: n => `${n} areas overlap here`, quiNota: 'The same place can have several kinds of protection: tap one to open it.',
     vb: n => n === 1 ? '1 old-growth forest' : n + ' old-growth forests', va: n => n === 1 ? '1 monumental tree' : n + ' monumental trees',
     wiki: 'From Wikipedia', wleggi: 'Read on Wikipedia', foto: 'Photos nearby', fotoN: 'Photos from Wikimedia Commons: they belong to their authors, under the licence shown.',
-    vMappa: 'Explore', vFunghi: 'Mycology', vPiante: 'Botany', vEsc: 'Hikes', vMeteo: 'Weather',
+    vMappa: 'Explore', vFunghi: 'Mycology', vPiante: 'Botany', vEsc: 'Trails', vMeteo: 'Weather', vReg: 'Record', vSpecie: 'Species',
     tMeteo: 'Weather for hikes', lMeteo: 'The best days to go out in the next 14 days, from the forecast and the rain of the previous 60 days (Open-Meteo data).',
     luogo: 'Place', posiz: 'My location', carico: 'Loading weather data…', errMeteo: 'Weather data not available right now. Please try again shortly.',
     escTit: 'Hike', escNota: 'Score from 1 to 10: forecast rain, chance of rain, wind, temperature and mud from previous days.',
@@ -112,7 +112,7 @@ const TX = {
     regNota: 'Recording uses the phone’s GPS and keeps going with the screen off. Routes, waypoints and photos stay on this phone only.',
     noGps: 'GPS is not available on this device or permission was denied.',
     dist: 'Distance', durata: 'Duration', disl: 'Ascent', miei: 'My routes', nessunTrk: 'No recorded routes.', gpx: 'GPX', elimina: 'Delete', eliminaConf: 'Delete this route? It cannot be recovered.',
-    obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Hiking routes, huts, shelters, picnic areas and springs from OpenStreetMap. Visible up close (zoom 11).',
+    obiettivo: 'Goal', sent: 'Trails and huts', dSent: 'Trails, marked routes, huts, springs and viewpoints. Visible as you zoom in.',
     zoomSent: 'Zoom in to see trails and huts', osmCar: 'Loading trails and huts from OpenStreetMap…', osmErr: 'OpenStreetMap servers are busy: trails and huts not loaded. Move the map to try again shortly.',
     vMap: 'Map', vList: 'List', AR: { tutte: 'All of Sicily', pa: 'Palermo area', tp: 'Trapani area', sic: 'Sicani and Agrigento', mad: 'Madonie', neb: 'Nebrodi', pel: 'Peloritani', etn: 'Etna and Alcantara', cen: 'Central Sicily', ibl: 'Iblei and South-East', iso: 'Minor islands' },
     perEsc: 'Hike', perFun: 'Fungi', miglioriQui: 'The best', schedaZona: 'Area page', soloApp: 'Route recording is available in the phone app.', regApp: 'Record route',
@@ -260,6 +260,9 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'osm-rt', type: 'symbol', source: 'st', 'source-layer': 'perc', minzoom: 12, layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['coalesce', ['get', 'r'], ''], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'symbol-spacing': 260 }, paint: { 'text-color': '#7a1f12', 'text-halo-color': '#fff', 'text-halo-width': 2 } });
   map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.55, 15, 0.85], 'icon-allow-overlap': false, 'icon-padding': 1 } });
   map.addLayer({ id: 'osm-t', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 13, layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
+  map.addSource('guida', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'guida-c', type: 'line', source: 'guida', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 10, 'line-opacity': 0.85 } });
+  map.addLayer({ id: 'guida-l', type: 'line', source: 'guida', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1d4ed8', 'line-width': 6, 'line-opacity': 0.75 } });
   map.addSource('prc', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'prc-c', type: 'line', source: 'prc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 9, 'line-opacity': 0.9 } });
   map.addLayer({ id: 'prc-l', type: 'line', source: 'prc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1d4ed8', 'line-width': 5 } });
@@ -323,7 +326,7 @@ function pannello() {
   const cnt = {}; for (const x of Object.values(S)) for (const b of x.b || []) cnt[b[0]] = (cnt[b[0]] || 0) + 1;
   const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
   const mac = Object.keys(CFC).filter(m => CFN.macro[m]);
-  $('liv').innerHTML = `<h4>${t('gTut')}</h4><div class="perche">${t('perche')}</div>`
+  $('liv').innerHTML = `<button class="grip" aria-label="Abbassa"><span></span></button><div class="lvh"><h3>${t('livelli')}</h3><button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('liv').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button><button class="close" aria-label="${t('chiudi')}">×</button></div><h4>${t('gTut')}</h4>`
     + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
@@ -332,6 +335,8 @@ function pannello() {
   $('bosco').value = bosco;
   $('bosco').onchange = e => { bosco = e.target.value; applica(); };
 }
+const altLiv = altezze($('liv'), '.grip, .lvh h3', () => chiudiLiv());
+$('liv').addEventListener('click', e => { if (e.target.closest('.lvh .close')) return chiudiLiv(); if (e.target.closest('.lvh .espandi')) return altLiv($('liv').classList.contains('big') ? 1 : 2); });
 $('liv').addEventListener('click', e => {
   const r = e.target.closest('.lv'), m = e.target.closest('.cft button');
   if (r) { const k = r.dataset.lv; ON[k] = !ON[k]; if (k === 'cf' && ON.cf && map.getZoom() < 7.5) map.easeTo({ zoom: 7.5, duration: 500 }); }
@@ -350,8 +355,8 @@ $('liv').addEventListener('click', e => {
   applica(); const st = $('liv').scrollTop; pannello(); $('liv').scrollTop = st;
 });
 $('liv').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('lv')) { e.preventDefault(); e.target.click(); } });
-$('btn-liv').onclick = () => { const o = !$('liv').classList.contains('open'); $('liv').classList.toggle('open', o); $('btn-liv').setAttribute('aria-expanded', o); if (o) { $('res').style.display = 'none'; pannello(); } };
-const chiudiLiv = () => { $('liv').classList.remove('open'); $('btn-liv').setAttribute('aria-expanded', false); };
+$('btn-liv').onclick = () => { const o = !$('liv').classList.contains('open'); $('liv').classList.toggle('open', o); document.body.classList.toggle('livon', o); if (!o) $('liv').classList.remove('big', 'mini'); $('btn-liv').setAttribute('aria-expanded', o); if (o) { $('res').style.display = 'none'; pannello(); } };
+const chiudiLiv = () => { document.body.classList.remove('livon'); $('liv').classList.remove('open', 'big', 'mini'); $('btn-liv').setAttribute('aria-expanded', false); };
 
 /* ---------- testi */
 const nb = c => LANG === 'it' ? (H.boschi[c] || [c])[0] : (BOSCO_EN[c] || c);
@@ -360,7 +365,7 @@ function testi() {
   $('l-it').classList.toggle('on', LANG === 'it'); $('l-en').classList.toggle('on', LANG === 'en');
   $('q').placeholder = t('cerca');
   $('liv-t').textContent = t('livelli');
-  for (const b of document.querySelectorAll('#sez button')) b.querySelector('span').textContent = t({ mappa: 'vMappa', funghi: 'vFunghi', piante: 'vPiante', escursioni: 'vEsc', meteo: 'vMeteo' }[b.dataset.v]);
+  for (const b of document.querySelectorAll('#sez button')) { b.querySelector('span').textContent = t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[b.dataset.v]); if (!b.querySelector('svg')) b.insertAdjacentHTML('afterbegin', ico(b.dataset.ic)); }
   if (vista === 'funghi' || vista === 'piante') catalogo(true); else if (vista === 'meteo') meteo(); else if (vista === 'escursioni' && window.escursioni) escursioni();
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
   if (cur) apri(cur, false);
@@ -694,11 +699,15 @@ const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
 const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
 const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
-const modo = { escursioni: 'mappa', meteo: 'mappa' };
-const mappaVista = v => (v === 'escursioni' || v === 'meteo') && modo[v] === 'mappa';
+const modo = { escursioni: 'mappa', meteo: 'mappa', registra: 'mappa' };
+const mappaVista = v => (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
+let ultimaSpecie = 'funghi';
+if (isApp) document.body.classList.add('app');
 function vai(v) {
   vista = v; document.body.classList.remove('escreg'); document.body.classList.remove('vm-esc', 'vm-met'); document.body.classList.add(v === 'escursioni' ? 'vm-esc' : v === 'meteo' ? 'vm-met' : 'vm-x');
-  for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v);
+  if (v === 'specie') return vai(ultimaSpecie);
+  if (v === 'funghi' || v === 'piante') ultimaSpecie = v;
+  for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v || (b.dataset.v === 'specie' && (v === 'funghi' || v === 'piante')));
   const mm = mappaVista(v), lista = v !== 'mappa' && !mm;
   $('cat').classList.toggle('on', lista); document.body.classList.toggle('cat-on', lista); document.body.classList.toggle('mm', mm);
   $('pan').classList.toggle('on', mm); if (!mm) $('pan').innerHTML = '';
@@ -706,7 +715,7 @@ function vai(v) {
   evidenzia(null);
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) map.resize();
-  if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v !== 'mappa') catalogo();
+  if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-modo]'); if (b && modo[vista] && modo[vista] !== b.dataset.modo) { modo[vista] = b.dataset.modo; vai(vista); } });
@@ -735,6 +744,7 @@ function evidenzia(items) {
   map.getSource('hlp').setData({ type: 'FeatureCollection', features: items.map(x => ({ type: 'Feature', properties: Object.assign({ id: x.k, v: x.v, lab: x.lab, vs: x.vs || '' }, x.wx ? { wx: x.wx } : {}), geometry: { type: 'Point', coordinates: centro(S[x.k]) } })) });
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
+$('cat').addEventListener('click', e => { const b = e.target.closest('[data-specie]'); if (b && b.dataset.specie !== vista) vai(b.dataset.specie); });
 function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
@@ -758,7 +768,7 @@ function catalogo(soloTesti) {
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
-      $('cat').innerHTML = `<div class="in"><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
+      $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : T('Piante', 'Plants')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
         <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button></div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
@@ -866,14 +876,54 @@ async function apriPercorso(id) {
     <div class="profilo" id="pc-prof"><small>${T('Profilo altimetrico…', 'Elevation profile…')}</small></div>
     ${p.da || p.a ? `<p>${it ? 'Da' : 'From'} <b>${esc(p.da || '–')}</b> ${it ? 'a' : 'to'} <b>${esc(p.a || '–')}</b>${p.giro ? (it ? ' (ad anello)' : ' (loop)') : ''}.</p>` : ''}
     ${p.desc ? `<p>${esc(p.desc)}</p>` : ''}
+    <h3>${T('Meteo alla partenza', 'Weather at the start')}</h3><div class="pcmeteo" id="pc-met"><small class="note">${t('carico')}</small></div>
+    <div id="pc-zona"></div>
+    <h3>${T('Cosa puoi trovare', 'What you may find')}</h3><div id="pc-trova"><small class="note">${t('carico')}</small></div>
     <div id="pc-poi"></div>
     ${p.op ? `<p class="note">${T('Gestione', 'Managed by')}: ${esc(p.op)}</p>` : ''}
     <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${p.s[1]},${p.s[0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" id="pc-gpx">GPX</button></div>
-    <p class="note">${T('Tracciato e dati: OpenStreetMap (ODbL), volontari e sezioni CAI. Controlla sempre segnaletica, meteo e condizioni del sentiero.', 'Track and data: OpenStreetMap (ODbL), volunteers and CAI sections. Always check signs, weather and trail conditions.')} <a href="https://www.openstreetmap.org/relation/${p.id}" target="_blank" rel="noopener">OSM</a></p>`;
+    <p class="note">${T('Tracciato e dati: OpenStreetMap (ODbL), volontari e sezioni CAI. Controlla sempre segnaletica, meteo e condizioni del sentiero.', 'Track and data: OpenStreetMap (ODbL), volunteers and CAI sections. Always check signs, weather and trail conditions.')} <a href="https://www.openstreetmap.org/relation/${p.id}" target="_blank" rel="noopener">OSM</a></p>
+    ${isApp ? `<div class="cta"><button id="pc-segui">${ico('navigation')}${T('Segui il percorso', 'Follow this trail')}</button></div>` : ''}`;
   mostra();
   $('pc-gpx').onclick = () => { const g = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(p.n)}</name>${p.g.map(l => `<trkseg>${l.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}"/>`).join('')}</trkseg>`).join('')}</trk></gpx>`; const u = URL.createObjectURL(new Blob([g], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = (p.r || 'percorso') + '.gpx'; document.body.appendChild(l); l.click(); l.remove(); };
-  profilo(p); vicini(p);
+  profilo(p); vicini(p); meteoPercorso(p); zonaPercorso(p); trovaPercorso(p);
+  if ($('pc-segui')) $('pc-segui').onclick = () => avviaReg({ id: p.id, n: p.n, g: p.g });
+  // il percorso intero in primo piano, sopra la scheda
+  requestAnimationFrame(() => {
+    const big = innerWidth >= 900, hS = $('sheet').getBoundingClientRect();
+    const pad = big ? { top: 50, bottom: 50, left: Math.round(hS.right) + 30, right: 50 } : { top: 70, bottom: Math.round(innerHeight - hS.top) + 20, left: 30, right: 60 };
+    map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: pad, duration: 800, maxZoom: 15.5 });
+  });
 }
+async function meteoPercorso(p) {
+  const j = await getJ(URLM(p.s[1].toFixed(3), p.s[0].toFixed(3))), el = $('pc-met'); if (!el) return;
+  if (!j || !j.daily) { el.innerHTML = `<small class="note">${T('Meteo non disponibile ora.', 'Weather not available now.')}</small>`; return; }
+  const { M, oggi, G } = serieMeteo(j.daily);
+  el.innerHTML = G.slice(0, 7).map(g => `<div class="r"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="v" style="background:${colore10(g.e.v)}">${num1(g.e.v)}</span>${cella(M, g.i)}</div>`).join('') + `<small class="note">${T('Punteggio escursione da 1 a 10 (pioggia, vento, caldo, freddo).', 'Hiking score 1 to 10 (rain, wind, heat, cold).')}</small>`;
+}
+function zonaPercorso(p) {
+  D.then(() => {
+    const ks = zoneDi(p), el = $('pc-zona'); if (!el || !ks.length) return;
+    const sug = {}; for (const x of suggerimenti(true)) sug[x.k] = x.why;
+    const visti = new Set(), uniche = ks.filter(k => !visti.has(S[k].n) && visti.add(S[k].n));
+    el.innerHTML = `<h3>${T('La zona', 'The area')}</h3>` + uniche.slice(0, 2).map(k => `<div class="pczona"><button class="nz" data-id="${k}">${esc(S[k].n)} ›</button><p>${esc(sug[k] && sug[k].length ? sug[k].join(' · ') : sintesi(k))}</p></div>`).join('');
+  });
+}
+// piante e funghi segnalati intorno al percorso (GBIF), collegati alle schede di Micologia e Botanica
+async function trovaPercorso(p) {
+  const m = 0.01, q = (tk, n) => getJ(`https://api.gbif.org/v1/occurrence/search?decimalLatitude=${(p.bb[1] - m).toFixed(3)},${(p.bb[3] + m).toFixed(3)}&decimalLongitude=${(p.bb[0] - m).toFixed(3)},${(p.bb[2] + m).toFixed(3)}&taxonKey=${tk}&limit=0&facet=speciesKey&facetLimit=${n}`);
+  const [jf, jp] = await Promise.all([q(5, 40), q(7707728, 60)]); await CAT;
+  const el = $('pc-trova'); if (!el) return;
+  const kf = {}; FUN.s.forEach((r, i) => kf[r[7]] = i); const kp = {}; PIA.s.forEach((r, i) => { if (r[4]) kp[r[4]] = i; });
+  const pick = (j, idx, max) => ((j && j.facets && j.facets[0] && j.facets[0].counts) || []).map(c => [idx[+c.name], c.count]).filter(x => x[0] != null).slice(0, max);
+  const F = pick(jf, kf, 10), P = pick(jp, kp, 14);
+  const bt = (tipo, [i, n], nome) => `<button data-sp="${tipo}:${i}">${esc(nome)}<small>${fmt(n)}</small></button>`;
+  el.innerHTML = (P.length ? `<p class="note" style="margin:2px 0">${T('Piante', 'Plants')}</p><div class="trova">${P.map(x => bt('piante', x, PIA.s[x[0]][0])).join('')}</div>` : '')
+    + (F.length ? `<p class="note" style="margin:2px 0">${T('Funghi', 'Fungi')}</p><div class="trova">${F.map(x => bt('funghi', x, FUN.s[x[0]][0])).join('')}</div>` : '')
+    + (P.length || F.length ? `<small class="note">${T('Specie con più segnalazioni intorno al percorso (GBIF); il numero indica le segnalazioni.', 'Species most recorded around the trail (GBIF); the number is the record count.')}</small>` : `<small class="note">${T('Nessuna segnalazione intorno al percorso.', 'No records around the trail.')}</small>`);
+  el.onclick = e => { const b = e.target.closest('[data-sp]'); if (!b) return; const [tp, i] = b.dataset.sp.split(':'); prcTorna = p.id; apriSpecie(tp, +i); };
+}
+let prcTorna = null;
 // punti di interesse lungo il percorso (entro 250 m dal tracciato)
 let PTI = null;
 async function vicini(p) {
@@ -908,7 +958,7 @@ async function profilo(p) {
 /* ---------- Escursioni: obiettivo, dove andare, registrazione del percorso */
 const INT = { funghi: '#a0702a', alberi: '#5b3a1a', boschi: '#2d6a4f', flora: '#7a5ea8', alim: '#8fae3c' };
 let intSel = new Set(['funghi', 'alberi']);
-function suggerimenti() {  // le 12 zone più adatte agli interessi scelti
+function suggerimenti(tutti) {  // le 12 zone più adatte agli interessi scelti
   const out = [];
   for (const [k, z] of LUOGHI()) {
     const d = DENTRO[k] || [], na = d.filter(x => S[x].t === 'am').length, nv = d.filter(x => S[x].t === 'bv').length;
@@ -921,44 +971,57 @@ function suggerimenti() {  // le 12 zone più adatte agli interessi scelti
     if (intSel.has('flora') && pi) { sc += Math.log10(1 + pi) * 2; why.push(fmt(pi) + (LANG === 'it' ? ' specie di piante segnalate' : ' plant species recorded')); }
     if (sc > 0) out.push({ k, z, sc, why });
   }
-  return out.sort((a, b) => b.sc - a.sc).slice(0, 12);
+  out.sort((a, b) => b.sc - a.sc);
+  return tutti ? out : out.slice(0, 12);
 }
 function escursioni() {
   if (vista !== 'escursioni') return;
-  D.then(() => {
-    const sug = suggerimenti(), mx = Math.max(1, ...sug.map(x => x.sc));
-    const chips = `<div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}`;
-    const reg = isApp ? `<h3>${t('miei')}</h3><div class="trk" id="trk"></div><p class="note">${t('regNota')}</p>` : '';
-    if (!ON.osm) { ON.osm = true; applica(); }
-    const prc = `<h3>${T('Percorsi consigliati', 'Recommended trails')}</h3><div class="prc-f"><select class="tendina" id="prc-a">${ORD_AREE.map(a => `<option value="${a}"${prcSel.area === a ? ' selected' : ''}>${t('AR')[a]}</option>`).join('')}</select><select class="tendina" id="prc-d"><option value="">${T('Ogni difficoltà', 'Any difficulty')}</option>${Object.keys(CAI).map(k => `<option value="${k}"${prcSel.diff === k ? ' selected' : ''}>${k} · ${T(...CAI[k])}</option>`).join('')}</select></div><div class="prc" id="prc"><p class="note">…</p></div>`;
-    if (modo.escursioni === 'mappa') {
-      $('pan').innerHTML = `<div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="pl">${t('toccaEsc')}</p>${chips}
-        <h3>${t('doveAndare')}</h3><ol class="top5">${sug.slice(0, 6).map(x => `<li><button data-zona="${x.k}"><b>${esc(x.z.n)}</b><small>${esc(x.why.join(' · '))}</small></button></li>`).join('')}</ol>${prc}${reg}`;
-      evidenzia(sug.map(x => ({ k: x.k, v: 3 + 6.5 * x.sc / mx, lab: x.z.n })));
-      if (sug.length) { const bb = [180, 90, -180, -90]; for (const x of sug) { const b = x.z.bb; bb[0] = Math.min(bb[0], b[0]); bb[1] = Math.min(bb[1], b[1]); bb[2] = Math.max(bb[2], b[2]); bb[3] = Math.max(bb[3], b[3]); } map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: padMappa(), duration: 700 }); }
-    } else {
-      const per = {}; for (const x of sug) (per[areaDi(x.k)] = per[areaDi(x.k)] || []).push(x);
-      $('cat').innerHTML = `<div class="in"><div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="lead">${isApp ? t('lEsc') : t('lEsc').replace(/ (Puoi registrare|You can record).*$/, '')}</p><h3>${t('obiettivo')}</h3>${chips}
-        ${prc}<h3>${t('doveAndare')}</h3>${ORD_AREE.filter(a => per[a]).map(a => `<h4 class="area-h">${t('AR')[a]}</h4><div class="sug">${per[a].map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>`).join('')}
-        ${isApp ? reg : `<p class="note" style="margin-top:20px">${t('soloApp')}</p>`}</div>`;
-    }
-    if (isApp) { regUI(); trkUI(); }
-    elencoPercorsi();
-  });
+  if (!ON.osm) { ON.osm = true; applica(); }
+  const opt = (id, val, lista) => `<select class="tendina" id="${id}">${lista.map(([v, l]) => `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
+  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Percorsi', 'Trails')}</h2></div>
+    <div class="prc-f">${opt('prc-a', prcSel.area, ORD_AREE.map(a => [a, t('AR')[a]]))}${opt('prc-d', prcSel.diff, [['', T('Ogni difficoltà', 'Any difficulty')], ...Object.keys(CAI).map(k => [k, k + ' · ' + T(...CAI[k])])])}</div>
+    <div class="prc-f">${opt('prc-i', prcSel.int, [['', T('Ogni interesse', 'Any interest')], ['funghi', t('iFunghi')], ['alberi', t('iAlberi')], ['boschi', t('iBoschi')], ['flora', t('iFlora')]])}${opt('prc-l', prcSel.len, [['', T('Ogni lunghezza', 'Any length')], ['c', T('Fino a 5 km', 'Up to 5 km')], ['m', T('5–12 km', '5–12 km')], ['l', T('Oltre 12 km', 'Over 12 km')]])}</div>
+    <div class="prc" id="prc"><p class="note">…</p></div>`;
+  elencoPercorsi();
+}
+/* zone (parchi, riserve, Natura 2000) attraversate da un percorso */
+function dentroPoligono(pt, g) {
+  const ring = (r, x, y) => { let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+  const P = g.type === 'Polygon' ? [g.coordinates] : g.type === 'MultiPolygon' ? g.coordinates : [];
+  return P.some(pl => ring(pl[0], pt[0], pt[1]) && !pl.slice(1).some(h => ring(h, pt[0], pt[1])));
+}
+const ZPRC = {};
+function zoneDi(p) {
+  if (ZPRC[p.id]) return ZPRC[p.id];
+  const pts = p.g.flat(), cand = pts.filter((_, i) => i % Math.max(1, Math.floor(pts.length / 12)) === 0), out = [];
+  for (const f of GJ.features) {
+    const k = f.properties.id, z = S[k]; if (!z || !z.bb) continue;
+    if (z.bb[2] < p.bb[0] || z.bb[0] > p.bb[2] || z.bb[3] < p.bb[1] || z.bb[1] > p.bb[3]) continue;
+    if (cand.some(q => dentroPoligono(q, f.geometry))) out.push(k);
+  }
+  const ord = { pn: 0, pr: 1, rn: 2, ap: 3 };
+  return ZPRC[p.id] = out.sort((a, b) => (ord[S[a].t] ?? 9) - (ord[S[b].t] ?? 9) || S[a].ha - S[b].ha);
 }
 // percorsi consigliati: prima quelli con più informazioni (nome, difficoltà, dislivello, descrizione, gestore)
-let prcSel = { area: 'tutte', diff: '', n: 8 };
+let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8 };
 async function elencoPercorsi() {
   const A = await caricaPercorsi(); if (!$('prc')) return;
   const punti = p => (p.n && p.n !== p.r ? 2 : 0) + (p.c ? 2 : 0) + (p.up ? 1 : 0) + (p.desc ? 2 : 0) + (p.op ? 1 : 0) + (p.net === 'rwn' || p.net === 'nwn' ? 1 : 0) + Math.min(2, p.km / 6);
-  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff)).sort((a, b) => punti(b) - punti(a));
+  await D;
+  let zsc = null;
+  if (prcSel.int) { const salva = intSel; intSel = new Set([prcSel.int]); zsc = {}; for (const x of suggerimenti(true)) zsc[x.k] = x.sc; intSel = salva; }
+  const lenOk = p => !prcSel.len || (prcSel.len === 'c' ? p.km <= 5 : prcSel.len === 'm' ? p.km > 5 && p.km <= 12 : p.km > 12);
+  const interesse = p => zsc ? Math.max(0, ...zoneDi(p).map(k => zsc[k] || 0)) : 0;
+  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff) && lenOk(p) && (!zsc || interesse(p) > 0))
+    .sort((a, b) => (zsc ? interesse(b) - interesse(a) : 0) || punti(b) - punti(a));
   $('prc').innerHTML = L.length ? L.slice(0, prcSel.n).map(p => `<button class="pc" data-prc="${p.id}"><b>${esc(p.n)}</b><small>${p.r ? `<span class="ref">${esc(p.r)}</span> ` : ''}${pctTag(p)}</small></button>`).join('') + (L.length > prcSel.n ? `<button class="piu" id="prc-piu">${T('Mostra altri', 'Show more')} (${L.length - prcSel.n})</button>` : '') : `<p class="note">${T('Nessun percorso segnato qui con questi filtri.', 'No marked trails here with these filters.')}</p>`;
 }
-const filtroPrc = e => { if (vista !== 'escursioni') return; if (e.target.id === 'prc-a') prcSel.area = e.target.value; else if (e.target.id === 'prc-d') prcSel.diff = e.target.value; else return; prcSel.n = 8; elencoPercorsi(); };
+const filtroPrc = e => { if (vista !== 'escursioni') return; const k = { 'prc-a': 'area', 'prc-d': 'diff', 'prc-i': 'int', 'prc-l': 'len' }[e.target.id]; if (!k) return; prcSel[k] = e.target.value; prcSel.n = 8; elencoPercorsi(); if (k === 'area') map.fitBounds(limitiArea(prcSel.area), { padding: padMappa(), duration: 700 }); };
 $('pan').addEventListener('change', filtroPrc); $('cat').addEventListener('change', filtroPrc);
 window.escursioni = escursioni;
 const clickEsc = e => {
-  if (vista !== 'escursioni') return;
+  if (vista !== 'escursioni' && vista !== 'registra') return;
+  if (e.target.closest('[data-regtab]')) { regTab = e.target.closest('[data-regtab]').dataset.regtab; return registra(); }
   const z = e.target.closest('[data-zona]'); if (z) { apri(z.dataset.zona, true); return; }
   const i = e.target.closest('.int button'), m = e.target.closest('[data-map]'), mt = e.target.closest('[data-mt]'), rb = e.target.closest('#regbtn'), tb = e.target.closest('[data-trk]');
   if (i) { intSel.has(i.dataset.i) ? intSel.delete(i.dataset.i) : intSel.add(i.dataset.i); escursioni(); }
@@ -1003,7 +1066,7 @@ document.body.insertAdjacentHTML('beforeend', `
 <div id="rec" class="rec" aria-live="polite">
   <div class="rec-top"><button class="rb" id="rec-min" aria-label="Riduci">${ico('chevron-down')}</button>
     <div class="rec-st"><div><b id="rec-km">0,0</b><span>km</span></div><div class="rec-t"><small id="rec-lab"></small><b id="rec-tm">00:00:00</b></div><div><b id="rec-up">0</b><span>m D+</span></div></div></div>
-  <div class="rec-gps" id="rec-gps"></div>
+  <div class="rec-gps" id="rec-gps"></div><div class="rec-guida" id="rec-guida" style="display:none"></div>
   <button class="rb rec-ctr" id="rec-ctr" aria-label="Centra">${ico('current-location')}</button>
   <div class="rec-bot"><button class="rec-stop" id="rec-stop" aria-label="Termina"><span></span></button>
     <button class="rec-pt" id="rec-pt">${ico('map-pin-plus')}<span id="rec-pt-l"></span></button>
@@ -1020,8 +1083,14 @@ function mostraRec(on) {
   $('recpill').classList.toggle('on', !!(REG && !on));
   if (on && REG) { if (vista !== 'mappa') vai('mappa'); map.resize(); aggRec(); }
 }
+function disegnaGuida(g) {
+  if (map.getSource('guida')) map.getSource('guida').setData({ type: 'FeatureCollection', features: g ? [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: g.g } }] : [] });
+  const el = $('rec-guida'); if (el) el.style.display = g ? '' : 'none';
+}
+function distGuida(q) { let d = 1e9; for (const l of REG.guida.g) for (const r of l) { const x = hav(r, q); if (x < d) d = x; } return d; }
 function aggRec() {
   if (!REG) return;
+  if (REG.guida && $('rec-guida')) { const q = REG.p[REG.p.length - 1], d = q ? distGuida(q) : 0, fuori = d > 80; $('rec-guida').classList.toggle('fuori', fuori); $('rec-guida').textContent = fuori ? T(`Fuori percorso: ${fmt(Math.round(d))} m`, `Off trail: ${fmt(Math.round(d))} m`) : `${ico('route').length ? '' : ''}${REG.guida.n}`; }
   const m = misure(REG.p), tm = orologio(Date.now() - REG.t0);
   $('rec-km').textContent = num1(m.km); $('rec-up').textContent = fmt(m.up); $('rec-tm').textContent = tm; $('recpill-t').textContent = tm;
   $('rec-lab').textContent = T('REGISTRAZIONE IN CORSO', 'RECORDING');
@@ -1036,16 +1105,18 @@ function posizione(q) {
   if (segui && document.body.classList.contains('recon')) map.easeTo({ center: [q[0], q[1]], zoom: Math.max(map.getZoom(), 15), duration: 600 });
 }
 map.on('dragstart', () => { if (REG) segui = false; });
-function avviaReg() {
+function avviaReg(guida) {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
-  if (!confirm(t('regConfIn'))) return;
-  REG = { t0: Date.now(), p: [], ob: [...intSel], w: [] };
+  if (REG) return mostraRec(true);
+  if (!confirm(guida ? T(`Seguire "${guida.n}" e registrare l'uscita? Il GPS resta attivo anche a schermo spento finché non la termini.`, `Follow "${guida.n}" and record the outing? GPS stays on, even with the screen off, until you stop.`) : t('regConfIn'))) return;
+  chiudi();
+  REG = { t0: Date.now(), p: [], ob: [...intSel], w: [], guida: guida || null };
   segui = true; salvaCorrente(); avviaVista();
 }
 // schermata e GPS: prima la schermata, poi il GPS (la richiesta dei permessi può mandare l'app in secondo piano)
 function avviaVista() {
   clearInterval(tick); tick = setInterval(aggRec, 1000);
-  disegnaTrk(REG.p, REG.w); mostraRec(true); regUI();
+  disegnaTrk(REG.p, REG.w); disegnaGuida(REG.guida); mostraRec(true); regUI();
   try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
   try { ascolta(); } catch (e) { toast('GPS: ' + (e && e.message || e)); }
 }
@@ -1074,7 +1145,7 @@ function fermaReg() {
   clearInterval(tick);
   const fatto = REG.p.length > 1 || REG.w.length;
   if (fatto) { const a = leggiTrk(); a.unshift({ id: 'T' + REG.t0, t0: REG.t0, ob: REG.ob, p: REG.p, w: REG.w }); scriviTrk(a); }
-  REG = null; salvaCorrente(); if (dot) { dot.remove(); dot = null; }
+  REG = null; salvaCorrente(); if (dot) { dot.remove(); dot = null; } disegnaGuida(null);
   mostraRec(false); toast(fatto ? T('Percorso salvato in Escursioni', 'Route saved in Hikes') : T('Nessun dato da salvare', 'Nothing to save'));
   regUI(); trkUI();
 }
@@ -1083,7 +1154,7 @@ function fermaReg() {
 (function recupera() {
   let r = null; try { r = JSON.parse(localStorage.getItem(TKC)); } catch (e) {}
   if (!r) return;
-  if (isApp && Date.now() - r.t0 < 24 * 3600e3) { REG = { t0: r.t0, p: r.p || [], ob: r.ob || [], w: r.w || [] }; segui = true; setTimeout(() => { avviaVista(); toast(T('Registrazione ripresa', 'Recording resumed')); }, 800); return; }
+  if (isApp && Date.now() - r.t0 < 24 * 3600e3) { REG = { t0: r.t0, p: r.p || [], ob: r.ob || [], w: r.w || [], guida: r.guida || null }; segui = true; setTimeout(() => { avviaVista(); toast(T('Registrazione ripresa', 'Recording resumed')); }, 800); return; }
   try { if (r.p.length > 1 || (r.w && r.w.length)) { const a = leggiTrk(); if (!a.some(x => x.id === 'T' + r.t0)) { a.unshift({ id: 'T' + r.t0, t0: r.t0, ob: r.ob, p: r.p, w: r.w || [] }); scriviTrk(a); } } localStorage.removeItem(TKC); } catch (e) {}
 })();
 $('rec-min').onclick = () => mostraRec(false);
@@ -1107,8 +1178,23 @@ $('miapos').onclick = () => {
     map.easeTo({ center: ll, zoom: Math.max(map.getZoom(), 14), duration: 800 });
   }, () => { $('miapos').classList.remove('cerca'); toast(t('noGps')); }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
 };
+let regTab = 'reg';
+function registra() {
+  if (vista !== 'registra') return;
+  $('pan').innerHTML = `<div class="ph-top"><h2>${T('Registra', 'Record')}</h2><div class="switch" role="tablist">${[['reg', T('Registra', 'Record')], ['uscite', T('Le mie uscite', 'My outings')]].map(([k, l]) => `<button role="tab" data-regtab="${k}" class="${regTab === k ? 'on' : ''}" aria-selected="${regTab === k}">${l}</button>`).join('')}</div></div>`
+    + (regTab === 'reg' ? `<div class="gpsst" id="gpsst">${ico('gps')}<span>${T('Cerco il segnale GPS…', 'Looking for GPS…')}</span></div><p class="note">${T('Registra un percorso libero: traccia, punti e foto restano sul telefono. Per seguire un percorso segnato, aprilo in Percorsi e tocca "Segui il percorso".', 'Record a free route: track, waypoints and photos stay on your phone. To follow a marked trail, open it in Trails and tap "Follow this trail".')}</p>`
+      : `<div class="trk" id="trk"></div>`);
+  regUI(); if (regTab === 'uscite') trkUI();
+  if (regTab === 'reg' && navigator.geolocation) navigator.geolocation.getCurrentPosition(q => {
+    const el = $('gpsst'); if (!el) return; const a = Math.round(q.coords.accuracy);
+    el.innerHTML = `${ico('gps')}<span>${a <= 25 ? T('Segnale GPS buono', 'Good GPS signal') : T('Segnale GPS debole', 'Weak GPS signal')} (± ${a} m)</span>`; el.style.color = a <= 25 ? '#2f9e44' : '#d9480f';
+    const ll = [q.coords.longitude, q.coords.latitude];
+    if (!mio) { const d = document.createElement('div'); d.className = 'gpsdot'; mio = new maplibregl.Marker({ element: d }).setLngLat(ll).addTo(map); } else mio.setLngLat(ll);
+    map.easeTo({ center: ll, zoom: Math.max(map.getZoom(), 14), duration: 800 });
+  }, () => { const el = $('gpsst'); if (el) el.innerHTML = `${ico('gps')}<span>${t('noGps')}</span>`; }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
+}
 function regUI() {
-  document.body.classList.toggle('escreg', isApp && vista === 'escursioni' && !REG);
+  document.body.classList.toggle('escreg', isApp && vista === 'registra' && !REG);
   if (!$('reg')) return;
   const m = REG ? misure(REG.p) : null;
   $('reg').innerHTML = REG
