@@ -258,7 +258,7 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'osm-rc', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 2.6, 14, 6], 'line-opacity': 0.85 } });
   map.addLayer({ id: 'osm-r', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': DIFF, 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 1.4, 14, 3.4] } });
   map.addLayer({ id: 'osm-rt', type: 'symbol', source: 'st', 'source-layer': 'perc', minzoom: 12, layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['coalesce', ['get', 'r'], ''], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'symbol-spacing': 260 }, paint: { 'text-color': '#7a1f12', 'text-halo-color': '#fff', 'text-halo-width': 2 } });
-  map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.42, 15, 0.62], 'icon-allow-overlap': false, 'icon-padding': 1 } });
+  map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.55, 15, 0.85], 'icon-allow-overlap': false, 'icon-padding': 1 } });
   map.addLayer({ id: 'osm-t', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 13, layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
   map.addSource('prc', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'prc-c', type: 'line', source: 'prc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 9, 'line-opacity': 0.9 } });
@@ -288,6 +288,8 @@ let bosco = '';
 const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
 const LIV = { osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
+// in Escursioni i sentieri restano visibili anche quando le zone sono evidenziate
+const sentInEsc = l => vista === 'escursioni' && ON.osm && LIV.osm.includes(l);
 function applica() {
   if (!map.getLayer('aree-f')) return;
   let ids = null;
@@ -304,7 +306,7 @@ function applica() {
   map.setPaintProperty('n2k-f', 'fill-opacity', ON.cf ? 0.03 : 0.12);
   map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
   $('liv-n').textContent = Object.values(ON).filter(Boolean).length;
-  if (document.body.classList.contains('mm')) for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', 'none');
+  if (document.body.classList.contains('mm')) for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l) && !sentInEsc(l)) map.setLayoutProperty(l, 'visibility', 'none');
   legenda();
 }
 const SW = {
@@ -726,7 +728,7 @@ const padMappa = () => innerWidth >= 900 ? { top: 40, bottom: 40, left: 40, righ
 function evidenzia(items) {
   if (!map.getSource('hl')) return;
   const on = !!items;
-  for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', on ? 'none' : (l in base ? ((l.startsWith('aree') ? ON.aree : ON.n2k) ? 'visible' : 'none') : 'visible'));
+  for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l) && !(on && sentInEsc(l))) map.setLayoutProperty(l, 'visibility', on ? 'none' : (l in base ? ((l.startsWith('aree') ? ON.aree : ON.n2k) ? 'visible' : 'none') : 'visible'));
   if (!on) { map.getSource('hl').setData({ type: 'FeatureCollection', features: [] }); map.getSource('hlp').setData({ type: 'FeatureCollection', features: [] }); applica(); return; }
   const byId = {}; for (const f of GJ.features) byId[f.properties.id] = f;
   map.getSource('hl').setData({ type: 'FeatureCollection', features: items.filter(x => byId[x.k]).map(x => ({ type: 'Feature', properties: { id: x.k, v: x.v }, geometry: byId[x.k].geometry })) });
@@ -864,12 +866,28 @@ async function apriPercorso(id) {
     <div class="profilo" id="pc-prof"><small>${T('Profilo altimetrico…', 'Elevation profile…')}</small></div>
     ${p.da || p.a ? `<p>${it ? 'Da' : 'From'} <b>${esc(p.da || '–')}</b> ${it ? 'a' : 'to'} <b>${esc(p.a || '–')}</b>${p.giro ? (it ? ' (ad anello)' : ' (loop)') : ''}.</p>` : ''}
     ${p.desc ? `<p>${esc(p.desc)}</p>` : ''}
+    <div id="pc-poi"></div>
     ${p.op ? `<p class="note">${T('Gestione', 'Managed by')}: ${esc(p.op)}</p>` : ''}
     <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${p.s[1]},${p.s[0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" id="pc-gpx">GPX</button></div>
     <p class="note">${T('Tracciato e dati: OpenStreetMap (ODbL), volontari e sezioni CAI. Controlla sempre segnaletica, meteo e condizioni del sentiero.', 'Track and data: OpenStreetMap (ODbL), volunteers and CAI sections. Always check signs, weather and trail conditions.')} <a href="https://www.openstreetmap.org/relation/${p.id}" target="_blank" rel="noopener">OSM</a></p>`;
   mostra();
   $('pc-gpx').onclick = () => { const g = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(p.n)}</name>${p.g.map(l => `<trkseg>${l.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}"/>`).join('')}</trkseg>`).join('')}</trk></gpx>`; const u = URL.createObjectURL(new Blob([g], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = (p.r || 'percorso') + '.gpx'; document.body.appendChild(l); l.click(); l.remove(); };
-  profilo(p);
+  profilo(p); vicini(p);
+}
+// punti di interesse lungo il percorso (entro 250 m dal tracciato)
+let PTI = null;
+async function vicini(p) {
+  PTI = PTI || fetch('data/punti.json').then(r => r.json());
+  const P = await PTI, pts = p.g.flat(), m = 0.003, out = [];
+  for (const q of P) {
+    if (q[0] < p.bb[0] - m || q[0] > p.bb[2] + m || q[1] < p.bb[1] - m || q[1] > p.bb[3] + m) continue;
+    let d = 1e9; for (const r of pts) { const x = hav(r, q); if (x < d) d = x; if (d < 60) break; }
+    if (d < 250) out.push(q);
+  }
+  const el = $('pc-poi'); if (!el || !out.length) return;
+  const ord = Object.keys(POI); out.sort((a, b) => ord.indexOf(a[2]) - ord.indexOf(b[2]));
+  el.innerHTML = `<h3>${T('Lungo il percorso', 'Along the trail')}</h3><div class="poil">${out.slice(0, 30).map(q => `<button data-ptll="${q[0]},${q[1]}"><i style="background:${POIC[q[2]]}">${ico(POI[q[2]])}</i><span><b>${esc(q[3] || T(...POIN[q[2]]))}</b><small>${esc(T(...POIN[q[2]]))}${q[4] ? ' · ' + fmt(q[4]) + ' m' : ''}</small></span></button>`).join('')}</div>`;
+  el.onclick = e => { const b = e.target.closest('[data-ptll]'); if (!b) return; const ll = b.dataset.ptll.split(',').map(Number); map.easeTo({ center: ll, zoom: 15, duration: 700 }); $('sheet').classList.add('mini'); $('sheet').classList.remove('big'); $('pan').classList.add('mini'); $('pan').classList.remove('big'); };
 }
 // profilo altimetrico: quote Copernicus 90 m da Open-Meteo su 100 punti del tracciato
 async function profilo(p) {
