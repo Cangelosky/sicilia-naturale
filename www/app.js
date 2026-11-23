@@ -214,7 +214,7 @@ style.layers.splice(style.layers.findIndex(l => l.id === 'place'), 0,
   { id: 'd-name', type: 'symbol', source: 'omd', 'source-layer': 'place', minzoom: 12, filter: ['in', ['get', 'class'], ['literal', ['hamlet', 'isolated_dwelling', 'locality', 'neighbourhood', 'suburb']]], layout: { 'text-field': ['get', 'name'], 'text-font': ['Noto Sans Regular'], 'text-size': 11 }, paint: { 'text-color': '#4a4236', 'text-halo-color': '#fff', 'text-halo-width': 1.3 } }
 );
 style.sources.dem3d = { type: 'raster-dem', tiles: ['loc://d/{z}/{x}/{y}'], encoding: 'terrarium', tileSize: 256, minzoom: 5, maxzoom: 8, bounds: B };
-const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 17, maxPitch: 70, maxBounds: [[10.5, 34.6], [17, 39.6]], attributionControl: false });
+const map = new maplibregl.Map({ container: 'map', style, bounds: [[12.3, 36.55], [15.7, 38.35]], fitBoundsOptions: { padding: 20 }, minZoom: 6, maxZoom: 17, maxPitch: 70, maxBounds: [[8, 31], [19.5, 42.5]], attributionControl: false });
 /* mappa 3D: rilievo vero (DEM Terrarium) con esagerazione verticale, inclinazione e rotazione */
 let tre = false;
 const b3 = document.createElement('button'); b3.className = 'btn3d'; b3.textContent = '3D'; b3.setAttribute('aria-pressed', 'false'); document.getElementById('wrap').appendChild(b3);
@@ -235,8 +235,16 @@ function satellite(on) {
 }
 bs.onclick = () => satellite(!satOn);
 map.on('load', () => satellite(satOn));
-map.addControl(new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }), 'bottom-right');
-map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ['© 2026 Oscar Cangelosi · Sicilia Naturale', 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF'] }), 'bottom-left');
+map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+/* crediti della mappa: un solo tasto "i" che apre l'elenco delle fonti visibili */
+const crediti = { onAdd() { const d = document.createElement('div'); d.className = 'maplibregl-ctrl crediti';
+  d.innerHTML = '<button type="button" aria-label="Crediti della mappa">i</button><div class="cr-box"></div>';
+  d.firstChild.onclick = () => { const box = d.lastChild, on = !d.classList.contains('on');
+    if (on) { const st = map.getStyle(), set = new Set(); for (const [id, src] of Object.entries(st.sources)) if (src.attribution && st.layers.some(l => l.source === id && (l.layout || {}).visibility !== 'none')) set.add(src.attribution);
+      box.innerHTML = [...set, 'Dati zone: EEA Natura 2000, EEA NatDA · Regione Siciliana, SIF', '© ' + new Date().getFullYear() + ' Oscar Cangelosi · Sicilia Naturale'].map(x => '<div>' + x + '</div>').join(''); }
+    d.classList.toggle('on', on); };
+  return d; }, onRemove() {} };
+map.addControl(crediti, 'bottom-left');
 
 /* ---------- dati */
 let prcSel = { area: 'tutte', diff: '', int: '', len: '', n: 8, uff: false, zona: '' };
@@ -1218,7 +1226,7 @@ document.body.insertAdjacentHTML('beforeend', `
 <div id="rec" class="rec" aria-live="polite">
   <div class="rec-top"><button class="rb" id="rec-min" aria-label="Riduci">${ico('chevron-down')}</button><button class="rb sosb" data-sos="1" aria-label="SOS">SOS</button>
     <div class="rec-st"><div><b id="rec-km">0,0</b><span>km</span></div><div class="rec-t"><small id="rec-lab"></small><b id="rec-tm">00:00:00</b></div><div><b id="rec-up">0</b><span>m D+</span></div></div></div>
-  <div class="rec-gps" id="rec-gps"></div><div class="rec-guida" id="rec-guida" style="display:none"></div>
+  <div class="rec-gps" id="rec-gps"></div><div class="rec-guida" id="rec-guida" style="display:none"></div><div class="rec-zona" id="rec-zona" style="display:none"></div>
   <button class="rb rec-ctr" id="rec-ctr" aria-label="Centra">${ico('current-location')}</button>
   <div class="rec-bot"><button class="rec-stop" id="rec-stop" aria-label="Termina"><span></span></button>
     <button class="rec-pt" id="rec-pt">${ico('map-pin-plus')}<span id="rec-pt-l"></span></button>
@@ -1276,6 +1284,7 @@ map.on('dragstart', () => { if (REG) segui = false; });
 function avviaReg(guida) {
   if (!navigator.geolocation && !isApp) return alertNota(t('noGps'));
   if (REG) return mostraRec(true);
+  ZREC = { q: null, k: [] };
   if (!confirm(guida ? T(`Seguire "${guida.n}" e registrare l'uscita? Il GPS resta attivo anche a schermo spento finché non la termini.`, `Follow "${guida.n}" and record the outing? GPS stays on, even with the screen off, until you stop.`) : t('regConfIn'))) return;
   chiudi();
   REG = { t0: Date.now(), p: [], ob: [...intSel], w: [], guida: guida || null };
@@ -1288,13 +1297,28 @@ function avviaVista() {
   try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
   try { ascolta(); } catch (e) { erroreGps(e); }
 }
+/* durante la registrazione: in quale parco o riserva sei, con avviso quando entri o esci */
+let ZREC = { q: null, k: [] };
+function zoneQui(q) {
+  if (typeof GJ === 'undefined' || !GJ) return [];
+  return GJ.features.filter(f => { const z = S[f.properties.id]; return z && AREE.includes(z.t) && z.bb && q[0] >= z.bb[0] && q[0] <= z.bb[2] && q[1] >= z.bb[1] && q[1] <= z.bb[3] && dentroPoligono(q, f.geometry); })
+    .map(f => f.properties.id).sort((a, b) => S[a].ha - S[b].ha);
+}
+function zonaRec(q) {
+  if (ZREC.q && hav(ZREC.q, q) < 25) return; ZREC.q = q;
+  const ora = zoneQui(q), prima = ZREC.k, entra = ora.filter(k => !prima.includes(k)), esce = prima.filter(k => !ora.includes(k));
+  if (prima.length || ora.length) { const msg = [...entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n), ...esce.map(k => T('Esci da: ', 'Leaving: ') + S[k].n)]; if (msg.length && ZREC.init) { toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
+  ZREC.k = ora; ZREC.init = true;
+  const el = $('rec-zona'); if (!el) return;
+  el.style.display = ora.length ? '' : 'none'; el.textContent = ora.length ? ora.map(k => S[k].n).join(' · ') : '';
+}
 function ascolta() {
   const punto = (lon, lat, alt, acc) => {
     if (!REG || acc > 40) return;
     const q = [+lon.toFixed(6), +lat.toFixed(6), alt != null ? Math.round(alt) : null, Date.now()];
     posizione(q);
     const last = REG.p[REG.p.length - 1]; if (last && hav(last, q) < 4) return;
-    REG.p.push(q); disegnaTrk(REG.p, REG.w); salvaCorrente(); aggRec();
+    REG.p.push(q); disegnaTrk(REG.p, REG.w); salvaCorrente(); aggRec(); zonaRec(q);
   };
   const BG = plug('BackgroundGeolocation');
   if (BG) {
