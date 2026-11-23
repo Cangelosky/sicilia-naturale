@@ -1,3 +1,4 @@
 data/raw/sif_dati_sicilia_naturale.json
 __pycache__/
 data/raw/osm/
+data/raw/sif_zone_parchi_riserve.json
