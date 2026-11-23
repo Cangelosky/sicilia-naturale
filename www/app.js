@@ -301,7 +301,7 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'osm-rc', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 2.6, 14, 6], 'line-opacity': 0.85 } });
   map.addLayer({ id: 'osm-r', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': DIFF, 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 1.4, 14, 3.4] } });
   map.addLayer({ id: 'osm-rt', type: 'symbol', source: 'st', 'source-layer': 'perc', minzoom: 12, layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['coalesce', ['get', 'r'], ''], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'symbol-spacing': 260 }, paint: { 'text-color': '#7a1f12', 'text-halo-color': '#fff', 'text-halo-width': 2 } });
-  map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.55, 15, 0.85], 'icon-allow-overlap': false, 'icon-padding': 1 } });
+  map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.75, 14, 1, 16, 1.15], 'icon-allow-overlap': false, 'icon-padding': 1 } });
   map.addLayer({ id: 'osm-t', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 13, layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
   map.addSource('guida', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'guida-c', type: 'line', source: 'guida', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 10, 'line-opacity': 0.85 } });
@@ -751,7 +751,7 @@ window.addEventListener('hashchange', () => { const h = location.hash.slice(1); 
 let vista = 'mappa';
 const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60, fam: '' } };
 const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
-const ICO = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
+const ICOC = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
 const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
 // plugin del telefono: da Capacitor 3 non sempre compaiono in Capacitor.Plugins, vanno registrati per nome
@@ -807,6 +807,11 @@ $('cat').addEventListener('click', e => { const b = e.target.closest('[data-spec
 const FELCI = new Set(['Aspleniaceae','Polypodiaceae','Pteridaceae','Dryopteridaceae','Athyriaceae','Dennstaedtiaceae','Ophioglossaceae','Osmundaceae','Woodsiaceae','Cystopteridaceae','Blechnaceae','Thelypteridaceae','Equisetaceae','Selaginellaceae','Isoetaceae','Marsileaceae','Salviniaceae','Lycopodiaceae','Hymenophyllaceae','Sinopteridaceae','Aspidiaceae']);
 const TIPI_P = [['alb', 'Alberi e arbusti', 'Trees and shrubs'], ['ali', 'Alimurgiche', 'Wild food plants'], ['orc', 'Orchidee', 'Orchids'], ['fel', 'Felci', 'Ferns'], ['gra', 'Graminacee', 'Grasses'], ['erb', 'Altre erbacee', 'Other herbs']];
 const tipoP = r => r[1] ? 'alb' : r[7] ? 'ali' : r[5] === 'Orchidaceae' ? 'orc' : FELCI.has(r[5]) ? 'fel' : r[5] === 'Poaceae' ? 'gra' : 'erb';
+/* simbolo e colore per tipo: funghi e tipi di piante */
+const TIPO_IC = { fun: ['mushroom', '#8a5a2b'], alb: ['tree', '#2b8a3e'], ali: ['plant-2', '#5c940d'], orc: ['flower', '#c2255c'], fel: ['feather', '#0b7285'], gra: ['grain', '#c77700'], erb: ['leaf', '#6741d9'] };
+const tipoSp = (tp, i) => tp === 'funghi' ? 'fun' : (PIA.s[i] ? tipoP(PIA.s[i]) : 'erb');
+const icoT = (k, cl) => { const [n, c] = TIPO_IC[k] || TIPO_IC.erb; return `<span class="tpi ${cl || ''}" style="color:${c}">${ico(n, 'xs')}</span>`; };
+const icoSp = (tp, i) => icoT(tipoSp(tp, i));
 function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
@@ -828,7 +833,7 @@ function catalogo(soloTesti) {
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
-      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}${ph ? '' : ` style="color:${TIPO_IC[f ? 'fun' : tipoP(r)][1]}"`}>${ph ? '' : ico(TIPO_IC[f ? 'fun' : tipoP(r)][0], 'phi')}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
@@ -838,7 +843,7 @@ function catalogo(soloTesti) {
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
       if ($('cf')) $('cf').onchange = e => { cs.piante.fam = e.target.value; cs.piante.n = 60; catalogo(); };
     }
-    $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${esc(n)}<em>${fmt(c)}</em></button>`).join('');
+    $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${!f && TIPO_IC[k] ? icoT(k) : ''}${esc(n)}<em>${fmt(c)}</em></button>`).join('');
     const nOn = ids.filter(i => stg(i).on === true).length;
     if ($('alimav')) $('alimav').remove();
     if (!f && st.g === 'ali') $('cn').insertAdjacentHTML('beforebegin', `<p class="avviso" id="alimav">${t('alimNota')}</p>`);
@@ -915,11 +920,11 @@ function avvisoMappa(m, ms) {
 }
 /* ---------- punti di interesse: icone (stesse della registrazione) */
 const POI = { rifugio: 'home', riparo: 'tent', picnic: 'tools-kitchen-2', panorama: 'binoculars', campeggio: 'tent', fontana: 'fountain', sorgente: 'droplet', vetta: 'mountain', grotta: 'building-arch', cascata: 'stairs-down', castello: 'building-castle', chiesa: 'building-church', torre: 'tower', rovine: 'columns', segnaletica: 'direction-sign', pannello: 'direction-sign' };
-const POIC = { rifugio: '#d08a2b', riparo: '#d08a2b', picnic: '#d08a2b', campeggio: '#d08a2b', segnaletica: '#d08a2b', pannello: '#d08a2b', panorama: '#3a8fd5', fontana: '#1c7ed6', sorgente: '#1c7ed6', cascata: '#1c7ed6', vetta: '#495057', grotta: '#495057', castello: '#a06bd0', chiesa: '#a06bd0', torre: '#a06bd0', rovine: '#a06bd0' };
+const POIC = { rifugio: '#c2570c', riparo: '#c2570c', picnic: '#2b8a3e', campeggio: '#2b8a3e', segnaletica: '#8d7a3a', pannello: '#8d7a3a', panorama: '#e8590c', fontana: '#1c7ed6', sorgente: '#1c7ed6', cascata: '#0b7285', vetta: '#495057', grotta: '#6b4226', castello: '#7048e8', chiesa: '#7048e8', torre: '#7048e8', rovine: '#7048e8' };
 const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
 function iconePoi() {
   for (const [k, i] of Object.entries(POI)) {
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="${POIC[k]}" stroke="#fff" stroke-width="5"/><g transform="translate(17 17) scale(1.25)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">${ICO[i]}</g></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="${POIC[k]}" stroke="#fff" stroke-width="5"/><g transform="translate(17 17) scale(1.25)" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICO[i]}</g></svg>`;
     const im = new Image(64, 64); im.onload = () => { if (!map.hasImage('poi-' + k)) map.addImage('poi-' + k, im, { pixelRatio: 2 }); }; im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
 }
@@ -997,7 +1002,7 @@ async function trovaPercorso(p) {
   const lista = (tipo, arr) => arr.map(([i, n]) => ({ tipo, i, n, st: stagione(tipo, i, mq, S2), nome: nomeC(tipo, i) || (tipo === 'funghi' ? FUN.s : PIA.s)[i][0] }));
   const tutte = [...lista('piante', pick(jp, kp, 60)), ...lista('funghi', pick(jf, kf, 40))];
   const grp = v => tutte.filter(x => x.st.on === v);
-  const bt = x => `<button data-sp="${x.tipo}:${x.i}" class="${x.st.on === false ? 'fuori' : ''}" title="${fmt(x.n)} ${T('segnalazioni', 'records')}">${x.tipo === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(x.nome)}${x.st.lab ? `<small>${esc(x.st.lab)}</small>` : ''}</button>`;
+  const bt = x => `<button data-sp="${x.tipo}:${x.i}" class="${x.st.on === false ? 'fuori' : ''}" title="${fmt(x.n)} ${T('segnalazioni', 'records')}">${icoSp(x.tipo, x.i)}${esc(x.nome)}${x.st.lab ? `<small>${esc(x.st.lab)}</small>` : ''}</button>`;
   const on = grp(true), mai = grp(null), off = grp(false);
   PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { funghi: on.filter(x => x.tipo === 'funghi').length, fiori: on.filter(x => x.tipo === 'piante' && !DECID.test(x.nome)).length }); avvisiPercorso(p);
   el.innerHTML = tutte.length ? (on.length ? `<p class="note gr">${T('In stagione', 'In season')} · ${quando === 'oggi' ? T('oggi', 'today') : quando === 'we' ? T('questo fine settimana', 'this weekend') : nomeMese(mq)}</p><div class="trova">${on.slice(0, 18).map(bt).join('')}</div>` : '')
@@ -1816,7 +1821,7 @@ async function calendario() {
   const tutte = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].map(([tp, i, n]) => ({ tp, i, n, st: stagione(tp, i, m, S2) }));
   const on = tutte.filter(x => x.st.on === true).sort((a, b) => b.n - a.n);
   const k = x => x.tp === 'funghi' ? FUN.s[x.i][7] : PIA.s[x.i][4], nuove = on.filter(x => { const mk = S2[k(x)]; return mk && mk[prima] === '0'; });
-  const sez = (tit, ic, l, max) => l.length ? `<h3>${ico(ic, 'sm')} ${tit} <em>${fmt(l.length)}</em></h3><div class="trova">${uniciNome(l).slice(0, max).map(x => `<button data-sp="${x.tp}:${x.i}">${x.tp === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}</button>`).join('')}</div>` : '';
+  const sez = (tit, ic, l, max) => l.length ? `<h3>${ico(ic, 'sm')} ${tit} <em>${fmt(l.length)}</em></h3><div class="trova">${uniciNome(l).slice(0, max).map(x => `<button data-sp="${x.tp}:${x.i}">${icoSp(x.tp, x.i)}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}</button>`).join('')}</div>` : '';
   $('cat').dataset.v = 'cal'; $('cat').scrollTop = 0;
   $('cat').innerHTML = `<div class="in cal"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
     <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p>
@@ -1844,7 +1849,7 @@ async function oggiQui() {
     const kf = {}; FUN.s.forEach((r, i) => kf[r[7]] = i); const kp = {}; PIA.s.forEach((r, i) => { if (r[4]) kp[r[4]] = i; });
     const sp = (j, idx, tp) => ((j && j.facets && j.facets[0] && j.facets[0].counts) || []).map(c => idx[+c.name]).filter(i => i != null).map(i => ({ tp, i, st: stagione(tp, i, m, S2) })).filter(x => x.st.on === true);
     const specie = [...sp(jp, kp, 'piante'), ...sp(jf, kf, 'funghi')];
-    const bt = x => `<button data-sp="${x.tp}:${x.i}">${x.tp === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}<small>${esc(x.st.lab)}</small></button>`;
+    const bt = x => `<button data-sp="${x.tp}:${x.i}">${icoSp(x.tp, x.i)}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}<small>${esc(x.st.lab)}</small></button>`;
     const riga = (attr, tit, sub, d) => `<button ${attr}><span><b>${esc(tit)}</b><small>${esc(sub)}</small></span><em>${num1(d)} km</em></button>`;
     $('sh').innerHTML = `<div><h2>${T('Oggi qui intorno', 'Around here today')}</h2><div class="badges"><span class="badge">${T('entro', 'within')} ${R} km · ${nomeMese(m)}</span></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
     $('sb').innerHTML = `<div class="vic">
