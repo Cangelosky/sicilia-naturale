@@ -326,12 +326,12 @@ function pannello() {
   const cnt = {}; for (const x of Object.values(S)) for (const b of x.b || []) cnt[b[0]] = (cnt[b[0]] || 0) + 1;
   const opts = Object.keys(H.boschi).filter(c => cnt[c]).sort((a, b) => nb(a).localeCompare(nb(b)));
   const mac = Object.keys(CFC).filter(m => CFN.macro[m]);
-  $('liv').innerHTML = `<button class="grip" aria-label="Abbassa"><span></span></button><div class="lvh"><h3>${t('livelli')}</h3><button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('liv').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button><button class="close" aria-label="${t('chiudi')}">×</button></div><h4>${t('gTut')}</h4>`
+  $('liv').innerHTML = `<button class="grip" aria-label="Abbassa"><span></span></button><div class="lvh"><h3>${t('livelli')}</h3><button class="espandi" aria-label="${T('Tutto schermo', 'Full screen')}">${ico($('liv').classList.contains('big') ? 'arrows-minimize' : 'arrows-maximize')}</button><button class="close" aria-label="${t('chiudi')}">×</button></div><h4>${T('Sentieri', 'Trails')}</h4>` + riga_lv('osm', t('sent'), t('dSent')) + `<h4>${t('gTut')}</h4>`
     + riga_lv('aree', t('aree'), t('dAree')) + riga_lv('n2k', t('n2k') + ' · ZSC / ZPS', t('dN2k'))
     + `<h4>${t('gHab')}</h4><select id="bosco"><option value="">${t('tutti')}</option><option value="*">${t('solo')}</option>${opts.map(c => `<option value="${c}">${esc(nb(c))}</option>`).join('')}</select>`
     + `<h4>${t('gBos')}</h4>` + riga_lv('bv', t('bvs'), t('dBv')) + riga_lv('am', t('ams'), t('dAm')) + riga_lv('cf', t('cf'), t('dCf'))
     + `<div class="cft">${mac.map(m => `<button data-m="${m}" class="${ON.cf && (!cfSel || cfSel.has(m)) ? 'on' : ''}"><i style="background:${CFC[m]}"></i>${esc(CFN.macro[m])}</button>`).join('')}<button class="tutti" data-m="*">${t('tuttiTipi')}</button><button class="tutti" data-m="-">${t('nessunTipo')}</button></div>`
-    + riga_lv('bs', t('bss'), t('dBs')) + `<h4>${t('vEsc')}</h4>` + riga_lv('osm', t('sent'), t('dSent'));
+    + riga_lv('bs', t('bss'), t('dBs'));
   $('bosco').value = bosco;
   $('bosco').onchange = e => { bosco = e.target.value; applica(); };
 }
@@ -756,15 +756,17 @@ function elencoCat() {
     const n = norm(r[0] + ' ' + (r[5] || '')); return w.every(x => n.includes(x)); });
 }
 function catalogo(soloTesti) {
-  CAT.then(() => {
+  Promise.all([CAT, caricaStag()]).then(([, S2]) => {
     if (vista !== 'funghi' && vista !== 'piante') return;
-    const f = vista === 'funghi', st = cs[vista], ids = elencoCat();
+    const f = vista === 'funghi', st = cs[vista], mo = new Date().getMonth();
+    const stg = i => stagione(vista, i, mo, S2), ord = i => { const o = stg(i).on; return o === true ? 0 : o === null ? 1 : 2; };
+    const ids = elencoCat().map((i, n) => [i, n]).sort((a, b) => ord(a[0]) - ord(b[0]) || a[1] - b[1]).map(x => x[0]);
     const gruppi = f ? [['', t('tutte'), FUN.s.length], ['*f', t('conFoto'), FUN.s.filter(r => r[8].length).length], ...FUN.g.map(g => [g, t('GF')[g], FUN.s.filter(r => r[4] === g).length])]
                      : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length], ['n2k', t('inN2k'), PIA.s.filter(r => r[2].length).length]];
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
-      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx"><i>${esc(r[0])}</i><small>${sub}</small>${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}>${ph ? '' : ICO[vista]}</span><span class="tx"><i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
@@ -775,7 +777,8 @@ function catalogo(soloTesti) {
       if ($('cf')) $('cf').onchange = e => { cs.piante.fam = e.target.value; cs.piante.n = 60; catalogo(); };
     }
     $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${esc(n)}<em>${fmt(c)}</em></button>`).join('');
-    $('cn').textContent = t('nSp')(ids.length);
+    const nOn = ids.filter(i => stg(i).on === true).length;
+    $('cn').textContent = t('nSp')(ids.length) + (nOn ? ' · ' + T(`${fmt(nOn)} in stagione a ${nomeMese(mo)}, mostrate per prime`, `${fmt(nOn)} in season in ${nomeMese(mo)}, shown first`) : '');
     $('gr').innerHTML = griglia;
     $('ca').textContent = t('altri'); $('ca').style.display = ids.length > st.n ? 'block' : 'none';
     fotoLazy();
@@ -828,7 +831,7 @@ function apriSpecie(tipo, i) {
   if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
   h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
-  $('sb').innerHTML = h; mostra();
+  $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
   $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null));
   wikiVoce(r[0]).then(w => {
     if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
@@ -871,7 +874,7 @@ async function apriPercorso(id) {
   evidenziaPercorso(p); cur = null;
   map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: padMappa(), duration: 800, maxZoom: 15 });
   const it = LANG === 'it', c = CAI[p.c];
-  $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}</div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+  $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}</div><div class="avv" id="pc-avv"></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
   $('sb').innerHTML = `<div class="kpi"><div><b>${num1(p.km)}</b><span>km</span></div><div><b id="pc-up">${p.up ? '+' + fmt(p.up) : '…'}</b><span>m D+</span></div><div><b id="pc-dn">${p.dn ? '−' + fmt(p.dn) : '…'}</b><span>m D−</span></div><div><b>${p.dur ? durata(p.dur) : '–'}</b><span>${T('tempo', 'time')}</span></div></div>
     <div class="profilo" id="pc-prof"><small>${T('Profilo altimetrico…', 'Elevation profile…')}</small></div>
     ${p.da || p.a ? `<p>${it ? 'Da' : 'From'} <b>${esc(p.da || '–')}</b> ${it ? 'a' : 'to'} <b>${esc(p.a || '–')}</b>${p.giro ? (it ? ' (ad anello)' : ' (loop)') : ''}.</p>` : ''}
@@ -896,10 +899,16 @@ async function apriPercorso(id) {
   });
 }
 async function meteoPercorso(p) {
+  const m = meseQ(), vicino = quando === 'oggi' || quando === 'we' || m === new Date().getMonth();
+  if (!vicino) return climaPercorso(p, m);
   const j = await getJ(URLM(p.s[1].toFixed(3), p.s[0].toFixed(3))), el = $('pc-met'); if (!el) return;
   if (!j || !j.daily) { el.innerHTML = `<small class="note">${T('Meteo non disponibile ora.', 'Weather not available now.')}</small>`; return; }
   const { M, oggi, G } = serieMeteo(j.daily);
-  el.innerHTML = G.slice(0, 7).map(g => `<div class="r"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="v" style="background:${colore10(g.e.v)}">${num1(g.e.v)}</span>${cella(M, g.i)}</div>`).join('') + `<small class="note">${T('Punteggio escursione da 1 a 10 (pioggia, vento, caldo, freddo).', 'Hiking score 1 to 10 (rain, wind, heat, cold).')}</small>`;
+  PRCM[p.id] = { M, G };
+  const fine = g => { const d = new Date(g.d + 'T12:00').getDay(); return d === 0 || d === 6; };
+  const gg = quando === 'we' ? G.filter(fine).slice(0, 2) : G.slice(0, 7);
+  avvisiPercorso(p);
+  el.innerHTML = gg.map(g => `<div class="r"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="v" style="background:${colore10(g.e.v)}">${num1(g.e.v)}</span>${cella(M, g.i)}</div>`).join('') + `<small class="note">${T('Punteggio escursione da 1 a 10 (pioggia, vento, caldo, freddo).', 'Hiking score 1 to 10 (rain, wind, heat, cold).')}</small>`;
 }
 function zonaPercorso(p) {
   D.then(() => {
@@ -916,14 +925,73 @@ async function trovaPercorso(p) {
   const el = $('pc-trova'); if (!el) return;
   const kf = {}; FUN.s.forEach((r, i) => kf[r[7]] = i); const kp = {}; PIA.s.forEach((r, i) => { if (r[4]) kp[r[4]] = i; });
   const pick = (j, idx, max) => ((j && j.facets && j.facets[0] && j.facets[0].counts) || []).map(c => [idx[+c.name], c.count]).filter(x => x[0] != null).slice(0, max);
-  const F = pick(jf, kf, 10), P = pick(jp, kp, 14);
-  const bt = (tipo, [i, n], nome) => `<button data-sp="${tipo}:${i}">${esc(nome)}<small>${fmt(n)}</small></button>`;
-  el.innerHTML = (P.length ? `<p class="note" style="margin:2px 0">${T('Piante', 'Plants')}</p><div class="trova">${P.map(x => bt('piante', x, PIA.s[x[0]][0])).join('')}</div>` : '')
-    + (F.length ? `<p class="note" style="margin:2px 0">${T('Funghi', 'Fungi')}</p><div class="trova">${F.map(x => bt('funghi', x, FUN.s[x[0]][0])).join('')}</div>` : '')
-    + (P.length || F.length ? `<small class="note">${T('Specie con più segnalazioni intorno al percorso (GBIF); il numero indica le segnalazioni.', 'Species most recorded around the trail (GBIF); the number is the record count.')}</small>` : `<small class="note">${T('Nessuna segnalazione intorno al percorso.', 'No records around the trail.')}</small>`);
+  const S2 = await caricaStag(), mq = meseQ();
+  const lista = (tipo, arr) => arr.map(([i, n]) => ({ tipo, i, n, st: stagione(tipo, i, mq, S2), nome: (tipo === 'funghi' ? FUN.s : PIA.s)[i][0] }));
+  const tutte = [...lista('piante', pick(jp, kp, 60)), ...lista('funghi', pick(jf, kf, 40))];
+  const grp = v => tutte.filter(x => x.st.on === v);
+  const bt = x => `<button data-sp="${x.tipo}:${x.i}" class="${x.st.on === false ? 'fuori' : ''}" title="${fmt(x.n)} ${T('segnalazioni', 'records')}">${x.tipo === 'funghi' ? ico('mushroom', 'xs') : ''}${esc(x.nome)}${x.st.lab ? `<small>${esc(x.st.lab)}</small>` : ''}</button>`;
+  const on = grp(true), mai = grp(null), off = grp(false);
+  PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { funghi: on.filter(x => x.tipo === 'funghi').length, fiori: on.filter(x => x.tipo === 'piante' && !DECID.test(x.nome)).length }); avvisiPercorso(p);
+  el.innerHTML = tutte.length ? (on.length ? `<p class="note gr">${T('In stagione', 'In season')} · ${quando === 'oggi' ? T('oggi', 'today') : quando === 'we' ? T('questo fine settimana', 'this weekend') : nomeMese(mq)}</p><div class="trova">${on.slice(0, 18).map(bt).join('')}</div>` : '')
+    + (mai.length ? `<p class="note gr">${T('Tutto l’anno o stagione non nota', 'All year or season unknown')}</p><div class="trova">${mai.slice(0, 12).map(bt).join('')}</div>` : '')
+    + (off.length ? `<details class="fuoris"><summary>${T('Fuori stagione', 'Out of season')} (${off.length})</summary><div class="trova">${off.map(bt).join('')}</div></details>` : '')
+    + `<small class="note">${T('Specie più segnalate intorno al percorso (GBIF). La stagione è stimata dai mesi delle osservazioni in Sicilia.', 'Species most recorded around the trail (GBIF). Season estimated from the months of records in Sicily.')}</small>`
+    : `<small class="note">${T('Nessuna segnalazione intorno al percorso.', 'No records around the trail.')}</small>`;
   el.onclick = e => { const b = e.target.closest('[data-sp]'); if (!b) return; const [tp, i] = b.dataset.sp.split(':'); prcTorna = p.id; apriSpecie(tp, +i); };
 }
 let prcTorna = null;
+/* ---------- stagioni: "Quando vai?" cambia meteo, specie in evidenza e avvisi del percorso */
+let quando = 'oggi', STG = null;
+const PRCM = {}, PRCQ = {};
+const nomeMese = m => new Date(2026, m, 1).toLocaleDateString(LANG === 'it' ? 'it-IT' : 'en-GB', { month: 'long' });
+const meseQ = () => { const d = new Date(); if (quando === 'oggi') return d.getMonth(); if (quando === 'we') { d.setDate(d.getDate() + (6 - d.getDay() + 7) % 7); return d.getMonth(); } return +quando; };
+const caricaStag = () => STG || (STG = fetch('data/stagioni.json').then(r => r.json()).catch(() => ({})));
+const DECID = /^(Fagus|Castanea|Acer|Populus|Salix|Alnus|Fraxinus|Ulmus|Betula|Sorbus|Carpinus|Ostrya|Celtis|Corylus|Platanus|Juglans|Tilia|Zelkova|Cotinus|Rhus|Vitis|Crataegus|Prunus|Pyrus|Malus|Cercis|Pistacia terebinthus|Quercus (pubescens|cerris|petraea|robur|virgiliana|frainetto|dalechampii|congesta|amplifolia|gussonei|leptobalanos|trojana|ithaburensis))/;
+// { on: true in stagione | false fuori | null sempre o non nota, lab }
+function stagione(tipo, i, m, S2) {
+  const f = tipo === 'funghi', r = f ? FUN.s[i] : PIA.s[i], k = f ? r[7] : r[4], mk = k && S2[k];
+  if (!f && DECID.test(r[0])) return m === 9 || m === 10 ? { on: true, lab: T('foliage autunnale', 'autumn foliage') } : m === 11 || m <= 1 ? { on: false, lab: T('senza foglie', 'leafless') } : { on: null, lab: T('in foglia', 'in leaf') };
+  if (!f && r[1]) return { on: null, lab: T('tutto l’anno', 'all year') };
+  if (!mk) return { on: null, lab: T('stagione non nota', 'season unknown') };
+  if (mk.split('1').length - 1 >= 10) return { on: null, lab: T('tutto l’anno', 'all year') };
+  return mk[m] === '1' ? { on: true, lab: f ? T('in fruttificazione', 'fruiting') : T('in fioritura', 'in flower') } : { on: false, lab: T('fuori stagione', 'out of season') };
+}
+async function stripStagione(tipo, i) {
+  const S2 = await caricaStag(), f = tipo === 'funghi', r = f ? FUN.s[i] : PIA.s[i], k = f ? r[7] : r[4], mk = k && S2[k];
+  if (!$('sb') || (!mk && !(!f && DECID.test(r[0])))) return;
+  const m = meseQ(), st = stagione(tipo, i, m, S2), mesi = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  const on = j => !f && DECID.test(r[0]) ? (j === 9 || j === 10) : mk[j] === '1';
+  $('sb').insertAdjacentHTML('afterbegin', `<div class="mesi"><div class="mb">${mesi.map(j => `<span class="${on(j) ? 'on' : ''}${j === m ? ' qui' : ''}">${nomeMese(j).slice(0, 1).toUpperCase()}</span>`).join('')}</div><small>${!f && DECID.test(r[0]) ? `<b>${T('Foliage d’autunno', 'Autumn foliage')}</b>` : `${st.on === true ? `<b>${esc(st.lab)}</b> · ` : st.on === false ? esc(st.lab) + ' · ' : ''}${f ? T('mesi in cui si trova in Sicilia', 'months when it is found in Sicily') : T('fioritura stimata dalle osservazioni in Sicilia', 'flowering estimated from records in Sicily')} (GBIF)`}</small></div>`);
+}
+// clima tipico del mese scelto (2019-2024, ERA5 via Open-Meteo)
+async function climaPercorso(p, m) {
+  const el = $('pc-met'); if (!el) return;
+  const j = await getJ(`https://archive-api.open-meteo.com/v1/archive?latitude=${p.s[1].toFixed(3)}&longitude=${p.s[0].toFixed(3)}&start_date=2019-01-01&end_date=2024-12-31&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,snowfall_sum&timezone=Europe%2FRome`);
+  if (!$('pc-met')) return;
+  if (!j || !j.daily) { el.innerHTML = `<small class="note">${T('Clima non disponibile ora.', 'Climate not available now.')}</small>`; return; }
+  const d = j.daily, ix = d.time.map((x, i) => +x.slice(5, 7) - 1 === m ? i : -1).filter(i => i >= 0), n = ix.length || 1, anni = 6;
+  const media = a => ix.reduce((s, i) => s + (a[i] || 0), 0) / n;
+  const C = { tx: media(d.temperature_2m_max), tn: media(d.temperature_2m_min), mm: ix.reduce((s, i) => s + (d.precipitation_sum[i] || 0), 0) / anni, gp: ix.filter(i => d.precipitation_sum[i] >= 1).length / anni, neve: ix.filter(i => d.snowfall_sum[i] > 0.5).length / anni };
+  PRCM[p.id] = { C };
+  el.innerHTML = `<div class="clima"><b>${T('Di solito a', 'Usually in')} ${nomeMese(m)}</b><span>${ico('temperature', 'xs')}${Math.round(C.tn)}–${Math.round(C.tx)}°</span><span>${ico('umbrella', 'xs')}${Math.round(C.gp)} ${T('giorni di pioggia', 'rainy days')} · ${fmt(Math.round(C.mm))} mm</span>${C.neve >= 1 ? `<span>❄ ${Math.round(C.neve)} ${T('giorni di neve', 'snow days')}</span>` : ''}</div><small class="note">${T('Medie 2019-2024 alla partenza (ERA5, Open-Meteo). Le previsioni vere arrivano 14 giorni prima.', '2019-2024 averages at the start (ERA5, Open-Meteo). Real forecasts are available 14 days ahead.')}</small>`;
+  avvisiPercorso(p);
+}
+// avvisi di stagione ricavati dai dati: neve, pioggia, caldo, foliage, funghi, fioriture
+function avvisiPercorso(p) {
+  const el = $('pc-avv'); if (!el) return;
+  const m = meseQ(), a = [], met = PRCM[p.id] || {}, q = PRCQ[p.id] || {}, zone = (typeof GJ !== 'undefined' && GJ) ? zoneDi(p) : [];
+  const bosco = c => zone.some(k => (S[k].b || []).some(b => c.includes(b[0])));
+  if ((m === 9 || m === 10) && bosco(['9210', '9260', '91AA', '91M0', '9220', '91E0', '92A0'])) a.push(['g', T('Foliage d’autunno', 'Autumn foliage')]);
+  if (q.mx >= 1300 && (m === 11 || m <= 2)) a.push(['b', T('Possibile neve sopra i 1.300 m', 'Snow likely above 1,300 m')]);
+  if (q.mx && q.mx < 700 && m >= 5 && m <= 7) a.push(['o', T('Caldo: evita le ore centrali', 'Hot: avoid midday')]);
+  let pioggia = false;
+  if (met.G) { const gg = quando === 'we' ? met.G.filter(g => [0, 6].includes(new Date(g.d + 'T12:00').getDay())).slice(0, 2) : met.G.slice(0, 2); pioggia = gg.some(g => (met.M.precipitation_sum[g.i] || 0) >= 5); }
+  if (met.C) pioggia = met.C.gp >= 9;
+  if (pioggia && (p.c === 'EE' || p.c === 'EEA' || q.acqua)) a.push(['r', T('Sconsigliato con la pioggia', 'Not advised in rain')]);
+  if (q.funghi >= 3) a.push(['f', T('Stagione dei funghi', 'Mushroom season')]);
+  if (q.fiori >= 5) a.push(['v', T('Fioriture', 'Flowers in bloom')]);
+  el.innerHTML = a.map(([c, l]) => `<span class="av av-${c}">${esc(l)}</span>`).join('');
+}
 // punti di interesse lungo il percorso (entro 250 m dal tracciato)
 let PTI = null;
 async function vicini(p) {
@@ -934,6 +1002,7 @@ async function vicini(p) {
     let d = 1e9; for (const r of pts) { const x = hav(r, q); if (x < d) d = x; if (d < 60) break; }
     if (d < 250) out.push(q);
   }
+  PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { acqua: out.some(q => q[2] === 'cascata') }); avvisiPercorso(p);
   const el = $('pc-poi'); if (!el || !out.length) return;
   const ord = Object.keys(POI); out.sort((a, b) => ord.indexOf(a[2]) - ord.indexOf(b[2]));
   el.innerHTML = `<h3>${T('Lungo il percorso', 'Along the trail')}</h3><div class="poil">${out.slice(0, 30).map(q => `<button data-ptll="${q[0]},${q[1]}"><i style="background:${POIC[q[2]]}">${ico(POI[q[2]])}</i><span><b>${esc(q[3] || T(...POIN[q[2]]))}</b><small>${esc(T(...POIN[q[2]]))}${q[4] ? ' · ' + fmt(q[4]) + ' m' : ''}</small></span></button>`).join('')}</div>`;
@@ -949,6 +1018,7 @@ async function profilo(p) {
   if (!j || !j.elevation) { el.innerHTML = ''; if (!p.up && $('pc-up')) $('pc-up').textContent = '–'; if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '–'; return; }
   const z = j.elevation, xs = sel.map(i => tot[i] / 1000), mn = Math.min(...z), mx = Math.max(...z);
   let up = 0, dn = 0; for (let i = 1; i < z.length; i++) { const dz = z[i] - z[i - 1]; if (dz > 0) up += dz; else dn -= dz; }
+  PRCQ[p.id] = Object.assign(PRCQ[p.id] || {}, { mx }); avvisiPercorso(p);
   if (!p.up && $('pc-up')) $('pc-up').textContent = '+' + fmt(Math.round(up)); if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '−' + fmt(Math.round(dn));
   const W = 320, H = 90, X = x => 4 + (W - 8) * x / (xs[xs.length - 1] || 1), Y = v => H - 14 - (H - 26) * (v - mn) / Math.max(1, mx - mn);
   const lin = xs.map((x, i) => `${X(x).toFixed(1)},${Y(z[i]).toFixed(1)}`).join(' ');
@@ -979,6 +1049,7 @@ function escursioni() {
   if (!ON.osm) { ON.osm = true; applica(); }
   const opt = (id, val, lista) => `<select class="tendina" id="${id}">${lista.map(([v, l]) => `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`).join('')}</select>`;
   $('pan').innerHTML = `<div class="ph-top"><h2>${T('Percorsi', 'Trails')}</h2></div>
+    <div class="prc-f quando">${ico('calendar')}${opt('prc-q', quando, [['oggi', T('Quando vai? Oggi', 'When? Today')], ['we', T('Questo fine settimana', 'This weekend')], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(m => [String(m), T('A ', 'In ') + nomeMese(m)])])}</div>
     <div class="prc-f">${opt('prc-a', prcSel.area, ORD_AREE.map(a => [a, t('AR')[a]]))}${opt('prc-d', prcSel.diff, [['', T('Ogni difficoltà', 'Any difficulty')], ...Object.keys(CAI).map(k => [k, k + ' · ' + T(...CAI[k])])])}</div>
     <div class="prc-f">${opt('prc-i', prcSel.int, [['', T('Ogni interesse', 'Any interest')], ['funghi', t('iFunghi')], ['alberi', t('iAlberi')], ['boschi', t('iBoschi')], ['flora', t('iFlora')]])}${opt('prc-l', prcSel.len, [['', T('Ogni lunghezza', 'Any length')], ['c', T('Fino a 5 km', 'Up to 5 km')], ['m', T('5–12 km', '5–12 km')], ['l', T('Oltre 12 km', 'Over 12 km')]])}</div>
     <div class="prc" id="prc"><p class="note">…</p></div>`;
@@ -1016,7 +1087,7 @@ async function elencoPercorsi() {
     .sort((a, b) => (zsc ? interesse(b) - interesse(a) : 0) || punti(b) - punti(a));
   $('prc').innerHTML = L.length ? L.slice(0, prcSel.n).map(p => `<button class="pc" data-prc="${p.id}"><b>${esc(p.n)}</b><small>${p.r ? `<span class="ref">${esc(p.r)}</span> ` : ''}${pctTag(p)}</small></button>`).join('') + (L.length > prcSel.n ? `<button class="piu" id="prc-piu">${T('Mostra altri', 'Show more')} (${L.length - prcSel.n})</button>` : '') : `<p class="note">${T('Nessun percorso segnato qui con questi filtri.', 'No marked trails here with these filters.')}</p>`;
 }
-const filtroPrc = e => { if (vista !== 'escursioni') return; const k = { 'prc-a': 'area', 'prc-d': 'diff', 'prc-i': 'int', 'prc-l': 'len' }[e.target.id]; if (!k) return; prcSel[k] = e.target.value; prcSel.n = 8; elencoPercorsi(); if (k === 'area') map.fitBounds(limitiArea(prcSel.area), { padding: padMappa(), duration: 700 }); };
+const filtroPrc = e => { if (vista !== 'escursioni') return; if (e.target.id === 'prc-q') { quando = e.target.value; return; } const k = { 'prc-a': 'area', 'prc-d': 'diff', 'prc-i': 'int', 'prc-l': 'len' }[e.target.id]; if (!k) return; prcSel[k] = e.target.value; prcSel.n = 8; elencoPercorsi(); if (k === 'area') map.fitBounds(limitiArea(prcSel.area), { padding: padMappa(), duration: 700 }); };
 $('pan').addEventListener('change', filtroPrc); $('cat').addEventListener('change', filtroPrc);
 window.escursioni = escursioni;
 const clickEsc = e => {
