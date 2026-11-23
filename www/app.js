@@ -723,7 +723,7 @@ function apri(k, vola) {
   } else h += `<p class="note">${area && !(s.n2k || []).length ? t('nodati') : t('nobosco')}</p>`;
   if (hab.length) h += `<details><summary>${t('hab')}<em>${hab.length}</em></summary><div class="hab">${hab.map(x => `<div><code>${x.c}${x.p ? '*' : ''}</code><span>${esc(H.boschi[x.c] && LANG === 'it' ? H.boschi[x.c][1] : H.hab[x.c] || x.c)}</span><span>${x.ha ? fmt(x.ha) + ' ha' : ''}</span></div>`).join('')}</div></details>`;
   if (sp.length) {
-    h += `<h3>${t('specie')} · ${fmt(sp.length)}</h3><p class="note">${area ? t('nspa') : t('nsp')}</p>`;
+    h += `<div class="wpr"><h3>${t('specie')} · ${fmt(sp.length)}</h3><button class="lnk" data-elsp="${k}">${ico('download', 'sm')} CSV</button></div><p class="note">${area ? t('nspa') : t('nsp')}</p>`;
     h += Object.keys(TX.it.G).filter(g => byG[g]).map(g => `<details><summary>${t('G')[g]}<em>${byG[g].length}</em></summary><div class="list">${byG[g].sort().map(n => g === 'P' ? `<button class="spn" data-spn="${esc(n)}"><i>${esc(n)}</i><span>›</span></button>` : `<div><i>${esc(n)}</i></div>`).join('')}</div></details>`).join('');
   }
   const coll = (s.n2k || []).concat(s.aree || []).concat(Object.keys(S).filter(c => (S[c].in || []).includes(k)));
@@ -883,7 +883,7 @@ function apriSpecie(tipo, i) {
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
   h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
-  $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null));
+  $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null), !f && sensibile('piante', i));
   wikiVoce(r[0]).then(w => {
     if (cur !== 'SP:' + tipo + ':' + i || !w || !$('wk')) return;
     $('wk').innerHTML = `<div class="wiki">${w.thumbnail && !(f && r[8].length) ? `<img src="${esc(w.thumbnail.source)}" alt="${esc(w.title)}" loading="lazy">` : ''}<div class="wt"><b>${t('wiki')} · ${esc(w.title)}</b>${esc(senzaComm(w.extract))}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${t('wleggi')}</a> · CC BY-SA</div></div></div>`;
@@ -1372,14 +1372,38 @@ async function schedaWpt() {
       <div class="wpr"><h3>${T('Foto', 'Photos')}</h3><button class="lnk" id="wpf-add">${ico('photo', 'sm')} ${T('Aggiungi foto', 'Add photo')}</button></div>
       <div class="wpph">${w.foto.map((id, i) => urls[i] ? `<div class="th"><img src="${urls[i]}" alt=""><button data-del="${i}" aria-label="Togli">${ico('x')}</button></div>` : '').join('') || `<button class="th vuoto" id="wpf-cam">${ico('camera-plus')}</button>`}</div>
       <button class="wpr tipo" id="wpf-tipo" style="--c:${wpCol(w.tipo)}"><h3>${T('Tipo', 'Type')}</h3><span>${ico(wpIco(w.tipo))}${esc(wpNome(w.tipo))}</span></button>
+      <h3>${T('Specie', 'Species')} <small class="note">${T('facoltativa, per le osservazioni', 'optional, for observations')}</small></h3><input id="wpf-s" list="wpf-sl" autocomplete="off" placeholder="${T('Nome comune o scientifico', 'Common or scientific name')}" value="${esc(w.sp ? etichettaSp(w.spt, w.spi) : '')}"><datalist id="wpf-sl"></datalist>
       <h3>${T('Nome', 'Name')}</h3><input id="wpf-n" maxlength="80" placeholder="${T('Dai un nome al punto', 'Name this waypoint')}" value="${esc(w.nome || '')}">
       <h3>${T('Descrizione', 'Description')}</h3><textarea id="wpf-d" rows="4" maxlength="1000" placeholder="${T('Che cosa vedi, come lo riconosci…', 'What you see, how to recognise it…')}">${esc(w.desc || '')}</textarea>
       <p class="note">${new Date(w.t).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}${w.ele != null ? ' · ' + fmt(w.ele) + ' m' : ''} · ${w.lat.toFixed(5)}, ${w.lon.toFixed(5)}</p>
     </div>
     <div class="wpfoot"><button class="cest" id="wpf-del" aria-label="${T('Elimina', 'Delete')}">${ico('trash')}</button><button class="fatto" id="wpf-ok">${T('Fatto', 'Done')}</button></div>`;
   $('wpf').classList.add('on');
+  CAT.then(() => { const dl = $('wpf-sl'); if (dl && !dl.childElementCount) dl.innerHTML = elencoSp().map(x => `<option value="${esc(x.l)}"></option>`).join(''); });
 }
-const leggiForm = () => { if (WPF && $('wpf-n')) { WPF.nome = $('wpf-n').value.trim(); WPF.desc = $('wpf-d').value.trim(); } };
+/* specie sensibili: orchidee e piante rare (meno di 5 segnalazioni GBIF in Sicilia) elencate nei formulari Natura 2000.
+   Le loro posizioni si mostrano e si esportano sfumate (circa 10 km). */
+const sensibile = (tp, i) => tp === 'piante' && !!PIA.s[i] && (PIA.s[i][5] === 'Orchidaceae' || (PIA.s[i][2].length > 0 && (PIA.s[i][6] || 0) < 5));
+const csv = righe => '\ufeff' + righe.map(r => r.map(v => { v = v == null ? '' : String(v); return /[",;\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\r\n');
+function scarica(testo, nome, tipo) { const u = URL.createObjectURL(new Blob([testo], { type: tipo })), l = document.createElement('a'); l.href = u; l.download = nome; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 5000); }
+/* osservazioni in formato Darwin Core (GBIF); il file si carica anche su iNaturalist e nei portali regionali */
+function scaricaOss(x) {
+  const ri = [['occurrenceID', 'basisOfRecord', 'scientificName', 'vernacularName', 'kingdom', 'eventDate', 'decimalLatitude', 'decimalLongitude', 'geodeticDatum', 'coordinateUncertaintyInMeters', 'minimumElevationInMeters', 'country', 'countryCode', 'stateProvince', 'locality', 'occurrenceRemarks', 'informationWithheld', 'associatedMedia']];
+  (x.w || []).filter(w => w.sp).forEach((w, j) => {
+    const sens = w.spt && sensibile(w.spt, w.spi), r0 = v => sens ? Math.round(v * 10) / 10 : +v.toFixed(5);
+    ri.push([`SN-${x.id}-${j + 1}`, 'HumanObservation', w.sp, w.spt ? nomeC(w.spt, w.spi) : '', w.spt === 'funghi' ? 'Fungi' : w.spt === 'piante' ? 'Plantae' : '', new Date(w.t).toISOString(), r0(w.lat), r0(w.lon), 'WGS84', sens ? 10000 : 10, w.ele != null && !sens ? Math.round(w.ele) : '', 'Italy', 'IT', 'Sicilia', w.nome || '', w.desc || '', sens ? 'Coordinate generalizzate a 0,1° (specie protetta)' : '', (w.foto || []).length ? (w.foto.length + ' foto sul telefono') : '']);
+  });
+  scarica(csv(ri), `osservazioni-${new Date(x.t0).toISOString().slice(0, 10)}.csv`, 'text/csv');
+}
+/* specie per le osservazioni: elenco funghi e piante con nome comune */
+let ELSP = null;
+const etichettaSp = (tp, i) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; if (!r) return ''; const n = nomeC(tp, i); return n ? `${n} — ${r[0]}` : r[0]; };
+const elencoSp = () => ELSP || (ELSP = [...FUN.s.map((r, i) => ({ tp: 'funghi', i })), ...PIA.s.map((r, i) => ({ tp: 'piante', i }))].map(x => ({ ...x, l: etichettaSp(x.tp, x.i) })));
+const leggiForm = () => {
+  if (!WPF || !$('wpf-n')) return; WPF.nome = $('wpf-n').value.trim(); WPF.desc = $('wpf-d').value.trim();
+  const v = $('wpf-s').value.trim(), x = v && elencoSp().find(y => y.l === v || (y.tp === 'funghi' ? FUN : PIA).s[y.i][0].toLowerCase() === v.toLowerCase());
+  if (x) { WPF.sp = (x.tp === 'funghi' ? FUN : PIA).s[x.i][0]; WPF.spt = x.tp; WPF.spi = x.i; } else if (v) { WPF.sp = v; WPF.spt = null; WPF.spi = null; } else { delete WPF.sp; delete WPF.spt; delete WPF.spi; }
+};
 $('wpf').addEventListener('click', e => {
   if (!WPF) return;
   if (e.target.closest('#wpf-add')) { leggiForm(); return scegliFoto(false, id => { WPF.foto.push(id); schedaWpt(); }); }
@@ -1430,18 +1454,19 @@ function disegnaTrk(p, w) {
 let popW = null;
 async function vediWpt(x) {
   const urls = (await Promise.all((x.foto || []).map(fotoURL))).filter(Boolean);
-  const h = `<div class="wpp"><b>${esc(x.nome || wpNome(x.tipo))}</b><small>${esc(wpNome(x.tipo))} · ${new Date(x.t).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}${x.ele != null ? ' · ' + fmt(x.ele) + ' m' : ''}</small>${x.desc ? `<p>${esc(x.desc)}</p>` : ''}${urls.map(u => `<img src="${u}" alt="">`).join('')}</div>`;
+  const h = `<div class="wpp"><b>${esc(x.nome || wpNome(x.tipo))}</b>${x.sp ? `<i>${esc(x.sp)}</i>` : ''}<small>${esc(wpNome(x.tipo))} · ${new Date(x.t).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'short', timeStyle: 'short' })}${x.ele != null ? ' · ' + fmt(x.ele) + ' m' : ''}</small>${x.desc ? `<p>${esc(x.desc)}</p>` : ''}${urls.map(u => `<img src="${u}" alt="">`).join('')}</div>`;
   if (popW) popW.remove();
   popW = new maplibregl.Popup({ maxWidth: '280px', offset: 30 }).setLngLat([x.lon, x.lat]).setHTML(h).addTo(map);
 }
 function trkUI() {
   if (!$('trk')) return;
   const a = leggiTrk();
-  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p), n = (x.w || []).length; return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${n ? ' · ' + n + ' ' + T(n === 1 ? 'punto' : 'punti', n === 1 ? 'waypoint' : 'waypoints') : ''}${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button><button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
+  $('trk').innerHTML = a.length ? a.map(x => { const m = misure(x.p), n = (x.w || []).length; return `<div class="t"><b>${new Date(x.t0).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' })}</b><small>${num1(m.km)} km · ${durS(m.min)} · +${fmt(m.up)} m${n ? ' · ' + n + ' ' + T(n === 1 ? 'punto' : 'punti', n === 1 ? 'waypoint' : 'waypoints') : ''}${x.ob && x.ob.length ? ' · ' + x.ob.map(o => t({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }[o])).join(', ') : ''}</small><div class="az"><button data-trk="${x.id}" data-az="map">${t('apriMappa')}</button><button data-trk="${x.id}" data-az="gpx">${t('gpx')}</button>${(x.w || []).some(w => w.sp) ? `<button data-trk="${x.id}" data-az="dwc">${T('Osservazioni CSV', 'Observations CSV')}</button>` : ''}<button data-trk="${x.id}" data-az="del">${t('elimina')}</button></div></div>`; }).join('') : `<p class="note">${t('nessunTrk')}</p>`;
 }
 function azioneTrk(id, az) {
   const a = leggiTrk(), x = a.find(y => y.id === id); if (!x) return;
   if (az === 'del') { if (confirm(t('eliminaConf'))) { (x.w || []).forEach(w => (w.foto || []).forEach(fotoDel)); scriviTrk(a.filter(y => y.id !== id)); trkUI(); disegnaTrk([], []); } return; }
+  if (az === 'dwc') return scaricaOss(x);
   if (az === 'map') { vai('mappa'); disegnaTrk(x.p, x.w); const pts = [...x.p, ...(x.w || []).map(w => [w.lon, w.lat])], lo = pts.map(q => q[0]), la = pts.map(q => q[1]); if (pts.length) map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: 60, maxZoom: 16, duration: 600 }); return; }
   const gpx = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1">${(x.w || []).map(w => `<wpt lat="${w.lat}" lon="${w.lon}">${w.ele != null ? `<ele>${w.ele}</ele>` : ''}<time>${new Date(w.t).toISOString()}</time><name>${esc(w.nome || wpNome(w.tipo))}</name>${w.desc ? `<desc>${esc(w.desc)}</desc>` : ''}<type>${esc(wpNome(w.tipo))}</type></wpt>`).join('')}<trk><name>Sicilia Naturale ${new Date(x.t0).toISOString().slice(0, 10)}</name><trkseg>${x.p.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}">${q[2] != null ? `<ele>${q[2]}</ele>` : ''}<time>${new Date(q[3]).toISOString()}</time></trkpt>`).join('')}</trkseg></trk></gpx>`;
   const u = URL.createObjectURL(new Blob([gpx], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = `sicilia-naturale-${new Date(x.t0).toISOString().slice(0, 10)}.gpx`; document.body.appendChild(l); l.click(); l.remove();
@@ -1560,16 +1585,21 @@ function apriMeteoZona(k) {
   mostra();
 }
 
+document.addEventListener('click', async e => { const b = e.target.closest('[data-elsp]'); if (!b) return; await CAT; const k = b.dataset.elsp, z = S[k];
+  const ri = [[T('gruppo', 'group'), 'scientificName', T('nome comune', 'vernacularName'), T('sito', 'site'), T('codice', 'code')]];
+  specieDi(k).map(i => [t('G')[SP.gr[i]] || SP.gr[i], SP.nomi[i]]).sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1])).forEach(([g, n]) => { const j = trovaPianta(n); ri.push([g, n, j >= 0 ? nomeC('piante', j) : '', z.n, k]); });
+  scarica(csv(ri), `specie-${k}.csv`, 'text/csv');
+});
 /* segnalazioni GBIF della specie sulla mappa (esagoni, dal sito GBIF) */
-async function mostraGbif(nome, key) {
+async function mostraGbif(nome, key, sens) {
   if (!key) { const m = await getJ('https://api.gbif.org/v1/species/match?name=' + encodeURIComponent(nome)); key = m && m.usageKey; }
   vai('mappa');
   if (!key) return;
   if (map.getLayer('gbif')) map.removeLayer('gbif'); if (map.getSource('gbif')) map.removeSource('gbif');
-  map.addSource('gbif', { type: 'raster', tileSize: 512, attribution: 'GBIF.org',
+  map.addSource('gbif', { type: 'raster', tileSize: 512, attribution: 'GBIF.org', maxzoom: sens ? 7 : 22,
     tiles: [`https://api.gbif.org/v2/map/occurrence/density/{z}/{x}/{y}@1x.png?srs=EPSG:3857&taxonKey=${key}&bin=hex&hexPerTile=40&style=classic.poly`] });
   map.addLayer({ id: 'gbif', type: 'raster', source: 'gbif', paint: { 'raster-opacity': 0.85 } }, 'sel');
-  $('gbifchip').innerHTML = `<span>${t('gbifChip')} <i>${esc(nome)}</i></span><button aria-label="Chiudi">×</button>`; $('gbifchip').classList.add('on');
+  $('gbifchip').innerHTML = `<span>${t('gbifChip')} <i>${esc(nome)}</i>${sens ? `<small> · ${T('specie protetta: posizioni sfumate', 'protected species: blurred locations')}</small>` : ''}</span><button aria-label="Chiudi">×</button>`; $('gbifchip').classList.add('on');
   map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: 30, duration: 600 });
 }
 $('gbifchip').onclick = e => { if (!e.target.closest('button')) return; if (map.getLayer('gbif')) map.removeLayer('gbif'); if (map.getSource('gbif')) map.removeSource('gbif'); $('gbifchip').classList.remove('on'); };
