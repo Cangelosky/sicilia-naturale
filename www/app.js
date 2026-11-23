@@ -1313,8 +1313,8 @@ function zoneQui(q) {
 }
 function zonaRec(q) {
   if (ZREC.q && hav(ZREC.q, q) < 25) return; ZREC.q = q;
-  const ora = zoneQui(q), prima = ZREC.k, entra = ora.filter(k => !prima.includes(k)), esce = prima.filter(k => !ora.includes(k));
-  if (prima.length || ora.length) { const msg = [...entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n), ...esce.map(k => T('Esci da: ', 'Leaving: ') + S[k].n)]; if (msg.length && ZREC.init) { toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
+  const ora = zoneQui(q), prima = ZREC.k, entra = ora.filter(k => !prima.includes(k));
+  if (prima.length || ora.length) { const msg = entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n); /* avviso solo all'ingresso (scelta di Oscar) */ if (msg.length && ZREC.init) { toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
   ZREC.k = ora; ZREC.init = true;
   const el = $('rec-zona'); if (!el) return;
   el.style.display = ora.length ? '' : 'none'; el.textContent = ora.length ? ora.map(k => S[k].n).join(' · ') : '';
