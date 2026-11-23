@@ -8,6 +8,8 @@ BB = '35.45,12.0,38.85,15.7'   # Sicilia e isole minori; Malta e Calabria si tol
 Q = {
   'percorsi': f'[out:json][timeout:600];{AREA}relation["route"~"^(hiking|foot)$"](area.s);out geom;',
   'sentieri': f'[out:json][timeout:600];{AREA}(way["highway"~"^(path|bridleway)$"](area.s);way["highway"="track"]["sac_scale"](area.s);way["highway"="footway"]["sac_scale"](area.s););out geom tags;',
+  # aree protette con le loro zone (A, B, C, D, preriserva) per avvisi e schede
+  'aree': f'[out:json][timeout:600];{AREA}(nwr["boundary"~"^(protected_area|national_park)$"](area.s);nwr["leisure"="nature_reserve"](area.s););out geom tags;',
   # punti di interesse: una richiesta per gruppo, poi uniti (una sola richiesta grande tornava vuota)
   'punti_tur': f'[out:json][timeout:300][bbox:{BB}];nwr["tourism"~"^(alpine_hut|wilderness_hut|picnic_site|viewpoint|camp_site)$"];out center;',
   'punti_ame': f'[out:json][timeout:300][bbox:{BB}];nwr["amenity"~"^(shelter|drinking_water|water_point)$"];out center;',
