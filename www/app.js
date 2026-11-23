@@ -321,7 +321,7 @@ let base = {};
 
 /* ---------- livelli e filtri */
 let bosco = '';
-const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false, osm: false };
+const ON = { aree: true, n2k: true, bv: false, am: false, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
 const LIV = { osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 // in Escursioni i sentieri restano visibili anche quando le zone sono evidenziate
@@ -439,7 +439,7 @@ map.on('click', e => {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
     if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small></div>`).addTo(map); return; }
-    const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r'] });
+    const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r', ...(map.getLayer('prv') && vista === 'escursioni' ? ['prv'] : [])] });
     if (pr.length) { apriPercorso(pr[0].properties.id); return; }
   }
   if (document.body.classList.contains('mm')) {
@@ -756,7 +756,7 @@ function vai(v) {
   const mm = mappaVista(v), lista = v !== 'mappa' && !mm;
   $('cat').classList.toggle('on', lista); document.body.classList.toggle('cat-on', lista); document.body.classList.toggle('mm', mm);
   $('pan').classList.toggle('on', mm); if (!mm) $('pan').innerHTML = '';
-  chiudiLiv(); $('res').style.display = 'none'; chiudi();
+  chiudiLiv(); $('res').style.display = 'none'; chiudi(); vediPanoramica();
   evidenzia(null);
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
@@ -1112,8 +1112,19 @@ function escursioni() {
     <div class="prc-f">${opt('prc-i', prcSel.int, [['', T('Ogni interesse', 'Any interest')], ['funghi', t('iFunghi')], ['alberi', t('iAlberi')], ['boschi', t('iBoschi')], ['flora', t('iFlora')]])}${opt('prc-l', prcSel.len, [['', T('Ogni lunghezza', 'Any length')], ['c', T('Fino a 5 km', 'Up to 5 km')], ['m', T('5–12 km', '5–12 km')], ['l', T('Oltre 12 km', 'Over 12 km')]])}</div>
     <label class="chk"><input type="checkbox" id="prc-u"${prcSel.uff ? ' checked' : ''}> ${T('Solo sentieri ufficiali (CAI, Sentiero Italia, parchi)', 'Official trails only (CAI, Sentiero Italia, parks)')}</label>
     <div class="prc" id="prc"><p class="note">…</p></div>`;
-  elencoPercorsi();
+  elencoPercorsi(); panoramica();
 }
+/* panoramica dei percorsi segnati sulla mappa intera (sotto lo zoom 9, poi subentrano i sentieri dettagliati) */
+async function panoramica() {
+  if (!map.getSource('prv')) {
+    const A = await caricaPercorsi(), sem = l => { const k = Math.max(1, Math.ceil(l.length / 25)); return l.filter((_, i) => i % k === 0 || i === l.length - 1); };
+    if (map.getSource('prv')) return;
+    map.addSource('prv', { type: 'geojson', data: { type: 'FeatureCollection', features: A.map(p => ({ type: 'Feature', properties: { id: p.id, c: p.c || '' }, geometry: { type: 'MultiLineString', coordinates: p.g.map(sem) } })) } });
+    map.addLayer({ id: 'prv', type: 'line', source: 'prv', maxzoom: 9, layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': ['match', ['get', 'c'], 'T', '#2f9e44', 'E', '#d9480f', 'EE', '#c92a2a', 'EEA', '#5f3dc4', '#d9480f'], 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1.2, 9, 2.2], 'line-opacity': 0.8 } }, map.getLayer('prc-c') ? 'prc-c' : undefined);
+  }
+  vediPanoramica();
+}
+function vediPanoramica() { if (map.getLayer('prv')) map.setLayoutProperty('prv', 'visibility', vista === 'escursioni' && !PIAN ? 'visible' : 'none'); }
 /* zone (parchi, riserve, Natura 2000) attraversate da un percorso */
 function dentroPoligono(pt, g) {
   const ring = (r, x, y) => { let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
@@ -1853,11 +1864,11 @@ function pianUI() {
 }
 function nuovoIt(dati) {
   chiudi(); PIAN = Object.assign({ tappe: [], segs: [], n: '', id: null, calc: false }, dati || {});
-  document.body.classList.add('pianon'); pianUI(); disegnaIt(PIAN.tappe, PIAN.segs);
+  document.body.classList.add('pianon'); vediPanoramica(); pianUI(); disegnaIt(PIAN.tappe, PIAN.segs);
   if (PIAN.tappe.length) { const lo = PIAN.tappe.map(q => q[0]), la = PIAN.tappe.map(q => q[1]); map.fitBounds([[Math.min(...lo), Math.min(...la)], [Math.max(...lo), Math.max(...la)]], { padding: { top: 60, bottom: 260, left: 40, right: 40 }, maxZoom: 15, duration: 600 }); }
   else if (map.getZoom() < 12) toast(T('Avvicinati alla zona e tocca il punto di partenza', 'Zoom in and tap the starting point'));
 }
-function esciIt() { PIAN = null; document.body.classList.remove('pianon'); if (map.getSource('pian')) disegnaIt([], []); if (vista === 'escursioni') escursioni(); }
+function esciIt() { PIAN = null; document.body.classList.remove('pianon'); vediPanoramica(); if (map.getSource('pian')) disegnaIt([], []); if (vista === 'escursioni') escursioni(); }
 async function pianClick(e) {
   if (PIAN.calc) return;
   const q = [+e.lngLat.lng.toFixed(5), +e.lngLat.lat.toFixed(5)], prev = PIAN.tappe[PIAN.tappe.length - 1];
