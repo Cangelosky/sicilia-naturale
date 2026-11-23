@@ -1,0 +1,28 @@
+name: Aggiornamenti
+# a ogni modifica del codice dell'app (cartella www) prepara il pacchetto per l'aggiornamento automatico
+# e lo mette sul ramo "ota" (version.json + www.zip), letto dall'app all'avvio. Funziona solo con il repository pubblico.
+on:
+  push:
+    branches: [main]
+    paths: ['www/**', 'package.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  ota:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pacchetto
+        run: |
+          V="$(node -p "require('./package.json').version")+${GITHUB_SHA::7}"
+          MIN="$(node -p "require('./package.json').apkMin || '0'")"
+          echo "window.SN_VER = { v: '$V' };" > www/versione.js
+          mkdir /tmp/ota && (cd www && zip -q -r -X /tmp/ota/www.zip . -x '.*')
+          echo "{\"v\":\"$V\",\"apkMin\":\"$MIN\",\"url\":\"https://raw.githubusercontent.com/${{ github.repository }}/ota/www.zip\"}" > /tmp/ota/version.json
+          cat /tmp/ota/version.json; ls -la /tmp/ota
+      - name: Ramo ota
+        run: |
+          cd /tmp/ota && git init -q -b ota && git add . \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Aggiornamento $(cat version.json)" \
+            && git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ota

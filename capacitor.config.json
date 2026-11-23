@@ -2,5 +2,13 @@
   "appId": "it.sicilianaturale.app",
   "appName": "Sicilia Naturale",
   "webDir": "www",
-  "android": { "backgroundColor": "#2d6a4f" }
+  "android": {
+    "backgroundColor": "#2d6a4f"
+  },
+  "plugins": {
+    "CapacitorUpdater": {
+      "autoUpdate": false,
+      "appReadyTimeout": 15000
+    }
+  }
 }

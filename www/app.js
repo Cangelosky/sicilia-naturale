@@ -1530,3 +1530,22 @@ $('sheet').addEventListener('click', e => { if (vista !== 'mappa' && e.target.cl
 $('sheet').addEventListener('click', e => { const b = e.target.closest('[data-spn]'); if (!b) return; const z = cur; CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) { daZona = z; apriSpecie('piante', i); } }); });
 testi();
 }
+// aggiornamenti automatici dell'app (Capgo updater, modalità manuale): all'avvio controlla version.json sul ramo "ota" del repository,
+// scarica il nuovo codice in sottofondo e lo applica alla prossima apertura. Serve un APK nuovo solo se cambia la parte nativa (apkMin).
+(async function aggiornamenti() {
+  const U = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.CapacitorUpdater; if (!U) return;
+  try { await U.notifyAppReady(); } catch (e) {}
+  try {
+    const r = await fetch('https://raw.githubusercontent.com/Cangelosky/sicilia-naturale/ota/version.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+    const m = await r.json(), io = (window.SN_VER || {}).v;
+    if (!m.v || m.v === io) return;
+    const num = v => String(v || '0').split(/[.+-]/).slice(0, 3).map(Number);
+    const meno = (a, b) => { a = num(a); b = num(b); for (let i = 0; i < 3; i++) { if ((a[i] || 0) !== (b[i] || 0)) return (a[i] || 0) < (b[i] || 0); } return false; };
+    const A = window.Capacitor.Plugins.App, apk = A && A.getInfo ? (await A.getInfo()).version : '0';
+    if (m.apkMin && meno(apk, m.apkMin)) { toast(T('C’è una versione nuova che richiede di installare l’APK aggiornato.', 'A new version needs the updated APK.')); return; }
+    const gia = ((await U.list()).bundles || []).find(b => b.version === m.v && b.status !== 'error');
+    const b = gia || await U.download({ url: m.url, version: m.v });
+    await U.next({ id: b.id });
+    toast(T('Aggiornamento scaricato: sarà attivo alla prossima apertura dell’app.', 'Update downloaded: active next time you open the app.'));
+  } catch (e) {}
+})();
