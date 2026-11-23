@@ -21,10 +21,14 @@ jobs:
           MIN="$(node -p "require('./package.json').apkMin || '0'")"
           echo "window.SN_VER = { v: '$V' };" > www/versione.js
           mkdir /tmp/ota && (cd www && zip -q -r -X /tmp/ota/www.zip . -x '.*')
-          echo "{\"v\":\"$V\",\"apkMin\":\"$MIN\",\"url\":\"https://raw.githubusercontent.com/${{ github.repository }}/ota/www.zip\"}" > /tmp/ota/version.json
-          cat /tmp/ota/version.json; ls -la /tmp/ota
+          echo "$V" > /tmp/ota_v; echo "$MIN" > /tmp/ota_min; ls -la /tmp/ota
       - name: Ramo ota
         run: |
-          cd /tmp/ota && git init -q -b ota && git add . \
-            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Aggiornamento $(cat version.json)" \
+          # prima il pacchetto, poi version.json che punta al pacchetto per commit (indirizzo fisso, niente copie vecchie in cache)
+          cd /tmp/ota && git init -q -b ota && git add www.zip \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Pacchetto $(cat /tmp/ota_v)"
+          SHA=$(git rev-parse HEAD)
+          echo "{\"v\":\"$(cat /tmp/ota_v)\",\"apkMin\":\"$(cat /tmp/ota_min)\",\"url\":\"https://raw.githubusercontent.com/${{ github.repository }}/$SHA/www.zip\"}" > version.json
+          cat version.json && git add version.json \
+            && git -c user.name=github-actions -c user.email=actions@github.com commit -q -m "Aggiornamento $(cat /tmp/ota_v)" \
             && git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" ota
