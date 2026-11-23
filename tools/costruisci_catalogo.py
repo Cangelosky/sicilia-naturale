@@ -52,6 +52,9 @@ bin2 = lambda n: ' '.join(n.split()[:2])
 gbb = {}
 for n, r in gb.items(): gbb.setdefault(bin2(n), r)
 nomi = sorted(set(siti) | set(amb) | set(gb))
+# piante di uso alimentare tradizionale (Licata et al. 2016), senza le specie tossiche o pericolose
+TOSSICHE = {'Ammi majus', 'Oenanthe pimpinelloides', 'Aristolochia sempervirens', 'Polygonatum multiflorum', 'Carlina gummifera', 'Echium vulgare', 'Heliotropium europaeum', 'Isatis tinctoria', 'Dioscorea communis', 'Equisetum arvense', 'Gladiolus italicus', 'Crocus biflorus', 'Anagyris foetida', 'Lathyrus sativus', 'Wisteria sinensis', 'Clematis cirrhosa', 'Clematis vitalba', 'Nepeta cataria', 'Teucrium fruticans', 'Globularia alypum', 'Calystegia sepium', 'Lathyrus clymenum', 'Orobanche crenata', 'Mentha pulegium'}
+ALIM = {l.strip() for l in open('data/raw/alimurgiche_licata2016.txt') if l.strip() and not l.startswith('#')} - TOSSICHE
 pia, visti = [], set()
 for n in nomi:
     g = gb.get(n) or gbb.get(bin2(n))
@@ -59,7 +62,8 @@ for n in nomi:
     visti.add(bin2(n))
     gen = n.split()[0]
     # [nome, albero, siti Natura 2000, alberi monumentali/boschi da seme, chiave GBIF, famiglia, segnalazioni GBIF in Sicilia]
-    pia.append([n, 1 if gen in ALBERI else 0, sorted(siti.get(n, []), key=lambda c: -S[c]['ha']), amb.get(n, []), g[2] if g else 0, g[1] if g else '', g[3] if g else 0])
+    # [..., 7: 1 se di uso alimentare tradizionale]
+    pia.append([n, 1 if gen in ALBERI else 0, sorted(siti.get(n, []), key=lambda c: -S[c]['ha']), amb.get(n, []), g[2] if g else 0, g[1] if g else '', g[3] if g else 0, 1 if bin2(n.replace(' subsp.', '')) in ALIM else 0])
 pia.sort(key=lambda r: (-r[1], -(len(r[2]) + 3 * len(r[3])), -r[6], r[0]))
 json.dump({'s': pia}, open(OUT + 'piante.json', 'w'), ensure_ascii=False, separators=(',', ':'))
 print('piante', len(pia), 'alberi', sum(r[1] for r in pia), 'con alberi monumentali o boschi da seme', sum(1 for r in pia if r[3]))

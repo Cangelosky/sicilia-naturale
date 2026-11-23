@@ -45,7 +45,7 @@ const TX = {
     migliori: 'Giorni migliori', pioggiaTit: 'Pioggia: 60 giorni passati e previsione', oggi: 'oggi', mm: 'mm',
     tEsc: 'Escursioni', lEsc: 'Scegli cosa vuoi cercare: ti proponiamo dove andare, con il meteo dei prossimi giorni. Puoi registrare il percorso mentre cammini.',
     iFunghi: 'Funghi', iAlberi: 'Alberi monumentali e boschi vetusti', iBoschi: 'Boschi', iFlora: 'Piante e fiori', iAlim: 'Piante alimurgiche',
-    alimNota: 'Per le piante alimurgiche non abbiamo ancora l’elenco delle specie: per ora non entrano nei suggerimenti.',
+    alimNota: 'Piante usate per tradizione nella cucina siciliana, secondo uno studio dell’Università di Palermo (Licata e altri, 2016). Qui non diamo indicazioni per mangiarle: molte somigliano a piante tossiche. Non raccoglierle senza un esperto.',
     doveAndare: 'Dove andare', apriMappa: 'Mappa', vediMeteo: 'Meteo', reg: 'Registra il percorso', regInizia: 'Inizia a registrare', wpAgg: 'Punto', wpFoto: 'Foto', wpNome: 'Nome (facoltativo)', wpSalva: 'Salva punto', wpAnnulla: 'Annulla', wpNoFix: 'Aspetta il segnale GPS: nessuna posizione ancora.', wpOk: 'Punto salvato', wpPunti: 'punti', wpPunto: 'punto', wpFotoAgg: 'Aggiungi foto', wpTipi: { fungo: 'Fungo', albero: 'Albero', pianta: 'Pianta', panorama: 'Panorama', acqua: 'Acqua', rifugio: 'Rifugio', animale: 'Animale', foto: 'Foto', altro: 'Altro' }, regFine: 'Termina la registrazione',
     regConfIn: 'Iniziare la registrazione del percorso? Il GPS resta attivo anche a schermo spento finché non la termini.', regConfFine: 'Terminare e salvare la registrazione?',
     regNota: 'La registrazione usa il GPS del telefono e continua anche a schermo spento. Percorsi, punti e foto restano salvati solo su questo telefono.',
@@ -106,7 +106,7 @@ const TX = {
     migliori: 'Best days', pioggiaTit: 'Rain: past 60 days and forecast', oggi: 'today', mm: 'mm',
     tEsc: 'Hikes', lEsc: 'Choose what you want to look for: we suggest where to go, with the weather for the coming days. You can record your route as you walk.',
     iFunghi: 'Fungi', iAlberi: 'Monumental trees and old-growth forests', iBoschi: 'Forests', iFlora: 'Plants and flowers', iAlim: 'Wild edible plants',
-    alimNota: 'We do not yet have the species list for wild edible plants: for now they are not part of the suggestions.',
+    alimNota: 'Plants traditionally used in Sicilian cooking, according to a University of Palermo study (Licata et al., 2016). We give no advice on eating them: many look like toxic plants. Do not pick them without an expert.',
     doveAndare: 'Where to go', apriMappa: 'Map', vediMeteo: 'Weather', reg: 'Record your route', regInizia: 'Start recording', wpAgg: 'Waypoint', wpFoto: 'Photo', wpNome: 'Name (optional)', wpSalva: 'Save waypoint', wpAnnulla: 'Cancel', wpNoFix: 'Wait for GPS: no position yet.', wpOk: 'Waypoint saved', wpPunti: 'waypoints', wpPunto: 'waypoint', wpFotoAgg: 'Add photo', wpTipi: { fungo: 'Mushroom', albero: 'Tree', pianta: 'Plant', panorama: 'View', acqua: 'Water', rifugio: 'Shelter', animale: 'Animal', foto: 'Photo', altro: 'Other' }, regFine: 'Stop recording',
     regConfIn: 'Start recording the route? GPS stays on, even with the screen off, until you stop.', regConfFine: 'Stop and save the recording?',
     regNota: 'Recording uses the phone’s GPS and keeps going with the screen off. Routes, waypoints and photos stay on this phone only.',
@@ -656,13 +656,23 @@ function apriAmb(k, s) {  // boschi vetusti, boschi da seme, alberi monumentali
   }
   $('sb').innerHTML = racconto(k) + h + collegate(s.in || []) + (s.fonte === 'elenco' ? fonteElenco() : fonteSIF()); mostra(); arricchisci(k);
 }
+// porta un riquadro nello spazio di mappa libero tra la testata e la scheda (o accanto, su PC)
+function inquadra(bb, maxZoom) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const m = map.getContainer().getBoundingClientRect(), sh = $('sheet').classList.contains('open') ? $('sheet').getBoundingClientRect() : null, big = innerWidth >= 900;
+    const top = vista === 'mappa' && !big ? 76 : 24;
+    const pad = big ? { top: 40, bottom: 40, left: sh ? Math.round(sh.right - m.left) + 30 : 40, right: vista === 'mappa' ? 60 : 430 }
+                    : { top, bottom: sh ? Math.max(40, Math.round(m.bottom - sh.top) + 16) : 40, left: 24, right: 64 };
+    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: pad, maxZoom, duration: 750 });
+  }));
+}
 function apri(k, vola) {
   if (k.startsWith('CF:')) return apriCF(k.slice(3));
   const s = S[k]; if (!s) return; cur = k;
   selez(k);
   try { history.replaceState(null, '', '#' + k); } catch (e) {}
   const lato = innerWidth >= 900;
-  if (vola) map.fitBounds([[s.bb[0], s.bb[1]], [s.bb[2], s.bb[3]]], { padding: lato ? { top: 90, bottom: 40, left: 480, right: 60 } : { top: 120, bottom: Math.min(innerHeight * 0.45, 380), left: 30, right: 30 }, maxZoom: s.t === 'am' ? 12 : 13, duration: 700 });
+  if (vola) inquadra(s.bb, s.t === 'am' ? 12 : 13);
   if (AMB.includes(s.t)) {
     if (!ON[s.t]) { ON[s.t] = true; applica(); }
     return apriAmb(k, s);
@@ -714,7 +724,7 @@ function vai(v) {
   chiudiLiv(); $('res').style.display = 'none'; chiudi();
   evidenzia(null);
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
-  if (v === 'mappa' || mm) map.resize();
+  if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
@@ -745,13 +755,17 @@ function evidenzia(items) {
 }
 $('sez').onclick = e => { const b = e.target.closest('button'); if (b) vai(b.dataset.v); };
 $('cat').addEventListener('click', e => { const b = e.target.closest('[data-specie]'); if (b && b.dataset.specie !== vista) vai(b.dataset.specie); });
+// tipi di pianta per i filtri di Botanica
+const FELCI = new Set(['Aspleniaceae','Polypodiaceae','Pteridaceae','Dryopteridaceae','Athyriaceae','Dennstaedtiaceae','Ophioglossaceae','Osmundaceae','Woodsiaceae','Cystopteridaceae','Blechnaceae','Thelypteridaceae','Equisetaceae','Selaginellaceae','Isoetaceae','Marsileaceae','Salviniaceae','Lycopodiaceae','Hymenophyllaceae','Sinopteridaceae','Aspidiaceae']);
+const TIPI_P = [['alb', 'Alberi e arbusti', 'Trees and shrubs'], ['ali', 'Alimurgiche', 'Wild food plants'], ['orc', 'Orchidee', 'Orchids'], ['fel', 'Felci', 'Ferns'], ['gra', 'Graminacee', 'Grasses'], ['erb', 'Altre erbacee', 'Other herbs']];
+const tipoP = r => r[1] ? 'alb' : r[7] ? 'ali' : r[5] === 'Orchidaceae' ? 'orc' : FELCI.has(r[5]) ? 'fel' : r[5] === 'Poaceae' ? 'gra' : 'erb';
 function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
     if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
     const n = norm(r[0] + ' ' + r[2] + ' ' + r[3]); return w.every(x => n.includes(x)); });
   return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
-    if (st.g === 'alb' && !r[1]) return false; if (st.g === 'n2k' && !r[2].length) return false;
+    if (st.g === 'alb' && !r[1]) return false; if (st.g === 'ali' && !r[7]) return false; if (['orc', 'fel', 'gra', 'erb'].includes(st.g) && tipoP(r) !== st.g) return false; if (st.g === 'n2k' && !r[2].length) return false;
     if (st.fam && r[5] !== st.fam) return false;
     const n = norm(r[0] + ' ' + (r[5] || '')); return w.every(x => n.includes(x)); });
 }
@@ -762,7 +776,7 @@ function catalogo(soloTesti) {
     const stg = i => stagione(vista, i, mo, S2), ord = i => { const o = stg(i).on; return o === true ? 0 : o === null ? 1 : 2; };
     const ids = elencoCat().map((i, n) => [i, n]).sort((a, b) => ord(a[0]) - ord(b[0]) || a[1] - b[1]).map(x => x[0]);
     const gruppi = f ? [['', t('tutte'), FUN.s.length], ['*f', t('conFoto'), FUN.s.filter(r => r[8].length).length], ...FUN.g.map(g => [g, t('GF')[g], FUN.s.filter(r => r[4] === g).length])]
-                     : [['', t('tutte'), PIA.s.length], ['alb', t('alberi'), PIA.s.filter(r => r[1]).length], ['n2k', t('inN2k'), PIA.s.filter(r => r[2].length).length]];
+                     : [['', t('tutte'), PIA.s.length], ...TIPI_P.map(([k, it, en]) => [k, T(it, en), PIA.s.filter(r => tipoP(r) === k || (k === 'alb' && r[1]) || (k === 'ali' && r[7])).length]), ['n2k', t('inN2k'), PIA.s.filter(r => r[2].length).length]];
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
@@ -778,6 +792,8 @@ function catalogo(soloTesti) {
     }
     $('cg').innerHTML = gruppi.map(([k, n, c]) => `<button data-g="${k}" class="${st.g === k ? 'on' : ''}">${esc(n)}<em>${fmt(c)}</em></button>`).join('');
     const nOn = ids.filter(i => stg(i).on === true).length;
+    if ($('alimav')) $('alimav').remove();
+    if (!f && st.g === 'ali') $('cn').insertAdjacentHTML('beforebegin', `<p class="avviso" id="alimav">${t('alimNota')}</p>`);
     $('cn').textContent = t('nSp')(ids.length) + (nOn ? ' · ' + T(`${fmt(nOn)} in stagione a ${nomeMese(mo)}, mostrate per prime`, `${fmt(nOn)} in season in ${nomeMese(mo)}, shown first`) : '');
     $('gr').innerHTML = griglia;
     $('ca').textContent = t('altri'); $('ca').style.display = ids.length > st.n ? 'block' : 'none';
@@ -892,11 +908,7 @@ async function apriPercorso(id) {
   profilo(p); vicini(p); meteoPercorso(p); zonaPercorso(p); trovaPercorso(p);
   if ($('pc-segui')) $('pc-segui').onclick = () => avviaReg({ id: p.id, n: p.n, g: p.g });
   // il percorso intero in primo piano, sopra la scheda
-  requestAnimationFrame(() => {
-    const big = innerWidth >= 900, hS = $('sheet').getBoundingClientRect();
-    const pad = big ? { top: 50, bottom: 50, left: Math.round(hS.right) + 30, right: 50 } : { top: 70, bottom: Math.round(innerHeight - hS.top) + 20, left: 30, right: 60 };
-    map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: pad, duration: 800, maxZoom: 15.5 });
-  });
+  inquadra(p.bb, 15.5);
 }
 async function meteoPercorso(p) {
   const m = meseQ(), vicino = quando === 'oggi' || quando === 'we' || m === new Date().getMonth();
@@ -1159,6 +1171,13 @@ function disegnaGuida(g) {
   const el = $('rec-guida'); if (el) el.style.display = g ? '' : 'none';
 }
 function distGuida(q) { let d = 1e9; for (const l of REG.guida.g) for (const r of l) { const x = hav(r, q); if (x < d) d = x; } return d; }
+// gli errori del GPS si mostrano solo se dopo 25 secondi non è arrivata nessuna posizione (all'avvio il telefono chiede i permessi)
+let errGps = null;
+function erroreGps(e) {
+  if (!REG || REG.p.length || errGps) return;
+  const permessi = e && /NOT_AUTHORIZED|denied|permission/i.test((e.code || '') + ' ' + (e.message || ''));
+  errGps = setTimeout(() => { errGps = null; if (REG && !REG.p.length) toast(permessi ? T('Consenti la posizione all’app (Impostazioni › App › Sicilia Naturale › Posizione: Consenti sempre)', 'Allow location for the app (Settings › Apps › Sicilia Naturale › Location: Allow all the time)') : t('noGps')); }, 25000);
+}
 function aggRec() {
   if (!REG) return;
   if (REG.guida && $('rec-guida')) { const q = REG.p[REG.p.length - 1], d = q ? distGuida(q) : 0, fuori = d > 80; $('rec-guida').classList.toggle('fuori', fuori); $('rec-guida').textContent = fuori ? T(`Fuori percorso: ${fmt(Math.round(d))} m`, `Off trail: ${fmt(Math.round(d))} m`) : `${ico('route').length ? '' : ''}${REG.guida.n}`; }
@@ -1189,7 +1208,7 @@ function avviaVista() {
   clearInterval(tick); tick = setInterval(aggRec, 1000);
   disegnaTrk(REG.p, REG.w); disegnaGuida(REG.guida); mostraRec(true); regUI();
   try { navigator.wakeLock && navigator.wakeLock.request('screen').then(w => wake = w).catch(() => {}); } catch (e) {}
-  try { ascolta(); } catch (e) { toast('GPS: ' + (e && e.message || e)); }
+  try { ascolta(); } catch (e) { erroreGps(e); }
 }
 function ascolta() {
   const punto = (lon, lat, alt, acc) => {
@@ -1202,11 +1221,11 @@ function ascolta() {
   const BG = isApp && window.Capacitor.Plugins && window.Capacitor.Plugins.BackgroundGeolocation;
   if (BG) {
     BG.addWatcher({ backgroundTitle: 'Sicilia Naturale', backgroundMessage: T('Registrazione percorso in corso', 'Recording route'), requestPermissions: true, stale: false, distanceFilter: 4 },
-      (loc, err) => { if (err) { toast(t('noGps')); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
-      .then(id => { bgId = id; }).catch(e => toast('GPS: ' + (e && e.message || e)));
+      (loc, err) => { if (err) { erroreGps(err); return; } if (loc) punto(loc.longitude, loc.latitude, loc.altitude, loc.accuracy); })
+      .then(id => { bgId = id; }).catch(e => erroreGps(e));
   } else {
     wid = navigator.geolocation.watchPosition(pos => { const c = pos.coords; punto(c.longitude, c.latitude, c.altitude, c.accuracy); },
-      () => toast(t('noGps')), { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
+      e => erroreGps(e), { enableHighAccuracy: true, maximumAge: 2000, timeout: 20000 });
   }
 }
 function fermaReg() {
