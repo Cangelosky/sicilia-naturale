@@ -29,7 +29,9 @@ jobs:
           sed -i 's#<application#<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />\n    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <uses-permission android:name="android.permission.CAMERA" />\n    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <application#' $M
           grep -c uses-permission $M
       - name: Compatibilità aggiornamenti (Android 34)
-        run: printf "\nconfigurations.all { resolutionStrategy { force 'androidx.work:work-runtime:2.9.1' } }\n" >> android/app/build.gradle
+        run: |
+          printf "\nconfigurations.all { resolutionStrategy { force 'androidx.work:work-runtime:2.9.1' } }\n" >> android/app/build.gradle
+          sed -i 's/minSdkVersion = 22/minSdkVersion = 23/' android/variables.gradle && grep minSdk android/variables.gradle
       - name: Chiave di firma fissa
         run: |
           G=android/app/build.gradle
