@@ -448,7 +448,7 @@ map.on('click', e => {
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
-    if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small>${gmapsLink(po[0].geometry.coordinates)}</div>`).addTo(map); return; }
+    if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small>${gmapsLink(po[0].geometry.coordinates)}<div class="poiph"></div></div>`).addTo(map); fotoPunto(po[0].geometry.coordinates); return; }
     const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r', ...(map.getLayer('prv') && vista === 'escursioni' ? ['prv'] : [])] });
     if (pr.length) { apriPercorso(pr[0].properties.id); return; }
   }
@@ -644,6 +644,7 @@ async function wikiCerca(nome) {
   }
   return null;
 }
+const NOFOTO = /satellit|sentinel|landsat|copernicus|nasa|\besa\b|\biss\d|\biss\b|view of earth|earth observation|astronaut|from space|dallo spazio|aerial|aerea|ortofoto|orthophoto|\bmaps?\b|mappa|cartina|carta |locator|topograph|\bplan\b|planimetr|diagram|schema|\bsvg\b|terra ?aqua|modis|worldview|google earth|openstreetmap|\bosm\b|stemma|coat of arms|flag|bandiera|logo|museo|musée|museum|targa|busto/i;
 async function arricchisci(k) {
   const s = S[k]; if (!s) return;
   let w = null;
@@ -661,7 +662,6 @@ async function arricchisci(k) {
   const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
   if (cur !== k || !$('gal')) return;
   // via immagini da satellite, mappe, carte e foto dallo spazio: non mostrano il luogo come lo vede chi ci va
-  const NOFOTO = /satellit|sentinel|landsat|copernicus|nasa|\besa\b|\biss\d|\biss\b|view of earth|earth observation|astronaut|from space|dallo spazio|aerial|aerea|ortofoto|orthophoto|\bmaps?\b|mappa|cartina|carta |locator|topograph|\bplan\b|planimetr|diagram|schema|\bsvg\b|terra ?aqua|modis|worldview|google earth|openstreetmap|\bosm\b|stemma|coat of arms|flag|bandiera|logo|museo|musée|museum|targa|busto/i;
   const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
     return !NOFOTO.test([p.title, pulito((m.ImageDescription || {}).value), pulito((m.Categories || {}).value), pulito((m.Artist || {}).value)].join(' ')); }).sort((a, b) => (a.index || 0) - (b.index || 0)).slice(0, 10);
   if (!ph.length) return;
@@ -925,6 +925,15 @@ function avvisoMappa(m, ms) {
 const POI = { rifugio: 'home', riparo: 'tent', picnic: 'tools-kitchen-2', panorama: 'binoculars', campeggio: 'tent', fontana: 'fountain', sorgente: 'droplet', vetta: 'mountain', grotta: 'building-arch', cascata: 'stairs-down', castello: 'building-castle', chiesa: 'building-church', torre: 'tower', rovine: 'columns', segnaletica: 'direction-sign', pannello: 'direction-sign' };
 const POIC = { rifugio: '#c2570c', riparo: '#c2570c', picnic: '#2b8a3e', campeggio: '#2b8a3e', segnaletica: '#8d7a3a', pannello: '#8d7a3a', panorama: '#e8590c', fontana: '#1c7ed6', sorgente: '#1c7ed6', cascata: '#0b7285', vetta: '#495057', grotta: '#6b4226', castello: '#7048e8', chiesa: '#7048e8', torre: '#7048e8', rovine: '#7048e8' };
 const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
+// foto del punto di interesse da Wikimedia Commons (entro 150 m), senza immagini da satellite o mappe
+async function fotoPunto(c) {
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${(+c[1]).toFixed(5)}|${(+c[0]).toFixed(5)}&ggsradius=150&ggsnamespace=6&ggslimit=15&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=240&format=json&origin=*`);
+  const el = document.querySelector('.maplibregl-popup .poiph'); if (!el) return;
+  const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
+    return !NOFOTO.test([p.title, pulito((m.ImageDescription || {}).value), pulito((m.Categories || {}).value)].join(' ')); }).sort((a, b) => (a.index || 0) - (b.index || 0)).slice(0, 3);
+  if (!ph.length) return;
+  el.innerHTML = ph.map(p => { const i = p.imageinfo[0], m = i.extmetadata || {}; return `<a href="${esc(i.descriptionurl)}" target="_blank" rel="noopener" title="${esc(pulito((m.Artist || {}).value).slice(0, 40))} · Wikimedia Commons"><img src="${esc(i.thumburl)}" alt="" loading="lazy"></a>`; }).join('') + `<small>Foto: Wikimedia Commons</small>`;
+}
 // foto e recensioni dei punti di interesse: si aprono in Google Maps (nessun dato di Google dentro l'app)
 const gmapsLink = (c, cl) => `<a class="gml ${cl || ''}" href="https://www.google.com/maps/search/?api=1&query=${(+c[1]).toFixed(5)},${(+c[0]).toFixed(5)}" target="_blank" rel="noopener">${ico('map-pin', 'xs')} ${T('Apri in Google Maps', 'Open in Google Maps')}</a>`;
 function iconePoi() {
@@ -1338,6 +1347,7 @@ async function zoneInterne(k) {
   const tot = L.reduce((a, x) => a + x.ha, 0), pz = parcoZ(k);
   $('zint').innerHTML = `<h3>${pz ? T('Zone del parco', 'Park zones') : T('Zone della riserva', 'Reserve zones')}</h3><div class="zint">${L.map(x => { const d = pz ? ZDESC[x.z[0]] : ZDESC[x.z.startsWith('B') ? 'RB' : 'RA'];
     return `<div class="zi"><i style="background:${ZCOL[x.z] || '#888'}"></i><div><b>${esc(zNome(k, x.z))}</b><span>${fmt(x.ha)} ha · ${Math.round(x.ha / tot * 100)}%</span>${d ? `<small>${T(...d)}</small>` : ''}</div></div>`; }).join('')}</div>
+    ${(RP[k] || {}).nonvig ? `<p class="avvz">${T('Attenzione: il parco è stato annullato nel 2019 e queste zone oggi non sono in vigore. È in corso una nuova istituzione.', 'Note: the park was annulled in 2019 and these zones are not in force today. A new designation is under way.')}</p>` : ''}
     <p class="note">${T('Zone colorate sulla mappa. Fonte: Regione Siciliana, SIF (servizio Parchi e Riserve). Superfici calcolate dai confini.', 'Zones coloured on the map. Source: Regione Siciliana, SIF (Parks and Reserves service). Areas computed from the boundaries.')}</p>`;
   vediZint(k);
 }
@@ -1351,10 +1361,10 @@ function zoneQui(q) {
 function zonaRec(q) {
   if (ZREC.q && hav(ZREC.q, q) < 25) return; ZREC.q = q;
   const ora = zoneQui(q), prima = ZREC.k, entra = ora.filter(k => !prima.includes(k));
-  if (prima.length || ora.length) { const msg = entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n); /* avviso solo all'ingresso (scelta di Oscar) */ if (msg.length && ZREC.init) { const zz = ZI_ok ? ZI_ok.features.filter(f => entra.includes(f.properties.k) && dentroPoligono(q, f.geometry)) : []; if (zz.length) msg[0] += ' · ' + zNome(zz[0].properties.k, zz[0].properties.z); toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
+  if (prima.length || ora.length) { const msg = entra.map(k => T('Entri in: ', 'Entering: ') + S[k].n + ((RP[k] || {}).nonvig ? T(' (parco non in vigore)', ' (park not in force)') : '')); /* avviso solo all'ingresso (scelta di Oscar) */ if (msg.length && ZREC.init) { const zz = ZI_ok ? ZI_ok.features.filter(f => entra.includes(f.properties.k) && !(RP[f.properties.k] || {}).nonvig && dentroPoligono(q, f.geometry)) : []; if (zz.length) msg[0] += ' · ' + zNome(zz[0].properties.k, zz[0].properties.z); toast(msg.join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} } }
   ZREC.k = ora;
   // zona interna (A, B, C, D) del parco o della riserva in cui sei
-  const zf = ZI_ok ? ZI_ok.features.filter(f => ora.includes(f.properties.k) && dentroPoligono(q, f.geometry)) : [];
+  const zf = ZI_ok ? ZI_ok.features.filter(f => ora.includes(f.properties.k) && !(RP[f.properties.k] || {}).nonvig && dentroPoligono(q, f.geometry)) : [];
   const zk = zf.map(f => f.properties.k + ':' + f.properties.z), nuovo = zk.filter(x => !(ZREC.z || []).includes(x));
   if (nuovo.length && ZREC.init && !entra.length) { toast(T('Entri in: ', 'Entering: ') + nuovo.map(x => { const [k, z] = x.split(':'); return zNome(k, z) + ' (' + S[k].n + ')'; }).join(' · ')); try { navigator.vibrate && navigator.vibrate([120, 80, 120]); } catch (e) {} }
   ZREC.z = zk; ZREC.init = true;
@@ -1830,7 +1840,26 @@ async function bannerAllerte(el) {
 /* ---------- percorso: scaricare la zona per l'uso offline */
 document.addEventListener('click', e => { const b = e.target.closest('[data-offprc]'); if (!b) return; caricaPercorsi().then(A => { const p = A.find(x => x.id === +b.dataset.offprc); if (p) { const m = 0.01; scaricaZona([p.bb[0] - m, p.bb[1] - m, p.bb[2] + m, p.bb[3] + m], p.n, false); b.textContent = T('Scarico la zona…', 'Downloading area…'); } }); });
 /* ---------- regole: aree protette e raccolta dei funghi in Sicilia */
+/* regole dei parchi, dai documenti ufficiali (sintesi in parole semplici; nessuna indicazione su cosa si mangia) */
+const RP = {
+  EUAP0227: { f: [['Regolamento per le attività di fruizione del Parco dell’Etna', 'https://www.etnalife.it/regolamento-per-attivita-fruizione-parco-delletna/'], ['Protezione Civile: escursioni alle quote sommitali', 'https://www.etnatracking.com/images/attachments/etna-fruizione-quote-sommitali.pdf']],
+    g: ['Cammina solo sui sentieri e sui percorsi segnalati.', 'Fuochi solo negli spazi attrezzati, mai altrove.', 'Campeggio solo nelle aree attrezzate; la tenda per bivacco è ammessa solo di notte dove non ci sono rifugi.', 'Cani e gatti mai liberi.', 'Vietato portare via o danneggiare piante, rocce e minerali.', 'Bici solo sulle piste ciclabili; fuori strada niente auto o moto.', 'Droni e altri velivoli solo con autorizzazione.', 'Rispetta la quiete: niente rumori inutili.', 'Vietato restare o bivaccare di notte sui crateri sommitali; l’escursione in vetta finisce al tramonto. Oltre i limiti indicati dalla Protezione Civile si sale solo con guide abilitate.'],
+    z: { A: ['Vietato portare cani e gatti.', 'Vietato ogni mezzo a motore.', 'Niente radio o musica ad alto volume.'], B: ['Vietato ogni mezzo a motore.'] } },
+  EUAP0228: { f: [['Decalogo del Parco delle Madonie (regole della fruizione)', 'https://parcodellemadonie.it/wp-content/uploads/2023/11/Decalogo-parco-Madonie.pdf']],
+    g: ['Non toccare, raccogliere né danneggiare piante o parti di esse.', 'Vietati campeggio, bivacco e fuochi.', 'Non disturbare né catturare animali, selvatici o al pascolo; osservali da lontano.', 'Segui i sentieri e i cartelli; non scavalcare staccionate.', 'Nelle grotte entra solo se sono segnalate come visitabili, sul percorso indicato.', 'Non attraversare boschi bruciati da un incendio.', 'Niente escursioni con rischio incendi o con temporali, vento forte o temperature estreme.', 'Non stare sotto le pareti di roccia.', 'Scarpe da escursione chiuse: vietati tacchi, infradito e ciabatte.', 'Non entrare nei terreni privati, anche se non recintati.', 'Riporta a casa i rifiuti.', 'Nel parco non ci sono acqua, ristoro, bagni né soccorso, tranne nei paesi e lungo le strade principali.'],
+    z: { A: ['Vietato fotografare o filmare vicino a nidi e luoghi dove gli animali si riproducono.'] } },
+  EUAP0226: { f: [['Disciplina delle attività e dei divieti, D.A. 560/11 del 4 agosto 1993', 'http://win.lasiciliainrete.it/natura/normativa/decreto_nebrodi.htm']],
+    g: ['Ogni zona ha regole diverse, fissate dal decreto istitutivo del parco: nella zona A, riserva integrale, sono le più severe.', 'Vietati caccia, campeggio libero e fuochi fuori dalle aree attrezzate; resta sui sentieri.'], nota: 'Sintesi parziale: il testo completo del decreto è nel link qui sotto.' },
+  EUAP0859: { f: [['Misure di conservazione e Regolamento di fruizione del Parco fluviale dell’Alcantara (delibera n. 4 del 27 aprile 2012)', 'https://orbs.regione.sicilia.it/files/Misure%20di%20conservazione%20in%20fase%20di%20approvazione/ITA030036%20-%20Riserva%20naturale%20del%20Fiume%20Alcantara/MdC%20ITA030036%20Riserva%20naturale%20del%20Fiume%20Alcantara.pdf']],
+    g: ['Vietato camminare fuori dai sentieri e dai percorsi segnalati.', 'Canoa, kayak, rafting, hydrospeed, trekking fluviale e torrentismo solo come previsto dal regolamento del parco.', 'Campeggio e bivacco solo nelle aree attrezzate.', 'Animali domestici sempre al guinzaglio.', 'Vietato danneggiare o portare via rocce e minerali; vietato disturbare o catturare animali.', 'Veicoli solo sulle strade carrabili.', 'Vietati caccia, sport equestri e voli non autorizzati (anche droni).', 'Riporta a casa i rifiuti.'] },
+  SIF_SICANI: { f: [['Regione Siciliana: verso una nuova istituzione del Parco dei Monti Sicani (18 febbraio 2025)', 'https://www.regione.sicilia.it/la-regione-informa/monti-sicani-savarino-incontra-sindaci-verso-una-nuova-istituzione-parco']],
+    g: ['Il Parco dei Monti Sicani è stato annullato nel 2019 ed è in corso una nuova istituzione: oggi le sue zone non sono in vigore.', 'Valgono le regole delle riserve che si trovano dentro l’area (per esempio Monte Cammarata, Monti di Palazzo Adriano e Valle del Sosio, Monte Carcaci, Monte Genuardo) e dei siti Natura 2000.'], nonvig: true },
+  EUAP1300: { f: [['Istituzione del Parco nazionale Isola di Pantelleria, D.P.R. 28 luglio 2016', 'https://www.isprambiente.gov.it/it/banche-dati/repertorio-dello-stato-di-attuazione-dei-piani-per-il-parco-nei-parchi-nazionali/parco-nazionale-isola-di-pantelleria'], ['Lago di Venere: regole (ordinanza 95/2023)', 'https://www.balarm.it/news/da-sapere-prima-di-andare-a-pantelleria-cosa-puoi-fare-e-cosa-no-al-lago-di-venere-137973']],
+    g: ['Il parco non ha ancora un suo regolamento: valgono le misure di salvaguardia del decreto istitutivo e la legge nazionale sulle aree protette.', 'Al Lago di Venere (Specchio di Venere) c’è un’ordinanza con regole precise: leggila prima di andare.'] }
+};
 function regole(z) {
+  const k = Object.keys(S).find(c => S[c] === z), rp = k && RP[k];
+  if (rp && LANG === 'it') return `<details class="regole"><summary>${ico('shield-check', 'sm')} ${T('Regole del parco', 'Park rules')}</summary><ul>${rp.g.map(v => `<li>${esc(v)}</li>`).join('')}</ul>${rp.z ? Object.entries(rp.z).map(([zz, l]) => `<p class="zr"><b>${esc(zNome(k, zz))}</b></p><ul>${l.map(v => `<li>${esc(v)}</li>`).join('')}</ul>`).join('') : ''}${rp.nota ? `<p class="note">${esc(rp.nota)}</p>` : ''}<p class="note">Fonti: ${rp.f.map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(n)}</a>`).join(' · ')}. In caso di dubbio vale il testo ufficiale.</p></details>`;
   const prot = ['pn', 'pr', 'rn', 'amp', 'ap'].includes(z.t), n2k = !prot && ['zsc', 'zsczps', 'zps'].includes(z.t);
   if (!prot && !n2k) return '';
   const it = LANG === 'it';
