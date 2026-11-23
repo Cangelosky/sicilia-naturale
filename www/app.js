@@ -154,6 +154,7 @@ maplibregl.addProtocol('loc', async params => {
   const p = k.split('/');
   let name = 'base';
   if (p[0] === 'f') { const s = +p[1] - 9; name = 'cf_' + (p[2] >> s) + '_' + (p[3] >> s); }
+  else if (p[0] === 's') { const s = +p[1] - 9; name = 'st_' + (p[2] >> s) + '_' + (p[3] >> s); }
   else if (p[0] !== 'g') { const z = +p[1]; if (z > 7) { const s = z - 7; name = 'c_' + (p[2] >> s) + '_' + (p[3] >> s); } }
   let P; try { P = await pack(name); } catch (e) { if (p[0] !== 'd') return { data: new ArrayBuffer(0) }; throw e; }
   const e = P.idx[k];
@@ -250,10 +251,19 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'bv-p', type: 'circle', source: 'bv', maxzoom: 11, paint: { 'circle-radius': 5, 'circle-color': '#c2571a', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
   map.addSource('am', { type: 'geojson', data: GA });
   map.addLayer({ id: 'am-c', type: 'circle', source: 'am', paint: { 'circle-radius': ['interpolate', ['linear'], ['zoom'], 6, 2.5, 11, 5.5], 'circle-color': '#5b3a1a', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.2 } });
-  map.addSource('osm', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, attribution: '© OpenStreetMap (ODbL)' });
-  map.addLayer({ id: 'osm-l', type: 'line', source: 'osm', filter: ['==', ['geometry-type'], 'LineString'], layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': '#b3261e', 'line-width': 2, 'line-dasharray': [2, 1.6] } });
-  map.addLayer({ id: 'osm-p', type: 'circle', source: 'osm', filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none' }, paint: { 'circle-radius': 6, 'circle-color': ['match', ['get', 'k'], 'r', '#7a3e00', 'w', '#1d6fa5', '#2d6a4f'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
-  map.addLayer({ id: 'osm-t', type: 'symbol', source: 'osm', minzoom: 12.5, filter: ['==', ['geometry-type'], 'Point'], layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
+  // sentieri, percorsi segnati e punti di interesse (OpenStreetMap) impacchettati nell'app: niente attese dai server
+  map.addSource('st', { type: 'vector', tiles: ['loc://s/{z}/{x}/{y}'], minzoom: 9, maxzoom: 14, bounds: B, attribution: '© OpenStreetMap (ODbL)' });
+  const DIFF = ['match', ['get', 'c'], 'T', '#2f9e44', 'E', '#d9480f', 'EE', '#c92a2a', 'EEA', '#5f3dc4', '#d9480f'];
+  map.addLayer({ id: 'osm-s', type: 'line', source: 'st', 'source-layer': 'sent', minzoom: 11, layout: { visibility: 'none', 'line-cap': 'round' }, paint: { 'line-color': ['match', ['get', 'd'], 3, '#7b2d26', 2, '#b3261e', '#9c5a2a'], 'line-width': ['interpolate', ['linear'], ['zoom'], 11, 1, 15, 2.4], 'line-dasharray': [2, 1.4], 'line-opacity': 0.9 } });
+  map.addLayer({ id: 'osm-rc', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 2.6, 14, 6], 'line-opacity': 0.85 } });
+  map.addLayer({ id: 'osm-r', type: 'line', source: 'st', 'source-layer': 'perc', layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': DIFF, 'line-width': ['interpolate', ['linear'], ['zoom'], 9, 1.4, 14, 3.4] } });
+  map.addLayer({ id: 'osm-rt', type: 'symbol', source: 'st', 'source-layer': 'perc', minzoom: 12, layout: { visibility: 'none', 'symbol-placement': 'line', 'text-field': ['coalesce', ['get', 'r'], ''], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'symbol-spacing': 260 }, paint: { 'text-color': '#7a1f12', 'text-halo-color': '#fff', 'text-halo-width': 2 } });
+  map.addLayer({ id: 'osm-p', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 11, layout: { visibility: 'none', 'icon-image': ['concat', 'poi-', ['get', 't']], 'icon-size': ['interpolate', ['linear'], ['zoom'], 11, 0.42, 15, 0.62], 'icon-allow-overlap': false, 'icon-padding': 1 } });
+  map.addLayer({ id: 'osm-t', type: 'symbol', source: 'st', 'source-layer': 'poi', minzoom: 13, layout: { visibility: 'none', 'text-field': ['get', 'n'], 'text-font': ['Noto Sans Regular'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#3b2a14', 'text-halo-color': '#fff', 'text-halo-width': 1.4 } });
+  map.addSource('prc', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'prc-c', type: 'line', source: 'prc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#fff', 'line-width': 9, 'line-opacity': 0.9 } });
+  map.addLayer({ id: 'prc-l', type: 'line', source: 'prc', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1d4ed8', 'line-width': 5 } });
+  iconePoi();
   map.addSource('hl', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addSource('hlp', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   const scala = ['interpolate', ['linear'], ['get', 'v'], 1, '#d1495b', 4, '#edae49', 6.5, '#8fc93a', 9, '#1f9e6e'];
@@ -263,7 +273,7 @@ map.on('load', () => D.then(() => {
   map.addLayer({ id: 'hl-t', type: 'symbol', source: 'hlp', layout: { 'text-field': ['format', ['get', 'vs'], { 'font-scale': 1.25 }, '\n', {}, ['get', 'lab'], { 'font-scale': 0.85 }, ['case', ['has', 'wx'], ['concat', '\n', ['get', 'wx']], ''], { 'font-scale': 0.78, 'text-color': '#1d4e89' }], 'text-font': ['Noto Sans Regular'], 'text-size': 13, 'text-max-width': 9, 'text-padding': 4 }, paint: { 'text-color': '#10261c', 'text-halo-color': 'rgba(255,255,255,.92)', 'text-halo-width': 1.6 } });
   map.addSource('trk', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'trk-l', type: 'line', source: 'trk', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#1b4332', 'line-width': 4, 'line-opacity': 0.9 } });
-  map.on('moveend', () => { if (ON.osm) caricaOSM(); });
+  
   map.addLayer({ id: 'sel', type: 'line', source: 'z', filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   for (const s of ['bv', 'bs']) map.addLayer({ id: 'sel-' + s, type: 'line', source: s, filter: ['==', ['get', 'id'], ''], paint: { 'line-color': '#e76f51', 'line-width': 3 } });
   map.addLayer({ id: 'sel-am', type: 'circle', source: 'am', filter: ['==', ['get', 'id'], ''], paint: { 'circle-radius': 9, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#e76f51', 'circle-stroke-width': 3 } });
@@ -277,7 +287,7 @@ let base = {};
 let bosco = '';
 const ON = { aree: true, n2k: true, bv: true, am: true, bs: false, cf: false, osm: false };
 let cfSel = null;   // macrocategorie scelte; null = tutte
-const LIV = { osm: ['osm-l', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
+const LIV = { osm: ['osm-s', 'osm-rc', 'osm-r', 'osm-rt', 'osm-p', 'osm-t'], cf: ['cf-f', 'cf-l', 'cf-p'], bv: ['bv-f', 'bv-l', 'bv-p', 'sel-bv'], am: ['am-c', 'sel-am'], bs: ['bs-f', 'bs-l', 'sel-bs'] };
 function applica() {
   if (!map.getLayer('aree-f')) return;
   let ids = null;
@@ -294,7 +304,6 @@ function applica() {
   map.setPaintProperty('n2k-f', 'fill-opacity', ON.cf ? 0.03 : 0.12);
   map.setPaintProperty('aree-f', 'fill-opacity', ON.cf ? 0.04 : 0.2);
   $('liv-n').textContent = Object.values(ON).filter(Boolean).length;
-  if (ON.osm) caricaOSM();
   if (document.body.classList.contains('mm')) for (const l of [...Object.keys(base), ...Object.values(LIV).flat()]) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', 'none');
   legenda();
 }
@@ -384,6 +393,13 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 map.on('click', e => {
   chiudiLiv();
   if (document.body.classList.contains('recon')) return;
+  if (ON.osm && map.getLayer('osm-r')) {
+    const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
+    const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
+    if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small></div>`).addTo(map); return; }
+    const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r'] });
+    if (pr.length) { apriPercorso(pr[0].properties.id); return; }
+  }
   if (document.body.classList.contains('mm')) {
     const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
     if (f.length) { const k = f[0].properties.id; vista === 'meteo' ? apriMeteoZona(k) : apri(k, false); } else chiudi();
@@ -456,6 +472,7 @@ function selez(k) {
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
+function chiudiPercorso() { evidenziaPercorso(null); }
 function mostra() { $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
 function tastoEspandi() {
   const c = $('sh').querySelector('.close'); if (!c || $('sh').querySelector('.espandi')) return;
@@ -463,7 +480,7 @@ function tastoEspandi() {
   c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
 }
 $('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; altSheet($('sheet').classList.contains('big') ? 1 : 2); });
-function chiudi() { $('sheet').classList.remove('open', 'big'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+function chiudi() { evidenziaPercorso(null); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 // schede e pannelli sul telefono: si trascinano dalla maniglia (o dal titolo) per abbassarli, nasconderli o allargarli
 function altezze(el, maniglia, chiudiDelTutto) {
   const stato = () => el.classList.contains('big') ? 2 : el.classList.contains('mini') ? 0 : 1;
@@ -814,33 +831,60 @@ function avvisoMappa(m, ms) {
   let el = $('avmap'); if (!el) { el = document.createElement('div'); el.id = 'avmap'; el.className = 'avmap'; $('wrap').appendChild(el); }
   clearTimeout(avT); el.textContent = m; el.style.display = m ? 'block' : 'none'; if (m && ms) avT = setTimeout(() => el.style.display = 'none', ms);
 }
-function caricaOSM() {
-  clearTimeout(osmT);
-  osmT = setTimeout(async () => {
-    if (!ON.osm) return;
-    if (map.getZoom() < 11) { avvisoMappa(t('zoomSent'), 3500); return; }
-    const b = map.getBounds(), bb = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map(x => x.toFixed(3)).join(',');
-    if (bb === osmB) return; osmB = bb;
-    const q = `[out:json][timeout:25];(relation["route"="hiking"](${bb});way["highway"="path"]["sac_scale"](${bb});node["tourism"~"alpine_hut|wilderness_hut|picnic_site"](${bb});node["amenity"="shelter"](${bb});node["natural"="spring"](${bb});node["amenity"="drinking_water"](${bb}););out geom 4000;`;
-    avvisoMappa(t('osmCar'));
-    let j = null;
-    for (const srv of OVERPASS) {   // server pubblici di OpenStreetMap: se uno è occupato si prova il successivo
-      const ac = new AbortController(), to = setTimeout(() => ac.abort(), 20000);
-      j = await fetch(srv, { method: 'POST', body: 'data=' + encodeURIComponent(q), signal: ac.signal }).then(r => r.ok ? r.json() : null).catch(() => null);
-      clearTimeout(to); if (j || bb !== osmB) break;
-    }
-    if (bb !== osmB) return;
-    if (!j) { osmB = ''; avvisoMappa(t('osmErr'), 6000); return; }
-    avvisoMappa('');
-    const F = [];
-    for (const e of j.elements) {
-      const tg = e.tags || {};
-      if (e.type === 'node') F.push({ type: 'Feature', properties: { k: tg.natural === 'spring' || tg.amenity === 'drinking_water' ? 'w' : /hut|shelter/.test(tg.tourism || tg.amenity || '') ? 'r' : 'p', n: tg.name || '' }, geometry: { type: 'Point', coordinates: [e.lon, e.lat] } });
-      else if (e.type === 'way' && e.geometry) F.push({ type: 'Feature', properties: { n: tg.name || '' }, geometry: { type: 'LineString', coordinates: e.geometry.map(g => [g.lon, g.lat]) } });
-      else if (e.type === 'relation') for (const m of e.members || []) if (m.type === 'way' && m.geometry) F.push({ type: 'Feature', properties: { n: tg.name || '' }, geometry: { type: 'LineString', coordinates: m.geometry.map(g => [g.lon, g.lat]) } });
-    }
-    if (map.getSource('osm')) map.getSource('osm').setData({ type: 'FeatureCollection', features: F });
-  }, 500);
+/* ---------- punti di interesse: icone (stesse della registrazione) */
+const POI = { rifugio: 'home', riparo: 'tent', picnic: 'tools-kitchen-2', panorama: 'binoculars', campeggio: 'tent', fontana: 'fountain', sorgente: 'droplet', vetta: 'mountain', grotta: 'building-arch', cascata: 'stairs-down', castello: 'building-castle', chiesa: 'building-church', torre: 'tower', rovine: 'columns', segnaletica: 'direction-sign', pannello: 'direction-sign' };
+const POIC = { rifugio: '#d08a2b', riparo: '#d08a2b', picnic: '#d08a2b', campeggio: '#d08a2b', segnaletica: '#d08a2b', pannello: '#d08a2b', panorama: '#3a8fd5', fontana: '#1c7ed6', sorgente: '#1c7ed6', cascata: '#1c7ed6', vetta: '#495057', grotta: '#495057', castello: '#a06bd0', chiesa: '#a06bd0', torre: '#a06bd0', rovine: '#a06bd0' };
+const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
+function iconePoi() {
+  for (const [k, i] of Object.entries(POI)) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="${POIC[k]}" stroke="#fff" stroke-width="5"/><g transform="translate(17 17) scale(1.25)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">${ICO[i]}</g></svg>`;
+    const im = new Image(64, 64); im.onload = () => { if (!map.hasImage('poi-' + k)) map.addImage('poi-' + k, im, { pixelRatio: 2 }); }; im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+}
+/* ---------- percorsi segnati (OpenStreetMap): elenco per area e scheda */
+let PRC = null;
+const caricaPercorsi = () => PRC || (PRC = fetch('data/percorsi.json').then(r => r.json()));
+const areaPt = (lon, lat) => ((lat > 38.33 && lon > 14.2) || lon < 12.2 || lat < 36.2 || lat > 38.6 || (lon < 12.45 && lat < 38.1 && lat > 37.85)) ? 'iso' : Object.keys(AC).reduce((a, b) => ((AC[a][0] - lon) ** 2 * 0.62 + (AC[a][1] - lat) ** 2) <= ((AC[b][0] - lon) ** 2 * 0.62 + (AC[b][1] - lat) ** 2) ? a : b);
+const CAI = { T: ['Turistico', 'Easy'], E: ['Escursionistico', 'Hiking'], EE: ['Per escursionisti esperti', 'Expert hikers'], EEA: ['Esperti con attrezzatura', 'Experts with gear'] };
+const durata = d => { const m = /^(\d+):(\d+)/.exec(d || ''); return m ? `${+m[1]} h ${m[2] !== '00' ? m[2] : ''}`.trim() : (d || ''); };
+const pctTag = p => [`${num1(p.km)} km`, p.up ? `+${fmt(p.up)} m` : '', p.dur ? durata(p.dur) : '', p.c ? `<span class="cai c-${p.c}">${p.c}</span>` : ''].filter(Boolean).join(' · ');
+function evidenziaPercorso(p) {
+  if (!map.getSource('prc')) return;
+  map.getSource('prc').setData({ type: 'FeatureCollection', features: p ? [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: p.g } }] : [] });
+}
+async function apriPercorso(id) {
+  const A = await caricaPercorsi(), p = A.find(x => x.id === +id); if (!p) return;
+  if (vista !== 'mappa' && vista !== 'escursioni') vai('escursioni');
+  if (modo.escursioni !== 'mappa' && vista === 'escursioni') { modo.escursioni = 'mappa'; vai('escursioni'); }
+  evidenziaPercorso(p); cur = null;
+  map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: padMappa(), duration: 800, maxZoom: 15 });
+  const it = LANG === 'it', c = CAI[p.c];
+  $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}</div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
+  $('sb').innerHTML = `<div class="kpi"><div><b>${num1(p.km)}</b><span>km</span></div><div><b id="pc-up">${p.up ? '+' + fmt(p.up) : '…'}</b><span>m D+</span></div><div><b id="pc-dn">${p.dn ? '−' + fmt(p.dn) : '…'}</b><span>m D−</span></div><div><b>${p.dur ? durata(p.dur) : '–'}</b><span>${T('tempo', 'time')}</span></div></div>
+    <div class="profilo" id="pc-prof"><small>${T('Profilo altimetrico…', 'Elevation profile…')}</small></div>
+    ${p.da || p.a ? `<p>${it ? 'Da' : 'From'} <b>${esc(p.da || '–')}</b> ${it ? 'a' : 'to'} <b>${esc(p.a || '–')}</b>${p.giro ? (it ? ' (ad anello)' : ' (loop)') : ''}.</p>` : ''}
+    ${p.desc ? `<p>${esc(p.desc)}</p>` : ''}
+    ${p.op ? `<p class="note">${T('Gestione', 'Managed by')}: ${esc(p.op)}</p>` : ''}
+    <div class="az"><a class="btnl" href="https://www.google.com/maps/dir/?api=1&destination=${p.s[1]},${p.s[0]}" target="_blank" rel="noopener">${T('Portami alla partenza', 'Directions to start')}</a><button class="btnl" id="pc-gpx">GPX</button></div>
+    <p class="note">${T('Tracciato e dati: OpenStreetMap (ODbL), volontari e sezioni CAI. Controlla sempre segnaletica, meteo e condizioni del sentiero.', 'Track and data: OpenStreetMap (ODbL), volunteers and CAI sections. Always check signs, weather and trail conditions.')} <a href="https://www.openstreetmap.org/relation/${p.id}" target="_blank" rel="noopener">OSM</a></p>`;
+  mostra();
+  $('pc-gpx').onclick = () => { const g = `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="Sicilia Naturale" xmlns="http://www.topografix.com/GPX/1/1"><trk><name>${esc(p.n)}</name>${p.g.map(l => `<trkseg>${l.map(q => `<trkpt lat="${q[1]}" lon="${q[0]}"/>`).join('')}</trkseg>`).join('')}</trk></gpx>`; const u = URL.createObjectURL(new Blob([g], { type: 'application/gpx+xml' })), l = document.createElement('a'); l.href = u; l.download = (p.r || 'percorso') + '.gpx'; document.body.appendChild(l); l.click(); l.remove(); };
+  profilo(p);
+}
+// profilo altimetrico: quote Copernicus 90 m da Open-Meteo su 100 punti del tracciato
+async function profilo(p) {
+  const pts = p.g.flat(), tot = []; let d = 0;
+  for (let i = 0; i < pts.length; i++) { if (i) d += hav(pts[i - 1], pts[i]); tot.push(d); }
+  const n = Math.min(100, pts.length), sel = Array.from({ length: n }, (_, i) => { const tgt = d * i / Math.max(1, n - 1); let j = tot.findIndex(x => x >= tgt); return j < 0 ? pts.length - 1 : j; });
+  const j = await fetch(`https://api.open-meteo.com/v1/elevation?latitude=${sel.map(i => pts[i][1]).join(',')}&longitude=${sel.map(i => pts[i][0]).join(',')}`).then(r => r.json()).catch(() => null);
+  const el = $('pc-prof'); if (!el) return;
+  if (!j || !j.elevation) { el.innerHTML = ''; if (!p.up && $('pc-up')) $('pc-up').textContent = '–'; if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '–'; return; }
+  const z = j.elevation, xs = sel.map(i => tot[i] / 1000), mn = Math.min(...z), mx = Math.max(...z);
+  let up = 0, dn = 0; for (let i = 1; i < z.length; i++) { const dz = z[i] - z[i - 1]; if (dz > 0) up += dz; else dn -= dz; }
+  if (!p.up && $('pc-up')) $('pc-up').textContent = '+' + fmt(Math.round(up)); if (!p.dn && $('pc-dn')) $('pc-dn').textContent = '−' + fmt(Math.round(dn));
+  const W = 320, H = 90, X = x => 4 + (W - 8) * x / (xs[xs.length - 1] || 1), Y = v => H - 14 - (H - 26) * (v - mn) / Math.max(1, mx - mn);
+  const lin = xs.map((x, i) => `${X(x).toFixed(1)},${Y(z[i]).toFixed(1)}`).join(' ');
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><defs><linearGradient id="pg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d4ed8" stop-opacity=".35"/><stop offset="1" stop-color="#1d4ed8" stop-opacity="0"/></linearGradient></defs><polygon points="${X(0)},${H - 14} ${lin} ${X(xs[xs.length - 1])},${H - 14}" fill="url(#pg)"/><polyline points="${lin}" fill="none" stroke="#1d4ed8" stroke-width="2"/><text x="4" y="10">${fmt(Math.round(mx))} m</text><text x="4" y="${H - 2}">${fmt(Math.round(mn))} m</text><text x="${W - 4}" y="${H - 2}" text-anchor="end">${num1(xs[xs.length - 1])} km</text></svg>`;
 }
 
 /* ---------- Escursioni: obiettivo, dove andare, registrazione del percorso */
@@ -867,20 +911,33 @@ function escursioni() {
     const sug = suggerimenti(), mx = Math.max(1, ...sug.map(x => x.sc));
     const chips = `<div class="int">${Object.entries({ funghi: 'iFunghi', alberi: 'iAlberi', boschi: 'iBoschi', flora: 'iFlora', alim: 'iAlim' }).map(([k, l]) => `<button data-i="${k}" class="${intSel.has(k) ? 'on' : ''}" aria-pressed="${intSel.has(k)}"><i style="background:${INT[k]}"></i>${t(l)}</button>`).join('')}</div>${intSel.has('alim') ? `<p class="avviso">${t('alimNota')}</p>` : ''}`;
     const reg = isApp ? `<h3>${t('miei')}</h3><div class="trk" id="trk"></div><p class="note">${t('regNota')}</p>` : '';
+    if (!ON.osm) { ON.osm = true; applica(); }
+    const prc = `<h3>${T('Percorsi consigliati', 'Recommended trails')}</h3><div class="prc-f"><select class="tendina" id="prc-a">${ORD_AREE.map(a => `<option value="${a}"${prcSel.area === a ? ' selected' : ''}>${t('AR')[a]}</option>`).join('')}</select><select class="tendina" id="prc-d"><option value="">${T('Ogni difficoltà', 'Any difficulty')}</option>${Object.keys(CAI).map(k => `<option value="${k}"${prcSel.diff === k ? ' selected' : ''}>${k} · ${T(...CAI[k])}</option>`).join('')}</select></div><div class="prc" id="prc"><p class="note">…</p></div>`;
     if (modo.escursioni === 'mappa') {
       $('pan').innerHTML = `<div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="pl">${t('toccaEsc')}</p>${chips}
-        <h3>${t('doveAndare')}</h3><ol class="top5">${sug.slice(0, 6).map(x => `<li><button data-zona="${x.k}"><b>${esc(x.z.n)}</b><small>${esc(x.why.join(' · '))}</small></button></li>`).join('')}</ol>${reg}`;
+        <h3>${t('doveAndare')}</h3><ol class="top5">${sug.slice(0, 6).map(x => `<li><button data-zona="${x.k}"><b>${esc(x.z.n)}</b><small>${esc(x.why.join(' · '))}</small></button></li>`).join('')}</ol>${prc}${reg}`;
       evidenzia(sug.map(x => ({ k: x.k, v: 3 + 6.5 * x.sc / mx, lab: x.z.n })));
       if (sug.length) { const bb = [180, 90, -180, -90]; for (const x of sug) { const b = x.z.bb; bb[0] = Math.min(bb[0], b[0]); bb[1] = Math.min(bb[1], b[1]); bb[2] = Math.max(bb[2], b[2]); bb[3] = Math.max(bb[3], b[3]); } map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: padMappa(), duration: 700 }); }
     } else {
       const per = {}; for (const x of sug) (per[areaDi(x.k)] = per[areaDi(x.k)] || []).push(x);
       $('cat').innerHTML = `<div class="in"><div class="ph-top"><h2>${t('tEsc')}</h2>${sw()}</div><p class="lead">${isApp ? t('lEsc') : t('lEsc').replace(/ (Puoi registrare|You can record).*$/, '')}</p><h3>${t('obiettivo')}</h3>${chips}
-        <h3>${t('doveAndare')}</h3>${ORD_AREE.filter(a => per[a]).map(a => `<h4 class="area-h">${t('AR')[a]}</h4><div class="sug">${per[a].map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>`).join('')}
+        ${prc}<h3>${t('doveAndare')}</h3>${ORD_AREE.filter(a => per[a]).map(a => `<h4 class="area-h">${t('AR')[a]}</h4><div class="sug">${per[a].map(x => `<div class="c"><b>${esc(x.z.n)}</b><small>${esc(t(x.z.t))} · ${fmt(x.z.ha)} ha</small><small>${esc(x.why.join(' · '))}</small><div class="az"><button data-map="${x.k}">${t('apriMappa')}</button><button data-mt="${x.k}">${t('vediMeteo')}</button></div></div>`).join('')}</div>`).join('')}
         ${isApp ? reg : `<p class="note" style="margin-top:20px">${t('soloApp')}</p>`}</div>`;
     }
     if (isApp) { regUI(); trkUI(); }
+    elencoPercorsi();
   });
 }
+// percorsi consigliati: prima quelli con più informazioni (nome, difficoltà, dislivello, descrizione, gestore)
+let prcSel = { area: 'tutte', diff: '', n: 8 };
+async function elencoPercorsi() {
+  const A = await caricaPercorsi(); if (!$('prc')) return;
+  const punti = p => (p.n && p.n !== p.r ? 2 : 0) + (p.c ? 2 : 0) + (p.up ? 1 : 0) + (p.desc ? 2 : 0) + (p.op ? 1 : 0) + (p.net === 'rwn' || p.net === 'nwn' ? 1 : 0) + Math.min(2, p.km / 6);
+  const L = A.filter(p => (prcSel.area === 'tutte' || areaPt(p.s[0], p.s[1]) === prcSel.area) && (!prcSel.diff || p.c === prcSel.diff)).sort((a, b) => punti(b) - punti(a));
+  $('prc').innerHTML = L.length ? L.slice(0, prcSel.n).map(p => `<button class="pc" data-prc="${p.id}"><b>${esc(p.n)}</b><small>${p.r ? `<span class="ref">${esc(p.r)}</span> ` : ''}${pctTag(p)}</small></button>`).join('') + (L.length > prcSel.n ? `<button class="piu" id="prc-piu">${T('Mostra altri', 'Show more')} (${L.length - prcSel.n})</button>` : '') : `<p class="note">${T('Nessun percorso segnato qui con questi filtri.', 'No marked trails here with these filters.')}</p>`;
+}
+const filtroPrc = e => { if (vista !== 'escursioni') return; if (e.target.id === 'prc-a') prcSel.area = e.target.value; else if (e.target.id === 'prc-d') prcSel.diff = e.target.value; else return; prcSel.n = 8; elencoPercorsi(); };
+$('pan').addEventListener('change', filtroPrc); $('cat').addEventListener('change', filtroPrc);
 window.escursioni = escursioni;
 const clickEsc = e => {
   if (vista !== 'escursioni') return;
@@ -889,6 +946,8 @@ const clickEsc = e => {
   if (i) { intSel.has(i.dataset.i) ? intSel.delete(i.dataset.i) : intSel.add(i.dataset.i); escursioni(); }
   else if (m) { vai('mappa'); apri(m.dataset.map, true); }
   else if (mt) { const k = mt.dataset.mt; modo.meteo = 'mappa'; mt0.area = areaDi(k); vai('meteo'); METP.then(() => apriMeteoZona(k)); }
+  else if (e.target.closest('[data-prc]')) apriPercorso(e.target.closest('[data-prc]').dataset.prc);
+  else if (e.target.closest('#prc-piu')) { prcSel.n += 12; elencoPercorsi(); }
   else if (rb) avviaReg();
   else if (e.target.closest('#regapri')) mostraRec(true);
   else if (tb) azioneTrk(tb.dataset.trk, tb.dataset.az);
