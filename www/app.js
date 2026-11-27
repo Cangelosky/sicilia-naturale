@@ -2446,8 +2446,8 @@ const STOPW = new Set('di del della dello dei degli delle da dal dalla e ed o od
 const paroleN = n => norm(n.split('/')[0].split(':')[0].replace(/\(.*?\)/g, ' ')).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOPW.has(w));
 const titoloOk = (n, t) => { const p = paroleN(n), tt = norm(t).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/);
   return p.length && p.every(w => tt.includes(w) || (w.length > 4 && tt.some(x => x.startsWith(w.slice(0, -1)) && Math.abs(x.length - w.length) <= 2))); };
-const IMGC = (() => { try { return JSON.parse(localStorage.getItem('sn_img') || '{}'); } catch (e) { return {}; } })();
-const salvaImg = () => { try { localStorage.setItem('sn_img', JSON.stringify(IMGC)); } catch (e) {} };
+const IMGC = (() => { try { return JSON.parse(localStorage.getItem('sn_img2') || '{}'); } catch (e) { return {}; } })();
+const salvaImg = () => { try { localStorage.setItem('sn_img2', JSON.stringify(IMGC)); } catch (e) {} };
 const IMGP = {};
 const BRUTTE = /stemma|coat of arms|logo|\bmaps?\b|mappa|flag|bandiera|\.svg|\.pdf|\.tif/i;
 function sapImgV(k) {
@@ -2456,15 +2456,18 @@ function sapImgV(k) {
   if (k in IMGC) return Promise.resolve(IMGC[k]);
   return IMGP[k] || (IMGP[k] = (async () => {
     let r = null;
-    const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(v.n)}&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=640`);
-    const pg = Object.values((j && j.query && j.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
-    for (const x of pg) if (x.thumbnail && titoloOk(v.n, x.title) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
-    if (!r) {
-      const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(v.n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640`);
+    const nomi = [...new Set([v.n, ...v.n.split('/').map(x => x.trim()), v.nd || ''].filter(x => x && paroleN(x).length))].slice(0, 3);
+    for (const n of nomi) {
+      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=640`);
+      const pg = Object.values((j && j.query && j.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
+      for (const x of pg) if (x.thumbnail && titoloOk(n, x.title) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
+      if (r) break;
+      const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640`);
       const cp = Object.values((c && c.query && c.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
       for (const x of cp) { const t = x.title.slice(5), ii = (x.imageinfo || [])[0] || {}, m = ii.extmetadata || {}, lic = (m.LicenseShortName || {}).value || '';
-        if (!titoloOk(v.n, t) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
+        if (!titoloOk(n, t) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
         r = { u: ii.thumburl, p: ii.descriptionurl, t, a: pulito((m.Artist || {}).value || '').slice(0, 80), l: lic, src: 'Wikimedia Commons' }; break; }
+      if (r) break;
     }
     IMGC[k] = r; salvaImg(); return r;
   })());
