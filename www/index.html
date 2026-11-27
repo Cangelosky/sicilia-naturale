@@ -910,6 +910,47 @@ body .sh5 h1,body .sh5 h2,body .sh5 .firma5{font-family:'Newsreader',Georgia,ser
 .chips5 button{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;background:#fff;padding:9px 16px;font:500 15px 'Bricolage Grotesque',sans-serif;color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(70,45,20,.06)}
 .chips5 button:hover{background:var(--ink);color:#fff}
 .chips5 button:focus-visible{outline:3px solid var(--ora);outline-offset:2px}
+
+/* filtro dei temi, in alto nella foto */
+.temi{position:absolute;z-index:4;top:clamp(14px,2.4vw,22px);left:clamp(16px,3vw,32px);right:clamp(16px,3vw,32px);display:flex;flex-wrap:wrap;align-items:center;gap:6px;pointer-events:none}
+.temi>*{pointer-events:auto}
+.temi .ql{font:500 13px 'Bricolage Grotesque',sans-serif;color:rgba(255,255,255,.85);margin-right:4px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.temi button{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.45);background:rgba(20,14,8,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;border-radius:999px;padding:7px 14px 7px 11px;font:500 14px 'Bricolage Grotesque',sans-serif;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.temi button i{width:9px;height:9px;border-radius:50%;background:var(--tc);box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.temi button:hover{background:rgba(20,14,8,.45)}
+.temi button.on{background:#fff;color:#26231F;border-color:#fff}
+.temi button.on i{box-shadow:none}
+.temi button.presto{opacity:.75}.temi button.presto::after{content:'presto';font-size:10.5px;opacity:.8;margin-left:2px}
+.temi button.presto.on{opacity:1}
+.temi button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.ap5{padding-top:clamp(70px,9vw,90px)!important}
+@media (max-width:860px){.ap5{padding-top:calc(24vh + 40px)!important}.temi button{padding:6px 11px 6px 9px;font-size:13px}.temi .ql{display:none}}
+.ap5 .apm{margin-top:6px}
+.ap5 .apm .leg{display:flex;flex-wrap:wrap;gap:12px;margin:8px 2px 0;font-size:12.5px;color:#6B5E50}
+.sh5 .t-parco{--tc:#2D6A4F}.sh5 .t-riserva{--tc:#74A57F}.sh5 .t-marina{--tc:#2F7EA8}
+.sh5 i.t-parco,.sh5 i.t-riserva,.sh5 i.t-marina{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle;background:var(--tc)}
+svg.smap circle.ev.t-riserva{opacity:.75}
+.mix5{--ora:#2D6A4F;--cob:#8a4a12;--soft:#EFE6D6;--soft2:#F7F2E8;--soft3:#EADFCB}
+.presto5{background:#fff;border-radius:var(--r);padding:18px 20px;box-shadow:0 4px 16px rgba(70,45,20,.07);border-left:5px solid #7B3F61}
+.presto5 b{font:500 22px 'Newsreader',Georgia,serif}.presto5 p{margin:6px 0 0;color:var(--sub)}
+.inc5{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.ic5{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 4px 16px rgba(70,45,20,.07);display:flex;flex-direction:column}
+.icf{position:relative;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:6px;min-height:170px;border:0;background:#C9D9C8 center/cover;padding:14px 16px;color:#fff;text-align:left;cursor:pointer;font:inherit}
+.icf::before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,30,20,.7),rgba(15,30,20,0) 65%)}
+.icf>*{position:relative}.icf .tag{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:#26231F;font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:999px}
+.icf b{font:500 25px/1.1 'Newsreader',Georgia,serif}
+.ict{padding:14px 16px 16px}
+.ict p{margin:0 0 12px;font-size:15.5px;line-height:1.5}
+.ict .lk{font-size:15.5px;color:#8a4a12}
+.ict .chips5 button{padding:6px 6px 6px 12px;font-size:14px;gap:6px}
+.ict .chips5 em{font-style:normal;font-size:12px;font-weight:700;background:#FBE3CE;color:#8a4a12;border-radius:999px;padding:2px 7px}
+.pz5 .img.cal{flex-direction:column;background:#FBE3CE;color:#8a4a12;gap:0}
+.pz5 .img.cal b{font:500 52px/1 'Newsreader',Georgia,serif;padding:0}.pz5 .img.cal small{font-size:14px;padding:0;color:#8a4a12}
+/* riquadro accanto al puntatore */
+.tipm{position:fixed;left:0;top:0;z-index:90;pointer-events:none;background:#fff;color:#26231F;border-radius:12px;padding:8px 12px;box-shadow:0 8px 24px rgba(40,25,10,.22);font:400 13px/1.35 'Bricolage Grotesque',sans-serif;max-width:260px;opacity:0;transition:opacity .12s}
+.tipm.on{opacity:1}
+.tipm b{display:block;font:500 17px/1.15 'Newsreader',Georgia,serif}
+.tipm small{display:block;color:#6B5E50;font-size:12.5px;margin-top:2px}
 </style>
 
 </head>
