@@ -2579,7 +2579,7 @@ function mappaSicilia(o) {
     ${si.contorno.map(p => `<polygon class="terra" points="${p.filter(([x, y]) => x > L0 && x < L1 && y > A0 && y < A1).map(([x, y]) => X(x) + ',' + Y(y)).join(' ')}"/>`).join('')}
     ${tr.length > 1 ? `<polyline class="trac" points="${tr.map(c => X(c[0]) + ',' + Y(c[1])).join(' ')}"/>` : ''}
     ${com.filter(c => !(c[3] && n[c[3]])).map(dot).join('')}${com.filter(c => c[3] && n[c[3]]).sort((a, b) => n[b[3]] - n[a[3]]).map(dot).join('')}
-    ${(o.punti || []).map(p => `<circle data-${p.a || 'cev'}="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
+    ${(o.punti || []).filter(p => p.xy[0] > L0 && p.xy[0] < L1 && p.xy[1] > A0 && p.xy[1] < A1).map(p => `<circle data-${p.a || 'cev'}="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
     ${o.nomi ? cap.map(c => { const f = 11 * Math.min(s, 1.35), dx = ['Trapani', 'Agrigento', 'Ragusa', 'Caltanissetta', 'Messina'].includes(c[0]) ? -1 : 1, x = +X(c[1]) + dx * 7 * Math.min(s, 1.35), y = +Y(c[2]) + (c[0] === 'Messina' ? -7 * s : c[0] === 'Enna' ? -3 * s : 4 * s);
       return `<g class="cap"><circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(2.2 * s).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${dx < 0 ? 'end' : 'start'}" style="font-size:${f.toFixed(1)}px">${c[0]}</text></g>`; }).join('') : ''}
   </svg>`;
