@@ -412,7 +412,8 @@ function testi() {
   for (const b of document.querySelectorAll('#sez button')) { b.querySelector('span').textContent = t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[b.dataset.v]); if (!b.querySelector('svg')) b.insertAdjacentHTML('afterbegin', ico(b.dataset.ic)); }
   if (vista === 'funghi' || vista === 'piante') catalogo(true); else if (vista === 'meteo') meteo(); else if (vista === 'escursioni' && window.escursioni) escursioni();
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
-  if (cur) apri(cur, false);
+  if (sapOn()) { sapNav(); $('q').placeholder = 'Cerca un dolce, un prodotto, un paese'; }
+  if (cur && !String(cur).startsWith('SAP:')) apri(cur, false);
 }
 function legenda() {
   let h = [['#2d6a4f', 'legA', 1, ON.aree], ['#1d6fa5', 'legM', 1, ON.aree], ['#2f7ea8', 'legZ', 0, ON.n2k], ['#7a5ea8', 'legP', 0, ON.n2k]].filter(x => x[3]).map(([c, k, f]) => `<div><i style="background:${c}${f ? '55' : '22'};border:1.5px ${k === 'legP' ? 'dashed' : 'solid'} ${c}"></i>${t(k)}</div>`).join('');
@@ -431,6 +432,7 @@ $('q').oninput = () => {
   const v = norm($('q').value.trim()); $('qx').style.display = v ? 'block' : 'none';
   if (v.length < 2) { $('res').style.display = 'none'; return; }
   chiudiLiv();
+  if (sapOn()) return sapCerca(v);
   const w = v.split(/\s+/);
   const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => n.includes(x)); })
     .sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || b[1].ha - a[1].ha).slice(0, 30);
@@ -444,6 +446,7 @@ $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); }
 map.on('click', e => {
   chiudiLiv();
   if (document.body.classList.contains('recon')) return;
+  if (sapOn()) return sapClick(e);
   if (PIAN) return pianClick(e);
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
@@ -760,12 +763,13 @@ const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || wind
 // plugin del telefono: da Capacitor 3 non sempre compaiono in Capacitor.Plugins, vanno registrati per nome
 const plug = n => { if (!isApp) return null; const C = window.Capacitor; try { return (C.Plugins && C.Plugins[n]) || (C.registerPlugin ? (C.Plugins[n] = C.registerPlugin(n)) : null); } catch (e) { return null; } };
 const modo = { escursioni: 'mappa', meteo: 'mappa', registra: 'mappa' };
-const mappaVista = v => (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
+const sapOn = () => !!(SAP && SAP.on);
+const mappaVista = v => !sapOn() && (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
 let ultimaSpecie = 'funghi';
 if (isApp) document.body.classList.add('app');
 function vai(v) {
   vista = v; document.body.classList.remove('escreg'); document.body.classList.remove('vm-esc', 'vm-met'); document.body.classList.add(v === 'escursioni' ? 'vm-esc' : v === 'meteo' ? 'vm-met' : 'vm-x');
-  if (v === 'specie') return vai(ultimaSpecie);
+  if (v === 'specie' && !sapOn()) return vai(ultimaSpecie);
   if (v !== 'escursioni') prcSel.zona = '';
   if (v === 'funghi' || v === 'piante') ultimaSpecie = v;
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v || (b.dataset.v === 'specie' && (v === 'funghi' || v === 'piante')));
@@ -776,6 +780,7 @@ function vai(v) {
   evidenzia(null);
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
+  if (sapOn() && v !== 'registra') return sapVai(v);
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
@@ -2128,4 +2133,244 @@ async function pdfIt(x) {
   inquadra(comePercorso(x).bb, 15.5);
 }
 { const h = location.hash.slice(1); if (h.startsWith('it=')) D.then(() => setTimeout(() => apriLinkIt(h.slice(3)), 600)); }
+
+/* ---------- Sapori: atlante agroalimentare ed enogastronomico (per ora solo sul sito, dati di prova) */
+var SAP = { on: false, d: null, fil: { k: 'tutto', q: '', paese: '', festa: '', lr: '' }, mese: new Date().getMonth() + 1, liv: { paesi: true, prod: true } };
+const SAPD = () => SAP.d || (SAP.d = fetch('data/sapori.json').then(r => r.json()).then(d => {
+  // dove si usa: legame inverso della distinta
+  for (const [k, v] of Object.entries(d.voci)) { v.k = k; v.usi = v.usi || []; }
+  for (const [k, v] of Object.entries(d.voci)) for (const [c] of (v.dist || [])) if (d.voci[c]) d.voci[c].usi.push(k);
+  for (const [k, p] of Object.entries(d.produttori)) p.k = k;
+  return (SAP.D = d);
+}));
+const SAPT = {
+  materia: ['Materia prima', 'Materie prime', 'wheat', '#5c940d'], semi: ['Semilavorato', 'Semilavorati', 'stack-2', '#c77700'],
+  prodotto: ['Prodotto', 'Prodotti', 'basket', '#1d6fa5'], dolce: ['Dolce', 'Dolci', 'cake', '#b85e3d'], piatto: ['Piatto', 'Piatti', 'bowl', '#7a5ea8']
+};
+const RUOLO = { coltiva: ['Coltiva o alleva', 'tractor', '#2b8a3e'], trasforma: ['Trasforma', 'building-factory-2', '#c77700'], vende: ['Vende o cucina', 'building-store', '#b85e3d'] };
+const LRC = { vivo: '#2b8a3e', raro: '#c77700', 'a rischio': '#c2255c', perduto: '#495057', 'da valutare': '#868e96' };
+const MESI = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+const MESIL = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+const icoV = v => { const x = SAPT[v.t] || SAPT.dolce; return `<span class="tpi" style="color:${x[3]}">${ico(x[2], 'xs')}</span>`; };
+const nomiPaesi = v => (v.paesi || []).map(p => SAP.D.paesi[p] ? SAP.D.paesi[p].n : p).join(', ');
+const PROVA = '<span class="badge prova">Dati di prova</span>';
+
+/* ---- interruttore Natura | Sapori (solo sito) */
+function sapModo(on) {
+  SAP.on = on; document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
+  for (const b of document.querySelectorAll('#modo button')) b.classList.toggle('on', (b.dataset.m === 'sapori') === on);
+  sapNav(); chiudi(); $('q').value = ''; $('res').style.display = 'none'; $('q').placeholder = on ? 'Cerca un dolce, un prodotto, un paese' : t('cerca');
+  if (map.getLayer('sap-p')) for (const l of ['sap-p', 'sap-pl', 'sap-pr', 'sap-v']) map.setLayoutProperty(l, 'visibility', 'none');
+  if (on) SAPD().then(() => vai(vista === 'funghi' || vista === 'piante' ? 'specie' : vista)); else vai(vista === 'specie' ? 'specie' : vista);
+}
+function sapNav() {
+  const L = SAP.on ? { mappa: ['Esplora', 'map'], escursioni: ['Itinerari', 'route-2'], registra: [T('Registra', 'Record'), 'player-record'], meteo: ['Calendario', 'calendar'], specie: ['Catalogo', 'tools-kitchen-2'] } : null;
+  for (const b of document.querySelectorAll('#sez button')) {
+    const v = b.dataset.v, [n, ic] = L ? L[v] : [t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[v]), b.dataset.ic];
+    b.querySelector('span').textContent = n; const s = b.querySelector('svg'); if (s) s.remove(); b.insertAdjacentHTML('afterbegin', ico(ic));
+  }
+}
+if (!isApp) {
+  document.querySelector('header h1').insertAdjacentHTML('afterend', '<div class="modo" id="modo" role="tablist" aria-label="Natura o Sapori"><button data-m="natura" class="on">Natura</button><button data-m="sapori">Sapori</button></div>');
+  $('modo').onclick = e => { const b = e.target.closest('button'); if (b && (b.dataset.m === 'sapori') !== SAP.on) sapModo(b.dataset.m === 'sapori'); };
+  $('wrap').querySelector('.top').insertAdjacentHTML('beforeend', '<div class="sapf" id="sapf"></div>');
+}
+
+/* ---- chiamata da vai(): mostra la vista Sapori */
+function sapVai(v) {
+  SAPD().then(() => {
+    if (!SAP.on) return;
+    evidenzia([]); document.body.classList.toggle('sapmap', v === 'mappa'); // nasconde i livelli di Natura
+    if (v === 'mappa') sapMappa();
+    else if (v === 'specie') sapCatalogo();
+    else if (v === 'meteo') sapCalendario();
+    else if (v === 'escursioni') sapItinerari();
+  });
+}
+
+/* ---- mappa */
+function sapGeo() {
+  const D = SAP.D, f = [];
+  const nPaese = {}; for (const v of Object.values(D.voci)) for (const p of (v.paesi || [])) nPaese[p] = (nPaese[p] || 0) + 1;
+  if (SAP.liv.paesi) for (const [k, p] of Object.entries(D.paesi)) if (nPaese[k]) f.push({ type: 'Feature', properties: { k, tipo: 'paese', n: p.n, c: nPaese[k] }, geometry: { type: 'Point', coordinates: p.c } });
+  if (SAP.liv.prod) for (const p of Object.values(D.produttori)) { const c = D.paesi[p.paese].c, o = (p.k.charCodeAt(1) % 5 - 2) * 0.012; f.push({ type: 'Feature', properties: { k: p.k, tipo: 'prod', n: p.n, r: p.r }, geometry: { type: 'Point', coordinates: [c[0] + o, c[1] - 0.012] } }); }
+  return { type: 'FeatureCollection', features: f };
+}
+function sapLayers() {
+  if (map.getSource('sap')) return;
+  map.addSource('sap', { type: 'geojson', data: sapGeo() });
+  map.addSource('sapv', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'sap-v', type: 'line', source: 'sapv', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#b85e3d', 'line-width': 4, 'line-dasharray': [1.5, 1.2], 'line-opacity': .9 } });
+  map.addLayer({ id: 'sap-p', type: 'circle', source: 'sap', filter: ['==', ['get', 'tipo'], 'paese'], paint: { 'circle-color': '#b85e3d', 'circle-opacity': .88, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5, 'circle-radius': ['interpolate', ['linear'], ['get', 'c'], 1, 9, 6, 16] } });
+  map.addLayer({ id: 'sap-pr', type: 'circle', source: 'sap', filter: ['==', ['get', 'tipo'], 'prod'], paint: { 'circle-color': ['match', ['get', 'r'], 'coltiva', RUOLO.coltiva[2], 'trasforma', RUOLO.trasforma[2], RUOLO.vende[2]], 'circle-radius': 7, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+  map.addLayer({ id: 'sap-pl', type: 'symbol', source: 'sap', filter: ['==', ['get', 'tipo'], 'paese'], layout: { 'text-field': ['concat', ['get', 'n'], ' · ', ['to-string', ['get', 'c']]], 'text-font': ['Noto Sans Regular'], 'text-size': 12.5, 'text-offset': [0, 1.5], 'text-anchor': 'top' }, paint: { 'text-color': '#5a2a16', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
+}
+function sapMappa() {
+  sapLayers(); map.getSource('sap').setData(sapGeo());
+  for (const l of ['sap-p', 'sap-pl', 'sap-pr', 'sap-v']) map.setLayoutProperty(l, 'visibility', 'visible');
+  $('sapf').innerHTML = `<button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#b85e3d"></i>Paesi e loro dolci</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('#sapf [data-l]'); if (!b) return; SAP.liv[b.dataset.l] = !SAP.liv[b.dataset.l]; sapMappa(); });
+function sapClick(e) {
+  const box = [[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]];
+  const f = map.queryRenderedFeatures(box, { layers: ['sap-pr', 'sap-p'].filter(l => map.getLayer(l)) });
+  if (!f.length) return chiudi();
+  const p = f[0].properties; p.tipo === 'prod' ? sapProduttore(p.k) : sapPaese(p.k);
+}
+function sapVola(c, z) { map.flyTo({ center: c, zoom: z || 10, padding: padMappa(), duration: 700 }); }
+
+/* ---- schede */
+function sapApri(k) { const v = SAP.D.voci[k]; if (v) sapVoce(k); else if (SAP.D.produttori[k]) sapProduttore(k); else if (SAP.D.paesi[k]) sapPaese(k); }
+const lnk = (k, sub) => { const D = SAP.D, v = D.voci[k], p = D.produttori[k], pa = D.paesi[k];
+  const n = v ? v.n : p ? p.n : pa ? pa.n : k, s = sub != null ? sub : v ? SAPT[v.t][0] + (v.paesi ? ' · ' + nomiPaesi(v) : '') : p ? RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n : 'Paese';
+  return `<button data-s="${k}">${v ? icoV(v) + ' ' : ''}${esc(n)}<br><small>${esc(s)}</small></button>`; };
+function testata(tit, sub, badge) { $('sh').innerHTML = `<div><h2>${esc(tit)}</h2>${sub ? `<p class="sci">${sub}</p>` : ''}${badge || ''}</div><button class="close" aria-label="Chiudi">×</button>`; }
+function natVicina(c) {
+  if (typeof S === 'undefined') return [];
+  return Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn'].includes(x.t) && x.bb).map(([k, x]) => [k, hav(c, centro(x))]).filter(x => x[1] < 25000).sort((a, b) => a[1] - b[1]).slice(0, 3);
+}
+function distinta(k, liv) {
+  const v = SAP.D.voci[k]; if (!v || !v.dist || liv > 4) return '';
+  return `<ul class="dist">${v.dist.map(([c, nota]) => { const x = SAP.D.voci[c]; if (!x) return '';
+    return `<li><button data-s="${c}">${icoV(x)} ${esc(x.n)}${nota ? ` <small>(${esc(nota)})</small>` : ''}</button>${distinta(c, liv + 1)}</li>`; }).join('')}</ul>`;
+}
+function sapVoce(k) {
+  const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez('');
+  const lr = v.lr ? `<span class="badge lr" style="background:${LRC[v.lr]}">Lista rossa: ${esc(v.lr)}</span>` : '';
+  testata(v.n, [v.nd ? `in siciliano <b>${esc(v.nd)}</b>` : '', v.paesi ? esc(nomiPaesi(v)) : ''].filter(Boolean).join(' · '),
+    `<span class="badge" style="background:${SAPT[v.t][3]}22;color:${SAPT[v.t][3]}">${SAPT[v.t][0]}</span>${(v.ric || []).map(r => `<span class="badge">${esc(r)}</span>`).join('')}${lr}${PROVA}`);
+  let h = `<div class="racconto"><p><b>${esc(v.breve || '')}</b></p>${v.storia ? `<p>${esc(v.storia)}</p>` : ''}</div>`;
+  if (v.paesi) h += `<h3>Dove nasce</h3><div class="links">${v.paesi.map(p => lnk(p)).join('')}</div>`;
+  if (v.sp) h += `<h3>Nella natura</h3><div class="links"><button data-spn="${esc(v.sp)}">${ico('leaf', 'xs')} <i>${esc(v.sp)}</i><br><small>Apri la scheda della specie nella parte Natura</small></button></div>`;
+  if (v.dist) h += `<h3>Di cosa è fatto</h3>${distinta(k, 0)}`;
+  if (v.usi.length) h += `<h3>Dove si usa</h3><div class="links">${v.usi.map(u => lnk(u)).join('')}</div>`;
+  if (v.ver) h += `<h3>Versioni documentate</h3>${v.ver.map(x => { const f = D.fonti[x.f] || {}, tit = { rif: 'Versione di riferimento', var: 'Variante lecita', dev: 'Non tradizionale' }[x.tipo];
+    return `<div class="ver ${x.tipo}"><b>${tit}</b>${x.cert ? ` <span class="cert">${esc(x.cert)}</span>` : ''}<small>${esc(f.a || '')}${f.t ? ', <i>' + esc(f.t) + '</i>' : ''}</small>${x.ingr ? `<p>${esc(x.ingr.join(' · '))}</p>` : ''}${x.nota ? `<p class="note">${esc(x.nota)}</p>` : ''}</div>`; }).join('')}`;
+  if (v.m || v.feste) h += `<h3>Stagione e feste</h3>${v.m ? `<div class="mesi">${MESI.map((m, i) => `<span class="${v.m.includes(i + 1) ? 'on' : ''}">${m}</span>`).join('')}</div>` : ''}${v.feste ? `<div class="links">${v.feste.map(f => `<button data-festa="${f}">${ico('calendar-event', 'xs')} ${esc(D.feste[f].n)}<br><small>${D.feste[f].d === 'mobile' ? 'data mobile' : D.feste[f].d.split('-').reverse().map(Number).join(' ') + ' ' + MESIL[+D.feste[f].d.slice(0, 2) - 1].replace(/^\d+ /, '')}</small></button>`).join('')}</div>` : ''}`;
+  const chi = Object.values(D.produttori).filter(p => p.fa.includes(k));
+  if (chi.length) h += `<h3>Chi lo fa oggi</h3><div class="links">${chi.map(p => lnk(p.k, RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n + ' · ' + p.liv)).join('')}</div>`;
+  const vg = Object.entries(D.viaggi).filter(([, x]) => x.voce === k || x.tappe.some(t => t[1] === k));
+  if (vg.length) h += `<h3>Segui il viaggio</h3><div class="links">${vg.map(([i, x]) => `<button data-viaggio="${i}">${ico('route-2', 'xs')} ${esc(x.n)}<br><small>${x.tappe.length} tappe, dal campo alla tavola</small></button>`).join('')}</div>`;
+  // tre ponti
+  const stesso = Object.values(D.voci).filter(x => x.k !== k && x.paesi && v.paesi && x.paesi.some(p => v.paesi.includes(p))).slice(0, 4);
+  const tema = Object.values(D.voci).filter(x => x.k !== k && x.t === v.t && (v.fam ? x.fam === v.fam : true)).slice(0, 4);
+  const nat = v.paesi ? natVicina(D.paesi[v.paesi[0]].c) : [];
+  if (stesso.length || tema.length || nat.length) h += `<h3>Scopri anche</h3>${stesso.length ? `<p class="note">Nello stesso luogo</p><div class="links">${stesso.map(x => lnk(x.k)).join('')}</div>` : ''}${tema.length ? `<p class="note">${v.fam ? 'Della stessa famiglia' : 'Dello stesso tipo'}</p><div class="links">${tema.map(x => lnk(x.k)).join('')}</div>` : ''}${nat.length ? `<p class="note">La natura intorno</p><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>` : ''}`;
+  const fonti = [...new Set((v.ver || []).map(x => x.f))].map(f => D.fonti[f]).filter(Boolean);
+  h += `<p class="src">Fonti: ${fonti.length ? fonti.map(f => esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p>`;
+  $('sb').innerHTML = h; mostra();
+  if (v.paesi && vista === 'mappa') sapVola(D.paesi[v.paesi[0]].c, 9);
+}
+function sapProduttore(k) {
+  const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r]; cur = 'SAP:' + k; selez('');
+  testata(p.n, `${r[0]} · ${esc(D.paesi[p.paese].n)}`, `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
+  let h = `<div class="racconto"><p>Scheda di prova: qui andranno la storia dell'azienda, le persone, le foto e la filiera dichiarata o verificata.</p></div>`;
+  h += `<h3>Cosa fa</h3><div class="links">${p.fa.map(x => lnk(x)).join('')}</div>`;
+  if (p.da) h += `<h3>Da chi compra</h3><div class="links">${p.da.map(x => lnk(x)).join('')}</div>`;
+  if (p.a) h += `<h3>A chi vende</h3><div class="links">${p.a.map(x => lnk(x)).join('')}</div>`;
+  if (p.esp) h += `<h3>Esperienze</h3><p class="racconto">${esc(p.esp)}</p>`;
+  h += `<h3>Livelli di verifica</h3><p class="note"><b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali.</p><p class="src">${esc(D.nota)}</p>`;
+  $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(D.paesi[p.paese].c, 10);
+}
+function sapPaese(k) {
+  const D = SAP.D, p = D.paesi[k]; cur = 'SAP:' + k; selez('');
+  const voci = Object.values(D.voci).filter(v => (v.paesi || []).includes(k)), prod = Object.values(D.produttori).filter(x => x.paese === k), fe = Object.entries(D.feste).filter(([, f]) => f.paesi.includes(k)), nat = natVicina(p.c);
+  testata(p.n, 'Cosa si mangia qui', PROVA);
+  let h = voci.length ? `<h3>Dolci, piatti e prodotti</h3><div class="links">${voci.map(v => lnk(v.k)).join('')}</div>` : '';
+  if (fe.length) h += `<h3>Feste</h3><div class="links">${fe.map(([i, f]) => `<button data-festa="${i}">${ico('calendar-event', 'xs')} ${esc(f.n)}</button>`).join('')}</div>`;
+  if (prod.length) h += `<h3>Produttori</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div>`;
+  if (nat.length) h += `<h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>`;
+  $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(p.c, 10);
+}
+function sapViaggio(i) {
+  const D = SAP.D, x = D.viaggi[i];
+  const go = () => {
+    const pts = x.tappe.map(([p]) => { const c = D.paesi[D.produttori[p].paese].c; return c; });
+    map.getSource('sapv').setData({ type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: pts } }] });
+    const bb = pts.reduce((b, c) => [Math.min(b[0], c[0]), Math.min(b[1], c[1]), Math.max(b[2], c[0]), Math.max(b[3], c[1])], [180, 90, -180, -90]);
+    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: padMappa(), maxZoom: 10, duration: 700 });
+    cur = 'SAP:v:' + i; selez('');
+    testata(x.n, 'Il viaggio della materia prima', PROVA);
+    $('sb').innerHTML = `<ol class="tappe">${x.tappe.map(([p, v], n) => { const P = D.produttori[p], V = D.voci[v]; return `<li><span class="nt">${n + 1}</span><div><button data-s="${p}"><b>${esc(P.n)}</b><small>${esc(RUOLO[P.r][0])} · ${esc(D.paesi[P.paese].n)}</small></button><button data-s="${v}" class="vv">${icoV(V)} ${esc(V.n)}</button></div></li>`; }).join('')}</ol><p class="note">Sulla mappa la linea collega le tappe in ordine. In futuro: itinerario da fare davvero, con PDF e link come per i percorsi.</p><p class="src">${esc(D.nota)}</p>`;
+    mostra();
+  };
+  if (vista !== 'mappa') { vai('mappa'); setTimeout(go, 400); } else go();
+}
+function sapFesta(i) { SAP.mese = (SAP.D.feste[i].m || [SAP.mese])[0]; vai('meteo'); }
+$('sheet').addEventListener('click', e => {
+  const b = e.target.closest('[data-s],[data-viaggio],[data-festa],[data-spn],[data-nat]'); if (!b || !SAP.on) return;
+  if (b.dataset.s) sapApri(b.dataset.s); else if (b.dataset.viaggio) sapViaggio(b.dataset.viaggio); else if (b.dataset.festa) sapFesta(b.dataset.festa);
+  else if (b.dataset.spn) CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) apriSpecie('piante', i); });
+  else if (b.dataset.nat) { sapModo(false); setTimeout(() => apri(b.dataset.nat, true), 300); }
+});
+
+/* ---- catalogo */
+function sapCatalogo() {
+  const D = SAP.D, F = SAP.fil, w = norm(F.q.trim()).split(/\s+/).filter(Boolean);
+  const tutti = Object.values(D.voci);
+  const lista = F.k === 'prod' ? [] : tutti.filter(v => (F.k === 'tutto' || v.t === F.k) && (!F.paese || (v.paesi || []).includes(F.paese)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && w.every(x => norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + nomiPaesi(v)).includes(x)));
+  const prod = (F.k === 'prod' || F.k === 'tutto') ? Object.values(D.produttori).filter(p => (!F.paese || p.paese === F.paese) && w.every(x => norm(p.n + ' ' + D.paesi[p.paese].n).includes(x))) : [];
+  const conta = k => k === 'tutto' ? tutti.length : k === 'prod' ? Object.keys(D.produttori).length : tutti.filter(v => v.t === k).length;
+  const cat = [['tutto', 'Tutto'], ['dolce', 'Dolci'], ['prodotto', 'Prodotti'], ['semi', 'Semilavorati'], ['materia', 'Materie prime'], ['prod', 'Produttori']];
+  const sel = (id, val, opts, vuoto) => `<select class="tendina" id="${id}"><option value="">${vuoto}</option>${opts.map(([k, n]) => `<option value="${k}"${val === k ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
+  const card = v => `<button class="card" data-sc="${v.k}"><span class="ph" style="color:${SAPT[v.t][3]}">${ico(SAPT[v.t][2], 'phi')}</span><span class="tx"><b class="nc">${esc(v.n)}</b>${v.nd ? `<i>${esc(v.nd)}</i>` : ''}<small>${esc([SAPT[v.t][0], nomiPaesi(v)].filter(Boolean).join(' · '))}</small>${v.lr ? `<span class="tag" style="background:${LRC[v.lr]}22;color:${LRC[v.lr]}">${esc(v.lr)}</span>` : ''}${v.fam ? `<span class="tag">${esc(v.fam)}</span>` : ''}</span></button>`;
+  const cardP = p => `<button class="card" data-sc="${p.k}"><span class="ph" style="color:${RUOLO[p.r][2]}">${ico(RUOLO[p.r][1], 'phi')}</span><span class="tx"><b class="nc">${esc(p.n)}</b><small>${esc(RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n)}</small><span class="tag">${esc(p.liv)}</span></span></button>`;
+  const fresh = $('cat').dataset.v !== 'sap-cat';
+  if (fresh) {
+    $('cat').dataset.v = 'sap-cat'; $('cat').scrollTop = 0;
+    $('cat').innerHTML = `<div class="in"><h2>Catalogo dei sapori</h2><p class="lead">Dolci, prodotti, semilavorati, materie prime e chi li fa. ${PROVA}</p>
+      <div class="cerca"><input id="sq" type="search" placeholder="Cerca un dolce, un ingrediente, un paese" value="${esc(F.q)}" autocomplete="off"></div>
+      <div class="grp" id="sg"></div>
+      <div class="sfil">${sel('sfp', F.paese, Object.entries(D.paesi).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, p]) => [k, p.n]), 'Tutti i paesi')}${sel('sff', F.festa, Object.entries(D.feste).map(([k, f]) => [k, f.n]), 'Tutte le feste')}${sel('sfl', F.lr, Object.keys(LRC).map(k => [k, k]), 'Lista rossa: tutti')}</div>
+      <p class="cnt" id="sn"></p><div class="griglia" id="sgr"></div><button class="altri" id="sz" style="display:none"></button>${COPY()}</div>`;
+    $('sq').oninput = e => { SAP.fil.q = e.target.value; sapCatalogo(); };
+    $('sfp').onchange = e => { SAP.fil.paese = e.target.value; sapCatalogo(); };
+    $('sff').onchange = e => { SAP.fil.festa = e.target.value; sapCatalogo(); };
+    $('sfl').onchange = e => { SAP.fil.lr = e.target.value; sapCatalogo(); };
+  }
+  $('sg').innerHTML = cat.map(([k, n]) => `<button data-sk="${k}" class="${F.k === k ? 'on' : ''}">${k !== 'tutto' && k !== 'prod' ? `<span class="tpi" style="color:${SAPT[k][3]}">${ico(SAPT[k][2], 'xs')}</span>` : ''}${n}<em>${conta(k)}</em></button>`).join('');
+  const nf = (F.paese ? 1 : 0) + (F.festa ? 1 : 0) + (F.lr ? 1 : 0);
+  $('sn').innerHTML = `${lista.length + prod.length} risultati${nf ? ` · <button class="azzera" id="saz">Azzera filtri</button>` : ''}`;
+  $('sgr').innerHTML = lista.map(card).join('') + prod.map(cardP).join('');
+  if ($('saz')) $('saz').onclick = () => { Object.assign(SAP.fil, { paese: '', festa: '', lr: '' }); $('cat').dataset.v = ''; sapCatalogo(); };
+}
+
+/* ---- calendario */
+function sapCalendario() {
+  const D = SAP.D, m = SAP.mese;
+  const fe = Object.entries(D.feste).filter(([, f]) => f.m.includes(m));
+  const st = Object.values(D.voci).filter(v => (v.m || []).includes(m));
+  $('cat').dataset.v = 'sap-cal'; $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="in"><h2>Calendario dei sapori</h2><p class="lead">Feste, dolci delle feste e prodotti di stagione, mese per mese. ${PROVA}</p>
+    <div class="mesi big">${MESI.map((x, i) => `<button data-mese="${i + 1}" class="${m === i + 1 ? 'on' : ''}">${x}</button>`).join('')}</div>
+    <h3>Feste di ${MESIL[m - 1]}</h3>${fe.length ? fe.map(([i, f]) => { const dl = Object.values(D.voci).filter(v => (v.feste || []).includes(i));
+      return `<div class="festa"><b>${esc(f.n)}</b><small>${f.d === 'mobile' ? 'data mobile' : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}${f.paesi.length ? ' · ' + f.paesi.map(p => D.paesi[p].n).join(', ') : ''}</small><div class="griglia">${dl.map(v => `<button class="card" data-sc="${v.k}"><span class="ph" style="color:${SAPT[v.t][3]}">${ico(SAPT[v.t][2], 'phi')}</span><span class="tx"><b class="nc">${esc(v.n)}</b><small>${esc(nomiPaesi(v))}</small></span></button>`).join('') || '<p class="note">Nessun dolce collegato nei dati di prova.</p>'}</div></div>`; }).join('') : '<p class="note">Nessuna festa in questo mese nei dati di prova.</p>'}
+    <h3>Di stagione</h3>${st.length ? `<div class="griglia">${st.map(v => `<button class="card" data-sc="${v.k}"><span class="ph" style="color:${SAPT[v.t][3]}">${ico(SAPT[v.t][2], 'phi')}</span><span class="tx"><b class="nc">${esc(v.n)}</b><small>${SAPT[v.t][0]}</small></span></button>`).join('')}</div>` : '<p class="note">Nessun prodotto di stagione nei dati di prova.</p>'}${COPY()}</div>`;
+}
+
+/* ---- itinerari */
+function sapItinerari() {
+  const D = SAP.D;
+  $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="in"><h2>Itinerari del gusto</h2><p class="lead">Il viaggio delle materie prime lungo la filiera: dal campo al laboratorio, fino alla bottega o alla tavola. ${PROVA}</p>
+    ${Object.entries(D.viaggi).map(([i, x]) => `<button class="viaggio" data-vg="${i}"><b>${esc(x.n)}</b><span>${x.tappe.map(([p, v]) => `${esc(D.voci[v].n)} <small>${esc(D.paesi[D.produttori[p].paese].n)}</small>`).join(' <em>›</em> ')}</span></button>`).join('')}${COPY()}</div>`;
+}
+$('cat').addEventListener('click', e => {
+  if (!SAP.on) return;
+  const c = e.target.closest('[data-sc]'), g = e.target.closest('[data-sk]'), m = e.target.closest('[data-mese]'), vg = e.target.closest('[data-vg]');
+  if (g) { SAP.fil.k = g.dataset.sk; sapCatalogo(); } else if (m) { SAP.mese = +m.dataset.mese; sapCalendario(); } else if (vg) sapViaggio(vg.dataset.vg); else if (c) sapApri(c.dataset.sc);
+}, true);
+
+/* ---- ricerca nella barra in alto */
+function sapCerca(v) {
+  const D = SAP.D; if (!D) return;
+  const w = v.split(/\s+/), r = [];
+  for (const x of Object.values(D.voci)) if (w.every(y => norm(x.n + ' ' + (x.nd || '') + ' ' + nomiPaesi(x)).includes(y))) r.push([x.k, x.n, SAPT[x.t][0]]);
+  for (const [k, p] of Object.entries(D.paesi)) if (w.every(y => norm(p.n).includes(y))) r.push([k, p.n, 'Paese']);
+  for (const p of Object.values(D.produttori)) if (w.every(y => norm(p.n).includes(y))) r.push([p.k, p.n, 'Produttore']);
+  $('res').innerHTML = r.length ? r.slice(0, 30).map(([k, n, s]) => `<button data-sres="${k}">${esc(n)}<small>${esc(s)}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
+  $('res').style.display = 'block';
+}
+$('res').addEventListener('click', e => { const b = e.target.closest('[data-sres]'); if (!b) return; e.stopPropagation(); $('res').style.display = 'none'; $('q').blur(); sapApri(b.dataset.sres); }, true);
+
 }
