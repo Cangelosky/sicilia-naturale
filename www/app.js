@@ -2203,16 +2203,16 @@ function sapLayers() {
   map.addSource('sapp', { type: 'geojson', data: sapGeo('paese'), cluster: true, clusterMaxZoom: 9, clusterRadius: 48, clusterProperties: { tot: ['+', ['get', 'c']] } });
   map.addSource('sapv', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
   map.addLayer({ id: 'sap-v', type: 'line', source: 'sapv', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#C2185B', 'line-width': 4, 'line-dasharray': [1.5, 1.2], 'line-opacity': .9 } });
-  map.addLayer({ id: 'sap-c', type: 'circle', source: 'sapp', filter: ['has', 'point_count'], paint: { 'circle-color': '#1B3A8C', 'circle-opacity': .92, 'circle-stroke-color': '#F2B705', 'circle-stroke-width': 3, 'circle-radius': ['interpolate', ['linear'], ['get', 'tot'], 2, 16, 40, 26, 200, 38] } });
+  map.addLayer({ id: 'sap-c', type: 'circle', source: 'sapp', filter: ['has', 'point_count'], paint: { 'circle-color': '#E8761A', 'circle-opacity': .92, 'circle-stroke-color': '#fff', 'circle-stroke-width': 3, 'circle-radius': ['interpolate', ['linear'], ['get', 'tot'], 2, 16, 40, 26, 200, 38] } });
   map.addLayer({ id: 'sap-cl', type: 'symbol', source: 'sapp', filter: ['has', 'point_count'], layout: { 'text-field': ['to-string', ['get', 'tot']], 'text-font': ['Noto Sans Bold'], 'text-size': 14, 'text-allow-overlap': true }, paint: { 'text-color': '#fff' } });
-  map.addLayer({ id: 'sap-p', type: 'circle', source: 'sapp', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': '#1B3A8C', 'circle-opacity': .9, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5, 'circle-radius': ['interpolate', ['linear'], ['get', 'c'], 1, 8, 10, 15] } });
-  map.addLayer({ id: 'sap-pl', type: 'symbol', source: 'sapp', filter: ['!', ['has', 'point_count']], layout: { 'text-field': ['concat', ['get', 'n'], ' · ', ['to-string', ['get', 'c']]], 'text-font': ['Noto Sans Regular'], 'text-size': 12.5, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#1B3A8C', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
+  map.addLayer({ id: 'sap-p', type: 'circle', source: 'sapp', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': '#E8761A', 'circle-opacity': .9, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5, 'circle-radius': ['interpolate', ['linear'], ['get', 'c'], 1, 8, 10, 15] } });
+  map.addLayer({ id: 'sap-pl', type: 'symbol', source: 'sapp', filter: ['!', ['has', 'point_count']], layout: { 'text-field': ['concat', ['get', 'n'], ' · ', ['to-string', ['get', 'c']]], 'text-font': ['Noto Sans Regular'], 'text-size': 12.5, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#8A3B00', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
   map.addLayer({ id: 'sap-pr', type: 'circle', source: 'sap', minzoom: 8, paint: { 'circle-color': ['match', ['get', 'r'], 'coltiva', RUOLO.coltiva[2], 'trasforma', RUOLO.trasforma[2], RUOLO.vende[2]], 'circle-radius': 7, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
 }
 function sapMappa() {
   sapLayers(); map.getSource('sap').setData(sapGeo('prod')); map.getSource('sapp').setData(sapGeo('paese'));
   for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'visible');
-  $('sapf').innerHTML = `<button class="on" data-home="1">${ico('sparkles', 'xs')}Scopri</button><button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#1B3A8C"></i>Comuni e loro sapori</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button>`;
+  $('sapf').innerHTML = `<button class="on" data-home="1">${ico('sparkles', 'xs')}Scopri</button><button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#E8761A"></i>Comuni e loro sapori</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button>`;
 }
 document.addEventListener('click', e => { if (e.target.closest('#sapf [data-home]')) { SAP.home = true; chiudi(); return vai('mappa'); } const b = e.target.closest('#sapf [data-l]'); if (!b) return; SAP.liv[b.dataset.l] = !SAP.liv[b.dataset.l]; sapMappa(); });
 function sapClick(e) {
@@ -2244,7 +2244,7 @@ function sapVoce(k) {
   const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez('');
   const lr = v.lr ? `<span class="badge lr" style="background:${LRC[v.lr]}">Lista rossa: ${esc(v.lr)}</span>` : '';
   testata(v.n, [v.nd ? `in siciliano <b>${esc(v.nd)}</b>` : '', v.paesi ? esc(nomiPaesi(v)) : ''].filter(Boolean).join(' · '),
-    `<span class="badge" style="background:${(GUSTO[catDi(v)] || [, , , '#1B3A8C'])[3]}1f;color:${(GUSTO[catDi(v)] || [, , , '#1B3A8C'])[3]}">${esc((GUSTO[catDi(v)] || [, SAPT[v.t][0]])[1])}</span>${(v.ric || []).map(r => `<span class="badge ric">${esc(r)}</span>`).join('')}${lr}`);
+    `<span class="badge" style="background:${(GUSTO[catDi(v)] || [, , , '#E8761A'])[3]}1f;color:${(GUSTO[catDi(v)] || [, , , '#E8761A'])[3]}">${esc((GUSTO[catDi(v)] || [, SAPT[v.t][0]])[1])}</span>${(v.ric || []).map(r => `<span class="badge ric">${esc(r)}</span>`).join('')}${lr}`);
   let h = `<div id="swk"></div><div class="racconto">${v.breve ? `<p><b>${esc(v.breve)}</b></p>` : ''}${v.storia ? `<p>${esc(v.storia)}</p>` : ''}${v.elenco ? `<p>Dall'elenco dei dolci siciliani di Oscar Cangelosi${v.nota ? `: <i>${esc(v.nota)}</i>` : ''}. La scheda completa (storia, versioni documentate, ingredienti) è da scrivere con le fonti.</p>` : ''}</div>`;
   if (v.pat) h += `<p class="note">Prodotto agroalimentare tradizionale della Sicilia, nell'elenco nazionale del Ministero dell'agricoltura.</p>`;
   if (v.paesi || v.prov) h += `<h3>Dove nasce</h3>${v.prov ? `<p class="note">${v.prov.length === 9 ? 'In tutta la Sicilia' : 'Provincia di ' + v.prov.map(x => PROVN[x]).join(', ')}.</p>` : ''}${v.paesi ? `<div class="links">${v.paesi.map(p => lnk(p)).join('')}</div>` : ''}${v.zind ? '<p class="note">Zona indicativa: i comuni esatti sono nel disciplinare di produzione.</p>' : ''}`;
@@ -2392,8 +2392,8 @@ function sapCerca(v) {
 $('res').addEventListener('click', e => { const b = e.target.closest('[data-sres]'); if (!b) return; e.stopPropagation(); $('res').style.display = 'none'; $('q').blur(); sapApri(b.dataset.sres); }, true);
 
 /* ---- inizio di Sapori: una domanda, poi ciò che interessa */
-const GUSTI = [['dolci', 'Dolci', 'cake', '#C2185B'], ['formaggi', 'Formaggi', 'cheese', '#E0A100'], ['frutta e ortaggi', 'Frutta e ortaggi', 'lemon-2', '#4E8A1E'], ['pane e pasta', 'Pane e pasta', 'bread', '#B06D1F'],
-  ['gastronomia', 'Piatti', 'bowl', '#D8431C'], ['salumi', 'Salumi e carni', 'meat', '#9B2C2C'], ['pesce', 'Pesce e mare', 'fish', '#1E6FA8'], ['miele', 'Miele', 'droplet', '#C98A00'], ['conserve e condimenti', 'Olio, sale e conserve', 'bottle', '#5D7A2B'], ['bevande', 'Liquori', 'glass-full', '#6A2C70']];
+const GUSTI = [['dolci', 'Dolci', 'cake'], ['formaggi', 'Formaggi', 'cheese'], ['frutta e ortaggi', 'Frutta e ortaggi', 'lemon-2'], ['pane e pasta', 'Pane e pasta', 'bread'],
+  ['gastronomia', 'Piatti', 'bowl'], ['vini', 'Vini', 'glass-full'], ['salumi', 'Salumi e carni', 'meat'], ['pesce', 'Pesce e mare', 'fish'], ['miele', 'Miele', 'droplet'], ['conserve e condimenti', 'Olio, sale e conserve', 'bottle'], ['bevande', 'Liquori', 'bottle']].map(g => g.concat('#E8761A'));
 const GUSTO = Object.fromEntries(GUSTI.map(g => [g[0], g]));
 const PROVN = { AG: 'Agrigento', CL: 'Caltanissetta', CT: 'Catania', EN: 'Enna', ME: 'Messina', PA: 'Palermo', RG: 'Ragusa', SR: 'Siracusa', TP: 'Trapani' };
 SAP.gusti = new Set((() => { try { return JSON.parse(localStorage.getItem('sn_gusti') || '[]'); } catch (e) { return []; } })());

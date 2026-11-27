@@ -77,7 +77,22 @@ for v in D['voci'].values():
     for x in ('paesi', 'prov'):
         if x in v and not v[x]: del v[x]
     if v['t'] == 'dolce' and 'cat' not in v: v['cat'] = 'dolci'
+# province ufficiali dei DOP/IGP (IRVO, giugno 2025)
+PROVDOP = {'Arancia di Ribera': 'AG PA', "Cappero delle Isole Eolie": 'ME', "Ciliegia dell'Etna": 'CT', "Ficodindia dell'Etna": 'CT', 'Ficodindia di San Cono': 'CT EN CL', 'Nocellara del Belice': 'TP', 'Pistacchio di Raffadali': 'AG', 'Pistacchio Verde di Bronte': 'CT',
+  'Arancia Rossa di Sicilia': 'CT SR EN', 'Cappero di Pantelleria': 'TP', 'Carota Novella di Ispica': 'RG SR CT CL', "Limone dell'Etna": 'CT', 'Limone di Siracusa': 'SR', 'Limone Interdonato Messina': 'ME', 'Pesca di Bivona': 'AG PA', 'Pesca di Leonforte': 'EN', 'Pesca di Delia': 'CL AG',
+  'Pomodoro di Pachino': 'RG SR', 'Uva da tavola di Canicattì': 'AG CT', 'Uva da tavola di Mazzarrone': 'CT RG', 'Monte Etna': 'CT EN ME', 'Monti Iblei': 'SR RG CT', 'Val di Mazara': 'PA AG', 'Valdemone': 'ME', 'Valle del Belìce': 'TP', 'Valli Trapanesi': 'TP',
+  'Piacentinu Ennese': 'EN', 'Provola dei Nebrodi': 'CT EN ME', 'Ragusano': 'RG SR', 'Vastedda della Valle del Belìce': 'AG TP PA', 'Pagnotta del Dittaino': 'EN CT', 'Cioccolato di Modica': 'RG', "Salame Sant'Angelo": 'ME', 'Sale Marino di Trapani': 'TP'}
+for nome, pv in PROVDOP.items():
+    for v in D['voci'].values():
+        if v.get('ric') and any(r in ('DOP', 'IGP') for r in v['ric']) and norm(v['n']).endswith(norm(nome)): v['prov'] = pv.split()
+n_vini = 0
+for riga in (f / 'vini_sicilia.txt').read_text().splitlines():
+    if not riga.strip() or riga.startswith('#'): continue
+    nome, sig, pv = riga.split('|')
+    D['voci']['vino-' + slug(nome)] = {'t': 'prodotto', 'n': nome + ' ' + sig, 'cat': 'vini', 'ric': [sig], 'prov': [x.strip() for x in pv.split(',')], 'breve': '', 'storia': '', 'vino': True}
+    n_vini += 1
+D['fonti']['vini'] = {'a': 'IRVO, Istituto Regionale del Vino e dell\'Olio', 't': 'Prodotti tipici siciliani (giugno 2025)'}
 D['fonti']['pat'] = {'a': 'Ministero dell\'agricoltura, Regione Siciliana', 't': 'Elenco nazionale dei prodotti agroalimentari tradizionali (via lasiciliainrete.it)'}
 D['fonti']['dopigp'] = {'a': 'Regione Siciliana', 't': 'Elenco dei prodotti agricoli e alimentari nei regimi di qualità (2026)'}
 json.dump(D, open('www/data/sapori.json', 'w'), ensure_ascii=False, separators=(',', ':'))
-print(n_pat, 'PAT nuovi;', n_dop, 'DOP/IGP nuovi;', len(D['paesi']), 'paesi;', len(D['voci']), 'voci. Comuni non trovati:', sorted(non_trovati))
+print(n_vini, 'vini;', n_pat, 'PAT nuovi;', n_dop, 'DOP/IGP nuovi;', len(D['paesi']), 'paesi;', len(D['voci']), 'voci. Comuni non trovati:', sorted(non_trovati))

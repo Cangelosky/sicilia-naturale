@@ -270,3 +270,30 @@ Amarena|PAT|ME
 Gelatina di maiale (liatina)|PAT|RG
 Cuscus di pesce|PAT|TP
 Ricotta di vacca|PAT|AG, CT, RG
+# Voci dell'elenco regionale (Allegato 1, aggiornamento 2024) non presenti nell'archivio di lasiciliainrete: zona dedotta dal nome dove indicata
+Rum di Avola|PAT|Avola
+Fegato caiolato (Ficatu ncaiulatu)|PAT|
+Carduni vruricatu di Pioppo|PAT|Monreale
+Cece rosso di Cianciana|PAT|Cianciana
+Fagiolo di Bisacquino|PAT|Bisacquino
+Cipolla di Bisacquino "Cipudda Busacchinara"|PAT|Bisacquino
+Limone della Conca d'Oro|PAT|Palermo
+Oliva a puddascedda di Buccheri|PAT|Buccheri
+Peperone di Cerami "u pipi ciramisi"|PAT|Cerami
+Trufolo, tartufo bianchetto di Buccheri|PAT|Buccheri
+Trufolo, tartufo scorzone di Buccheri|PAT|Buccheri
+Granita di limone|PAT|Tutte
+Guastedda facci i vecchia|PAT|
+Ncannellate|PAT|
+Pasta reale di Tortorici|PAT|Tortorici
+Cubaita di Racalmuto|PAT|Racalmuto
+Taralli di Racalmuto|PAT|Racalmuto
+Focaccia messinese|GAST|Messina
+Gidata o girata|GAST|
+Mbriulata di Milena|GAST|Milena
+'Mpignulati|GAST|
+Pitone o pidone messinese fritto|GAST|Messina
+Purpetta di Crita (polpette di Creta)|GAST|
+Tagano aragonese (taganu)|GAST|Aragona
+U pitaggiu (pitaggio)|GAST|
+Ricotta salata|PAT|
