@@ -1117,6 +1117,31 @@ body.hc .sh5 small,body.hc .cat small,body.hc .cat .note,body.hc .cat .lead,body
 body.hc .gusti5 button,body.hc .chi5 button,body.hc .sez5 button,body.hc .altre5 button,body.hc .card{outline:2px solid #26231F}
 body.hc .ap5::after,body.hc .sl5 .sld::after{background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.55))!important}
 @media(max-width:899px){.let5{margin-left:6px}.let5 button{min-width:30px;height:30px}}
+
+abbr.gl{text-decoration:underline dotted #8a7a6a;text-underline-offset:3px;cursor:help}
+abbr.gl:focus-visible{outline:2px solid #E8761A;border-radius:3px}
+.serv5{display:flex;gap:10px;justify-content:center;margin:24px 0 0}
+.serv5 button{border:0;background:none;color:#5c4f42;text-decoration:underline;text-underline-offset:3px;font:500 14px 'Bricolage Grotesque',sans-serif;cursor:pointer}
+.pag5{padding-bottom:30px}.pag5 h1{font:500 clamp(36px,4.6vw,56px)/1.05 'Newsreader',Georgia,serif;margin:16px 0 10px;color:#26231F}
+.pag5 .lead{font-size:18px;color:#4e4034;max-width:62ch;line-height:1.5}
+.gl5{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin:0}
+.gl5 div{background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 4px 16px rgba(70,45,20,.07)}
+.gl5 dt{font:500 21px 'Newsreader',Georgia,serif;color:#26231F}.gl5 dd{margin:4px 0 0;color:#4e4034;line-height:1.45}
+.txt5{max-width:760px}.txt5 h2{font-size:26px!important;margin:24px 0 8px}.txt5 p{font-size:16.5px;line-height:1.6;color:#3d3328}
+.cit5{background:#fff;border-left:4px solid #26231F;padding:12px 16px;border-radius:0 12px 12px 0;font-family:'Newsreader',Georgia,serif;font-size:18px!important}
+.ric5{margin:20px 18px 0;background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 2px 8px rgba(70,45,20,.07);font-size:13.5px;color:#4e4034;line-height:1.45}
+.ric5 p{margin:10px 0 0}
+.stampa5{border:0;border-radius:999px;background:#26231F;color:#fff;padding:8px 14px;font:600 13.5px 'Bricolage Grotesque',sans-serif;cursor:pointer}
+@media print{
+  body.stampa header,body.stampa #map,body.stampa .top,body.stampa .sez,body.stampa .cat,body.stampa .maplibregl-control-container,body.stampa .sh button,body.stampa .altre5m,body.stampa .cta5,body.stampa .stampa5,body.stampa .natT,body.stampa .tipm,body.stampa #pan,body.stampa .pan{display:none!important}
+  body.stampa #sheet{position:static!important;display:block!important;width:auto!important;max-height:none!important;box-shadow:none!important;background:#fff!important}
+  body.stampa #sheet .sh>div{display:block!important}body.stampa #sheet .sh{position:static!important}
+  body.stampa #sb{overflow:visible!important;max-height:none!important}
+  body.stampa .eroe5{height:200px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body.stampa #wrap{position:static!important;height:auto!important}
+  body.stampa #wrap>*:not(#sheet){display:none!important}
+  body.stampa .mm5{max-width:380px}
+}
 </style>
 
 </head>

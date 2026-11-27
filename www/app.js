@@ -7,7 +7,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
 const T = (it, en) => LANG === 'it' ? it : en;
 // nota di proprietà, in fondo alle pagine e ai Livelli
 let UPD = '';  // stato degli aggiornamenti automatici, mostrato nel piè di pagina
-const COPY = () => (() => { try { return altreSez(); } catch (e) { return ''; } })() + `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
+const COPY = () => (() => { try { return altreSez(); } catch (e) { return ''; } })() + (isApp ? '' : '<p class="serv5"><button data-pag="glossario">Glossario</button><button data-pag="metodo">Metodo e fonti</button></p>') + `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -2938,7 +2938,7 @@ $('cat').addEventListener('click', e => {
   if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
   if (w === 'scuola') { SEZ = 'natura'; NAT.home = false; return vai('piante'); }
   if (w === 'bambini') return $('sapevi').scrollIntoView({ behavior: 'smooth' });
-  if (w === 'studiosi') { SEZ = 'natura'; NAT.home = false; return vai('funghi'); }
+  if (w === 'studiosi') return pagina('metodo');
   if (w === 'lontano') { entraSez('sapori'); return setTimeout(() => { const q = $('hq'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 900); }
 }, true);
 // le sezioni in preparazione: cosa ci sarà
@@ -3083,5 +3083,69 @@ if (!isApp) {
   document.querySelector('.let5').onclick = e => { const b = e.target.closest('[data-let]'); if (!b) return; if (b.dataset.let === 't') LET.t = ((LET.t || 0) + 1) % 3; else LET.c = !LET.c; applicaLet(); };
   applicaLet();
 }
+
+
+/* ---- per chi studia: glossario, metodo e fonti, schede da stampare e citare */
+const GLOSS = {
+  'Natura 2000': 'La rete europea di aree protette per conservare habitat e specie rari. In Sicilia comprende ZSC e ZPS.',
+  'ZSC': 'Zona Speciale di Conservazione: un\'area della rete Natura 2000 che protegge habitat e specie elencati da una direttiva europea.',
+  'ZPS': 'Zona di Protezione Speciale: un\'area della rete Natura 2000 dedicata alla tutela degli uccelli selvatici.',
+  'endemica': 'Una specie endemica vive solo in un territorio preciso e in nessun altro posto al mondo.',
+  'habitat': 'L\'ambiente in cui vive una specie: il suolo, il clima, le piante e gli animali che lo caratterizzano.',
+  'riserva orientata': 'Una riserva dove sono ammesse alcune attività dell\'uomo, purché rispettino la natura del luogo.',
+  'riserva integrale': 'Una riserva dove la natura è lasciata a sé stessa e l\'uomo può entrare solo con limiti molto stretti.',
+  'IUCN': 'L\'Unione internazionale per la conservazione della natura: classifica le aree protette e il rischio di estinzione delle specie.',
+  'DOP': 'Denominazione di Origine Protetta: un prodotto fatto interamente in una zona precisa, seguendo un disciplinare approvato in Europa.',
+  'IGP': 'Indicazione Geografica Protetta: un prodotto legato a una zona, dove avviene almeno una fase della produzione.',
+  'PAT': 'Prodotto Agroalimentare Tradizionale: preparato allo stesso modo da almeno venticinque anni, nell\'elenco del Ministero dell\'agricoltura.',
+  'DOCG': 'Denominazione di Origine Controllata e Garantita: il livello più alto di tutela per i vini italiani.',
+  'DOC': 'Denominazione di Origine Controllata: un vino prodotto in una zona precisa con regole su uve e metodo.',
+  'IGT': 'Indicazione Geografica Tipica: un vino legato a un territorio, con regole meno strette di DOC e DOCG.',
+  'Lista rossa': 'L\'elenco di dolci, piatti, varietà e razze che rischiano di sparire, con il loro stato: vivo, raro, a rischio, perduto.',
+  'disciplinare': 'Il documento ufficiale che stabilisce zona, ingredienti e metodo di un prodotto a denominazione.',
+  'GBIF': 'Una banca dati mondiale e libera delle osservazioni di piante, funghi e animali.',
+  'Darwin Core': 'Un formato standard per scambiare dati sulla biodiversità tra musei, università e ricercatori.',
+  'bosco vetusto': 'Un bosco antico, rimasto senza tagli per moltissimo tempo, con alberi vecchi e legno morto che ospitano molta vita.',
+  'albero monumentale': 'Un albero tutelato per età, dimensioni, forma o valore storico, iscritto in un elenco nazionale.'
+};
+const GLRE = new RegExp('(^|[^\\p{L}])(' + Object.keys(GLOSS).sort((a, b) => b.length - a.length).map(k => k.replace(/ /g, '\\s')).join('|') + ')(?![\\p{L}])', 'u');
+function glossa(root) {
+  if (!root || isApp) return; const visti = new Set();
+  const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('button,a,h2,h3,abbr,.src,.cap5,.kick,script') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  const nodi = []; while (tw.nextNode()) nodi.push(tw.currentNode);
+  for (const n of nodi) { const m = n.nodeValue.match(GLRE); if (!m) continue; const k = Object.keys(GLOSS).find(x => x.toLowerCase() === m[2].replace(/\s+/g, ' ').toLowerCase()); if (!k || visti.has(k)) continue; visti.add(k);
+    const i = m.index + m[1].length, r = n.splitText(i); r.splitText(m[2].length); const ab = document.createElement('abbr'); ab.className = 'gl'; ab.dataset.gl = k; ab.tabIndex = 0; ab.textContent = r.nodeValue; r.replaceWith(ab); }
+}
+const glMostra = (el, x, y) => tipMostra(`<b>${esc(el.dataset.gl)}</b><small>${esc(GLOSS[el.dataset.gl])}</small>`, x, y);
+document.addEventListener('mouseover', e => { const g = e.target.closest && e.target.closest('abbr.gl'); if (g) glMostra(g, e.clientX, e.clientY); });
+document.addEventListener('mouseout', e => { if (e.target.closest && e.target.closest('abbr.gl')) tipNascondi(); });
+document.addEventListener('click', e => { const g = e.target.closest && e.target.closest('abbr.gl'); if (!g) return; e.stopPropagation(); const r = g.getBoundingClientRect(); glMostra(g, r.left, r.bottom); setTimeout(tipNascondi, 5000); }, true);
+// pagine di servizio: glossario e metodo
+function pagina(k) {
+  chiudi(); $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'pag-' + k; $('cat').scrollTop = 0;
+  const testa = (t, d) => `<div class="sh5 pag5"><section class="s5"><h1>${t}</h1><p class="lead">${d}</p></section>`;
+  if (k === 'glossario') $('cat').innerHTML = testa('Glossario', 'Le parole un po\' difficili che trovi nelle schede, spiegate in modo semplice. Nelle schede sono sottolineate: passaci sopra o toccale per leggere la spiegazione.') +
+    `<section class="s5"><dl class="gl5">${Object.entries(GLOSS).sort((a, b) => a[0].localeCompare(b[0], 'it')).map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl></section>${COPY()}</div>`;
+  else $('cat').innerHTML = testa('Metodo e fonti', 'Come sono raccolti e verificati i dati di Sicilia Naturale, e come citarli in una ricerca o in una tesi.') +
+    `<section class="s5 txt5"><h2>Da dove vengono i dati</h2>
+      <p><b>Natura</b>: aree protette e siti Natura 2000 dall'Agenzia europea dell'ambiente e dalla Regione Siciliana (Sistema informativo forestale); boschi vetusti, boschi da seme e alberi monumentali dagli elenchi ufficiali; specie da GBIF e dal database Micelio dell'Associazione Micologica G. Inzenga; sentieri e punti di interesse da OpenStreetMap; meteo da Open-Meteo e allerte dalla Protezione Civile.</p>
+      <p><b>Sapori</b>: elenco nazionale dei prodotti agroalimentari tradizionali (PAT), elenco regionale dei prodotti DOP e IGP, vini a denominazione (IRVO), elenco dei dolci siciliani di Oscar Cangelosi. Le date delle sagre vengono da siti di eventi e giornali locali, indicati in ogni scheda.</p>
+      <h2>Come li usiamo</h2>
+      <p>I racconti delle schede sono costruiti solo dai dati delle fonti: niente viene inventato. Dove una zona è indicativa lo scriviamo. Le specie rare hanno la posizione sfumata di circa 10 km per proteggerle. Non diamo mai indicazioni sulla commestibilità di funghi e piante selvatiche.</p>
+      <h2>Per chi studia e insegna</h2>
+      <p>Ogni scheda ha il tasto <b>Stampa o salva per la ricerca</b>: produce una pagina pulita con le fonti. Dalle schede delle zone si scaricano l'elenco delle specie in CSV; dalle uscite registrate le osservazioni in Darwin Core; dagli itinerari il PDF e il GPX.</p>
+      <h2>Come citare</h2><p class="cit5">Sicilia Naturale, atlante della natura e dei sapori di Sicilia, a cura di Oscar Cangelosi. ${esc(location.origin + location.pathname)}, consultato il ${new Date().toLocaleDateString('it-IT')}.</p>
+      <p class="note">Il sito è un prototipo in costruzione: alcuni dati sono di prova e sono segnalati come tali.</p></section>${COPY()}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pag]'); if (!b) return; e.preventDefault(); e.stopPropagation(); pagina(b.dataset.pag); }, true);
+// schede: glossario, stampa e citazione
+const _dopo = dopoScheda;
+dopoScheda = function () {
+  _dopo(); const sb = $('sb'); if (!sb || isApp) return; glossa(sb);
+  if (!sb.querySelector('.ric5')) { const tit = ($('sh').querySelector('h2') || {}).textContent || document.querySelector('.nh5 h2')?.textContent || 'Scheda';
+    const box = `<div class="ric5"><button class="stampa5">Stampa o salva per la ricerca</button><p><b>Come citare questa scheda</b><br>Sicilia Naturale, «${esc(tit)}», a cura di Oscar Cangelosi, consultato il ${new Date().toLocaleDateString('it-IT')}. <button class="lk" data-pag="metodo">Metodo e fonti</button></p></div>`;
+    const a = sb.querySelector('.altre5m'); a ? a.insertAdjacentHTML('beforebegin', box) : sb.insertAdjacentHTML('beforeend', box); }
+};
+document.addEventListener('click', e => { if (!e.target.closest('.stampa5')) return; document.body.classList.add('stampa'); window.print(); setTimeout(() => document.body.classList.remove('stampa'), 500); });
 
 }
