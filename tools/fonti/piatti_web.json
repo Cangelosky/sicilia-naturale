@@ -29,7 +29,13 @@
 "pan2": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/",
 "en3": "https://www.sicilying.com/it/blog/itinerari-di-sicilia-cosa-fare-a-enna/",
 "en4": "https://www.immobiliare.it/news/vivere-a/italia/cosa-vedere-a-enna-la-citta-piu-alta-ditalia-e-ombelico-di-sicilia-251901/",
-"neb": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/"
+"neb": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/",
+"sag": "https://www.siciliainfesta.com/sagre.htm",
+"cmme": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf",
+"cctp": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf",
+"itsav": "https://www.italia.it/it/sicilia/savoca",
+"brum": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf",
+"vfr": "https://www.balarm.it/eventi/il-fiore-in-tavola-a-villafrati-cooking-show-a-tema-con-lo-chef-carmelo-trentacosti-131906"
 },
 "piatti": [
 {
@@ -156,9 +162,14 @@
 "n": "Iris",
 "cat": "strada",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Tremestieri Etneo",
+"Pedara"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Panelle",
@@ -194,28 +205,40 @@
 "cat": "strada",
 "luoghi": [
 "Ragusa",
-"Naso"
+"Naso",
+"Modica"
 ],
 "fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
 "altre_fonti": [
-"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"https://www.siciliainfesta.com/sagre.htm"
 ]
 },
 {
 "n": "Scacciata",
 "cat": "strada",
 "luoghi": [
-"Catania"
+"Catania",
+"Milo",
+"Motta Sant'Anastasia"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Sfincione",
 "cat": "strada",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Bagheria",
+"Ficarazzi"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Stigghiole",
@@ -229,9 +252,13 @@
 "n": "Vastedda fritta",
 "cat": "strada",
 "luoghi": [
-"Valle del Belice"
+"Valle del Belice",
+"Gratteri"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Caldume",
@@ -264,8 +291,13 @@
 {
 "n": "Cavateddi",
 "cat": "primo",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Floridia"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Cuscus alla trapanese",
@@ -303,11 +335,13 @@
 "cat": "primo",
 "luoghi": [
 "Palermo",
-"Castelbuono"
+"Castelbuono",
+"Caltabellotta"
 ],
 "fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
 "altre_fonti": [
-"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"https://www.siciliainfesta.com/sagre.htm"
 ]
 },
 {
@@ -1164,9 +1198,13 @@
 "n": "Frittura di paranza",
 "cat": "secondo",
 "luoghi": [
-"Siracusa"
+"Siracusa",
+"Aci Castello"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Pesce spada alla stimpirata",
@@ -1800,7 +1838,10 @@
 "luoghi": [
 "Troina"
 ],
-"fonte": "https://www.visitsicily.info/en/?p=3297"
+"fonte": "https://www.visitsicily.info/en/?p=3297",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Mostarda di ficodindia",
@@ -1944,9 +1985,13 @@
 "n": "Coniglio alla cacciatora",
 "cat": "secondo",
 "luoghi": [
-"Regalbuto"
+"Regalbuto",
+"Comitini"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Frascatula",
@@ -2158,9 +2203,13 @@
 "n": "Teste di turco",
 "cat": "dolce",
 "luoghi": [
-"Lucca Sicula"
+"Lucca Sicula",
+"Scicli"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Cucchiteddi",
@@ -2304,9 +2353,15 @@
 "n": "Buccellato",
 "cat": "dolce",
 "luoghi": [
-"Bompensiere"
+"Bompensiere",
+"Caccamo",
+"Casteldaccia",
+"Enna"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Calamari ripieni",
@@ -2330,10 +2385,17 @@
 "luoghi": [
 "Campofranco",
 "Licodia Eubea",
-"Merì"
+"Merì",
+"Altavilla Milicia",
+"Palazzo Adriano",
+"Casteltermini",
+"Paceco",
+"Butera"
 ],
 "fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
-"altre_fonti": []
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Galletti alla griglia",
@@ -2514,9 +2576,13 @@
 "n": "Scacciate",
 "cat": "strada",
 "luoghi": [
-"Biancavilla"
+"Biancavilla",
+"Messina"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Crispelle",
@@ -2843,10 +2909,13 @@
 "cat": "dolce",
 "luoghi": [
 "Trecastagni",
-"Mirto"
+"Mirto",
+"Sinagra"
 ],
 "fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
-"altre_fonti": []
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Zuccata",
@@ -3812,9 +3881,13 @@
 "n": "Sfoglio",
 "cat": "secondo",
 "luoghi": [
-"Petralia Soprana"
+"Petralia Soprana",
+"Polizzi Generosa"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Olive con la mollica",
@@ -4538,7 +4611,10 @@
 "luoghi": [
 "Cefalù"
 ],
-"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Pappardelle al ragù di cinghiale",
@@ -4646,7 +4722,10 @@
 "luoghi": [
 "Delia"
 ],
-"fonte": "https://www.agrofood.it/it/regioni/sicilia"
+"fonte": "https://www.agrofood.it/it/regioni/sicilia",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "'Mpanatigghi",
@@ -5019,8 +5098,13 @@
 {
 "n": "Ricotta infornata",
 "cat": "formaggio",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+"luoghi": [
+"Tripi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Salsiccia pasqualora partinicese",
@@ -5120,7 +5204,10 @@
 "luoghi": [
 "Acireale"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Cipolla di Giarratana",
@@ -5405,7 +5492,10 @@
 "luoghi": [
 "Ribera"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Uva Italia di Canicattì",
@@ -5600,8 +5690,14 @@
 {
 "n": "Nfigghiulata",
 "cat": "strada",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+"luoghi": [
+"Gibellina",
+"Poggioreale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Paḍḍucculi di carni 'nno brodu",
@@ -5912,7 +6008,10 @@
 "luoghi": [
 "Priolo Gargallo"
 ],
-"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.siciliainfesta.com/sagre.htm"
+]
 },
 {
 "n": "Fettuccine con uova di ricci",
@@ -5945,6 +6044,2219 @@
 "Zafferana Etnea"
 ],
 "fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ricotta",
+"cat": "formaggio",
+"luoghi": [
+"Sant'Angelo Muxaro",
+"Roccella Valdemone",
+"Solarino",
+"Santa Elisabetta",
+"Maniace",
+"Montalbano Elicona",
+"Calamonaci",
+"Fiumedinisi",
+"Buscemi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Sfincia",
+"cat": "dolce",
+"luoghi": [
+"Montelepre",
+"Bagheria",
+"Petrosino",
+"Carini",
+"Salemi",
+"Barcellona Pozzo di Gotto"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pataco' (cicerchia)",
+"cat": "prodotto",
+"luoghi": [
+"Licodia Eubea"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Suino nero",
+"cat": "secondo",
+"luoghi": [
+"Longi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salsiccia",
+"cat": "secondo",
+"luoghi": [
+"Chiaramonte Gulfi",
+"Acate",
+"Barcellona Pozzo di Gotto",
+"Sclafani Bagni",
+"Ragalna",
+"Mongiuffi Melia",
+"Santa Ninfa",
+"Aragona",
+"Caccamo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Carduni vruricatu",
+"cat": "prodotto",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Arancia Tarocco",
+"cat": "prodotto",
+"luoghi": [
+"Francofonte"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maccheroni",
+"cat": "primo",
+"luoghi": [
+"Messina",
+"Mongiuffi Melia",
+"Sant'Angelo di Brolo",
+"Librizzi",
+"Raccuja",
+"San Filippo del Mela"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Seppia",
+"cat": "secondo",
+"luoghi": [
+"Scicli",
+"Balestrate",
+"Palma di Montechiaro"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "'Mpurnatu e 'mpanata",
+"cat": "strada",
+"luoghi": [
+"Campobello di Licata"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Froscia e 'ncannellata",
+"cat": "dolce",
+"luoghi": [
+"Alessandria della Rocca"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Arancia",
+"cat": "prodotto",
+"luoghi": [
+"Scillato",
+"Gualtieri Sicaminò",
+"Barcellona Pozzo di Gotto"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Finocchietto selvatico",
+"cat": "prodotto",
+"luoghi": [
+"Blufi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Nespola",
+"cat": "prodotto",
+"luoghi": [
+"Calatabiano"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pasticciottu di Soccorso",
+"cat": "dolce",
+"luoghi": [
+"Gualtieri Sicaminò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cannolo",
+"cat": "dolce",
+"luoghi": [
+"Piana degli Albanesi",
+"Aci Bonaccorsi",
+"Favignana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Agnello pasquale",
+"cat": "secondo",
+"luoghi": [
+"Favara"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Nespole e pasta",
+"cat": "primo",
+"luoghi": [
+"Trabia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Formaggio",
+"cat": "formaggio",
+"luoghi": [
+"Santo Stefano Quisquina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tataratà",
+"cat": "dolce",
+"luoghi": [
+"Casteltermini"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Formaggi e ricotta",
+"cat": "formaggio",
+"luoghi": [
+"Poggioreale"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Limone zagara bianca",
+"cat": "prodotto",
+"luoghi": [
+"Calatabiano"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fragola",
+"cat": "prodotto",
+"luoghi": [
+"Maletto",
+"Marsala",
+"Siracusa",
+"Partinico"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cipolla rossa",
+"cat": "prodotto",
+"luoghi": [
+"Partanna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Melone cartucciaru",
+"cat": "prodotto",
+"luoghi": [
+"Paceco"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Melone giallo",
+"cat": "prodotto",
+"luoghi": [
+"Joppolo Giancaxio",
+"Gibellina",
+"Roccamena"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Olio",
+"cat": "prodotto",
+"luoghi": [
+"Furnari",
+"Caltabellotta",
+"Lucca Sicula",
+"Cefalà Diana",
+"Mazzarino",
+"Santa Maria di Licodia",
+"Altofonte"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Polpo",
+"cat": "secondo",
+"luoghi": [
+"Acireale"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesce spada",
+"cat": "secondo",
+"luoghi": [
+"Acireale",
+"Aci Castello"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane votivo",
+"cat": "strada",
+"luoghi": [
+"Caltavuturo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Crastuna",
+"cat": "prodotto",
+"luoghi": [
+"Solarino"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pettine e pesce azzurro",
+"cat": "secondo",
+"luoghi": [
+"Caronia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maccherone",
+"cat": "primo",
+"luoghi": [
+"Calatafimi-Segesta",
+"Nicosia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mitilugghia",
+"cat": "prodotto",
+"luoghi": [
+"Acate"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Olive",
+"cat": "prodotto",
+"luoghi": [
+"Valderice"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tonno e ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Avola"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Grabuscia",
+"cat": "dolce",
+"luoghi": [
+"Burgio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cassatella",
+"cat": "dolce",
+"luoghi": [
+"Buseto Palizzolo",
+"Agira",
+"Calatafimi-Segesta",
+"Custonaci"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Spincia",
+"cat": "dolce",
+"luoghi": [
+"Custonaci"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pecora",
+"cat": "secondo",
+"luoghi": [
+"Villarosa",
+"Santa Ninfa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Crostino mazzariddaru",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mbriulata",
+"cat": "strada",
+"luoghi": [
+"Milena"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cipolla",
+"cat": "prodotto",
+"luoghi": [
+"Castrofilippo",
+"Giarratana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maccarruni",
+"cat": "primo",
+"luoghi": [
+"Francofonte",
+"Santa Ninfa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pecorino pepato",
+"cat": "formaggio",
+"luoghi": [
+"Castel di Iudica"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Porchetta",
+"cat": "secondo",
+"luoghi": [
+"Belpasso",
+"Sant'Angelo di Brolo",
+"San Fratello",
+"Calatafimi-Segesta",
+"Sclafani Bagni"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Bruschetta",
+"cat": "strada",
+"luoghi": [
+"Condrò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pasta cu l'agghia e sasizza arrustuta",
+"cat": "primo",
+"luoghi": [
+"Buseto Palizzolo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cascavaddu",
+"cat": "formaggio",
+"luoghi": [
+"Castel di Lucio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tortone",
+"cat": "dolce",
+"luoghi": [
+"Sperlinga",
+"Montalbano Elicona"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Favi squadati e olive",
+"cat": "prodotto",
+"luoghi": [
+"Tusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Vastelle tusane con acciuga salata",
+"cat": "secondo",
+"luoghi": [
+"Tusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salsiccia e frittelle",
+"cat": "dolce",
+"luoghi": [
+"Ciminna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cappero",
+"cat": "prodotto",
+"luoghi": [
+"Malfa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salsiccia e pane cunzatu",
+"cat": "secondo",
+"luoghi": [
+"Castellammare del Golfo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tinca",
+"cat": "prodotto",
+"luoghi": [
+"Licodia Eubea"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pastedda",
+"cat": "prodotto",
+"luoghi": [
+"Troina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Patata",
+"cat": "prodotto",
+"luoghi": [
+"Torregrotta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Provola",
+"cat": "formaggio",
+"luoghi": [
+"Basicò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Frittella",
+"cat": "dolce",
+"luoghi": [
+"Isnello",
+"Ragusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ricotta e formaggio",
+"cat": "formaggio",
+"luoghi": [
+"Vizzini"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Carciofo",
+"cat": "prodotto",
+"luoghi": [
+"Cerda",
+"Ramacca",
+"Niscemi",
+"Castelvetrano"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ficodindia",
+"cat": "prodotto",
+"luoghi": [
+"San Cono",
+"Santa Margherita di Belice",
+"Roccapalumba",
+"Belpasso",
+"Montalbano Elicona"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tartufo dei Nebrodi",
+"cat": "prodotto",
+"luoghi": [
+"Capizzi",
+"Santa Domenica Vittoria"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Porchetta, cuzzola e salsiccia",
+"cat": "secondo",
+"luoghi": [
+"Savoca"
+],
+"fonte": "https://www.italia.it/it/sicilia/savoca"
+},
+{
+"n": "Stoccafisso alla ghiotta",
+"cat": "prodotto",
+"luoghi": [
+"Savoca"
+],
+"fonte": "https://www.italia.it/it/sicilia/savoca"
+},
+{
+"n": "Tagliatelle al finocchietto e ragù di maiale",
+"cat": "secondo",
+"luoghi": [
+"Savoca"
+],
+"fonte": "https://www.italia.it/it/sicilia/savoca"
+},
+{
+"n": "Maccheroni alle cotiche",
+"cat": "primo",
+"luoghi": [
+"Savoca"
+],
+"fonte": "https://www.italia.it/it/sicilia/savoca"
+},
+{
+"n": "Granita al limone con zuccarata",
+"cat": "dolce",
+"luoghi": [
+"Savoca"
+],
+"fonte": "https://www.italia.it/it/sicilia/savoca"
+},
+{
+"n": "Cuscus di pesce alla mazarese",
+"cat": "secondo",
+"luoghi": [
+"Mazara del Vallo"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Muccunetti",
+"cat": "dolce",
+"luoghi": [
+"Mazara del Vallo"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Gambero rosso",
+"cat": "secondo",
+"luoghi": [
+"Mazara del Vallo"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Frascatuli con brodo di pesce",
+"cat": "secondo",
+"luoghi": [
+"Mazara del Vallo",
+"Marsala"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Spagnolette",
+"cat": "dolce",
+"luoghi": [
+"Marsala"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Tagliancozzo",
+"cat": "dolce",
+"luoghi": [
+"Marsala"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Purceddu (melone)",
+"cat": "prodotto",
+"luoghi": [
+"Alcamo"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Cotonese (formaggio)",
+"cat": "formaggio",
+"luoghi": [
+"Paceco"
+],
+"fonte": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf"
+},
+{
+"n": "Biscotto castrense",
+"cat": "dolce",
+"luoghi": [
+"Castroreale"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Cipolla di Novara",
+"cat": "prodotto",
+"luoghi": [
+"Novara di Sicilia"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Melina lappedda",
+"cat": "prodotto",
+"luoghi": [
+"San Pier Niceto"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Pesca",
+"cat": "prodotto",
+"luoghi": [
+"Moio Alcantara",
+"Bivona",
+"Leonforte"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Fagiolo fiumara",
+"cat": "prodotto",
+"luoghi": [
+"San Piero Patti"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Fagiolo miricano",
+"cat": "prodotto",
+"luoghi": [
+"Castell'Umberto"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Fagiolo carcazo",
+"cat": "prodotto",
+"luoghi": [
+"Ucria"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Fagiolo crucchitto",
+"cat": "prodotto",
+"luoghi": [
+"Ucria"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Fagiolo mussu niuru",
+"cat": "prodotto",
+"luoghi": [
+"Sinagra"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Olio minuta",
+"cat": "prodotto",
+"luoghi": [
+"Sinagra",
+"Naso"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Oliva santagatese",
+"cat": "prodotto",
+"luoghi": [
+"Sant'Agata di Militello"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Limone interdonato",
+"cat": "prodotto",
+"luoghi": [
+"Forza d'Agrò",
+"Alì Terme"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Noce panuzzara",
+"cat": "prodotto",
+"luoghi": [
+"Motta Camastra"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Miele di cappero",
+"cat": "prodotto",
+"luoghi": [
+"Santa Marina Salina"
+],
+"fonte": "https://www.cittametropolitana.me.it/enoteca-provinciale/pubblicazioni/allegati/carta_enogastronomica.pdf"
+},
+{
+"n": "Maccheroni al ferretto con sugo di castrato",
+"cat": "secondo",
+"luoghi": [
+"Frazzanò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salame piccante",
+"cat": "salume",
+"luoghi": [
+"San Marco d'Alunzio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Asparago selvatico",
+"cat": "prodotto",
+"luoghi": [
+"Sant'Angelo Muxaro"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cavatieddi",
+"cat": "primo",
+"luoghi": [
+"Monterosso Almo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cassatelle",
+"cat": "dolce",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Arancia rossa",
+"cat": "prodotto",
+"luoghi": [
+"Centuripe"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ricotta e cannolo",
+"cat": "dolce",
+"luoghi": [
+"Mussomeli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Caciocavallo",
+"cat": "formaggio",
+"luoghi": [
+"San Mauro Castelverde",
+"Godrano"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Schiticchio",
+"cat": "prodotto",
+"luoghi": [
+"San Piero Patti"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ciliegie",
+"cat": "prodotto",
+"luoghi": [
+"Chiusa Sclafani",
+"Graniti",
+"Giarre"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Nocattolo",
+"cat": "dolce",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fave, cipolle e patate",
+"cat": "prodotto",
+"luoghi": [
+"Isnello"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane",
+"cat": "strada",
+"luoghi": [
+"Novara di Sicilia",
+"Monterosso Almo",
+"Ramacca",
+"Calamonaci",
+"Alimena",
+"Fiumedinisi",
+"Monreale",
+"Montalbano Elicona",
+"Ragalna",
+"Itala"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tartufo",
+"cat": "prodotto",
+"luoghi": [
+"Sambuca di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ciliegia dell'Etna",
+"cat": "prodotto",
+"luoghi": [
+"Sant'Alfio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tonno",
+"cat": "secondo",
+"luoghi": [
+"Ispica"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Grano",
+"cat": "prodotto",
+"luoghi": [
+"Petralia Soprana",
+"Campofelice di Fitalia",
+"Contessa Entellina",
+"Montevago"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cuzzola",
+"cat": "prodotto",
+"luoghi": [
+"Roccalumera"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pomodoro siccagno",
+"cat": "prodotto",
+"luoghi": [
+"Montallegro"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesche",
+"cat": "prodotto",
+"luoghi": [
+"Moio Alcantara",
+"Chiusa Sclafani"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cuddiruni ragunisi",
+"cat": "prodotto",
+"luoghi": [
+"Aragona"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Limone seccagno",
+"cat": "prodotto",
+"luoghi": [
+"Pettineo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Totano",
+"cat": "secondo",
+"luoghi": [
+"Spadafora"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Virgineddi",
+"cat": "dolce",
+"luoghi": [
+"Burgio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Arancino",
+"cat": "strada",
+"luoghi": [
+"Rosolini",
+"Aci Castello",
+"Carlentini",
+"Assoro",
+"Enna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cipolla busacchinara",
+"cat": "prodotto",
+"luoghi": [
+"Bisacquino"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Manna",
+"cat": "prodotto",
+"luoghi": [
+"Pollina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane cunzato",
+"cat": "strada",
+"luoghi": [
+"Piedimonte Etneo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pistacchio",
+"cat": "prodotto",
+"luoghi": [
+"Brolo",
+"Raffadali",
+"Bronte"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Sale",
+"cat": "prodotto",
+"luoghi": [
+"Petralia Soprana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Polpetta alla griglia con alloro",
+"cat": "prodotto",
+"luoghi": [
+"Gratteri"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pomodoro",
+"cat": "prodotto",
+"luoghi": [
+"Villalba",
+"Maniace",
+"Valledolmo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Nocciole",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Acciuga",
+"cat": "secondo",
+"luoghi": [
+"Valverde"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Anguilla",
+"cat": "secondo",
+"luoghi": [
+"Sinagra"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Passavolante",
+"cat": "dolce",
+"luoghi": [
+"Vicari"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cuddiruni",
+"cat": "prodotto",
+"luoghi": [
+"Ciminna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fava",
+"cat": "prodotto",
+"luoghi": [
+"Campofiorito"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane caldo",
+"cat": "strada",
+"luoghi": [
+"Monforte San Giorgio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pititti, pititteddi e liccumarei",
+"cat": "prodotto",
+"luoghi": [
+"Melilli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane condito",
+"cat": "strada",
+"luoghi": [
+"Zafferana Etnea",
+"Castiglione di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Capra al forno",
+"cat": "secondo",
+"luoghi": [
+"Novara di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mostarda",
+"cat": "dolce",
+"luoghi": [
+"Gagliano Castelferrato",
+"San Pietro Clarenza",
+"Portopalo di Capo Passero",
+"Giarre"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cudduruni",
+"cat": "strada",
+"luoghi": [
+"Melilli",
+"Carlentini"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Nocciola",
+"cat": "prodotto",
+"luoghi": [
+"Ucria",
+"Raccuja",
+"San Piero Patti",
+"Novara di Sicilia",
+"Linguaglossa",
+"Sant'Angelo di Brolo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mostarda di uva",
+"cat": "dolce",
+"luoghi": [
+"Librizzi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pizza e schiacciata",
+"cat": "strada",
+"luoghi": [
+"Valverde"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fungo porcino",
+"cat": "prodotto",
+"luoghi": [
+"Milo",
+"Alcara li Fusi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Miele",
+"cat": "prodotto",
+"luoghi": [
+"Sortino"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ficodindia e mostarda",
+"cat": "dolce",
+"luoghi": [
+"Camporotondo Etneo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cavatello",
+"cat": "primo",
+"luoghi": [
+"Cerami"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Uva",
+"cat": "prodotto",
+"luoghi": [
+"Valledolmo",
+"Canicattì",
+"Chiaramonte Gulfi",
+"Alcamo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Noce",
+"cat": "prodotto",
+"luoghi": [
+"Motta Camastra"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mostarda e ficodindia",
+"cat": "dolce",
+"luoghi": [
+"Militello in Val di Catania"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Masticutte",
+"cat": "dolce",
+"luoghi": [
+"Alimena"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Rametta nissorina",
+"cat": "dolce",
+"luoghi": [
+"Nissoria"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane nero",
+"cat": "strada",
+"luoghi": [
+"Castelvetrano"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salsiccia al ceppo",
+"cat": "secondo",
+"luoghi": [
+"Linguaglossa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Funghi",
+"cat": "prodotto",
+"luoghi": [
+"Castelbuono",
+"Ucria",
+"Caltavuturo",
+"Frazzanò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Castagna",
+"cat": "prodotto",
+"luoghi": [
+"Montagnareale",
+"Antillo",
+"Mezzojuso",
+"San Salvatore di Fitalia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Vastedda",
+"cat": "strada",
+"luoghi": [
+"Capaci",
+"Torretta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Olio e mandorla",
+"cat": "prodotto",
+"luoghi": [
+"Montemaggiore Belsito"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Suino nero e fungo porcino",
+"cat": "secondo",
+"luoghi": [
+"Cesarò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Salsiccia e caliceddi",
+"cat": "secondo",
+"luoghi": [
+"Ragalna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cavolfiore rosso",
+"cat": "prodotto",
+"luoghi": [
+"Moio Alcantara"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Oliva nocellara del Belice",
+"cat": "prodotto",
+"luoghi": [
+"Campobello di Mazara"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fungo dell'Etna",
+"cat": "prodotto",
+"luoghi": [
+"Pedara"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Muffuletta",
+"cat": "strada",
+"luoghi": [
+"Poggioreale"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maiale e cinghiale",
+"cat": "secondo",
+"luoghi": [
+"Antillo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Guastedda",
+"cat": "strada",
+"luoghi": [
+"Mussomeli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Peperone",
+"cat": "prodotto",
+"luoghi": [
+"Sutera"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maccarruna 'nta maidda",
+"cat": "primo",
+"luoghi": [
+"Termini Imerese"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Castagne",
+"cat": "prodotto",
+"luoghi": [
+"Viagrande",
+"Barcellona Pozzo di Gotto",
+"Tusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Piturro",
+"cat": "prodotto",
+"luoghi": [
+"Sinagra"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Zafferano",
+"cat": "prodotto",
+"luoghi": [
+"Valguarnera Caropepe"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cuddurune",
+"cat": "strada",
+"luoghi": [
+"Mistretta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mango",
+"cat": "prodotto",
+"luoghi": [
+"Fiumefreddo di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Chianu e guastedda",
+"cat": "strada",
+"luoghi": [
+"Petralia Sottana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pantofola",
+"cat": "dolce",
+"luoghi": [
+"Lercara Friddi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Babbaluci",
+"cat": "prodotto",
+"luoghi": [
+"Sambuca di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pizza",
+"cat": "strada",
+"luoghi": [
+"Campofelice di Roccella",
+"Nicosia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Olio e olive",
+"cat": "prodotto",
+"luoghi": [
+"Trappeto"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Kaki",
+"cat": "prodotto",
+"luoghi": [
+"Misilmeri"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Taganu",
+"cat": "strada",
+"luoghi": [
+"Aragona"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Agrumi",
+"cat": "prodotto",
+"luoghi": [
+"Furci Siculo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Casarecce col sugo di maiale",
+"cat": "secondo",
+"luoghi": [
+"Sant'Angelo di Brolo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Polpetta arrostita e salsiccia",
+"cat": "secondo",
+"luoghi": [
+"Riposto"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mandorlata",
+"cat": "dolce",
+"luoghi": [
+"Viagrande"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Frittole",
+"cat": "strada",
+"luoghi": [
+"Floresta",
+"Santa Domenica Vittoria",
+"Malvagna"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Crispella e anguilla",
+"cat": "secondo",
+"luoghi": [
+"Valverde"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Granita",
+"cat": "dolce",
+"luoghi": [
+"Nicolosi",
+"Gioiosa Marea"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cannatuni",
+"cat": "prodotto",
+"luoghi": [
+"Salaparuta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesce",
+"cat": "secondo",
+"luoghi": [
+"Acate"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fico",
+"cat": "prodotto",
+"luoghi": [
+"Valderice"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Lenticchie",
+"cat": "prodotto",
+"luoghi": [
+"Petralia Soprana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Truscitedda",
+"cat": "dolce",
+"luoghi": [
+"Castronovo di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Minni di virgini",
+"cat": "dolce",
+"luoghi": [
+"Sambuca di Sicilia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mosto e mostarda",
+"cat": "dolce",
+"luoghi": [
+"Capo d'Orlando"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Asineddi",
+"cat": "dolce",
+"luoghi": [
+"Carini"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesce azzurro e pomodoro",
+"cat": "secondo",
+"luoghi": [
+"Scicli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Grano e pane",
+"cat": "strada",
+"luoghi": [
+"Catenanuova"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ciliegia",
+"cat": "prodotto",
+"luoghi": [
+"Monterosso Almo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cucciddatu scaniatu",
+"cat": "dolce",
+"luoghi": [
+"Scicli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Piciota",
+"cat": "dolce",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Favazza",
+"cat": "strada",
+"luoghi": [
+"Termini Imerese"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Suino nero dei Nebrodi",
+"cat": "secondo",
+"luoghi": [
+"Sinagra"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mastazzoli e cosa duci",
+"cat": "dolce",
+"luoghi": [
+"Motta Sant'Anastasia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "'N puzzuddu",
+"cat": "strada",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pasta 'nta maidda",
+"cat": "primo",
+"luoghi": [
+"Aidone"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Scaccione",
+"cat": "strada",
+"luoghi": [
+"Monterosso Almo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pennette",
+"cat": "primo",
+"luoghi": [
+"Sant'Angelo di Brolo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ceci",
+"cat": "prodotto",
+"luoghi": [
+"Rosolini"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Rana",
+"cat": "secondo",
+"luoghi": [
+"Paternò"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Asparago",
+"cat": "prodotto",
+"luoghi": [
+"Mirabella Imbaccari"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Uva da tavola",
+"cat": "prodotto",
+"luoghi": [
+"Caltagirone"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pane e grani antichi",
+"cat": "strada",
+"luoghi": [
+"Gela"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cotaccalla",
+"cat": "dolce",
+"luoghi": [
+"Campofranco"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Zucca",
+"cat": "prodotto",
+"luoghi": [
+"Casalvecchio Siculo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Porcini",
+"cat": "prodotto",
+"luoghi": [
+"Buseto Palizzolo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Mandorla",
+"cat": "prodotto",
+"luoghi": [
+"Vicari",
+"Roccapalumba"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ranza e sciura",
+"cat": "prodotto",
+"luoghi": [
+"Chiusa Sclafani"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Gnocculo",
+"cat": "primo",
+"luoghi": [
+"Petrosino"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Melanzana",
+"cat": "prodotto",
+"luoghi": [
+"Milazzo",
+"Petrosino"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "'Mpanata",
+"cat": "strada",
+"luoghi": [
+"Francofonte"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Arancina",
+"cat": "strada",
+"luoghi": [
+"San Cataldo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pipi russu",
+"cat": "prodotto",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cinghiale",
+"cat": "secondo",
+"luoghi": [
+"Pollina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Rosetta con la mortadella",
+"cat": "strada",
+"luoghi": [
+"Piedimonte Etneo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Biscotto sampirotu",
+"cat": "dolce",
+"luoghi": [
+"San Pier Niceto"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ortica",
+"cat": "prodotto",
+"luoghi": [
+"Tortorici"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Granturco",
+"cat": "prodotto",
+"luoghi": [
+"Antillo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Biscotto",
+"cat": "dolce",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fagiolo badda",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesche e pere",
+"cat": "prodotto",
+"luoghi": [
+"Maniace"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Torrone",
+"cat": "dolce",
+"luoghi": [
+"Calascibetta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Asparago pungitopo",
+"cat": "prodotto",
+"luoghi": [
+"Rometta"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pepata di cozze",
+"cat": "secondo",
+"luoghi": [
+"Aci Castello"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Cozza",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Maccheroni al sugo",
+"cat": "primo",
+"luoghi": [
+"San Piero Patti"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Grani antichi",
+"cat": "prodotto",
+"luoghi": [
+"Marianopoli"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Panino ca sasizza arrustuta",
+"cat": "strada",
+"luoghi": [
+"Erice"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Zeppole",
+"cat": "dolce",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "'Mpanata e piruna",
+"cat": "strada",
+"luoghi": [
+"Niscemi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Masculina",
+"cat": "secondo",
+"luoghi": [
+"Aci Castello"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Porchetta e ricotta",
+"cat": "formaggio",
+"luoghi": [
+"Aci Sant'Antonio"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Fritto di paranza",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Focaccetta",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Stocco",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pesce povero",
+"cat": "secondo",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Tirrimulliru e nuvoletta",
+"cat": "dolce",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Muffuletto",
+"cat": "strada",
+"luoghi": [
+"Licata"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Focaccia",
+"cat": "strada",
+"luoghi": [
+"Chiaramonte Gulfi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Paranza",
+"cat": "secondo",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Ngiambella",
+"cat": "dolce",
+"luoghi": [
+"San Cataldo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Uva Italia",
+"cat": "prodotto",
+"luoghi": [
+"Ravanusa"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Pani cunzatu",
+"cat": "prodotto",
+"luoghi": [
+"Castellammare del Golfo"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Grano e castrato",
+"cat": "secondo",
+"luoghi": [
+"San Teodoro"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Gallo",
+"cat": "secondo",
+"luoghi": [
+"Chiaramonte Gulfi"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Carrubo",
+"cat": "prodotto",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://www.siciliainfesta.com/sagre.htm"
+},
+{
+"n": "Riso con gli angeli",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Maccaruni o ferru",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Cozze ripiene alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Pesce spada in camiciola",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Mulincianeddi chini",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Schiacciata messinese",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Crustuli",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Carciofi imburracciati",
+"cat": "contorno",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Caponatina messinese",
+"cat": "contorno",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Piparelli messinesi",
+"cat": "dolce",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Chiacchiere messinesi",
+"cat": "dolce",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Sfinci ca passula",
+"cat": "dolce",
+"luoghi": [],
+"fonte": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf"
+},
+{
+"n": "Lunetta del borgo",
+"cat": "dolce",
+"luoghi": [
+"Villafrati"
+],
+"fonte": "https://www.balarm.it/eventi/il-fiore-in-tavola-a-villafrati-cooking-show-a-tema-con-lo-chef-carmelo-trentacosti-131906"
 }
 ]
 }
