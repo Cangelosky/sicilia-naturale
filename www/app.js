@@ -2439,7 +2439,7 @@ function sapCatalogo() {
   const fresh = $('cat').dataset.v !== 'sap-cat';
   if (fresh) {
     $('cat').dataset.v = 'sap-cat'; $('cat').scrollTop = 0;
-    $('cat').innerHTML = `<div class="in"><h2>Catalogo dei sapori</h2><p class="lead">Dolci, prodotti tradizionali, DOP e IGP, piatti, ingredienti e chi li fa.</p>
+    $('cat').innerHTML = `<div class="in"><h2 id="sgt">${GUSTO[F.k] ? esc(GUSTO[F.k][1]) : 'Catalogo dei sapori'}</h2><p class="lead" id="sgl">${GUSTO[F.k] && DESCG[F.k] ? DESCG[F.k] + '. Filtra per paese, festa o riconoscimento, oppure cambia famiglia qui sotto.' : 'Dolci, prodotti tradizionali, DOP e IGP, piatti, ingredienti e chi li fa.'}</p>
       <div class="cerca"><input id="sq" type="search" placeholder="Cerca un dolce, un ingrediente, un paese" value="${esc(F.q)}" autocomplete="off"></div>
       <div class="grp" id="sg"></div>
       <div class="sfil">${sel('sfp', F.paese, Object.entries(D.paesi).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, p]) => [k, p.n]), 'Tutti i paesi')}${sel('sff', F.festa, Object.entries(D.feste).map(([k, f]) => [k, f.n]), 'Tutte le feste')}${sel('sfa', F.fam, [...new Set(tutti.map(v => v.fam).filter(Boolean))].sort().map(x => [x, x]), 'Tutte le famiglie')}${sel('sfr', F.ric || '', [['tut', 'DOP e IGP'], ['pat', 'Prodotti tradizionali (PAT)']], 'Tutti i riconoscimenti')}${sel('sfl', F.lr, Object.keys(LRC).map(k => [k, k]), 'Lista rossa: tutti')}</div>
@@ -2534,7 +2534,7 @@ function sapItinerari() {
 $('cat').addEventListener('click', e => {
   if (!SAP.on) return;
   const c = e.target.closest('[data-sc]'), g = e.target.closest('[data-sk]'), m = e.target.closest('[data-mese]'), vg = e.target.closest('[data-vg]');
-  if (g) { SAP.fil.k = g.dataset.sk; sapCatalogo(); } else if (m) { SAP.mese = +m.dataset.mese; sapCalendario(); } else if (vg) sapViaggio(vg.dataset.vg); else if (c) sapApri(c.dataset.sc);
+  if (g) { SAP.fil.k = g.dataset.sk; $('cat').dataset.v = ''; sapCatalogo(); } else if (m) { SAP.mese = +m.dataset.mese; sapCalendario(); } else if (vg) sapViaggio(vg.dataset.vg); else if (c) sapApri(c.dataset.sc);
 }, true);
 
 /* ---- ricerca nella barra in alto */
@@ -2553,6 +2553,7 @@ $('res').addEventListener('click', e => { const b = e.target.closest('[data-sres
 const GUSTI = [['dolci', 'Dolci', 'cake'], ['formaggi', 'Formaggi', 'cheese'], ['frutta e ortaggi', 'Frutta e ortaggi', 'lemon-2'], ['pane e pasta', 'Pane e pasta', 'bread'],
   ['gastronomia', 'Piatti', 'bowl'], ['vini', 'Vini', 'glass-full'], ['salumi', 'Salumi e carni', 'meat'], ['pesce', 'Pesce e mare', 'fish'], ['miele', 'Miele', 'droplet'], ['conserve e condimenti', 'Olio, sale e conserve', 'bottle'], ['bevande', 'Liquori', 'bottle']].map(g => g.concat('#E8761A'));
 const GUSTO = Object.fromEntries(GUSTI.map(g => [g[0], g]));
+var DESCG = { dolci: 'Paste di mandorla, cassate, biscotti delle feste', formaggi: 'Pecorino, ricotta, tuma, provola', 'frutta e ortaggi': 'Agrumi, ficodindia, legumi e ortaggi antichi', 'pane e pasta': 'Pani rituali e grani antichi', gastronomia: 'Piatti di casa e di strada', vini: 'Denominazioni e vitigni dell\'isola', salumi: 'Carni e salumi delle razze locali', pesce: 'Pesce azzurro e conserve di mare', miele: 'Mieli di timo, agrumi, carrubo', 'conserve e condimenti': 'Olio, sale, capperi, conserve', bevande: 'Rosoli e liquori di casa' };
 const PROVN = { AG: 'Agrigento', CL: 'Caltanissetta', CT: 'Catania', EN: 'Enna', ME: 'Messina', PA: 'Palermo', RG: 'Ragusa', SR: 'Siracusa', TP: 'Trapani' };
 SAP.gusti = new Set((() => { try { return JSON.parse(localStorage.getItem('sn_gusti') || '[]'); } catch (e) { return []; } })());
 const salvaGusti = () => { try { localStorage.setItem('sn_gusti', JSON.stringify([...SAP.gusti])); } catch (e) {} };
@@ -2689,8 +2690,8 @@ function sapHome() {
       <div class="apm">${mappaSicilia({ w: 420, nomi: true })}<button id="hmap">Esplora la mappa ${freccia}</button></div>
     </section>
     <section class="s5">
-      <div class="t5"><h2>Cosa ti va di scoprire?</h2><p>${sel ? `Stai guardando ${esc(nomeSel)}. ` : ''}Scegli uno o più sapori: foto, mappa e suggerimenti si adattano.${sel ? ' <button id="hreset" class="lk">Mostra tutto</button>' : ''}</p></div>
-      <div class="gusti5">${GUSTI.map(([k, n, ic]) => `<button data-gusto="${k}" class="${SAP.gusti.has(k) ? 'on' : ''}" aria-pressed="${SAP.gusti.has(k)}"><span class="img${fotoG[k] ? ' conf' : ''}"${fotoG[k] ? ` style="background-image:url('foto/${fotoG[k]}.webp')"` : esempio[k] ? ` data-wk="${esc(esempio[k])}"` : ''}>${ico(ic)}</span><span class="tx"><b>${n}</b><small>${DESC[k] || ''}</small><em>${conta[k]} ${conta[k] === 1 ? 'voce' : 'voci'}</em></span>${SAP.gusti.has(k) ? '<span class="ok">✓</span>' : freccia}</button>`).join('')}</div>
+      <div class="t5"><h2>Cosa ti va di scoprire?</h2><p>${sel ? `Stai guardando ${esc(nomeSel)}. ` : ''}Tocca una famiglia di sapori per entrare ed esplorarla.${sel ? ' <button id="hreset" class="lk">Mostra tutto</button>' : ''}</p></div>
+      <div class="gusti5">${GUSTI.map(([k, n, ic]) => `<button data-gusto="${k}"><span class="img${fotoG[k] ? ' conf' : ''}"${fotoG[k] ? ` style="background-image:url('foto/${fotoG[k]}.webp')"` : esempio[k] ? ` data-wk="${esc(esempio[k])}"` : ''}>${ico(ic)}</span><span class="tx"><b>${n}</b><small>${DESC[k] || ''}</small><em>${conta[k]} ${conta[k] === 1 ? 'voce' : 'voci'}</em></span>${freccia}</button>`).join('')}</div>
     </section>
     ${storie.length ? `<section class="s5"><div class="t5"><h2>Storie e scoperte</h2></div><div class="storie5">${storie.map(([fo, t, d, dove]) => `<button class="st5" ${dove.startsWith('fam:') ? `data-fam="${dove.slice(4)}"` : `data-sc="${dove}"`} style="background-image:url('foto/${fo}.webp')"><span class="tag">${dove.startsWith('fam:') ? 'Tradizioni' : 'Prodotti'}</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>` : ''}
     <section class="s5">
@@ -2736,7 +2737,7 @@ function sapHome() {
 $('cat').addEventListener('click', e => {
   if (!SAP.on || $('cat').dataset.v !== 'sap-home') return;
   const gu = e.target.closest('[data-gusto]'), p = e.target.closest('[data-porta]'), fa = e.target.closest('[data-fam]'), fe = e.target.closest('.festa3,.festa5');
-  if (gu) { e.stopPropagation(); const k = gu.dataset.gusto; SAP.gusti.has(k) ? SAP.gusti.delete(k) : SAP.gusti.add(k); salvaGusti(); SAP.hi = null; return sapHome(); }
+  if (gu) { e.stopPropagation(); const k = gu.dataset.gusto; Object.assign(SAP.fil, { k, q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }); SAP.home = false; $('cat').dataset.v = ''; $('cat').scrollTop = 0; return vai('specie'); }
   if (e.target.closest('[data-sc]')) return;
   if (fa) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'dolci', fam: fa.dataset.fam, q: '', paese: '', festa: '', lr: '', n: 60 }); $('cat').dataset.v = ''; return vai('specie'); }
   if (fe) { e.stopPropagation(); SAP.mese = +fe.dataset.hmese; SAP.cal = null; return vai('meteo'); }
