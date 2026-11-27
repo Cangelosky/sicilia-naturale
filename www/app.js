@@ -523,6 +523,7 @@ let cur = null;
 const cls = tp => tp === 'amp' ? 'mare' : tp === 'zps' ? 'zps' : N2K.includes(tp) ? 'n2k' : AMB.includes(tp) ? tp : '';
 const tipoCF = c => (CFN.tipi[c] || [c])[0];
 function selez(k) {
+  $('sheet').classList.remove('narr');
   if (!map.getLayer('sel')) return;
   const tp = S[k] ? S[k].t : '';
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
@@ -561,14 +562,14 @@ $('sheet').addEventListener('click', e => {
 const COL = { pn: '#1b4332', pr: '#2d6a4f', rn: '#2d6a4f', ap: '#2d6a4f', amp: '#1d6fa5', zsc: '#2f7ea8', zsczps: '#2f7ea8', zps: '#7a5ea8', bv: '#c2571a', am: '#5b3a1a', bs: '#9a7b2f' };
 const colore = k => k.startsWith('CF:') ? (CFC[k.slice(3, 5)] || '#5a8f29') : (COL[S[k].t] || '#2d6a4f');
 const nomiBoschi = (b, n) => b.slice(0, n).map(x => nb(x[0]).toLowerCase());
-const elenco = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + (LANG === 'it' ? ' e ' : ' and ') + a[a.length - 1];
+const elencoE = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + (LANG === 'it' ? ' e ' : ' and ') + a[a.length - 1];
 function sintesi(k) {
   if (k.startsWith('CF:')) { const c = k.slice(3); return esc(CFN.macro[c.slice(0, 2)] || '') + ' · ' + (LANG === 'it' ? 'tipo di bosco della particella' : 'forest type of the stand'); }
   const s = S[k], p = [];
   if (s.t === 'am') return esc([s.vg, s.circ ? fmt(s.circ) + ' cm' : '', s.alt ? fmt(s.alt) + ' m' : ''].filter(Boolean).join(' · '));
   if (s.ha) p.push(fmt(s.ha) + ' ha');
   if (s.t === 'bv' || s.t === 'bs') { p.push(esc(s.tf || s.sp || '')); return p.filter(Boolean).join(' · '); }
-  if (s.b && s.b.length) p.push(esc(elenco(nomiBoschi(s.b, 2))));
+  if (s.b && s.b.length) p.push(esc(elencoE(nomiBoschi(s.b, 2))));
   const d = DENTRO[k] || [], nv = d.filter(x => S[x].t === 'bv').length, na = d.filter(x => S[x].t === 'am').length;
   if (nv) p.push(t('vb')(nv)); if (na) p.push(t('va')(na));
   p.push(N2K.includes(s.t) ? (s.t === 'zps' ? (LANG === 'it' ? 'tutela gli uccelli' : 'protects birds') : (LANG === 'it' ? 'tutela habitat e specie' : 'protects habitats and species')) : (LANG === 'it' ? 'ente e regolamento propri' : 'own managing body and rules'));
@@ -606,16 +607,16 @@ function racconto(k) {
     const area = !k.startsWith('ITA');
     P.push(DESC[LANG][s.t] || '');
     P.push(it ? `Si estende per ${fmt(s.ha)} ettari${s.anno && /^\d{4}/.test(String(s.anno)) ? ` ed è tutelato dal ${String(s.anno).slice(0, 4)}` : ''}.` : `It covers ${fmt(s.ha)} ha${s.anno && /^\d{4}/.test(String(s.anno)) ? ` and was established in ${String(s.anno).slice(0, 4)}` : ''}.`);
-    if (s.b && s.b.length) P.push(it ? `I boschi coprono circa ${fmt(s.bha)} ettari${area ? ' nei siti Natura 2000 collegati' : ''}: i più estesi sono ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`
-                                     : `Forests cover about ${fmt(s.bha)} ha${area ? ' in the linked Natura 2000 sites' : ''}; the largest are ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`);
+    if (s.b && s.b.length) P.push(it ? `I boschi coprono circa ${fmt(s.bha)} ettari${area ? ' nei siti Natura 2000 collegati' : ''}: i più estesi sono ${esc(elencoE(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`
+                                     : `Forests cover about ${fmt(s.bha)} ha${area ? ' in the linked Natura 2000 sites' : ''}; the largest are ${esc(elencoE(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`);
     const sp = specieDi(k), pi = sp.filter(i => SP.gr[i] === 'P');
-    if (pi.length) P.push(it ? `Tra le specie segnalate ci sono ${fmt(pi.length)} piante, come ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.` : `Recorded species include ${fmt(pi.length)} plants, such as ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.`);
+    if (pi.length) P.push(it ? `Tra le specie segnalate ci sono ${fmt(pi.length)} piante, come ${elencoE(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.` : `Recorded species include ${fmt(pi.length)} plants, such as ${elencoE(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.`);
     const d = DENTRO[k] || [], v = d.filter(x => S[x].t === 'bv'), a = d.filter(x => S[x].t === 'am').sort((x, y) => (S[y].circ || 0) - (S[x].circ || 0));
     if (v.length || a.length) {
       const pz = [];
-      if (v.length) pz.push(t('vb')(v.length) + (v.length <= 3 ? ` (${esc(elenco(v.map(x => S[x].n)))})` : ''));
+      if (v.length) pz.push(t('vb')(v.length) + (v.length <= 3 ? ` (${esc(elencoE(v.map(x => S[x].n)))})` : ''));
       if (a.length) pz.push(t('va')(a.length));
-      let f = (it ? 'Al suo interno ci sono ' : 'Inside there are ') + elenco(pz) + '.';
+      let f = (it ? 'Al suo interno ci sono ' : 'Inside there are ') + elencoE(pz) + '.';
       if (a.length) { const g = S[a[0]]; f += it ? ` Il più grande è ${g.vg ? `<b>${esc(g.vg)}</b> ` : ''}in località ${esc(g.n)}, con un tronco di ${fmt(g.circ)} cm di circonferenza.` : ` The largest is ${g.vg ? `<b>${esc(g.vg)}</b> ` : 'the tree '}at ${esc(g.n)}, with a trunk ${fmt(g.circ)} cm around.`; }
       P.push(f);
     }
@@ -900,10 +901,10 @@ function apriSpecie(tipo, i) {
     const am = r[3].filter(k => S[k] && S[k].t === 'am'), bs = r[3].filter(k => S[k] && S[k].t === 'bs');
     if (r[5]) h += it ? `<p><i>${esc(r[0])}</i> è una pianta della famiglia ${esc(r[5])}${r[6] ? `, con ${fmt(r[6])} segnalazioni in Sicilia nel database mondiale della biodiversità GBIF` : ''}.</p>`
                       : `<p><i>${esc(r[0])}</i> is a plant of the family ${esc(r[5])}${r[6] ? `, with ${fmt(r[6])} records in Sicily in the GBIF global biodiversity database` : ''}.</p>`;
-    if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
-                             : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
-    if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
-                                        : `<p>In Sicily it is the species of ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
+    if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elencoE(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
+                             : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elencoE(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
+    if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elencoE([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
+                                        : `<p>In Sicily it is the species of ${elencoE([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
   }
   h += '</div>';
   if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0 · ${t('fotoMic')}</p>`;
@@ -1131,7 +1132,7 @@ function suggerimenti(tutti) {  // le 12 zone più adatte agli interessi scelti
     const pi = specieDi(k).filter(i => SP.gr[i] === 'P').length;
     const fungB = z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).reduce((a, b) => a + b[1], 0);
     let sc = 0; const why = [];
-    if (intSel.has('funghi') && fungB) { sc += Math.log10(1 + fungB) * 2; why.push((LANG === 'it' ? 'boschi adatti ai funghi: ' : 'forests good for fungi: ') + elenco(z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).slice(0, 2).map(b => nb(b[0]).toLowerCase()))); }
+    if (intSel.has('funghi') && fungB) { sc += Math.log10(1 + fungB) * 2; why.push((LANG === 'it' ? 'boschi adatti ai funghi: ' : 'forests good for fungi: ') + elencoE(z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).slice(0, 2).map(b => nb(b[0]).toLowerCase()))); }
     if (intSel.has('alberi') && (na || nv)) { sc += Math.log10(1 + na + 3 * nv) * 3; why.push([na ? t('va')(na) : '', nv ? t('vb')(nv) : ''].filter(Boolean).join(', ')); }
     if (intSel.has('boschi') && z.bha) { sc += Math.log10(1 + z.bha) * 1.5; why.push(fmt(z.bha) + (LANG === 'it' ? ' ha di bosco' : ' ha of forest')); }
     if (intSel.has('flora') && pi) { sc += Math.log10(1 + pi) * 2; why.push(fmt(pi) + (LANG === 'it' ? ' specie di piante segnalate' : ' plant species recorded')); }
@@ -1708,7 +1709,7 @@ function apriMeteoZona(k) {
   const { M, i0, oggi, G } = MET[k];
   cur = null; selez('');
   const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
-  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
+  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elencoE([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
     <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
       return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span>${cella(M, g.i)}<small>${esc(sub)}</small></div>`; }).join('')}</div>
     <p class="note" style="margin-top:10px">${nota}</p></div>`;
@@ -2281,33 +2282,65 @@ function distinta(k, liv) {
   return `<ul class="dist">${v.dist.map(([c, nota]) => { const x = SAP.D.voci[c]; if (!x) return '';
     return `<li><button data-s="${c}">${icoV(x)} ${esc(x.n)}${nota ? ` <small>(${esc(nota)})</small>` : ''}</button>${distinta(c, liv + 1)}</li>`; }).join('')}</ul>`;
 }
+// ---- schede narrative: un racconto costruito dai dati, senza inventare
+const ARTICOLO = { dolci: 'Un dolce', formaggi: 'Un formaggio', 'frutta e ortaggi': 'Un frutto della terra', 'pane e pasta': 'Un pane', gastronomia: 'Un piatto', vini: 'Un vino', salumi: 'Un salume', pesce: 'Un sapore di mare', miele: 'Un miele', 'conserve e condimenti': 'Un condimento', bevande: 'Un liquore' };
+function racconto5(v) {
+  const D = SAP.D, out = [], cat = catDi(v), P = (v.paesi || []).map(p => D.paesi[p].n);
+  const dove = P.length ? (P.length > 4 ? `${elencoE(P.slice(0, 3))} e in altri ${P.length - 3} comuni` : elencoE(P)) : v.prov ? (v.prov.length === 9 ? 'tutta la Sicilia' : 'provincia di ' + elencoE(v.prov.map(x => PROVN[x]))) : '';
+  if (v.t === 'materia') out.push(`${v.n} è una materia prima: da qui partono ricette, dolci e prodotti di tutta l'isola.`);
+  else if (dove) out.push(`${ARTICOLO[cat] || 'Un sapore'} ${P.length ? 'di ' : 'diffuso in '}${dove}${v.nd && norm(v.nd) !== norm(v.n) ? `, che in siciliano si chiama «${v.nd}»` : ''}.`);
+  const ric = v.ric || [];
+  if (ric.includes('DOP')) out.push('È una DOP: il nome, la zona e il modo di produrlo sono protetti da un disciplinare europeo.');
+  else if (ric.includes('IGP')) out.push('È una IGP: l\'Europa riconosce il suo legame con il territorio da cui viene.');
+  else if (ric.some(r => /DOC|IGT/.test(r))) out.push(`È un vino a denominazione (${ric.filter(r => /DOC|IGT/.test(r)).join(', ')}): uve, zona e metodo seguono un disciplinare.`);
+  if (v.pat) out.push('È nell\'elenco nazionale dei prodotti tradizionali: si prepara allo stesso modo da almeno venticinque anni.');
+  if (ric.some(r => /Slow/i.test(r))) out.push('È un presidio Slow Food, custodito da chi lo produce ancora.');
+  if (v.fam && v.fam !== 'Altri dolci') out.push(`Appartiene alla famiglia dei ${v.fam.toLowerCase()}.`);
+  if (v.lr) out.push(v.lr === 'vivo' ? 'Si prepara ancora con continuità.' : v.lr === 'perduto' ? 'Oggi è considerato perduto: resta nei libri e nella memoria.' : `Oggi è ${v.lr}: pochi lo preparano ancora, ed è il motivo per cui lo raccontiamo.`);
+  if (v.dist && v.dist.length) out.push(`È fatto di ${elencoE(v.dist.map(([c]) => (D.voci[c] || {}).n).filter(Boolean).map(x => x.toLowerCase()))}.`);
+  if (v.feste && v.feste.length) out.push(`Si prepara per ${elencoE(v.feste.map(f => D.feste[f].n))}.`);
+  else if (v.m && v.m.length && v.m.length < 12) { const M = new Set(v.m), ini = [...M].find(m => !M.has(m === 1 ? 12 : m - 1)), fin = [...M].find(m => !M.has(m === 12 ? 1 : m + 1)); if (ini && fin && [...M].length === ((fin - ini + 12) % 12) + 1) out.push(ini === fin ? `Il suo mese è ${MESIL[ini - 1]}.` : `Il suo tempo va da ${MESIL[ini - 1]} a ${MESIL[fin - 1]}.`); }
+  if (v.usi.length) out.push(`Lo ritrovi dentro ${elencoE(v.usi.slice(0, 3).map(u => D.voci[u].n))}${v.usi.length > 3 ? ' e altro ancora' : ''}.`);
+  if (v.elenco && !out.length) out.push(`Uno dei dolci dell'elenco di Oscar Cangelosi${v.nota ? `: ${v.nota}` : ''}.`);
+  return out;
+}
+const SAGRE = () => SAP.sagre && SAP.sagre.eventi ? Promise.resolve(SAP.sagre) : (SAP.sagre = fetch('data/sagre.json').then(r => r.json()).catch(() => ({ eventi: [] })));
+function sagreDi(paesi, nome) { const oi = new Date().toISOString().slice(0, 10), w = norm(nome || '').split(/\s+/).filter(x => x.length > 4);
+  return Promise.resolve(SAGRE()).then(sg => { SAP.sagre = sg; return (sg.eventi || []).filter(e => e.d[e.d.length - 1] >= oi && e.t !== 'presepe' && ((e.p && paesi.includes(e.p)) || (w.length && w.some(x => norm(e.n).includes(x))))); }); }
+function eroe5(id, img, cap) { return `<div class="eroe5" id="${id}"${img ? ` style="background-image:url('${img}')"` : ''}></div>${cap ? `<p class="cap5" id="${id}c">${cap}</p>` : `<p class="cap5" id="${id}c"></p>`}`; }
 function sapVoce(k) {
-  const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez('');
-  const lr = v.lr ? `<span class="badge lr" style="background:${LRC[v.lr]}">Lista rossa: ${esc(v.lr)}</span>` : '';
-  testata(v.n, [v.nd ? `in siciliano <b>${esc(v.nd)}</b>` : '', v.paesi ? esc(nomiPaesi(v)) : ''].filter(Boolean).join(' · '),
-    `<span class="badge" style="background:${(GUSTO[catDi(v)] || [, , , '#E8761A'])[3]}1f;color:${(GUSTO[catDi(v)] || [, , , '#E8761A'])[3]}">${esc((GUSTO[catDi(v)] || [, SAPT[v.t][0]])[1])}</span>${(v.ric || []).map(r => `<span class="badge ric">${esc(r)}</span>`).join('')}${lr}`);
-  let h = `${v.fo ? `<figure class="fmia"><img src="foto/${v.fo.f}.webp" alt="${esc(v.fo.t)}"><figcaption>${esc(v.fo.t)}. Foto di Oscar Cangelosi</figcaption></figure>` : ''}<div id="swk"></div><div class="racconto">${v.breve ? `<p><b>${esc(v.breve)}</b></p>` : ''}${v.storia ? `<p>${esc(v.storia)}</p>` : ''}${v.elenco ? `<p>Dall'elenco dei dolci siciliani di Oscar Cangelosi${v.nota ? `: <i>${esc(v.nota)}</i>` : ''}. La scheda completa (storia, versioni documentate, ingredienti) è da scrivere con le fonti.</p>` : ''}</div>`;
-  if (v.pat) h += `<p class="note">Prodotto agroalimentare tradizionale della Sicilia, nell'elenco nazionale del Ministero dell'agricoltura.</p>`;
-  if (v.paesi || v.prov) h += `<h3>Dove nasce</h3>${v.prov ? `<p class="note">${v.prov.length === 9 ? 'In tutta la Sicilia' : 'Provincia di ' + v.prov.map(x => PROVN[x]).join(', ')}.</p>` : ''}${v.paesi ? `<div class="links">${v.paesi.map(p => lnk(p)).join('')}</div>` : ''}${v.zind ? '<p class="note">Zona indicativa: i comuni esatti sono nel disciplinare di produzione.</p>' : ''}`;
-  if (v.sp) h += `<h3>Nella natura</h3><div class="links"><button data-spn="${esc(v.sp)}">${ico('leaf', 'xs')} <i>${esc(v.sp)}</i><br><small>Apri la scheda della specie nella parte Natura</small></button></div>`;
-  if (v.dist) h += `<h3>Di cosa è fatto</h3>${distinta(k, 0)}`;
-  if (v.usi.length) h += `<h3>Dove si usa</h3><div class="links">${v.usi.map(u => lnk(u)).join('')}</div>`;
-  if (v.ver) h += `<h3>Versioni documentate</h3>${v.ver.map(x => { const f = D.fonti[x.f] || {}, tit = { rif: 'Versione di riferimento', var: 'Variante lecita', dev: 'Non tradizionale' }[x.tipo];
-    return `<div class="ver ${x.tipo}"><b>${tit}</b>${x.cert ? ` <span class="cert">${esc(x.cert)}</span>` : ''}<small>${esc(f.a || '')}${f.t ? ', <i>' + esc(f.t) + '</i>' : ''}</small>${x.ingr ? `<p>${esc(x.ingr.join(' · '))}</p>` : ''}${x.nota ? `<p class="note">${esc(x.nota)}</p>` : ''}</div>`; }).join('')}`;
-  if (v.m || v.feste) h += `<h3>Stagione e feste</h3>${v.m ? `<div class="mesi">${MESI.map((m, i) => `<span class="${v.m.includes(i + 1) ? 'on' : ''}">${m}</span>`).join('')}</div>` : ''}${v.feste ? `<div class="links">${v.feste.map(f => `<button data-festa="${f}">${ico('calendar-event', 'xs')} ${esc(D.feste[f].n)}<br><small>${D.feste[f].d === 'mobile' ? 'data mobile' : D.feste[f].d.split('-').reverse().map(Number).join(' ') + ' ' + MESIL[+D.feste[f].d.slice(0, 2) - 1].replace(/^\d+ /, '')}</small></button>`).join('')}</div>` : ''}`;
+  const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez(''); $('sheet').classList.add('narr');
+  const g = GUSTO[catDi(v)], cat = g ? g[1] : SAPT[v.t][0];
+  testata(v.n, '', '');
+  const fr = racconto5(v), kick = [cat, ...(v.ric || []).filter(r => r !== 'PAT'), v.pat ? 'Prodotto tradizionale' : '', v.lr ? 'Lista rossa: ' + v.lr : ''].filter(Boolean);
+  let h = `<article class="nar5">${eroe5('sve', v.fo ? `foto/${v.fo.f}.webp` : '', v.fo ? `${esc(v.fo.t)}. Foto di Oscar Cangelosi` : '')}
+    <div class="nh5"><p class="kick">${kick.map(esc).join(' · ')}</p><h2>${esc(v.n)}</h2>${v.nd && norm(v.nd) !== norm(v.n) ? `<p class="dial">in siciliano <i>${esc(v.nd)}</i></p>` : ''}</div>
+    ${fr.length ? `<p class="lede">${esc(fr[0])}</p>${fr.length > 1 ? `<p class="corpo">${esc(fr.slice(1).join(' '))}</p>` : ''}` : ''}
+    <div class="cta5">${v.paesi ? `<button data-vmap="${k}">${ico('map-pin', 'xs')} Vedi sulla mappa</button>` : ''}${v.paesi && v.paesi.length === 1 ? `<button data-s="${v.paesi[0]}">${ico('basket', 'xs')} Cosa si mangia a ${esc(D.paesi[v.paesi[0]].n)}</button>` : ''}</div>
+    <div id="swk"></div><div id="ssag"></div>`;
+  if (v.paesi || v.prov) h += `<section class="ns5"><h3>Dove nasce</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, evid: v.paesi || [] })}</div>${v.paesi ? `<div class="chips5">${v.paesi.map(p => `<button data-s="${p}">${esc(D.paesi[p].n)}</button>`).join('')}</div>` : `<p class="note">${v.prov.length === 9 ? 'In tutta la Sicilia' : 'Provincia di ' + v.prov.map(x => PROVN[x]).join(', ')}.</p>`}${v.zind ? '<p class="note">Zona indicativa: i comuni esatti sono nel disciplinare di produzione.</p>' : ''}</section>`;
+  if (v.sp) h += `<section class="ns5"><h3>Nella natura</h3><div class="links"><button data-spn="${esc(v.sp)}">${ico('leaf', 'xs')} <i>${esc(v.sp)}</i><br><small>La pianta, dove cresce e quando fiorisce</small></button></div></section>`;
+  if (v.dist) h += `<section class="ns5"><h3>Di cosa è fatto</h3>${distinta(k, 0)}</section>`;
+  if (v.usi.length) h += `<section class="ns5"><h3>Dove si usa</h3><div class="links">${v.usi.map(u => lnk(u)).join('')}</div></section>`;
+  if (v.ver) h += `<section class="ns5"><h3>Versioni documentate</h3>${v.ver.map(x => { const f = D.fonti[x.f] || {}, tit = { rif: 'Versione di riferimento', var: 'Variante lecita', dev: 'Non tradizionale' }[x.tipo];
+    return `<div class="ver ${x.tipo}"><b>${tit}</b>${x.cert ? ` <span class="cert">${esc(x.cert)}</span>` : ''}<small>${esc(f.a || '')}${f.t ? ', <i>' + esc(f.t) + '</i>' : ''}</small>${x.ingr ? `<p>${esc(x.ingr.join(' · '))}</p>` : ''}${x.nota ? `<p class="note">${esc(x.nota)}</p>` : ''}</div>`; }).join('')}</section>`;
+  if (v.m || v.feste) h += `<section class="ns5"><h3>Quando</h3>${v.m ? `<div class="mesi">${MESI.map((m, i) => `<span class="${v.m.includes(i + 1) ? 'on' : ''}">${m}</span>`).join('')}</div>` : ''}${v.feste ? `<div class="links">${v.feste.map(f => `<button data-festa="${f}">${ico('calendar-event', 'xs')} ${esc(D.feste[f].n)}<br><small>${D.feste[f].d === 'mobile' ? 'data mobile' : +D.feste[f].d.slice(3) + ' ' + MESIL[+D.feste[f].d.slice(0, 2) - 1]}</small></button>`).join('')}</div>` : ''}</section>`;
   const chi = Object.values(D.produttori).filter(p => p.fa.includes(k));
-  if (chi.length) h += `<h3>Chi lo fa oggi</h3><div class="links">${chi.map(p => lnk(p.k, RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n + ' · ' + p.liv)).join('')}</div>`;
+  if (chi.length) h += `<section class="ns5"><h3>Chi lo fa oggi</h3><div class="links">${chi.map(p => lnk(p.k, RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n + ' · ' + p.liv)).join('')}</div></section>`;
   const vg = Object.entries(D.viaggi).filter(([, x]) => x.voce === k || x.tappe.some(t => t[1] === k));
-  if (vg.length) h += `<h3>Segui il viaggio</h3><div class="links">${vg.map(([i, x]) => `<button data-viaggio="${i}">${ico('route-2', 'xs')} ${esc(x.n)}<br><small>${x.tappe.length} tappe, dal campo alla tavola</small></button>`).join('')}</div>`;
-  // tre ponti
-  const stesso = Object.values(D.voci).filter(x => x.k !== k && x.paesi && v.paesi && x.paesi.some(p => v.paesi.includes(p))).slice(0, 4);
-  const tema = Object.values(D.voci).filter(x => x.k !== k && x.t === v.t && (v.fam ? x.fam === v.fam : true)).slice(0, 4);
+  if (vg.length) h += `<section class="ns5"><h3>Segui il viaggio</h3><div class="links">${vg.map(([i, x]) => `<button data-viaggio="${i}">${ico('route-2', 'xs')} ${esc(x.n)}<br><small>${x.tappe.length} tappe, dal campo alla tavola</small></button>`).join('')}</div></section>`;
+  const stesso = Object.values(D.voci).filter(x => x.k !== k && x.paesi && v.paesi && x.paesi.some(p => v.paesi.includes(p))).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk)).slice(0, 6);
   const nat = v.paesi ? natVicina(D.paesi[v.paesi[0]].c) : [];
-  if (stesso.length || tema.length || nat.length) h += `<h3>Scopri anche</h3>${stesso.length ? `<p class="note">Nello stesso luogo</p><div class="links">${stesso.map(x => lnk(x.k)).join('')}</div>` : ''}${tema.length ? `<p class="note">${v.fam ? 'Della stessa famiglia' : 'Dello stesso tipo'}</p><div class="links">${tema.map(x => lnk(x.k)).join('')}</div>` : ''}${nat.length ? `<p class="note">La natura intorno</p><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>` : ''}`;
+  if (stesso.length) h += `<section class="ns5"><h3>Nello stesso posto</h3><div class="mini5">${stesso.map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b></button>`).join('')}</div></section>`;
+  if (nat.length) h += `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>`;
   const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : []))].map(f => D.fonti[f]).filter(Boolean);
-  h += `<p class="src">Fonti: ${fonti.length ? fonti.map(f => esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p>`;
-  $('sb').innerHTML = h; mostra(); sapWiki(v, cur);
-  if (v.paesi && vista === 'mappa') sapVola(D.paesi[v.paesi[0]].c, 9);
+  h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
+  $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
+  if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
+    if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/800px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
+    else sapImgV(k).then(r => { if (r) metti(r.u, `${esc(r.a ? r.a + ', ' : '')}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a>`); }); }
+  sagreDi(v.paesi || [], v.n).then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Da segnare in calendario</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}</small></span></button>`).join('')}</section>`; });
+  if (v.paesi && vista === 'mappa' && !SAP.home) sapVola(D.paesi[v.paesi[0]].c, 9);
 }
 function sapProduttore(k) {
   const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r]; cur = 'SAP:' + k; selez('');
@@ -2321,20 +2354,43 @@ function sapProduttore(k) {
   $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(D.paesi[p.paese].c, 10);
 }
 function sapPaese(k) {
-  const D = SAP.D, p = D.paesi[k]; cur = 'SAP:' + k; selez('');
+  const D = SAP.D, p = D.paesi[k]; if (!p) return; cur = 'SAP:' + k; selez(''); $('sheet').classList.add('narr');
   SAP.visti = (SAP.visti || []).filter(x => x !== k).concat(k).slice(-12);
   const voci = Object.values(D.voci).filter(v => (v.paesi || []).includes(k)), prov = Object.values(D.voci).filter(v => !(v.paesi || []).includes(k) && (v.prov || []).includes(p.pv) && (v.prov || []).length < 9);
   const prod = Object.values(D.produttori).filter(x => x.paese === k), fe = Object.entries(D.feste).filter(([, f]) => f.paesi.includes(k)), nat = natVicina(p.c);
-  const grp = [['Con denominazione DOP o IGP', v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')], ['Prodotti tradizionali', v => (v.ric || []).includes('PAT') && v.t !== 'dolce'], ['Dolci', v => v.t === 'dolce'], ['Altro', () => true]];
-  const usati = new Set();
-  testata(p.n, `Provincia di ${esc(PROVN[p.pv] || '')}. ${voci.length} sapori legati a questo comune`, '');
-  let h = '';
-  for (const [tit, f] of grp) { const l = voci.filter(v => !usati.has(v.k) && f(v)); l.forEach(v => usati.add(v.k)); if (l.length) h += `<h3>${tit}</h3><div class="links">${l.map(v => lnk(v.k, [(v.ric || []).join(', '), v.fam && v.fam !== 'Altri dolci' ? v.fam : '', v.nota || ''].filter(Boolean).join(', ').slice(0, 90) || SAPT[v.t][0])).join('')}</div>`; }
-  if (fe.length) h += `<h3>Feste</h3><div class="links">${fe.map(([i, f]) => `<button data-festa="${i}">${ico('calendar-event', 'xs')} ${esc(f.n)}</button>`).join('')}</div>`;
-  if (prov.length) h += `<details class="prov"><summary>In provincia di ${esc(PROVN[p.pv])}: altri ${prov.length} prodotti tradizionali</summary><div class="links">${prov.map(v => lnk(v.k)).join('')}</div></details>`;
-  if (prod.length) h += `<h3>Produttori (esempi)</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div>`;
-  if (nat.length) h += `<h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>`;
-  $('sb').innerHTML = h || '<p class="note">Nessun sapore ancora collegato a questo comune.</p>'; mostra(); if (vista === 'mappa' && !SAP.home) sapVola(p.c, 10);
+  const dol = voci.filter(v => v.t === 'dolce').length, dop = voci.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')), pat = voci.filter(v => v.pat).length;
+  const nC = {}; for (const v of Object.values(D.voci)) for (const q of (v.paesi || [])) nC[q] = (nC[q] || 0) + 1;
+  const inProv = Object.entries(D.paesi).filter(([, x]) => x.pv === p.pv && nC[x]).map(([q]) => q);
+  const rk = Object.keys(D.paesi).filter(q => D.paesi[q].pv === p.pv).sort((a, b) => (nC[b] || 0) - (nC[a] || 0)).indexOf(k) + 1;
+  const vicini = Object.entries(D.paesi).filter(([q]) => q !== k && nC[q]).map(([q, x]) => [q, hav(p.c, x.c)]).sort((a, b) => a[1] - b[1]).slice(0, 5);
+  const top = voci.slice().sort((a, b) => ((b.ric || []).length + !!b.fo * 2 + !!b.wk) - ((a.ric || []).length + !!a.fo * 2 + !!a.wk));
+  testata(p.n, '', '');
+  const fr = [];
+  if (voci.length) fr.push(`A ${p.n} sono documentati ${voci.length} ${voci.length === 1 ? 'sapore' : 'sapori'}${dol ? `, ${dol === voci.length ? 'tutti dolci' : `di cui ${dol} ${dol === 1 ? 'dolce' : 'dolci'}`}` : ''}.`);
+  if (dop.length) fr.push(`Qui nasce ${elencoE(dop.map(v => v.n))}, con denominazione riconosciuta in Europa.`);
+  else if (top[0]) fr.push(`Il più conosciuto è ${top[0].n}.`);
+  if (rk && rk <= 3 && voci.length > 3) fr.push(`È tra i tre comuni più ricchi di sapori della provincia di ${PROVN[p.pv]}.`);
+  if (fe.length) fr.push(`Le feste da segnare: ${elencoE(fe.map(([, f]) => f.n))}.`);
+  if (nat[0]) fr.push(`A ${Math.round(nat[0][1] / 1000)} km c'è ${S[nat[0][0]].n}.`);
+  let h = `<article class="nar5">${eroe5('spe', '', '')}
+    <div class="nh5"><p class="kick">Comune · Provincia di ${esc(PROVN[p.pv] || '')}</p><h2>${esc(p.n)}</h2></div>
+    ${fr.length ? `<p class="lede">${esc(fr[0])}</p>${fr.length > 1 ? `<p class="corpo">${esc(fr.slice(1).join(' '))}</p>` : ''}` : '<p class="lede">Qui non abbiamo ancora documentato sapori. Se ne conosci uno, raccontacelo.</p>'}
+    <div class="cta5"><button data-pmap="${k}">${ico('map-pin', 'xs')} Vedi sulla mappa</button></div>
+    <div id="ssag"></div>
+    ${voci.length ? `<section class="ns5"><h3>Cosa assaggiare</h3><div class="mini5 big">${top.slice(0, 6).map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b><small>${esc([(x.ric || []).join(', '), x.fam && x.fam !== 'Altri dolci' ? x.fam : ''].filter(Boolean).join(', ') || SAPT[x.t][0])}</small></button>`).join('')}</div>
+      ${top.length > 6 ? `<details class="prov"><summary>E altri ${top.length - 6}</summary><div class="chips5">${top.slice(6).map(x => `<button data-s="${x.k}">${esc(x.n)}</button>`).join('')}</div></details>` : ''}</section>` : ''}
+    <section class="ns5"><h3>Dove si trova</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, sel: k })}</div><p class="note">${inProv.length} comuni della provincia di ${esc(PROVN[p.pv])} hanno sapori documentati.</p></section>
+    ${fe.length ? `<section class="ns5"><h3>Feste</h3><div class="links">${fe.map(([i, f]) => `<button data-festa="${i}">${ico('calendar-event', 'xs')} ${esc(f.n)}</button>`).join('')}</div></section>` : ''}
+    ${nat.length ? `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>` : ''}
+    ${vicini.length ? `<section class="ns5"><h3>Qui vicino</h3><div class="chips5">${vicini.map(([q, d]) => `<button data-s="${q}">${esc(D.paesi[q].n)}<em>${Math.round(d / 1000)} km</em></button>`).join('')}</div></section>` : ''}
+    ${prov.length ? `<details class="prov"><summary>In provincia di ${esc(PROVN[p.pv])}: altri ${prov.length} prodotti tradizionali</summary><div class="links">${prov.map(v => lnk(v.k)).join('')}</div></details>` : ''}
+    ${prod.length ? `<section class="ns5"><h3>Produttori (esempi)</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div></section>` : ''}
+    <p class="src">Il racconto è costruito dai dati: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. ${esc(D.nota)}</p></article>`;
+  $('sb').innerHTML = h; mostra(); sapFoto($('sb'));
+  wikiVoce(p.n + (['Licata', 'Ribera'].includes(p.n) ? '' : '')).then(w => { if (!w || cur !== 'SAP:' + k || !$('spe') || !w.thumbnail || NOFOTO.test(w.thumbnail.source)) return;
+    $('spe').style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/800px-')}')`; $('spec').innerHTML = `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`; });
+  sagreDi([k], '').then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Prossimamente a ${esc(p.n)}</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.desc)}</small></span></button>`).join('')}</section>`; });
+  if (vista === 'mappa' && !SAP.home) sapVola(p.c, 10);
 }
 function sapViaggio(i) {
   const D = SAP.D, x = D.viaggi[i];
@@ -2352,6 +2408,14 @@ function sapViaggio(i) {
 }
 function sapFesta(i) { SAP.mese = (SAP.D.feste[i].m || [SAP.mese])[0]; vai('meteo'); }
 $('sheet').addEventListener('click', e => {
+  const vm = e.target.closest('[data-vmap],[data-pmap],[data-scal],.mm5 circle[data-sc]');
+  if (vm) { e.stopPropagation(); const D = SAP.D;
+    if (vm.dataset.scal) { const ev = (SAP.sagre.eventi || []).find(x => x.id === vm.dataset.scal); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d[0], tipo: '', pv: '' }; versoSapori(() => vai('meteo')); } return; }
+    if (vm.dataset.sc) return sapPaese(vm.dataset.sc);
+    const c = vm.dataset.vmap ? D.paesi[D.voci[vm.dataset.vmap].paesi[0]].c : D.paesi[vm.dataset.pmap].c, keep = cur;
+    const vola = () => { sapVola(c, 10); };
+    if (vista !== 'mappa' || SAP.home || NAT.home) { SAP.home = false; NAT.home = false; vai('mappa'); setTimeout(() => { vola(); const kk = keep.slice(4); D.voci[kk] ? sapVoce(kk) : sapPaese(kk); }, 450); } else vola();
+    return; }
   const b = e.target.closest('[data-s],[data-viaggio],[data-festa],[data-spn],[data-nat]'); if (!b || (!SAP.on && !String(cur).startsWith('SAP:'))) return;
   if (b.dataset.s) sapApri(b.dataset.s); else if (b.dataset.viaggio) sapViaggio(b.dataset.viaggio); else if (b.dataset.festa) sapFesta(b.dataset.festa);
   else if (b.dataset.spn) CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) apriSpecie('piante', i); });
@@ -2574,7 +2638,7 @@ function mappaSicilia(o) {
   const tr = (SAP.visti || []).filter(q => D.paesi[q]).map(q => D.paesi[q].c);
   const com = si.comuni.filter(c => c[1] > L0 && c[1] < L1 && c[2] > A0 && c[2] < A1);
   const dot = c => { const q = c[3], m = q && n[q]; return m
-    ? `<circle data-sc="${q}" cx="${X(c[1])}" cy="${Y(c[2])}" r="${((1.8 + 4.2 * Math.sqrt(m / mx)) * s).toFixed(1)}" class="on${o.sel === q ? ' sel' : ''}"><title>${esc(c[0])}: ${m} ${m === 1 ? 'sapore' : 'sapori'}</title></circle>`
+    ? `<circle data-sc="${q}" cx="${X(c[1])}" cy="${Y(c[2])}" r="${((1.8 + 4.2 * Math.sqrt(m / mx)) * s).toFixed(1)}" class="on${o.sel === q || (o.evid && o.evid.includes(q)) ? ' sel' : ''}"><title>${esc(c[0])}: ${m} ${m === 1 ? 'sapore' : 'sapori'}</title></circle>`
     : `<circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(1.3 * s).toFixed(1)}" class="off"><title>${esc(c[0])}: ancora nessun sapore documentato</title></circle>`; };
   const cap = com.filter(c => CAPO[c[0]]);
   return `<svg class="smap" viewBox="0 0 ${w} ${h}" role="img" aria-label="Mappa della Sicilia con i comuni e i loro sapori">
