@@ -1,6 +1,6 @@
 {
 "agg": "2026-11-27",
-"nota": "Elenco dei piatti raccolti dal web (fase 1). Solo nomi, categorie e luoghi: nessun testo di ricetta.",
+"nota": "Elenco dei piatti e prodotti tipici raccolti dal web. Solo nomi, categorie, luoghi e fonti: nessun testo di ricetta.",
 "fonti": {
 "sic": "https://it.wikipedia.org/wiki/Cucina_siciliana",
 "pa": "https://it.wikipedia.org/wiki/Cucina_palermitana",
@@ -15,7 +15,21 @@
 "cl3": "https://www.distrettoturisticodelleminiere.it/en/stagioni/cose-da-assaggiare-inverno/",
 "en1": "https://www.visitsicily.info/en/?p=3297",
 "en2": "https://www.balarm.it/news/un-entroterra-tutto-da-gustare-i-prodotti-tipici-di-un-antico-borgo-ennese-ricco-di-storia-e-tradizioni-123625",
-"ct2": "https://online.scuola.zanichelli.it/tecnichedicucina-files/La-Sicilia.pdf"
+"ct2": "https://online.scuola.zanichelli.it/tecnichedicucina-files/La-Sicilia.pdf",
+"ind": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"pat": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani",
+"rds": "https://ricettedisicilia.org/ricette-siciliane/",
+"rds35": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/",
+"ita": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani",
+"agro": "https://www.agrofood.it/it/regioni/sicilia",
+"viv": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/",
+"eol": "https://www.travel365.it/lipari-eolie-cosa-mangiare.htm",
+"eol2": "https://www.balarm.it/news/con-la-pasta-alla-cucunciata-ti-senti-subito-alle-eolie-un-primo-ricco-colorato-e-saporito-138542",
+"pan": "https://www.voloscontato.it/ristoranti/pantelleria-dove-mangiare-bene-spendendo-poco.php",
+"pan2": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/",
+"en3": "https://www.sicilying.com/it/blog/itinerari-di-sicilia-cosa-fare-a-enna/",
+"en4": "https://www.immobiliare.it/news/vivere-a/italia/cosa-vedere-a-enna-la-citta-piu-alta-ditalia-e-ombelico-di-sicilia-251901/",
+"neb": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/"
 },
 "piatti": [
 {
@@ -57,8 +71,13 @@
 {
 "n": "Matarocco",
 "cat": "antipasto",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Calatafimi-Segesta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Mulinciani mmuttunati",
@@ -69,8 +88,13 @@
 {
 "n": "Frittedda",
 "cat": "antipasto",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Brolo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Arancina / arancino",
@@ -140,9 +164,14 @@
 "n": "Panelle",
 "cat": "strada",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Sommatino",
+"Collesano"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pane con la milza",
@@ -164,9 +193,13 @@
 "n": "Scaccia",
 "cat": "strada",
 "luoghi": [
-"Ragusa"
+"Ragusa",
+"Naso"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Scacciata",
@@ -212,9 +245,13 @@
 "n": "Anelletti al forno",
 "cat": "primo",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Camporeale"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Busiate",
@@ -253,16 +290,25 @@
 {
 "n": "Pasta alla Palina",
 "cat": "primo",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Ciminna"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pasta con le sarde",
 "cat": "primo",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Castelbuono"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pasta con i broccoli arriminati",
@@ -284,9 +330,14 @@
 "n": "Pasta alla Norma",
 "cat": "primo",
 "luoghi": [
-"Catania"
+"Catania",
+"Paternò",
+"San Filippo del Mela"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pasta al nero di seppia",
@@ -329,8 +380,13 @@
 {
 "n": "Pasta alla carrettiera",
 "cat": "primo",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Alì"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pasta con la bottarga",
@@ -427,8 +483,13 @@
 {
 "n": "Falsomagro",
 "cat": "secondo",
-"luoghi": [],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"luoghi": [
+"Delia"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Involtini alla siciliana",
@@ -466,7 +527,8 @@
 "n": "Pescestocco alla messinese",
 "cat": "secondo",
 "luoghi": [
-"Messina"
+"Messina",
+"Milazzo"
 ],
 "fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
 },
@@ -482,9 +544,13 @@
 "n": "Sarde a beccafico",
 "cat": "secondo",
 "luoghi": [
-"Palermo"
+"Palermo",
+"Campofelice di Roccella"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Sarde allinguate",
@@ -774,15 +840,22 @@
 "luoghi": [
 "Mistretta"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Sciusceddu",
 "cat": "primo",
 "luoghi": [
-"Messina"
+"Messina",
+"Capo d'Orlando"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Stuppateddi",
@@ -804,9 +877,13 @@
 "n": "Agnello alla messinese",
 "cat": "secondo",
 "luoghi": [
-"Messina"
+"Messina",
+"Alcara li Fusi"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Baccalà alla messinese",
@@ -1103,9 +1180,13 @@
 "n": "Cernia alla matalotta",
 "cat": "secondo",
 "luoghi": [
-"Siracusa"
+"Siracusa",
+"Pachino"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Ghiotta di tonno coi peperoni",
@@ -1480,9 +1561,13 @@
 "n": "Pastizzu",
 "cat": "strada",
 "luoghi": [
-"Ragusa"
+"Ragusa",
+"Comiso"
 ],
-"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana",
+"altre_fonti": [
+"https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+]
 },
 {
 "n": "Pastieri",
@@ -1732,6 +1817,4134 @@
 "Pietraperzia"
 ],
 "fonte": "https://www.balarm.it/news/un-entroterra-tutto-da-gustare-i-prodotti-tipici-di-un-antico-borgo-ennese-ricco-di-storia-e-tradizioni-123625"
+},
+{
+"n": "Uova strapazzate col pomodoro",
+"cat": "contorno",
+"luoghi": [
+"Agira"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta i San Giuseppi",
+"cat": "primo",
+"luoghi": [
+"Aidone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gelo di mellone",
+"cat": "dolce",
+"luoghi": [
+"Assoro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zuppa di cotenne e fave",
+"cat": "primo",
+"luoghi": [
+"Barrafranca"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pomodori al gratin",
+"cat": "contorno",
+"luoghi": [
+"Calascibetta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi alla villanella",
+"cat": "contorno",
+"luoghi": [
+"Catenanuova",
+"Gaggi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Riso mantecato",
+"cat": "primo",
+"luoghi": [
+"Centuripe"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sformato di melanzane",
+"cat": "contorno",
+"luoghi": [
+"Cerami"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Guastedde ennesi",
+"cat": "secondo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Aggrassatu",
+"cat": "secondo",
+"luoghi": [
+"Gagliano Castelferrato"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pollo all'aceto",
+"cat": "secondo",
+"luoghi": [
+"Leonforte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zuppa di cotenne e giri",
+"cat": "primo",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sfinci di riso",
+"cat": "primo",
+"luoghi": [
+"Nissoria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con la coratella",
+"cat": "primo",
+"luoghi": [
+"Piazza Armerina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zuppa di uovo nell'acqua",
+"cat": "primo",
+"luoghi": [
+"Pietraperzia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coniglio alla cacciatora",
+"cat": "secondo",
+"luoghi": [
+"Regalbuto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frascatula",
+"cat": "primo",
+"luoghi": [
+"Sperlinga",
+"Villarosa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": [
+"https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+]
+},
+{
+"n": "Cosciotto di castrato abbottonato",
+"cat": "secondo",
+"luoghi": [
+"Troina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Testa di maiale in gelatina",
+"cat": "secondo",
+"luoghi": [
+"Valguarnera Caropepe"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coniglio a ragù",
+"cat": "secondo",
+"luoghi": [
+"Villarosa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Melanzane al forno",
+"cat": "contorno",
+"luoghi": [
+"Agrigento"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ravioloni all'uovu di tunnu",
+"cat": "primo",
+"luoghi": [
+"Alessandria della Rocca"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tiano d'Aragona",
+"cat": "primo",
+"luoghi": [
+"Aragona"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gattò di riso",
+"cat": "primo",
+"luoghi": [
+"Bivona",
+"Mandanici"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Minestrone di pasta con fave e finocchietti",
+"cat": "primo",
+"luoghi": [
+"Burgio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con alici e piselli",
+"cat": "primo",
+"luoghi": [
+"Calamonaci"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Patate e sfinciuni",
+"cat": "contorno",
+"luoghi": [
+"Caltabellotta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ravioli fritti alla ricotta",
+"cat": "primo",
+"luoghi": [
+"Camastra"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gattò di sarde e carciofi",
+"cat": "contorno",
+"luoghi": [
+"Cammarata"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Lu mpurnatu",
+"cat": "secondo",
+"luoghi": [
+"Campobello di Licata"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uva di Canicattì ai tre cioccolati",
+"cat": "dolce",
+"luoghi": [
+"Canicattì"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni in agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Casteltermini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciolone di castrato al ragù",
+"cat": "secondo",
+"luoghi": [
+"Castrofilippo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Anguille in camicia all'eraclese",
+"cat": "secondo",
+"luoghi": [
+"Cattolica Eraclea"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Budello grasso",
+"cat": "secondo",
+"luoghi": [
+"Cianciana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coratella e patate",
+"cat": "contorno",
+"luoghi": [
+"Comitini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di patate e peperoni",
+"cat": "primo",
+"luoghi": [
+"Favara"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ditalini con favuzze e ricotta",
+"cat": "primo",
+"luoghi": [
+"Grotte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pane di fegato",
+"cat": "secondo",
+"luoghi": [
+"Joppolo Giancaxio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Farfalle alla Lampedusa in bocca",
+"cat": "primo",
+"luoghi": [
+"Lampedusa e Linosa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uova arriminate",
+"cat": "contorno",
+"luoghi": [
+"Licata"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Teste di turco",
+"cat": "dolce",
+"luoghi": [
+"Lucca Sicula"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cucchiteddi",
+"cat": "secondo",
+"luoghi": [
+"Menfi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con le sarde di Montallegro",
+"cat": "primo",
+"luoghi": [
+"Montallegro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di lenticchie",
+"cat": "primo",
+"luoghi": [
+"Montevago"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Stigghiolata china",
+"cat": "secondo",
+"luoghi": [
+"Naro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Farro",
+"cat": "secondo",
+"luoghi": [
+"Ravanusa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno al ragù",
+"cat": "secondo",
+"luoghi": [
+"Realmonte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Mulettu ammarinatu del Platani",
+"cat": "secondo",
+"luoghi": [
+"Ribera"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pesto siciliano",
+"cat": "salsa",
+"luoghi": [
+"Sambuca di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa verde",
+"cat": "salsa",
+"luoghi": [
+"San Biagio Platani"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salame turco",
+"cat": "dolce",
+"luoghi": [
+"San Giovanni Gemini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Luna di Maometto",
+"cat": "dolce",
+"luoghi": [
+"Sant'Angelo Muxaro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Trionfo di gola",
+"cat": "dolce",
+"luoghi": [
+"Santa Elisabetta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gattò di patate e melanzane",
+"cat": "contorno",
+"luoghi": [
+"Santa Margherita di Belice"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salàmoreci",
+"cat": "secondo",
+"luoghi": [
+"Santo Stefano Quisquina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con sarde alla sciacchitana",
+"cat": "primo",
+"luoghi": [
+"Sciacca"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa con aglio",
+"cat": "salsa",
+"luoghi": [
+"Siculiana",
+"Belpasso"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Pollo alla nissena",
+"cat": "secondo",
+"luoghi": [
+"Acquaviva Platani"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Buccellato",
+"cat": "dolce",
+"luoghi": [
+"Bompensiere"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Calamari ripieni",
+"cat": "secondo",
+"luoghi": [
+"Butera"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Fuate",
+"cat": "strada",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cuccia",
+"cat": "dolce",
+"luoghi": [
+"Campofranco",
+"Licodia Eubea",
+"Merì"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Galletti alla griglia",
+"cat": "secondo",
+"luoghi": [
+"Gela"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uova con patate fritte",
+"cat": "contorno",
+"luoghi": [
+"Marianopoli"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cubaida",
+"cat": "dolce",
+"luoghi": [
+"Mazzarino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi ripieni in tegame",
+"cat": "contorno",
+"luoghi": [
+"Milena"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Arancine",
+"cat": "strada",
+"luoghi": [
+"Montedoro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperonata",
+"cat": "contorno",
+"luoghi": [
+"Mussomeli",
+"Pedara",
+"Basicò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Sarde alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Niscemi",
+"Partinico"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Pasta aglio, olio e peperoncino",
+"cat": "primo",
+"luoghi": [
+"Resuttano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Mastazzola",
+"cat": "dolce",
+"luoghi": [
+"Riesi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pollo al forno",
+"cat": "secondo",
+"luoghi": [
+"San Cataldo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Timballo di riso",
+"cat": "primo",
+"luoghi": [
+"Santa Caterina Villarmosa",
+"Buscemi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Pasta a picchio pacchio",
+"cat": "primo",
+"luoghi": [
+"Serradifalco"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pitirri",
+"cat": "strada",
+"luoghi": [
+"Sutera"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni ripieni",
+"cat": "contorno",
+"luoghi": [
+"Vallelunga Pratameno"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Arancine con amarena",
+"cat": "strada",
+"luoghi": [
+"Villalba"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Involtini di tonno in tegame",
+"cat": "secondo",
+"luoghi": [
+"Aci Bonaccorsi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tunnina ammarinata",
+"cat": "secondo",
+"luoghi": [
+"Aci Castello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Caponata catanese",
+"cat": "contorno",
+"luoghi": [
+"Aci Catena"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno alla puttanesca",
+"cat": "secondo",
+"luoghi": [
+"Aci Sant'Antonio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Mascoli marinati",
+"cat": "secondo",
+"luoghi": [
+"Acireale"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti alla carrettiera",
+"cat": "primo",
+"luoghi": [
+"Adrano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Scacciate",
+"cat": "strada",
+"luoghi": [
+"Biancavilla"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Crispelle",
+"cat": "strada",
+"luoghi": [
+"Bronte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Baccalà alla siciliana",
+"cat": "secondo",
+"luoghi": [
+"Calatabiano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccu verde",
+"cat": "primo",
+"luoghi": [
+"Caltagirone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette con le mandorle",
+"cat": "secondo",
+"luoghi": [
+"Camporotondo Etneo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Parmigiana catanese",
+"cat": "contorno",
+"luoghi": [
+"Castel di Iudica"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpicelli e patate in tegame",
+"cat": "contorno",
+"luoghi": [
+"Castiglione di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno all'agliata",
+"cat": "salsa",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Fiori di zucca fritti",
+"cat": "contorno",
+"luoghi": [
+"Fiumefreddo di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Mascolini all'agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Giarre"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Trippa fritta",
+"cat": "secondo",
+"luoghi": [
+"Grammichele"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno ammarinato",
+"cat": "secondo",
+"luoghi": [
+"Gravina di Catania"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Anguille in umido",
+"cat": "secondo",
+"luoghi": [
+"Linguaglossa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Torta di ricotta e fragole",
+"cat": "dolce",
+"luoghi": [
+"Maletto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Funghi alla siciliana",
+"cat": "contorno",
+"luoghi": [
+"Maniace"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette di finocchietti",
+"cat": "secondo",
+"luoghi": [
+"Mascali",
+"Novara di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Polpette di ricotta",
+"cat": "secondo",
+"luoghi": [
+"Mascalucia",
+"Roccavaldina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Maccheroni al sugo di maiale",
+"cat": "primo",
+"luoghi": [
+"Mazzarrone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta cu finocchiu rizzu",
+"cat": "primo",
+"luoghi": [
+"Militello in Val di Catania"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sfincioni di San Giuseppe",
+"cat": "strada",
+"luoghi": [
+"Milo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di polpo",
+"cat": "contorno",
+"luoghi": [
+"Mineo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti ca nunnata",
+"cat": "primo",
+"luoghi": [
+"Mirabella Imbaccari"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cozze gratinate",
+"cat": "secondo",
+"luoghi": [
+"Misterbianco"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Dolce di campagna con pinoli",
+"cat": "dolce",
+"luoghi": [
+"Motta Sant'Anastasia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uova in carrozza",
+"cat": "contorno",
+"luoghi": [
+"Nicolosi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cotenne con verdure",
+"cat": "secondo",
+"luoghi": [
+"Palagonia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi alla brace",
+"cat": "contorno",
+"luoghi": [
+"Piedimonte Etneo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carrubbelle",
+"cat": "dolce",
+"luoghi": [
+"Raddusa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Risotto alla marinara",
+"cat": "primo",
+"luoghi": [
+"Ragalna",
+"Santa Lucia del Mela"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Pasta coi broccoli catanesi",
+"cat": "primo",
+"luoghi": [
+"Ramacca"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Crispelle di riso",
+"cat": "primo",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Mascolini alla pescatora",
+"cat": "secondo",
+"luoghi": [
+"Riposto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con i tenerumi",
+"cat": "primo",
+"luoghi": [
+"San Cono"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti con l'astice",
+"cat": "primo",
+"luoghi": [
+"San Giovanni la Punta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Lattume di tonno al forno",
+"cat": "secondo",
+"luoghi": [
+"San Gregorio di Catania"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Calamari al forno",
+"cat": "secondo",
+"luoghi": [
+"Sant'Agata li Battiati"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno con le cipolle",
+"cat": "secondo",
+"luoghi": [
+"Sant'Alfio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa di pelati",
+"cat": "salsa",
+"luoghi": [
+"Santa Maria di Licodia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Broccoli fritti",
+"cat": "contorno",
+"luoghi": [
+"Santa Venerina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Caponata di melanzane",
+"cat": "contorno",
+"luoghi": [
+"Scordia",
+"Lascari"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Biancomangiare",
+"cat": "dolce",
+"luoghi": [
+"Trecastagni",
+"Mirto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html",
+"altre_fonti": []
+},
+{
+"n": "Zuccata",
+"cat": "dolce",
+"luoghi": [
+"Tremestieri Etneo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con aragosta",
+"cat": "primo",
+"luoghi": [
+"Valverde"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di pesce stocco",
+"cat": "contorno",
+"luoghi": [
+"Acquedolci"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "'Mpanata di pesce spada",
+"cat": "strada",
+"luoghi": [
+"Alì Terme"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa alla messinese",
+"cat": "salsa",
+"luoghi": [
+"Antillo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Crocchette di riso",
+"cat": "primo",
+"luoghi": [
+"Barcellona Pozzo di Gotto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi a piripicchio",
+"cat": "contorno",
+"luoghi": [
+"Capizzi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata turca",
+"cat": "contorno",
+"luoghi": [
+"Capri Leone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Riso nero",
+"cat": "primo",
+"luoghi": [
+"Caronia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Siringate di ricotta",
+"cat": "dolce",
+"luoghi": [
+"Casalvecchio Siculo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Agliata",
+"cat": "salsa",
+"luoghi": [
+"Castel di Lucio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uova con la tuma",
+"cat": "contorno",
+"luoghi": [
+"Castelmola"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cipollata",
+"cat": "contorno",
+"luoghi": [
+"Castell'Umberto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coniglio arrosto",
+"cat": "secondo",
+"luoghi": [
+"Castroreale"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Castrato al forno",
+"cat": "secondo",
+"luoghi": [
+"Cesarò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccheroni al gratin",
+"cat": "primo",
+"luoghi": [
+"Condrò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Olive a puddastredda",
+"cat": "contorno",
+"luoghi": [
+"Falcone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cotognata",
+"cat": "dolce",
+"luoghi": [
+"Ficarra"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gelato di frutta",
+"cat": "dolce",
+"luoghi": [
+"Fiumedinisi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti cu l'agghiu e l'ogghiu",
+"cat": "primo",
+"luoghi": [
+"Floresta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salmorigano",
+"cat": "salsa",
+"luoghi": [
+"Fondachelli-Fantina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gelato di gianduia",
+"cat": "dolce",
+"luoghi": [
+"Forza d'Agrò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciolettine alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Francavilla di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta frolla",
+"cat": "dolce",
+"luoghi": [
+"Frazzanò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta c'anciove e muddica",
+"cat": "primo",
+"luoghi": [
+"Furci Siculo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Arancine dolci",
+"cat": "dolce",
+"luoghi": [
+"Furnari"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi con mollica",
+"cat": "contorno",
+"luoghi": [
+"Galati Mamertino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di pomodoro e cipolle",
+"cat": "contorno",
+"luoghi": [
+"Gallodoro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pesce stocco alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Giardini Naxos"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta reale",
+"cat": "dolce",
+"luoghi": [
+"Gioiosa Marea"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pomodori al forno",
+"cat": "contorno",
+"luoghi": [
+"Graniti"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con cipolla",
+"cat": "contorno",
+"luoghi": [
+"Gualtieri Sicaminò"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni arrostiti",
+"cat": "contorno",
+"luoghi": [
+"Itala"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con patate",
+"cat": "contorno",
+"luoghi": [
+"Leni"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Falsomagro o braciolone",
+"cat": "secondo",
+"luoghi": [
+"Letojanni"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Torrone di scorza d'arancio",
+"cat": "dolce",
+"luoghi": [
+"Librizzi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con asparagi",
+"cat": "contorno",
+"luoghi": [
+"Limina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciole di pesce spada arrosto",
+"cat": "secondo",
+"luoghi": [
+"Lipari"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di pomodoro",
+"cat": "contorno",
+"luoghi": [
+"Longi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Crema di ricotta",
+"cat": "dolce",
+"luoghi": [
+"Malfa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ragù di carne",
+"cat": "secondo",
+"luoghi": [
+"Malvagna"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa di estratto",
+"cat": "salsa",
+"luoghi": [
+"Mazzarrà Sant'Andrea"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carne aggrassata",
+"cat": "secondo",
+"luoghi": [
+"Moio Alcantara"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsiccia al ragù",
+"cat": "secondo",
+"luoghi": [
+"Monforte San Giorgio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pane e caponata",
+"cat": "contorno",
+"luoghi": [
+"Mongiuffi Melia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Bistecche alla siciliana",
+"cat": "secondo",
+"luoghi": [
+"Montagnareale"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di pollo",
+"cat": "contorno",
+"luoghi": [
+"Montalbano Elicona"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sgombro a cotoletta",
+"cat": "secondo",
+"luoghi": [
+"Motta Camastra"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Purpieddi in tianu",
+"cat": "secondo",
+"luoghi": [
+"Motta d'Affermo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Limone zuccherato",
+"cat": "dolce",
+"luoghi": [
+"Nizza di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Insalata di aringhe e arance",
+"cat": "contorno",
+"luoghi": [
+"Oliveri"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carpaccio di pesce spada",
+"cat": "secondo",
+"luoghi": [
+"Pace del Mela"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con le vongole in bianco",
+"cat": "primo",
+"luoghi": [
+"Pagliara"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciole di pesce spada alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Patti"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con neonata",
+"cat": "primo",
+"luoghi": [
+"Pettineo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Vermicelli alla siciliana",
+"cat": "primo",
+"luoghi": [
+"Piraino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cotoletta all'aceto",
+"cat": "secondo",
+"luoghi": [
+"Raccuja"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tagliolini con sogliole",
+"cat": "primo",
+"luoghi": [
+"Reitano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Risotto al prezzemolo",
+"cat": "primo",
+"luoghi": [
+"Roccafiorita"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zuppa di pesce",
+"cat": "primo",
+"luoghi": [
+"Roccalumera"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa per arrosti",
+"cat": "salsa",
+"luoghi": [
+"Roccella Valdemone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Olive nere fritte",
+"cat": "contorno",
+"luoghi": [
+"Rodì Milici"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maltagliati all'aggrassata",
+"cat": "primo",
+"luoghi": [
+"Rometta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cassata gelata",
+"cat": "dolce",
+"luoghi": [
+"San Fratello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sorbetto di pesche bianche",
+"cat": "dolce",
+"luoghi": [
+"San Marco d'Alunzio"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sorbetto di limone all'arancia",
+"cat": "dolce",
+"luoghi": [
+"San Pier Niceto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Triglie con salsa di menta",
+"cat": "salsa",
+"luoghi": [
+"San Piero Patti"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti alle erbe",
+"cat": "primo",
+"luoghi": [
+"San Salvatore di Fitalia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pollo arrosto",
+"cat": "secondo",
+"luoghi": [
+"San Teodoro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Melanzane ad insalata",
+"cat": "contorno",
+"luoghi": [
+"Sant'Agata di Militello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spumette di nocciole",
+"cat": "dolce",
+"luoghi": [
+"Sant'Alessio Siculo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sedanini con pesce spada e melanzane",
+"cat": "primo",
+"luoghi": [
+"Sant'Angelo di Brolo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spuma gelata di crema",
+"cat": "dolce",
+"luoghi": [
+"Santa Domenica Vittoria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Involtini di capellini",
+"cat": "primo",
+"luoghi": [
+"Santa Marina Salina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Busiati col pesto di melanzane",
+"cat": "primo",
+"luoghi": [
+"Santa Teresa di Riva"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gelo di melone",
+"cat": "dolce",
+"luoghi": [
+"Alia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sfince di San Giuseppe",
+"cat": "dolce",
+"luoghi": [
+"Alimena"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pignoccata",
+"cat": "dolce",
+"luoghi": [
+"Aliminusa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno bianco",
+"cat": "secondo",
+"luoghi": [
+"Altavilla Milicia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Torrone di mandorle",
+"cat": "dolce",
+"luoghi": [
+"Altofonte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciolettine arrostite",
+"cat": "secondo",
+"luoghi": [
+"Bagheria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno a sfinciuni",
+"cat": "secondo",
+"luoghi": [
+"Balestrate"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spiedini fritti",
+"cat": "secondo",
+"luoghi": [
+"Baucina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tunnina fritta",
+"cat": "secondo",
+"luoghi": [
+"Belmonte Mezzagno"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pizzaiola al forno",
+"cat": "strada",
+"luoghi": [
+"Bisacquino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette in agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Blufi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Testa di maiale soppressata",
+"cat": "secondo",
+"luoghi": [
+"Bolognetta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Braciolone di cotenne",
+"cat": "secondo",
+"luoghi": [
+"Bompietro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sarde fritte",
+"cat": "secondo",
+"luoghi": [
+"Borgetto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Capretto al forno",
+"cat": "secondo",
+"luoghi": [
+"Caccamo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sarde in pastella",
+"cat": "secondo",
+"luoghi": [
+"Caltavuturo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Capretto brasato",
+"cat": "secondo",
+"luoghi": [
+"Campofelice di Fitalia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Trippa con le melanzane",
+"cat": "contorno",
+"luoghi": [
+"Campofiorito"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Baccalà alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Capaci"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Lasagne con ragù e ricotta",
+"cat": "primo",
+"luoghi": [
+"Carini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con salsa e melanzane",
+"cat": "primo",
+"luoghi": [
+"Casteldaccia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta e carciofi",
+"cat": "primo",
+"luoghi": [
+"Castellana Sicula"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con i broccoli in tegame",
+"cat": "primo",
+"luoghi": [
+"Castronovo di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con i broccoli fritti",
+"cat": "primo",
+"luoghi": [
+"Cefalà Diana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di zucca e patate",
+"cat": "primo",
+"luoghi": [
+"Cefalù"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccu con zucca gialla",
+"cat": "primo",
+"luoghi": [
+"Cerda"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di fagioli freschi",
+"cat": "primo",
+"luoghi": [
+"Chiusa Sclafani"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sfincione palermitano",
+"cat": "strada",
+"luoghi": [
+"Cinisi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Arancine di riso",
+"cat": "primo",
+"luoghi": [
+"Contessa Entellina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Timballo di maccheroni bianco",
+"cat": "primo",
+"luoghi": [
+"Corleone"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Timballo di maccheroni rosso",
+"cat": "primo",
+"luoghi": [
+"Ficarazzi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Anelletti del Monsù",
+"cat": "primo",
+"luoghi": [
+"Gangi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Panserotti",
+"cat": "strada",
+"luoghi": [
+"Geraci Siculo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pizza rustica",
+"cat": "strada",
+"luoghi": [
+"Giardinello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasticcio di caponata",
+"cat": "contorno",
+"luoghi": [
+"Giuliana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con melanzane",
+"cat": "contorno",
+"luoghi": [
+"Godrano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette di pangrattato",
+"cat": "secondo",
+"luoghi": [
+"Gratteri"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Formaggio all'argentiera",
+"cat": "secondo",
+"luoghi": [
+"Isnello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Parmigiana",
+"cat": "contorno",
+"luoghi": [
+"Isola delle Femmine"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Melincianedde 'mmuttunate",
+"cat": "secondo",
+"luoghi": [
+"Lercara Friddi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi fritti",
+"cat": "contorno",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Broccoli affogati",
+"cat": "contorno",
+"luoghi": [
+"Montelepre"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zucca gialla in agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Montemaggiore Belsito"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Patate apparecchiate",
+"cat": "contorno",
+"luoghi": [
+"Palazzo Adriano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cassata siciliana",
+"cat": "dolce",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sfoglio",
+"cat": "secondo",
+"luoghi": [
+"Petralia Soprana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Olive con la mollica",
+"cat": "contorno",
+"luoghi": [
+"Petralia Sottana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cannoli",
+"cat": "dolce",
+"luoghi": [
+"Piana degli Albanesi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Funghi in tegame",
+"cat": "contorno",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con le sarde a mare",
+"cat": "primo",
+"luoghi": [
+"Pollina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccu e finocchietti",
+"cat": "primo",
+"luoghi": [
+"Prizzi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Broccoli in pastella",
+"cat": "contorno",
+"luoghi": [
+"Roccamena"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di riso e patate",
+"cat": "primo",
+"luoghi": [
+"Roccapalumba"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con carciofi",
+"cat": "contorno",
+"luoghi": [
+"San Cipirello"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Funghi al forno",
+"cat": "contorno",
+"luoghi": [
+"San Giuseppe Jato"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno in salsa verde",
+"cat": "salsa",
+"luoghi": [
+"San Mauro Castelverde"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Baccalà in umido",
+"cat": "secondo",
+"luoghi": [
+"Santa Cristina Gela"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni imbottiti",
+"cat": "contorno",
+"luoghi": [
+"Santa Flavia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con le cozze",
+"cat": "primo",
+"luoghi": [
+"Sciara"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta col ragù di tonno",
+"cat": "primo",
+"luoghi": [
+"Scillato"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Buccellati",
+"cat": "dolce",
+"luoghi": [
+"Sclafani Bagni"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Arrosto panato alla palermitana",
+"cat": "secondo",
+"luoghi": [
+"Termini Imerese"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con i ricci",
+"cat": "primo",
+"luoghi": [
+"Terrasini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno alla stemperata",
+"cat": "secondo",
+"luoghi": [
+"Acate"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Costate di maiale ripiene",
+"cat": "secondo",
+"luoghi": [
+"Chiaramonte Gulfi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cassata al forno",
+"cat": "dolce",
+"luoghi": [
+"Giarratana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Biancomangiare di mandorle",
+"cat": "dolce",
+"luoghi": [
+"Ispica"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Scacce",
+"cat": "strada",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Melanzane in insalata",
+"cat": "contorno",
+"luoghi": [
+"Monterosso Almo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "'Mpanatigghie",
+"cat": "strada",
+"luoghi": [
+"Pozzallo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Stemperata",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cacio all'argentiera",
+"cat": "secondo",
+"luoghi": [
+"Santa Croce Camerina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccheroni al forno",
+"cat": "primo",
+"luoghi": [
+"Scicli"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittata con salsiccia",
+"cat": "contorno",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Augusta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonnina alla siciliana",
+"cat": "secondo",
+"luoghi": [
+"Avola"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "'Mpanate siracusane",
+"cat": "strada",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con le noci",
+"cat": "primo",
+"luoghi": [
+"Canicattini Bagni"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni con la mollica",
+"cat": "contorno",
+"luoghi": [
+"Carlentini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Olive alla stemperata",
+"cat": "contorno",
+"luoghi": [
+"Cassaro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Gallina col riso",
+"cat": "primo",
+"luoghi": [
+"Ferla"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta fritta alla siracusana",
+"cat": "primo",
+"luoghi": [
+"Floridia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Maccu di San Giuseppe",
+"cat": "primo",
+"luoghi": [
+"Francofonte"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti col tonno fresco",
+"cat": "primo",
+"luoghi": [
+"Lentini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Frittura in pastella",
+"cat": "secondo",
+"luoghi": [
+"Melilli"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsiccia di tonno",
+"cat": "secondo",
+"luoghi": [
+"Noto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coniglio alla stemperata",
+"cat": "secondo",
+"luoghi": [
+"Palazzolo Acreide"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta col nero di seppia",
+"cat": "primo",
+"luoghi": [
+"Portopalo di Capo Passero"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Coniglio in agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Alcamo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Capretto con le mandorle",
+"cat": "secondo",
+"luoghi": [
+"Buseto Palizzolo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con salsa e pesce fritto",
+"cat": "primo",
+"luoghi": [
+"Campobello di Mazara"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Involtini di tonno arrosto",
+"cat": "secondo",
+"luoghi": [
+"Castellammare del Golfo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Salsa di pomodoro",
+"cat": "salsa",
+"luoghi": [
+"Castelvetrano"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno arrosto",
+"cat": "secondo",
+"luoghi": [
+"Custonaci"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pesto trapanese",
+"cat": "salsa",
+"luoghi": [
+"Erice"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno crudo",
+"cat": "secondo",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti con l'uovo di tonno",
+"cat": "primo",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Lattume di tonno fritto",
+"cat": "secondo",
+"luoghi": [
+"Partanna"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con broccoli fritti alla trapanese",
+"cat": "primo",
+"luoghi": [
+"Petrosino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cabucio",
+"cat": "secondo",
+"luoghi": [
+"Poggioreale"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Rianata",
+"cat": "secondo",
+"luoghi": [
+"Salaparuta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cucuzzata",
+"cat": "dolce",
+"luoghi": [
+"Salemi"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Agrodolce",
+"cat": "dolce",
+"luoghi": [
+"Santa Ninfa"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tonno 'mmuttunatu",
+"cat": "secondo",
+"luoghi": [
+"San Vito lo Capo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cuscus",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette di tonno",
+"cat": "secondo",
+"luoghi": [
+"Valderice"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Cannoli di tuma",
+"cat": "dolce",
+"luoghi": [
+"Vita"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti col nero di seppia",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Melanzane a quaglia",
+"cat": "contorno",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Sarde a linguata",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Coniglio all'argentiera",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Ficatu dî sette cannola",
+"cat": "contorno",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Crostini palermitani",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Cazzilli",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Quarume",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Purpu a stricasale",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Ghiotta di stoccafisso alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Polpette di sarde alla catanese",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Polpette di cavallo",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Melanzane ripiene alla catanese",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Impanata di castrato",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Maccheroni in agrodolce",
+"cat": "primo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Ciarbiḍḍuzzu abbuttunatu",
+"cat": "secondo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Maccarruna cu sucu",
+"cat": "primo",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Agnello al forno con patate",
+"cat": "secondo",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Schiacciata nissena con tuma e spinaci",
+"cat": "strada",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Pizza agrigentina",
+"cat": "strada",
+"luoghi": [
+"Agrigento"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Busiate con pesce spada e melanzane",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Tonnina salata",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://ricettedisicilia.org/ricette-siciliane/"
+},
+{
+"n": "Timballo del Gattopardo",
+"cat": "primo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta al forno alla catanese",
+"cat": "primo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta cinque buchi alla catanese",
+"cat": "primo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Lasagne cacate",
+"cat": "primo",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta cû trunzu di Aci",
+"cat": "primo",
+"luoghi": [
+"Acireale"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta alla Turiddu",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta dû malu tempu",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta câ nnocca",
+"cat": "primo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta a taianu",
+"cat": "primo",
+"luoghi": [
+"Cefalù"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pappardelle al ragù di cinghiale",
+"cat": "primo",
+"luoghi": [
+"Nebrodi e Madonie"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Spaghetti alla lampedusana",
+"cat": "primo",
+"luoghi": [
+"Lampedusa e Linosa"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "'Ncucciateḍḍu",
+"cat": "primo",
+"luoghi": [
+"Scicli"
+],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta câ pastigghia",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Pasta e ceci alla siciliana",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://ricettedisicilia.org/35-grandi-primi-piatti-della-cucina-siciliana/"
+},
+{
+"n": "Tagghiani all'ortica",
+"cat": "primo",
+"luoghi": [
+"Castiglione di Sicilia"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Coniglio selvatico",
+"cat": "secondo",
+"luoghi": [
+"Castiglione di Sicilia"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Sciauni",
+"cat": "dolce",
+"luoghi": [
+"Castiglione di Sicilia"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Cuccureddi",
+"cat": "dolce",
+"luoghi": [
+"Castiglione di Sicilia"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Maccheroni al sugo di suino nero dei Nebrodi",
+"cat": "primo",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Nuvolette",
+"cat": "dolce",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Tirrimulliri",
+"cat": "dolce",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Sciatore",
+"cat": "dolce",
+"luoghi": [
+"Zafferana Etnea"
+],
+"fonte": "https://www.italia.it/it/sicilia/cosa-fare/prodotti-piatti-tipici-siciliani"
+},
+{
+"n": "Cuddrireddra",
+"cat": "dolce",
+"luoghi": [
+"Delia"
+],
+"fonte": "https://www.agrofood.it/it/regioni/sicilia"
+},
+{
+"n": "'Mpanatigghi",
+"cat": "strada",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://www.agrofood.it/it/regioni/sicilia"
+},
+{
+"n": "Acciughe di Sciacca",
+"cat": "conserva",
+"luoghi": [
+"Sciacca"
+],
+"fonte": "https://www.agrofood.it/it/regioni/sicilia"
+},
+{
+"n": "Panicuottu col pomodoro",
+"cat": "primo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Busiati con la ricotta",
+"cat": "primo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Pasta con la lenticchia nera",
+"cat": "primo",
+"luoghi": [
+"Leonforte"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Agnello al limone a fricassè",
+"cat": "secondo",
+"luoghi": [
+"Valguarnera Caropepe"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Agnello in umido con piselli",
+"cat": "secondo",
+"luoghi": [
+"Villarosa"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Stigghiole di capretto",
+"cat": "secondo",
+"luoghi": [
+"Piazza Armerina"
+],
+"fonte": "https://www.vivienna.it/2013/10/31/la-gastronomia-pasquale-ad-enna-2/"
+},
+{
+"n": "Pasta ricasciata",
+"cat": "primo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://www.immobiliare.it/news/vivere-a/italia/cosa-vedere-a-enna-la-citta-piu-alta-ditalia-e-ombelico-di-sicilia-251901/"
+},
+{
+"n": "Frascatula di cicerchia",
+"cat": "primo",
+"luoghi": [
+"Sperlinga"
+],
+"fonte": "https://www.sicilying.com/it/blog/itinerari-di-sicilia-cosa-fare-a-enna/"
+},
+{
+"n": "Zuppa di scorfano all'eoliana",
+"cat": "primo",
+"luoghi": [
+"Lipari"
+],
+"fonte": "https://www.travel365.it/lipari-eolie-cosa-mangiare.htm"
+},
+{
+"n": "Insalata eoliana",
+"cat": "contorno",
+"luoghi": [
+"Lipari"
+],
+"fonte": "https://www.travel365.it/lipari-eolie-cosa-mangiare.htm"
+},
+{
+"n": "Caponata eoliana",
+"cat": "contorno",
+"luoghi": [
+"Lipari"
+],
+"fonte": "https://www.travel365.it/lipari-eolie-cosa-mangiare.htm"
+},
+{
+"n": "Pasta alla cucunciata",
+"cat": "primo",
+"luoghi": [
+"Santa Marina Salina",
+"Malfa",
+"Leni"
+],
+"fonte": "https://www.balarm.it/news/con-la-pasta-alla-cucunciata-ti-senti-subito-alle-eolie-un-primo-ricco-colorato-e-saporito-138542"
+},
+{
+"n": "Cuscus pantesco",
+"cat": "primo",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.voloscontato.it/ristoranti/pantelleria-dove-mangiare-bene-spendendo-poco.php"
+},
+{
+"n": "Pasta con l'ammogghiu",
+"cat": "primo",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.voloscontato.it/ristoranti/pantelleria-dove-mangiare-bene-spendendo-poco.php"
+},
+{
+"n": "Ravioli amari",
+"cat": "primo",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.voloscontato.it/ristoranti/pantelleria-dove-mangiare-bene-spendendo-poco.php"
+},
+{
+"n": "Bacio pantesco",
+"cat": "dolce",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.voloscontato.it/ristoranti/pantelleria-dove-mangiare-bene-spendendo-poco.php"
+},
+{
+"n": "Pesto pantesco",
+"cat": "salsa",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/"
+},
+{
+"n": "Pasta alla pantesca",
+"cat": "primo",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/"
+},
+{
+"n": "Tumma",
+"cat": "formaggio",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/"
+},
+{
+"n": "Mustazzoli panteschi",
+"cat": "dolce",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://blog.giallozafferano.it/fantasiaincucina/cosa-mangiare-a-pantelleria-i-5-piatti-tipici-della-cucina-pantesca/"
+},
+{
+"n": "Salame fellata",
+"cat": "salume",
+"luoghi": [
+"Nebrodi"
+],
+"fonte": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/"
+},
+{
+"n": "Salsiccia dei Nebrodi",
+"cat": "salume",
+"luoghi": [
+"Nebrodi"
+],
+"fonte": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/"
+},
+{
+"n": "Porchetta di suino nero dei Nebrodi",
+"cat": "secondo",
+"luoghi": [
+"Caronia"
+],
+"fonte": "https://www.gamberorosso.it/attualita/viaggio-nebrodi-sicilia/"
+},
+{
+"n": "Ainuzzi",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Belicino",
+"cat": "formaggio",
+"luoghi": [
+"Valle del Belice"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Caci figurati",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Caciocavallo palermitano",
+"cat": "formaggio",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Caciotta degli Elimi",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Canestrato",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Canestrato vacchino",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cofanetto",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cosacavaḍḍu ibleo",
+"cat": "formaggio",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ericino",
+"cat": "formaggio",
+"luoghi": [
+"Erice"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Formaggio di capra Paḍḍuni",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Formaggio di capra siciliana",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Formaggio di Santo Stefano di Quisquina",
+"cat": "formaggio",
+"luoghi": [
+"Santo Stefano Quisquina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Maiorchino",
+"cat": "formaggio",
+"luoghi": [
+"Novara di Sicilia"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Mozzarella siciliana",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pecorino rosso",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Picurinu (tuma, primosale, secondo sale)",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Piḍḍiato",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Provola dei Monti Sicani",
+"cat": "formaggio",
+"luoghi": [
+"Monti Sicani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Provola delle Madonie",
+"cat": "formaggio",
+"luoghi": [
+"Madonie"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Provola dei Nebrodi",
+"cat": "formaggio",
+"luoghi": [
+"Nebrodi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Tumazzu di vacca",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Vasteḍḍa palermitana",
+"cat": "formaggio",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ricotta iblea",
+"cat": "formaggio",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ricotta infornata",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Salsiccia pasqualora partinicese",
+"cat": "salume",
+"luoghi": [
+"Partinico"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Salsiccione",
+"cat": "salume",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Lijatina (gelatina di maiale)",
+"cat": "salume",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Aglio rosso di Nubia",
+"cat": "prodotto",
+"luoghi": [
+"Paceco"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Aglio di Trapani",
+"cat": "prodotto",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Albicocca di Scillato",
+"cat": "prodotto",
+"luoghi": [
+"Scillato"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Arancia bionda di Scillato",
+"cat": "prodotto",
+"luoghi": [
+"Scillato"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Bastarduna di Calatafimi",
+"cat": "prodotto",
+"luoghi": [
+"Calatafimi-Segesta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Carciofo spinoso di Palermo",
+"cat": "prodotto",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Carciofo spinoso di Menfi",
+"cat": "prodotto",
+"luoghi": [
+"Menfi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Carciofo violetto catanese",
+"cat": "prodotto",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Sparaceḍḍu palermitano",
+"cat": "prodotto",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Trunzu di Aci",
+"cat": "prodotto",
+"luoghi": [
+"Acireale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cipolla di Giarratana",
+"cat": "prodotto",
+"luoghi": [
+"Giarratana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Clementine di Monforte San Giorgio",
+"cat": "prodotto",
+"luoghi": [
+"Monforte San Giorgio"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Fagiolo di Polizzi",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Fava di Leonforte",
+"cat": "prodotto",
+"luoghi": [
+"Leonforte"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Favi lezzi di Buccheri",
+"cat": "prodotto",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ficodindia della valle del Belice",
+"cat": "prodotto",
+"luoghi": [
+"Valle del Belice"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ficodindia della valle del Torto",
+"cat": "prodotto",
+"luoghi": [
+"Valle del Torto"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Fragola di Maletto",
+"cat": "prodotto",
+"luoghi": [
+"Maletto"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Fragolina di Ribera",
+"cat": "prodotto",
+"luoghi": [
+"Ribera"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Fragolina di Sciacca",
+"cat": "prodotto",
+"luoghi": [
+"Sciacca"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Kaki di Misilmeri",
+"cat": "prodotto",
+"luoghi": [
+"Misilmeri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Lenticchia di Ustica",
+"cat": "prodotto",
+"luoghi": [
+"Ustica"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Lenticchia di Villalba",
+"cat": "prodotto",
+"luoghi": [
+"Villalba"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Limone in seccagno di Pettineo",
+"cat": "prodotto",
+"luoghi": [
+"Pettineo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Mandarino tardivo di Ciaculli",
+"cat": "prodotto",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Mandorla di Avola",
+"cat": "prodotto",
+"luoghi": [
+"Avola"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Manna delle Madonie",
+"cat": "prodotto",
+"luoghi": [
+"Castelbuono",
+"Pollina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Melone giallo di Paceco",
+"cat": "prodotto",
+"luoghi": [
+"Paceco"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Nespola di Trabia",
+"cat": "prodotto",
+"luoghi": [
+"Trabia"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Nocciole dei Nebrodi",
+"cat": "prodotto",
+"luoghi": [
+"Nebrodi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Noce di Motta Camastra",
+"cat": "prodotto",
+"luoghi": [
+"Motta Camastra"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Oliva puḍḍasceḍḍa di Buccheri",
+"cat": "prodotto",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Oliva nera di Buccheri",
+"cat": "prodotto",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Ovaletto di Calatafimi",
+"cat": "prodotto",
+"luoghi": [
+"Calatafimi-Segesta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Patata novella di Messina",
+"cat": "prodotto",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Patata novella di Siracusa",
+"cat": "prodotto",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pomodoro di Vittoria",
+"cat": "prodotto",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pomodoro faino di Licata",
+"cat": "prodotto",
+"luoghi": [
+"Licata"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pomodoro siccagnu pizzutellu di Paceco",
+"cat": "prodotto",
+"luoghi": [
+"Paceco"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Susina sanacore di Monreale",
+"cat": "prodotto",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Zucchina friscareḍḍa di Misilmeri",
+"cat": "prodotto",
+"luoghi": [
+"Misilmeri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Zucca virmiciḍḍara",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pomodoro secco (ciappa)",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pesca di Bivona",
+"cat": "prodotto",
+"luoghi": [
+"Bivona"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pesca di Leonforte",
+"cat": "prodotto",
+"luoghi": [
+"Leonforte"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Arancia di Ribera",
+"cat": "prodotto",
+"luoghi": [
+"Ribera"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Uva Italia di Canicattì",
+"cat": "prodotto",
+"luoghi": [
+"Canicattì"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Carciofo violetto di Niscemi",
+"cat": "prodotto",
+"luoghi": [
+"Niscemi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pistacchio verde di Bronte",
+"cat": "prodotto",
+"luoghi": [
+"Bronte"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pomodoro di Pachino",
+"cat": "prodotto",
+"luoghi": [
+"Pachino"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Limone di Siracusa",
+"cat": "prodotto",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cappero di Salina",
+"cat": "prodotto",
+"luoghi": [
+"Salina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cappero di Pantelleria",
+"cat": "prodotto",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Sale marino di Trapani",
+"cat": "prodotto",
+"luoghi": [
+"Trapani",
+"Paceco",
+"Marsala"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Peperone di Cerami",
+"cat": "prodotto",
+"luoghi": [
+"Cerami"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Miele di timo ibleo",
+"cat": "prodotto",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Miele delle Madonie",
+"cat": "prodotto",
+"luoghi": [
+"Madonie"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Miele delle Egadi",
+"cat": "prodotto",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Bottarga di Capo San Vito",
+"cat": "conserva",
+"luoghi": [
+"San Vito lo Capo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pesce azzurro sott'olio di Lampedusa",
+"cat": "conserva",
+"luoghi": [
+"Lampedusa e Linosa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Menola salata",
+"cat": "conserva",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Salame di tonno",
+"cat": "conserva",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Sardina salata",
+"cat": "conserva",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Alice sotto sale",
+"cat": "conserva",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Baḍḍuzzi di risu",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Caciu all'argintera",
+"cat": "salsa",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cardi in pastella",
+"cat": "contorno",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cavate",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Focaccia al sambuco",
+"cat": "strada",
+"luoghi": [
+"Troina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Maccarruna",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Maccu di granu",
+"cat": "primo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Malateḍḍi",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Nfigghiulata",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Paḍḍucculi di carni 'nno brodu",
+"cat": "secondo",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pane cotto",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pani chî pipi",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pani frijutu cu l'ovu",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Parmigiana di melanzane",
+"cat": "contorno",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pane di Monreale",
+"cat": "pane",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pane a lievitazione naturale",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pane di San Giuseppe",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pagnotta alla disgraziata",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Vasteḍḍa nfigghiulata",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Vasteḍḍa frijuta",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cannolo di Piana degli Albanesi e Santa Cristina Gela",
+"cat": "dolce",
+"luoghi": [
+"Piana degli Albanesi",
+"Santa Cristina Gela"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cassateddi di Calatafimi",
+"cat": "dolce",
+"luoghi": [
+"Calatafimi-Segesta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cassatella di Agira",
+"cat": "dolce",
+"luoghi": [
+"Agira"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cucciddati di Calatafimi",
+"cat": "dolce",
+"luoghi": [
+"Calatafimi-Segesta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cudduruni di Buccheri",
+"cat": "dolce",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Funciddi di Buccheri",
+"cat": "dolce",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Nfasciateddi di Troina",
+"cat": "dolce",
+"luoghi": [
+"Troina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pasta reale di Erice",
+"cat": "dolce",
+"luoghi": [
+"Erice"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pasta reale di Tortorici",
+"cat": "dolce",
+"luoghi": [
+"Tortorici"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pignolata di Messina",
+"cat": "dolce",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Torrone di Caltanissetta",
+"cat": "dolce",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Biscotto di Monreale",
+"cat": "dolce",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Cioccolato di Modica",
+"cat": "dolce",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://it.wikipedia.org/wiki/Prodotti_agroalimentari_tradizionali_siciliani"
+},
+{
+"n": "Pesce spada alla ghiotta",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasticcio di sostanza",
+"cat": "primo",
+"luoghi": [
+"Militello Rosmarino"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pesce spada alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Villafranca Tirrena"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Fettine impanate",
+"cat": "secondo",
+"luoghi": [
+"Torretta"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pomodoro a picchio pacchio",
+"cat": "contorno",
+"luoghi": [
+"Trabia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pasta con pesce spada e menta",
+"cat": "primo",
+"luoghi": [
+"Trappeto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Calamari imbottiti",
+"cat": "secondo",
+"luoghi": [
+"Ustica"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Minestra di tenerumi",
+"cat": "primo",
+"luoghi": [
+"Valledolmo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Sformato di pollo",
+"cat": "secondo",
+"luoghi": [
+"Ventimiglia di Sicilia"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Zuppa di pane cotto",
+"cat": "primo",
+"luoghi": [
+"Vicari"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Peperoni col pangrattato",
+"cat": "contorno",
+"luoghi": [
+"Marineo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Carciofi imbottiti",
+"cat": "contorno",
+"luoghi": [
+"Mezzojuso"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tortino di melanzane",
+"cat": "contorno",
+"luoghi": [
+"Palma di Montechiaro"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Uova murine",
+"cat": "secondo",
+"luoghi": [
+"Porto Empedocle"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette di melanzane",
+"cat": "secondo",
+"luoghi": [
+"Racalmuto"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Pani frittu cu l'ova",
+"cat": "strada",
+"luoghi": [
+"Raffadali"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Polpette al basilico",
+"cat": "secondo",
+"luoghi": [
+"Priolo Gargallo"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Fettuccine con uova di ricci",
+"cat": "primo",
+"luoghi": [
+"San Michele di Ganzaria"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Spaghetti con uovo di tonno",
+"cat": "primo",
+"luoghi": [
+"Viagrande"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Ripiddu 'nnivicatu",
+"cat": "dolce",
+"luoghi": [
+"Vizzini"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
+},
+{
+"n": "Tortiglioni al miele",
+"cat": "primo",
+"luoghi": [
+"Zafferana Etnea"
+],
+"fonte": "https://sicilia.indettaglio.it/ita/gastronomia/gastronomia.html"
 }
 ]
 }
