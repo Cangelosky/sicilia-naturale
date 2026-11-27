@@ -1,0 +1,272 @@
+# Prodotti agroalimentari tradizionali (PAT) della Sicilia: nome | categoria lasiciliainrete | zona
+# Fonte: archivio PAT di lasiciliainrete.it (270 schede, dall'elenco nazionale MASAF), letto il 27/11/2026
+Minna di Virgini|PAT|Sambuca di Sicilia
+Ricotta iblea|PAT|RG
+Pane di San Giuseppe|PAT|Leonforte, Nissoria, Valguarnera Caropepe
+Pupi cull'uova|PAT|Nicosia
+Squartucciatu|PAT|Poggioreale
+Cosacavaddu Ibleo (Caciocavallo Ragusano)|PAT|RG
+Arancini di riso|PAT|Tutte
+Buccellato|PAT|Aidone
+Cannillieri|PAT|Villarosa
+Cassata siciliana|PAT|Tutte
+Cassateddi di Calatafimi|PAT|Calatafimi Segesta
+Stigghiola|PAT|Tutte
+Pasta che vruoccoli arriminàti|PAT|Tutte
+Nucàtuli|PAT|Tutte
+Iris|PAT|Palermo
+Ossa di morto (Palazzolo Acreide)|PAT|Palazzolo Acreide
+Frascatula|PAT|Enna
+Cannolo tradizionale di Piana degli Albanesi e Santa Cristina Gela|PAT|Piana degli Albanesi, Santa Cristina Gela
+Pasta con le sarde|PAT|Bagheria
+Panelle|PAT|Palermo
+Ricotta mista|PAT|SR
+Miele della provincia di Agrigento|PAT|AG
+Miele di Trapani|PAT|Trapani
+Miele di acacia, di timo, di carrubo|PAT|RG
+Miele delle Madonie|PAT|PA
+Salame di tonno, Ficazza di tùnnu|PAT|TP
+Pesce azzurro sott'olio di Lampedusa|PAT|Lampedusa e Linosa
+Zuzzu|GAST|CT
+Pani frittu cu l'uovu|GAST|Buccheri
+Pani co pipi|GAST|Buccheri
+Nfigghiulata|GAST|Tutte
+Màccu di favi|GAST|AG, CL, CT, EN, ME, PA
+Crocchè di patate|GAST|Tutte
+Crespelle|GAST|
+Coddra chi sardi|GAST|Realmonte
+Taralli|GAST|Tutte
+Panzerotti|GAST|Tutte
+Mmugliulati|GAST|Realmonte
+Granita di gelsi neri|GAST|Tutte
+Gelo di melone|GAST|Tutte
+Frutti di Martorana|GAST|Palermo
+Funciddi di Buccheri|GAST|Buccheri
+Duci di tibbi|GAST|Realmonte
+Cudduruni di Buccheri|GAST|Buccheri
+Cuddriruni duci|GAST|Realmonte
+Cuddriruni|GAST|Realmonte
+Crespelle di riso|PAT|RG, CT, PA
+Cassatella di ceci, Cassatedda di ciciri|PAT|Partinico
+Zucchina di Misilmeri detta "friscaredda"|PAT|Misilmeri
+Zucca virmiciddara|PAT|Monreale, Altofonte
+Susina Sanacore Tardiva|PAT|Monreale, Altofonte
+Susina Pruno di Vruno|PAT|Monreale, Altofonte
+Susina lazzarino|PAT|Monreale
+Susina della rosa|PAT|Monreale, Altofonte
+Susina Caleca|PAT|Monreale, Altofonte
+Susina Ariddu di core|PAT|Monreale, Altofonte
+Pomodoro Faino di Licata detto "buttiglieddu"|PAT|Licata
+Pomodoro di Vittoria|PAT|Vittoria
+Pistacchio|PAT|Bronte
+Patata novella di Messina|PAT|ME
+Oliva nera di Buccheri|PAT|Buccheri
+Nespola di Trabia|PAT|Trabia
+Limone Verdello|PAT|SR, CT, ME
+Kaki di Misilmeri|PAT|Misilmeri
+Fragolina di Sciacca|PAT|Sciacca
+Fico d'india della Valle del Belice|PAT|Santa Margherita di Belice
+Favi liezzi di Buccheri|PAT|Buccheri
+Clementine di Monforte San Giorgio|PAT|Monforte San Giorgio, San Pier Niceto
+Cavolfiore violetto "natalino"|PAT|CT
+Carciofo violetto catanese|PAT|CT
+Carciofo spinoso di Palermo o Menfi|PAT|Termini Imerese, Menfi, Castelvetrano, Sambuca di Sicilia, Sciacca
+Capperi e cucunci|PAT|AG, CL, CT, EN, ME, PA, SR, TP
+Salsiccia pasqualora partinicese|PAT|Partinico
+Liquore di mandarino|PAT|Tutte
+Acquavite di vino|PAT|Tutte
+Acquavite di miele iblea (Spiritu re fascitrari)|PAT|RG
+Ossa di morto (Acireale)|PAT|Acireale
+Biscotti a "s" (area iblea)|PAT|RG
+Pasta ca muddica|GAST|Tutte
+Ricotta di pecora|PAT|PA, AG, EN, TP
+Sfincione|GAST|Palermo
+Caciu all'argintera|GAST|Tutte
+Parmigiana di melanzane|PAT|Tutte
+Caponata di melenzane|PAT|Tutte
+Busiati col pesto trapanese|PAT|Trapani
+Cardi in pastella|PAT|Palermo
+Cavate|PAT|Aidone
+Focaccia al sambuco|PAT|Troina
+Maccaruna|PAT|Enna
+Maccu di grano|PAT|Aidone
+Malateddi|PAT|Enna
+Padducculi di carni 'no brudu|PAT|Enna
+Pani cuttu o pane cotto|PAT|Enna
+Sarde a beccaficu|PAT|Palermo
+Vinu cotto e mustazzoli|PAT|Nicosia
+Ricotta infornata|PAT|Messina
+Bottarga, uovo di tonno di Capo San Vito|PAT|Favignana, Trapani
+Menola salata|PAT|TP
+Tonno di tonnara|PAT|Favignana
+Vaccareddi (grosse lumache)|PAT|Nissoria
+Miele delle Egadi|PAT|Favignana
+Miele di timo, di agrumi, di cardo, di eucalyptus, di carrubo|PAT|RG
+Miele millefiori|PAT|Solarino
+Miele ibleo|PAT|RG
+Cavolo rapa di Acireale "Trunzu di Aci"|PAT|Acireale
+Cavolo rapa selvatico|PAT|TP
+Alice sotto sale|PAT|Sciacca
+Gambero rosso|PAT|Sciacca
+Sardina salata|PAT|Sciacca
+Melone invernale giallo "cartucciaro" verde "purceddu"|PAT|Alcamo, Paceco
+Lattime di tonno salato|PAT|Trapani
+Picurinu: tuma, primosale, secondo sale, stagionato|PAT|AG, CL, EN, ME, PA, RG, SR, TP
+Pecorino rosso|PAT|Tutte
+Provola siciliana|PAT|Tutte
+Marmellata di arance (AG, CL)|PAT|AG, CL
+Mandarino tardivo di Ciaculli (CT)|PAT|PA, CT
+Mostarda (Calascibetta)|PAT|Calascibetta
+Cucuzzata (Catania)|PAT|Catania
+Scursunera|PAT|Tutte
+Badduzzi di risu cu brudu, o ganeffe di risu|PAT|Enna
+Vucciddati di mandorle|PAT|Villarosa
+Vastedda fritta|PAT|Gratteri
+Vastedda cu sammucu o vastedda nfigghiulata|PAT|Troina
+Torrone di Caltanissetta, Turruni|PAT|Caltanissetta
+Testa di turco "Testi di Tùrcu"|PAT|Castelbuono
+Sfoglio, "Sfuogghio"|PAT|Castellana Sicula
+Sfinci di San Giuseppe|PAT|Palermo
+Scursunera (Ragusa)|PAT|RG
+Scacciata|PAT|Tutte
+Savoiarde, taralle|PAT|Gratteri
+Salame turco|PAT|Tutte
+Pupo di zucchero, pupacena|PAT|Tutte
+Pizzarruna|PAT|San Giovanni Gemini, Cammarata
+Piparelle|PAT|CT, ME, RG, SR
+Pignolata di Messina|PAT|Messina
+Pignoccata "a pagniuccata"|PAT|RG
+Petrafennula|GAST|Tutte
+Pasta reale di Erice|GAST|Erice
+Pasta di nocciola|PAT|Sant'Alfio
+Pasta di mandorle|PAT|Aidone
+Pasta alla crema di latte, "Pasta all'antica"|PAT|Montelepre
+Papareddi, paparelle|PAT|Tutte
+Pane votivo "A cuddura di S. Paulu"|PAT|Palazzolo Acreide
+Pane di Monreale (u pani ri Murriali)|PAT|Monreale
+Pane di casa, "u pani i casa"|PAT|RG, Modica, Monterosso Almo
+Pane a lievitazione naturale, Pani cu crescenti|PAT|Castellana Sicula
+Pagnotta alla disgraziata|PAT|ME
+Nfrigghiulata|PAT|Poggioreale
+Nfasciatieddi di Troina|PAT|Troina
+Nfasciatieddi di Agira|PAT|Agira
+Nfasciatieddi (Militello)|PAT|Militello in Val di Catania
+Mastazzola|PAT|Poggioreale
+Mandorlato, biscotto riccio|PAT|Palma di Montechiaro
+Giuggiolena o cubbaita|PAT|Tutte
+Guammelle|PAT|Aidone
+Granita di mandorle|PAT|CT, ME, RG, SR
+Gadduzzi|PAT|Aidone
+Fasciatelle|PAT|CT, ME, RG, SR
+Facciuni di Santa Chiara (torta di Santa Chiara)|PAT|Noto, Avola
+Cuffitelle (cuffiteddi)|PAT|Calascibetta
+Cuddureddi|PAT|San Giovanni Gemini, Cammarata
+Cuddrireddra|PAT|Delia
+Cucuzzata|PAT|Tutte
+Cucciddati di Calatafimi|PAT|Calatafimi Segesta
+Cucciddata (Poggioreale)|PAT|Poggioreale
+Cuccia|PAT|Tutte
+Crispelle, i crispeddi|PAT|RG
+Cosi di ficu, cosi duci|PAT|Buseto Palizzolo, Custonaci, San Vito Lo Capo, Castellammare del Golfo
+Colombe pasquali, i palummeddi, pastifuorti|PAT|RG
+Ciascuna, mucatoli|PAT|RG
+Ciambella|PAT|San Cataldo
+Cassatella di Agira "Cassatedda"|PAT|Agira
+Cassateddi (Cammarata)|PAT|San Giovanni Gemini, Cammarata
+Cannolo alla ricotta, cannolo siciliano|PAT|Trapani
+Braccialette|PAT|Nicosia
+Bocconetto o Buccunettu|PAT|Sant'Angelo di Brolo
+Biscotto di Monreale|PAT|Monreale
+Biscotti glassati (viscotta ca liffia)|PAT|RG
+Biscotti duri|PAT|Calascibetta
+Biscotti di Natale|PAT|Barrafranca
+Biscotti bolliti|PAT|RG
+Biscotti al latte|PAT|RG
+Biscotti a "s" (Gratteri)|PAT|Gratteri
+Biancomangiare|PAT|Tutte
+Amaretti|PAT|Villarosa
+Susini Sanacore, "U prunu ri Murriali"|PAT|Monreale
+Rosmarino, "rosamarina"|PAT|Villarosa
+Pomodoro secco "ciappa"|PAT|Tutte
+Pomodoro seccagno "Pizzutello di Paceco"|PAT|Valderice, Paceco
+Pere Virgolosa, "Pira Virgulusi"|PAT|Adrano
+Pere Ucciardona, "Pira Ucciarduna"|PAT|Adrano, Randazzo
+Pere Spinelli, "Pira Spineddi"|PAT|Bronte
+Pere Butirra d'estate, "Pira 'Mputiri"|PAT|Adrano
+Patata novella di Siracusa|PAT|Siracusa
+Ovaletto di Calatafimi|PAT|Calatafimi Segesta
+Origano|PAT|Villarosa
+Oliva nera passulunara|PAT|San Mauro Castelverde
+Oliva "Nebba"|PAT|Scillato
+Noci di Motta, "Nuci da Motta"|PAT|ME
+Nocciole dei Nebrodi|PAT|ME
+Mostarda essiccata, "Mustardi essiccati"|PAT|Villarosa
+Mostarda (Militello)|PAT|Militello in Val di Catania
+Melone giallo d'inverno (Paceco)|PAT|Paceco, Trapani, Erice, Valderice
+Mele Gelate Cola, "Gilati Cola"|PAT|Bronte
+Mele Cola, "Puma Cola"|PAT|Bronte, Adrano
+Marmellata di pere Spinelli|PAT|RG
+Marmellata di mele cotogne|PAT|RG
+Marmellata di arance (Ragusa)|PAT|RG
+Manna|PAT|PA
+Mandorla|PAT|SR
+Mandorla di Avola|PAT|Avola
+Mandarino tardivo di Ciaculli|PAT|Palermo
+Limone in seccagno di Pettineo|PAT|Pettineo
+Lenticchia di Villalba|PAT|Villalba
+Lenticchia di Ustica|PAT|Ustica
+Grano duro, "Furmintu"|PAT|Villarosa
+Fragolina di Ribera|PAT|Ribera, Caltabellotta, Menfi
+Fragola di Maletto|PAT|Maletto, Bronte
+Ficodindia della Valle del Torto|PAT|Vicari, Lercara Friddi
+Fichidindia (Biancavilla e Paternò)|PAT|Biancavilla, Santa Maria di Licodia, Paternò
+Fichi secchi|PAT|Nissoria, Enna
+Fava larga di Leonforte|PAT|Leonforte
+Fagiolo di Polizzi "Fasola a Badda"|PAT|Polizzi Generosa
+Cotognata "A' cutugnata"|PAT|Villarosa
+Cipolla di Giarratana|PAT|Giarratana
+Ciliegia Mastrantoni, "Cirasa Mastrantoni"|PAT|Trecastagni, San Giovanni la Punta, Aci Sant'Antonio
+Cece "Principe"|PAT|Tutte
+Cavolo broccolo o "sparacello" palermitano|PAT|Palermo
+Carciofo spinoso di Menfi|PAT|Menfi
+Capperi, "Chiappari"|PAT|Villarosa
+Bastarduna di Calatafimi|PAT|Calatafimi Segesta
+Arancia Biondo di Scillato|PAT|Scillato
+Anguria di Siracusa, "Zuccherino"|PAT|Siracusa
+Alloro, "addauru"|PAT|Villarosa
+Albicocco di Scillato|PAT|Scillato
+Aglio rosso di Nubia|PAT|Paceco, Trapani, Erice, Valderice
+Vastedda palermitana|PAT|Palermo
+Tumazzo di vacca|PAT|RG
+Provola dei Nebrodi (PAT)|PAT|ME
+Provola delle Madonie|PAT|PA
+Provola dei Monti Sicani o "Caciotta"|PAT|PA
+Provola (Agrigento)|PAT|AG
+Piddiato|PAT|Santa Ninfa, Calatafimi Segesta, Petrosino, Marsala, Partanna, Salemi, Castelvetrano, Custonaci, San Vito Lo Capo, Castellammare del Golfo
+Mozzarella (Giardinello)|PAT|Giardinello
+Maiorchino di Novara di Sicilia, "Maiurcheu"|PAT|Novara di Sicilia
+Maiorchino|PAT|Santa Lucia del Mela, Novara di Sicilia, Basicò, Tripi, Montalbano Elicona
+Formaggio di Santo Stefano di Quisquina|PAT|Castronovo di Sicilia, Cammarata, Bivona, Palazzo Adriano, Santo Stefano Quisquina
+Formaggio di capra siciliano|PAT|Tutte
+Formaggio di capra "Padduni"|PAT|Tutte
+Ericino|PAT|Trapani
+Cofanetto o caciocavallo "Cofanaro"|PAT|Custonaci, Castellammare del Golfo, Calatafimi Segesta
+Canestrato vacchino|PAT|Gratteri
+Canestrato|PAT|Tutte
+Caciotta degli Elimi|PAT|Calatafimi Segesta
+Caciocavallo palermitano|PAT|Palermo
+Caci figurati|PAT|ME
+Belicino|PAT|Castelvetrano, Poggioreale, Salaparuta, Campobello di Mazara, Santa Ninfa, Petrosino, Salemi
+Ainuzzi|PAT|Cammarata, San Giovanni Gemini
+Sale marino naturale|PAT|Trapani, Paceco
+Elioconcentrato di pomodoro, "Astrattu"|PAT|Bagheria
+Olio extravergine di oliva "ogghiu d'aliva"|PAT|Giardinello
+Salsiccione, "Sausizzuni"|PAT|Monterosso Almo, Giarratana, Chiaramonte Gulfi, Modica, Comiso, Scicli, Ispica
+Salsiccia "Pasqualora"|PAT|Erice, Valderice, Paceco, Calatafimi Segesta, Alcamo, Castellammare del Golfo, Buseto Palizzolo, San Vito Lo Capo, Custonaci
+Salsiccia di maiale fresca, secca e affumicata|PAT|RG
+Carne fresca di vacca, di pecora, di capra e di maiale|PAT|
+Liquore Fuoco dell'Etna|PAT|Santa Venerina
+Amarena|PAT|ME
+Gelatina di maiale (liatina)|PAT|RG
+Cuscus di pesce|PAT|TP
+Ricotta di vacca|PAT|AG, CT, RG
