@@ -1,0 +1,86 @@
+[
+{
+"f": "natura/tramonto-isola",
+"t": "Tramonto sul mare, con un'isola vulcanica all'orizzonte",
+"g": "mare",
+"h": 1
+},
+{
+"f": "natura/scogliere",
+"t": "Scogliere a picco su un mare cristallino",
+"g": "mare",
+"h": 1
+},
+{
+"f": "natura/saline-tramonto",
+"t": "Tramonto sulle saline, con un mulino a vento",
+"g": "mare",
+"h": 1
+},
+{
+"f": "natura/mulino-saline",
+"t": "Un mulino a vento sulle saline",
+"g": "mare",
+"h": 0
+},
+{
+"f": "natura/agave-montagne",
+"t": "La fioritura dell'agave, con le montagne sullo sfondo",
+"g": "piante",
+"h": 1
+},
+{
+"f": "natura/arco-tramonto",
+"t": "Il sole al tramonto, visto da un arco di roccia",
+"g": "mare",
+"h": 1
+},
+{
+"f": "natura/campagna",
+"t": "Campagna e colline in primavera",
+"g": "paesaggi",
+"h": 1
+},
+{
+"f": "natura/funghi-muschio",
+"t": "Funghi nel muschio del sottobosco",
+"g": "funghi",
+"h": 1
+},
+{
+"f": "natura/acetosella",
+"t": "Acetosella (Oxalis) nei campi d'inverno",
+"g": "piante",
+"h": 0
+},
+{
+"f": "natura/more-rovo",
+"t": "More di rovo selvatico",
+"g": "piante",
+"h": 0
+},
+{
+"f": "natura/origano-fiore",
+"t": "Origano in fiore",
+"g": "piante",
+"h": 0
+},
+{
+"f": "natura/fiore-carciofo",
+"t": "Il fiore del carciofo",
+"g": "piante",
+"h": 0
+},
+{
+"f": "natura/fico",
+"t": "Fichi sul ramo, tra le grandi foglie",
+"g": "piante",
+"h": 0
+},
+{
+"f": "natura/tramonto-baia",
+"t": "Tramonto su una baia, dalla finestra",
+"g": "mare",
+"h": 0
+}
+]

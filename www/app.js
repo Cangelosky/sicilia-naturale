@@ -781,6 +781,7 @@ function vai(v) {
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
   if (sapOn() && v !== 'registra') return sapVai(v);
+  if (v === 'mappa' && NAT.home) return natHome();
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
@@ -2578,7 +2579,7 @@ function mappaSicilia(o) {
     ${si.contorno.map(p => `<polygon class="terra" points="${p.filter(([x, y]) => x > L0 && x < L1 && y > A0 && y < A1).map(([x, y]) => X(x) + ',' + Y(y)).join(' ')}"/>`).join('')}
     ${tr.length > 1 ? `<polyline class="trac" points="${tr.map(c => X(c[0]) + ',' + Y(c[1])).join(' ')}"/>` : ''}
     ${com.filter(c => !(c[3] && n[c[3]])).map(dot).join('')}${com.filter(c => c[3] && n[c[3]]).sort((a, b) => n[b[3]] - n[a[3]]).map(dot).join('')}
-    ${(o.punti || []).map(p => `<circle data-cev="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
+    ${(o.punti || []).map(p => `<circle data-${p.a || 'cev'}="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
     ${o.nomi ? cap.map(c => { const f = 11 * Math.min(s, 1.35), dx = ['Trapani', 'Agrigento', 'Ragusa', 'Caltanissetta', 'Messina'].includes(c[0]) ? -1 : 1, x = +X(c[1]) + dx * 7 * Math.min(s, 1.35), y = +Y(c[2]) + (c[0] === 'Messina' ? -7 * s : c[0] === 'Enna' ? -3 * s : 4 * s);
       return `<g class="cap"><circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(2.2 * s).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${dx < 0 ? 'end' : 'start'}" style="font-size:${f.toFixed(1)}px">${c[0]}</text></g>`; }).join('') : ''}
   </svg>`;
@@ -2674,6 +2675,80 @@ $('cat').addEventListener('click', e => {
   if (p) { e.stopPropagation(); const w = p.dataset.porta;
     if (w === 'viaggio') vai('escursioni'); else if (w === 'calendario') vai('meteo');
     else if (w === 'tutelati') { Object.assign(SAP.fil, { k: 'tutto', fam: '', q: '', paese: '', festa: '', lr: '', ric: 'tut', n: 60 }); $('cat').dataset.v = ''; vai('specie'); } }
+}, true);
+
+
+/* ---- Natura: pagina d'inizio con foto, racconto e mappa disegnata */
+var NAT = { home: !isApp && !location.hash.slice(1), foto: null, hi: null };
+setTimeout(() => { if (NAT.home && !sapOn() && vista === 'mappa') natHome(); }, 0);
+document.addEventListener('click', e => { const b = e.target.closest('#sez button[data-v="mappa"]'); if (b && !sapOn() && !isApp) NAT.home = true; }, true);
+const NATF = () => NAT.foto || (NAT.foto = fetch('foto/natura.json').then(r => r.json()).catch(() => []));
+const natMappa = () => { NAT.home = false; vai('mappa'); };
+async function natHome() {
+  const [fo] = await Promise.all([NATF(), D, CAT, SAPD().catch(() => null)]);
+  if (sapOn() || vista !== 'mappa' || !NAT.home) return;
+  NAT.foto = fo;
+  const conta = t => Object.values(S).filter(x => x.t === t).length;
+  const nPar = conta('pn') + conta('pr'), nRis = conta('rn'), nAmp = conta('amp'), nN2k = conta('zsc') + conta('zsczps') + conta('zps'), nAm = (GA.features || []).length, nBv = (GV.features || []).length, nSp = FUN.s.length + PIA.s.length;
+  const hero = fo.filter(x => x.h); NAT.hi = NAT.hi == null ? Math.floor(Math.random() * hero.length) : NAT.hi; const hf = hero[NAT.hi % hero.length] || {};
+  const fG = g => (fo.find(x => x.g === g) || {}).f;
+  const punti = Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn', 'amp'].includes(x.t) && x.bb).map(([k, x]) => ({ a: 'nk', id: k, xy: centro(x), t: x.t === 'rn' ? 'riserva' : x.t === 'amp' ? 'marina' : 'parco', on: x.t !== 'rn', tit: x.n }));
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const porte = [
+    ['parchi', 'Parchi e riserve', `${nPar} parchi, ${nRis} riserve, ${nAmp} aree marine`, 'tree', fG('mare') ? 'natura/scogliere' : ''],
+    ['sentieri', 'Sentieri e percorsi', 'Oltre 20.000 sentieri, con dislivello e tempi', 'route-2', 'natura/campagna'],
+    ['vetusti', 'Boschi vetusti', `${nBv} boschi antichi, mai tagliati da secoli`, 'trees', ''],
+    ['alberi', 'Alberi monumentali', `${nAm} alberi da andare a trovare`, 'tree', ''],
+    ['funghi', 'Funghi', `${fmt(FUN.s.length)} specie, con le stagioni`, 'mushroom', 'natura/funghi-muschio'],
+    ['piante', 'Piante e fiori', `${fmt(PIA.s.length)} specie della flora siciliana`, 'flower', 'natura/origano-fiore'],
+    ['calendario', 'Cosa fiorisce ora', 'Il calendario della natura, mese per mese', 'calendar', 'natura/fiore-carciofo'],
+    ['meteo', 'Meteo e allerte', 'Prima di partire: pioggia, vento, allerte', 'cloud', '']
+  ];
+  const WK = { vetusti: 'Faggeta', alberi: 'Castagno dei Cento Cavalli', meteo: 'Etna' };
+  const storie = [['EUAP0227', 'Etna', "L'Etna, la montagna che respira", 'Il vulcano attivo più alto d\'Europa: boschi di betulle e faggi, colate, crateri e un parco che sale dal mare a oltre 3.300 metri.'],
+    ['EUAP0228', 'Parco delle Madonie', 'Le Madonie, un\'isola nell\'isola', 'Faggete, agrifogli giganti e l\'abete dei Nebrodi, una specie che esiste solo qui e conta poche decine di alberi in natura.'],
+    ['EUAP0382', 'Riserva naturale orientata dello Zingaro', 'Lo Zingaro, sette chilometri senza strade', 'La prima riserva naturale della Sicilia: calette, palme nane e un sentiero lungo la costa, solo a piedi.']];
+  const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr'].includes(x.t));
+  const mese = new Date().getMonth(), S2 = await caricaStag();
+  const ora = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].filter(([tp, i]) => stagione(tp, i, mese, S2).on === true).sort((a, b) => b[2] - a[2]).slice(0, 14);
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  const primo = $('cat').dataset.v !== 'nat-home'; $('cat').dataset.v = 'nat-home'; if (primo) $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="sh5 nat5">
+    <section class="ap5"><div class="apf" style="background-image:url('foto/${hf.f}.webp')" role="img" aria-label="${esc(hf.t || '')}"></div>
+      <div class="apt"><h1>La Sicilia,<br>una natura <i>da ascoltare.</i></h1>
+        <p class="lead">Ci sono isole che si visitano. E poi ci sono isole che si imparano ad ascoltare: ${nPar} parchi, ${nRis} riserve naturali, ${nAmp} aree marine protette e più di ${fmt(Math.floor(nSp / 1000) * 1000)} specie di piante e funghi.</p>
+        <label class="cerca5">${ico('map-pin-search')}<input id="nq" type="search" placeholder="Cerca un parco, un sentiero, una specie…" autocomplete="off" aria-label="Cerca"><button id="ngo" aria-label="Cerca">${freccia}</button></label>
+        <p class="apc">${esc(hf.t || '')}, foto di Oscar Cangelosi</p></div>
+      <div class="apm">${mappaSicilia({ w: 420, nomi: true, punti })}<button id="nmap">Esplora la mappa ${freccia}</button></div>
+    </section>
+    <section class="s5"><div class="t5"><h2>Cosa ti va di scoprire?</h2><p>Parti da quello che ti incuriosisce: la mappa e le schede ti portano il resto.</p></div>
+      <div class="gusti5">${porte.map(([k, n, d, ic, f]) => `<button data-np="${k}"><span class="img${f ? ' conf' : ''}"${f ? ` style="background-image:url('foto/${f}.webp')"` : WK[k] ? ` data-nwk="${esc(WK[k])}"` : ''}>${ico(ic)}</span><span class="tx"><b>${n}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Storie e scoperte</h2></div>
+      <div class="storie5">${storie.map(([k, wk, t, d]) => `<button class="st5" data-nk="${k}" data-nwk="${esc(wk)}"><span class="tag">Parchi e riserve</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
+    ${ora.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[mese]}</h2><button class="lk" data-np="calendario">Tutto il calendario</button><p>Le specie più osservate in questo mese, secondo i dati delle osservazioni.</p></div>
+      <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}"><span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
+    <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>${parchi.length} parchi, dal mare alle montagne. Tocca per aprire la scheda con zone, regole e sentieri.</p></div>
+      <div class="chips5">${parchi.map(([k, x]) => `<button data-nk="${k}">${esc(x.n)}</button>`).join('')}</div></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Dati: EEA Natura 2000, Regione Siciliana SIF, Elenco degli alberi monumentali, OpenStreetMap, GBIF. Foto di Oscar Cangelosi e da Wikipedia. Nessuna indicazione sulla commestibilità di funghi e piante.</p>${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/640px-')}')`; el.classList.add('conf'); } });
+  const cerca = () => { const q = $('nq').value.trim(); natMappa(); if (q) setTimeout(() => { $('q').value = q; $('q').dispatchEvent(new Event('input', { bubbles: true })); $('q').focus(); }, 300); };
+  $('nq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('ngo').onclick = e => { e.preventDefault(); cerca(); };
+  $('nmap').onclick = natMappa;
+}
+$('cat').addEventListener('click', e => {
+  if (sapOn() || $('cat').dataset.v !== 'nat-home') return;
+  const k = e.target.closest('[data-nk]'), p = e.target.closest('[data-np]'), sp = e.target.closest('[data-sp]');
+  if (k) { e.stopPropagation(); natMappa(); return setTimeout(() => apri(k.dataset.nk, true), 650); }
+  if (sp) { e.stopPropagation(); const [tp, i] = sp.dataset.sp.split(':'); NAT.home = false; vai(tp); return setTimeout(() => apriSpecie(tp, +i), 300); }
+  if (!p) return; e.stopPropagation(); const w = p.dataset.np;
+  if (w === 'parchi') { ON.aree = true; applica(); return natMappa(); }
+  if (w === 'vetusti' || w === 'alberi') { ON[w === 'vetusti' ? 'bv' : 'am'] = true; applica(); return natMappa(); }
+  NAT.home = false;
+  if (w === 'sentieri') return vai('escursioni');
+  if (w === 'funghi' || w === 'piante') return vai(w);
+  if (w === 'calendario') { vai('piante'); return setTimeout(calendario, 200); }
+  if (w === 'meteo') return vai('meteo');
 }, true);
 
 }
