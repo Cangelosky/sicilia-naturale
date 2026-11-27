@@ -783,7 +783,7 @@ function vai(v) {
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
   if (sapOn() && v !== 'registra') return sapVai(v);
-  if (!sapOn()) mixLivelli(v);
+  if (!sapOn()) { mixLivelli(v); if (v !== 'mappa' && SEZ === 'home') SEZ = 'natura'; }
   if (v === 'mappa' && NAT.home) return natHome();
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
@@ -849,7 +849,7 @@ function catalogo(soloTesti) {
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
-      $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>${f ? REGOLE_FUNGHI() : ''}
+      $('cat').innerHTML = `<div class="in"><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>${f ? REGOLE_FUNGHI() : ''}
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
         <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button>${COPY()}</div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
@@ -1920,8 +1920,8 @@ async function calendario() {
   const k = x => x.tp === 'funghi' ? FUN.s[x.i][7] : PIA.s[x.i][4], nuove = on.filter(x => { const mk = S2[k(x)]; return mk && mk[prima] === '0'; });
   const sez = (tit, ic, l, max) => l.length ? `<h3>${ico(ic, 'sm')} ${tit} <em>${fmt(l.length)}</em></h3><div class="trova">${uniciNome(l).slice(0, max).map(x => `<button data-sp="${x.tp}:${x.i}">${icoSp(x.tp, x.i)}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}</button>`).join('')}</div>` : '';
   $('cat').dataset.v = 'cal'; $('cat').scrollTop = 0;
-  $('cat').innerHTML = `<div class="in cal"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
-    <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p>
+  $('cat').innerHTML = `<div class="in cal">
+    <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
     <select class="tendina mesesel" id="cal-m">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(j => `<option value="${j}"${j === m ? ' selected' : ''}>${nomeMese(j)[0].toUpperCase() + nomeMese(j).slice(1)}${j === new Date().getMonth() ? T(' (ora)', ' (now)') : ''}</option>`).join('')}</select>
     ${sez(T('Iniziano questo mese', 'Starting this month'), 'sparkles', nuove, 16)}
     ${sez(T('Fioriture', 'In flower'), 'flower', on.filter(x => x.tp === 'piante' && x.st.lab === T('in fioritura', 'in flower')), 30)}
@@ -2164,7 +2164,7 @@ const PROVA = '<span class="badge prova">Dati di prova</span>';
 /* ---- interruttore Natura | Sapori (solo sito) */
 function sapModo(on) {
   if (!on && $('sapcard')) sapCarta();
-  SAP.on = on; SAP.home = true; document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
+  SAP.on = on; SAP.home = true; if (on) SEZ = 'sapori'; else if (SEZ === 'sapori') SEZ = 'natura'; document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
   for (const b of document.querySelectorAll('#modo button')) b.classList.toggle('on', (b.dataset.m === 'sapori') === on);
   sapNav(); chiudi(); $('q').value = ''; $('res').style.display = 'none'; $('q').placeholder = on ? 'Cerca un dolce, un prodotto, un paese' : t('cerca');
   if (map.getLayer('sap-p')) for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'none');
@@ -2711,6 +2711,7 @@ function sapHome() {
         <div class="ric5"><p>I più ricchi</p>${cm.slice(0, 12).map(([p, n]) => `<button data-sc="${p}"><span><b>${esc(D.paesi[p].n)}</b><small>Provincia di ${esc(PROVN[D.paesi[p].pv] || '')}</small></span><em>${n}</em></button>`).join('')}</div></div>
       <button id="hmap2" class="tutti5">Apri la mappa grande ${freccia}</button>
     </section>
+    <section class="s5"><button class="pross5" data-tema="natura" style="--tc:#2D6A4F"><span class="img" style="background-image:url('foto/natura/campagna.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Da dove viene quello che mangi</b><span>Il pistacchio sull'Etna, la manna sulle Madonie, la provola sui Nebrodi. Cammina nei luoghi dove nascono i sapori.</span><em>Entra in Natura</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori e viaggi sono esempi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
   sapFoto($('cat'));
@@ -2754,7 +2755,7 @@ async function natHome() {
   const [fo] = await Promise.all([NATF(), D, CAT, SAPD().catch(() => null)]);
   if (sapOn() || vista !== 'mappa' || !NAT.home) return;
   NAT.foto = fo;
-  if (misto()) return mixHome(fo);
+  if (SEZ !== 'natura') return SEZ === 'home' ? genHome(fo) : prestoHome(SEZ, fo);
   const conta = t => Object.values(S).filter(x => x.t === t).length;
   const nPar = conta('pn') + conta('pr'), nRis = conta('rn'), nAmp = conta('amp'), nN2k = conta('zsc') + conta('zsczps') + conta('zps'), nAm = (GA.features || []).length, nBv = (GV.features || []).length, nSp = FUN.s.length + PIA.s.length;
   const hero = fo.filter(x => x.h); NAT.hi = NAT.hi == null ? Math.floor(Math.random() * hero.length) : NAT.hi; const hf = hero[NAT.hi % hero.length] || {};
@@ -2796,6 +2797,7 @@ async function natHome() {
       <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}">${tp === 'funghi' && r[8].length ? `<span class="img conf" style="background-image:url('${BASEF + r[8][0]}')">` : `<span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">`}${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
     <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>${parchi.length} parchi, dal mare alle montagne. Tocca per aprire la scheda con zone, regole e sentieri.</p></div>
       <div class="chips5">${parchi.map(([k, x]) => `<button data-nk="${k}">${esc(x.n)}</button>`).join('')}</div></section>
+    <section class="s5"><button class="pross5" data-tema="sapori" style="--tc:#E8761A"><span class="img" style="background-image:url('foto/backcassatelle.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Dopo il sentiero, la tavola</b><span>Ogni parco ha i suoi paesi e ogni paese i suoi sapori. Scopri cosa si mangia dove hai camminato.</span><em>Entra in Sapori</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Dati: EEA Natura 2000, Regione Siciliana SIF, Elenco degli alberi monumentali, OpenStreetMap, GBIF. Foto di Oscar Cangelosi e da Wikipedia. Nessuna indicazione sulla commestibilità di funghi e piante.</p>${COPY()}</div>`;
   for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/640px-')}')`; el.classList.add('conf'); } });
@@ -2822,25 +2824,96 @@ $('cat').addEventListener('click', e => {
 /* ---- i temi: filtro in alto nella foto d'apertura, si possono unire */
 const TEMA = { natura: ['Natura', '#2D6A4F'], sapori: ['Sapori', '#E8761A'], mare: ['Mare', '#2F7EA8'], arte: ['Arte', '#8A5A3C'], storia: ['Storia', '#7B3F61'] };
 const PRONTI = ['natura', 'sapori'];
-var TEMI = new Set((() => { try { const t = JSON.parse(localStorage.getItem('sn_temi') || '[]').filter(x => TEMA[x]); return t.length ? t : ['natura']; } catch (e) { return ['natura']; } })());
-const salvaTemi = () => { try { localStorage.setItem('sn_temi', JSON.stringify([...TEMI])); } catch (e) {} };
-const misto = () => !isApp && !(TEMI.size === 1 && (TEMI.has('natura') || TEMI.has('sapori')));
+// le cinque sezioni: si entra dal menu nella foto d'apertura; la home le presenta tutte
+var SEZ = isApp || location.hash.slice(1) ? 'natura' : 'home';
+var TEMI = new Set(['natura']);
+const misto = () => false;
+const SEZT = {
+  natura: { t: 'Natura', s: 'Una natura da ascoltare', d: 'Boschi mai tagliati da secoli, un vulcano che respira, orchidee che fioriscono solo qui. Sei parchi, settantacinque riserve e oltre ventimila sentieri per camminare la Sicilia, con le regole per farlo bene.', cta: 'Entra in Natura', f: 'natura/campagna' },
+  sapori: { t: 'Sapori', s: 'Una tavola da scoprire', d: 'Ogni paese ha il suo dolce, ogni festa il suo pane. Mille sapori documentati, dalla terra alla tavola: dove nascono, di cosa sono fatti, quando si preparano e le sagre dove assaggiarli.', cta: 'Entra in Sapori', f: 'backcassatelle' },
+  mare: { t: 'Mare', s: 'Un mare che ha fatto la storia', d: 'Isole, fondali, saline e tonnare. Il mare che ha nutrito, difeso e collegato la Sicilia al mondo, con le aree marine protette e i suoi pesci.', cta: 'In preparazione', f: 'natura/scogliere', fut: ['Le sette aree marine protette e i loro fondali', 'Saline, tonnare e borghi di pescatori', 'I pesci del Mediterraneo e le stagioni della pesca'] },
+  arte: { t: 'Arte', s: 'La bellezza costruita in tremila anni', d: 'Templi greci, mosaici arabo-normanni, chiese barocche e le maioliche dei paesi. Opere da vedere dal vivo, con chi le ha fatte e perché.', cta: 'In preparazione', wk: 'Duomo di Monreale', fut: ['Templi, teatri e mosaici da visitare', 'Il barocco del Val di Noto', 'Artigiani di oggi: ceramica, ferro, pietra'] },
+  storia: { t: 'Storia', s: 'Ogni popolo ha lasciato una traccia', d: 'Sicani, Greci, Arabi, Normanni, Spagnoli: la storia dell\'isola letta sulle mappe antiche, nelle foto d\'archivio e nei racconti, con una linea del tempo da percorrere.', cta: 'In preparazione', wk: 'Valle dei Templi', fut: ['Mappe antiche sovrapposte alla Sicilia di oggi', 'Una linea del tempo dai Sicani all\'Unità', 'Foto d\'archivio e racconti di paese'] }
+};
 function filtroTemi() {
   if (isApp) return '';
-  return `<nav class="temi" aria-label="Cosa vuoi vedere"><span class="ql">Mostra</span>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${TEMI.has(k) ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-pressed="${TEMI.has(k)}"${PRONTI.includes(k) ? '' : ' title="In preparazione"'}><i></i>${n}</button>`).join('')}</nav>`;
+  return `<nav class="temi" aria-label="Sezioni del sito"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</nav>`;
 }
 document.addEventListener('click', e => {
-  const b = e.target.closest('[data-tema]'); if (!b) return; e.preventDefault(); e.stopPropagation();
-  const k = b.dataset.tema; if (TEMI.has(k)) { if (TEMI.size === 1) return; TEMI.delete(k); } else TEMI.add(k);
-  salvaTemi(); applicaTemi();
+  const b = e.target.closest('[data-tema],header h1.marchio'); if (!b || isApp) return; e.preventDefault(); e.stopPropagation();
+  entraSez(b.dataset.tema || 'home');
 }, true);
-function applicaTemi() {
-  for (const b of document.querySelectorAll('#modo button')) b.classList.toggle('on', TEMI.size === 1 && TEMI.has(b.dataset.m));
-  const y = $('cat').scrollTop;
-  if (TEMI.size === 1 && TEMI.has('sapori')) { if (!SAP.on) sapModo(true); else { SAP.home = true; vai('mappa'); } return; }
+function entraSez(k) {
+  SEZ = k; TEMI = new Set([k]); chiudi(); $('cat').scrollTop = 0; $('cat').dataset.v = '';
+  if (k === 'sapori') { if (!SAP.on) sapModo(true); else { SAP.home = true; vai('mappa'); } return; }
   NAT.home = true; NAT.hi = null;
   if (SAP.on) sapModo(false); else vai('mappa');
-  setTimeout(() => { if ($('cat').scrollTop < 5 && y < 500) $('cat').scrollTop = y; }, 50);
+}
+function applicaTemi() { entraSez([...TEMI][0]); }
+// la home: le sezioni che scorrono e invitano a entrare
+async function genHome(fo) {
+  await SAPD(); await SAGRE();
+  const D2 = SAP.D, conta = t => Object.values(S).filter(x => x.t === t).length;
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const oi = new Date().toISOString().slice(0, 10), mese = new Date().getMonth();
+  const prossime = (SAP.sagre.eventi || []).filter(e => e.t === 'sagra' && e.d[e.d.length - 1] >= oi).sort((a, b) => (a.d.find(d => d >= oi) > b.d.find(d => d >= oi) ? 1 : -1)).slice(0, 3);
+  const nh = fo.filter(x => x.h && x.g !== 'mare'), nat = nh[Math.floor(Math.random() * nh.length)] || {};
+  SEZT.natura.f = nat.f || SEZT.natura.f;
+  const sl = Object.entries(SEZT);
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  $('cat').dataset.v = 'gen-home';
+  $('cat').innerHTML = `<div class="sh5 gen5">
+    <section class="ap5 sl5" aria-roledescription="carosello" aria-label="Le sezioni di Sicilia Naturale">${filtroTemi()}
+      ${sl.map(([k, x], i) => `<div class="sld${i === 0 ? ' on' : ''}" data-i="${i}" style="--tc:${TEMA[k][1]}" aria-hidden="${i !== 0}"><div class="apf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></div>
+        <div class="apt"><p class="kick5"><i></i>${x.t}${PRONTI.includes(k) ? '' : ' · in preparazione'}</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p>
+          ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
+      <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
+    </section>
+    <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
+      <div class="vie5">
+        <button data-via="sentiero"><span class="n">1</span><b>Ho mezza giornata</b><span>Un sentiero in un parco, e dopo cosa si mangia nei paesi vicini.</span><em>Natura, poi Sapori ${freccia}</em></button>
+        <button data-via="dolce"><span class="n">2</span><b>Cerco un sapore della tradizione</b><span>Un dolce, un formaggio, un pane: dove nasce e quando si prepara.</span><em>Sapori ${freccia}</em></button>
+        <button data-via="mese"><span class="n">3</span><b>Cosa succede questo mese</b><span>Sagre e feste in calendario, e quello che fiorisce in campagna.</span><em>Calendario ${freccia}</em></button>
+      </div></section>
+    <section class="s5"><div class="t5"><h2>Le cinque sezioni</h2><p>Due sono già aperte, tre sono in preparazione.</p></div>
+      <div class="sez5">${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="img" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span><span class="tx"><b><i></i>${x.t}</b><small>${x.s}.</small>${PRONTI.includes(k) ? `<em>${k === 'natura' ? `${conta('pn') + conta('pr')} parchi, ${conta('rn')} riserve, ${fmt(FUN.s.length + PIA.s.length)} specie` : `${fmt(Object.values(D2.voci).filter(v => v.t !== 'materia').length)} sapori in ${Object.keys(D2.paesi).length} comuni`}</em>` : '<em>In preparazione</em>'}</span>${freccia}</button>`).join('')}</div></section>
+    ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1200px-')}')`; });
+  scorri5();
+}
+let SLT = null;
+function scorri5() {
+  clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
+  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')]; let i = 0, ferma = false;
+  const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i)); };
+  box.querySelector('.slp').onclick = () => va(i - 1); box.querySelector('.sls').onclick = () => va(i + 1);
+  dots.forEach(d => d.onclick = () => va(+d.dataset.go));
+  box.onmouseenter = box.onfocusin = () => { ferma = true; }; box.onmouseleave = () => { ferma = false; };
+  let x0 = null; box.ontouchstart = e => { x0 = e.touches[0].clientX; }; box.ontouchend = e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) va(i + (dx < 0 ? 1 : -1)); x0 = null; };
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) SLT = setInterval(() => { if (!ferma && $('cat').dataset.v === 'gen-home' && document.visibilityState === 'visible') va(i + 1); else if ($('cat').dataset.v !== 'gen-home') clearInterval(SLT); }, 6500);
+}
+$('cat').addEventListener('click', e => {
+  if ($('cat').dataset.v !== 'gen-home') return;
+  const v = e.target.closest('[data-via]'); if (!v) return; e.stopPropagation(); const w = v.dataset.via;
+  if (w === 'sentiero') { SEZ = 'natura'; NAT.home = false; return vai('escursioni'); }
+  if (w === 'dolce') return entraSez('sapori');
+  if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
+}, true);
+// le sezioni in preparazione: cosa ci sarà
+async function prestoHome(k, fo) {
+  const x = SEZT[k], freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'presto-home';
+  $('cat').innerHTML = `<div class="sh5 gen5">
+    <section class="ap5" style="--tc:${TEMA[k][1]}">${filtroTemi()}<div class="apf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></div>
+      <div class="apt"><p class="kick5"><i></i>${x.t} · in preparazione</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p></div></section>
+    <section class="s5"><div class="t5"><h2>Cosa troverai</h2><p>Stiamo raccogliendo luoghi, fonti e foto. Ecco cosa arriverà in questa sezione.</p></div>
+      <ol class="fut5">${x.fut.map(f => `<li>${f}</li>`).join('')}</ol></section>
+    <section class="s5"><div class="t5"><h2>Intanto puoi entrare qui</h2></div>
+      <div class="sez5">${PRONTI.map(q => `<button data-tema="${q}" style="--tc:${TEMA[q][1]}"><span class="img" style="background-image:url('foto/${SEZT[q].f}.webp')"></span><span class="tx"><b><i></i>${SEZT[q].t}</b><small>${SEZT[q].s}.</small></span>${freccia}</button>`).join('')}</div></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1200px-')}')`; });
 }
 // comuni dei sapori sulla mappa di Natura quando i temi sono uniti
 function mixLivelli(v) {
@@ -2945,5 +3018,4 @@ if (fineP) {
   map.on('mouseout', tipNascondi);
 }
 
-setTimeout(() => { if (!isApp && TEMI.size === 1 && TEMI.has('sapori') && !SAP.on) sapModo(true); }, 0);
 }

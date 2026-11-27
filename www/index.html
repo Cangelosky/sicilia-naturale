@@ -999,6 +999,58 @@ header h1.marchio .mt{font-family:'Caprasimo',Georgia,serif;font-weight:400;font
 .nar5 .src{margin:20px 18px 0;font-size:12px;color:#8a7a6a}
 .nar5 details.prov{margin:10px 18px 0}
 .nar5 .mesi span.on{background:#E8761A;color:#fff}
+.in .switch.spsw{margin:4px 0 16px}
+
+/* menu delle sezioni nella foto */
+.temi .ini{font-weight:600}
+.temi button.on{background:#fff;color:#26231F}
+/* home generale: le sezioni che scorrono */
+.sl5{min-height:min(78vh,680px)!important;padding:0!important;display:block!important}
+.sl5 .sld{position:absolute;inset:0;display:flex;align-items:flex-end;padding:clamp(70px,9vw,90px) clamp(22px,4vw,48px) clamp(64px,8vh,80px);opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s}
+.sl5 .sld.on{opacity:1;visibility:visible}
+.sl5 .sld .apf{transform:scale(1.04);transition:transform 7s ease-out}.sl5 .sld.on .apf{transform:scale(1)}
+.sl5 .sld::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,12,6,.66) 0%,rgba(20,12,6,.25) 55%,rgba(20,12,6,0) 80%),linear-gradient(0deg,rgba(20,12,6,.45),transparent 45%);pointer-events:none}
+.sl5::after{display:none}
+.sl5 .apt{z-index:2}
+.kick5{display:inline-flex;align-items:center;gap:8px;margin:0 0 10px;font:600 14px 'Bricolage Grotesque',sans-serif;color:#fff;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border-radius:999px;padding:5px 12px}
+.kick5 i{width:10px;height:10px;border-radius:50%;background:var(--tc)}
+.entra{display:inline-flex;align-items:center;gap:12px;border:0;border-radius:999px;background:#fff;color:#26231F;padding:7px 7px 7px 20px;font:600 16px 'Bricolage Grotesque',sans-serif;cursor:pointer}
+.entra .fr{background:var(--tc);color:#fff;width:38px;height:38px}
+.entra.ghost{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.5);backdrop-filter:blur(6px)}
+.entra:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.sln{position:absolute;z-index:5;left:50%;bottom:20px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:rgba(20,12,6,.3);backdrop-filter:blur(6px);border-radius:999px;padding:5px 8px}
+.sln button{border:0;background:none;color:#fff;cursor:pointer}
+.slp,.sls{font-size:22px;line-height:1;width:28px;height:28px;border-radius:50%}
+.slp:hover,.sls:hover{background:rgba(255,255,255,.2)}
+.sdot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.5)!important;padding:0;transition:width .3s}
+.sdot.on{width:28px;border-radius:6px;background:var(--tc)!important;box-shadow:0 0 0 2px #fff}
+@media (max-width:860px){.sl5{min-height:88vh!important}.sl5 .sld{padding-bottom:70px}}
+@media (prefers-reduced-motion:reduce){.sl5 .sld,.sl5 .sld .apf{transition:none}}
+.vie5{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.vie5 button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;border:0;border-radius:var(--r);background:#fff;padding:18px;text-align:left;cursor:pointer;font:inherit;color:#26231F;box-shadow:0 4px 16px rgba(70,45,20,.07)}
+.vie5 .n{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#26231F;color:#fff;font-weight:700}
+.vie5 b{font:500 22px/1.15 'Newsreader',Georgia,serif}
+.vie5 span:not(.n):not(.fr){color:#5c4f42;font-size:15px;line-height:1.45}
+.vie5 em{margin-top:auto;padding-top:8px;display:flex;align-items:center;gap:8px;font-style:normal;font-weight:600;font-size:14px}
+.vie5 button:hover{box-shadow:0 8px 22px rgba(70,45,20,.13)}
+.sez5{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.sez5 button{display:flex;align-items:center;gap:14px;border:0;border-radius:var(--r);background:#fff;padding:8px 12px 8px 8px;text-align:left;cursor:pointer;font:inherit;color:#26231F;box-shadow:0 4px 16px rgba(70,45,20,.07)}
+.sez5 .img{flex:none;width:96px;height:96px;border-radius:12px;background:#E9DCC5 center/cover}
+.sez5 .tx{flex:1;display:flex;flex-direction:column;gap:3px}
+.sez5 b{display:flex;align-items:center;gap:8px;font:500 23px/1.1 'Newsreader',Georgia,serif}
+.sez5 b i{width:10px;height:10px;border-radius:50%;background:var(--tc)}
+.sez5 small{color:#5c4f42;font-size:14px}.sez5 em{font-style:normal;font-size:12.5px;font-weight:600;color:var(--tc)}
+.sez5 button.presto{opacity:.82}
+.sag5.row{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}.sag5.row button{margin:0}
+.fut5{margin:0;padding:0 0 0 22px;display:grid;gap:10px;font:400 20px/1.35 'Newsreader',Georgia,serif}
+.pross5{display:flex;align-items:stretch;width:100%;border:0;border-radius:var(--r);background:#fff;padding:0;overflow:hidden;text-align:left;cursor:pointer;font:inherit;color:#26231F;box-shadow:0 4px 16px rgba(70,45,20,.07);border-left:6px solid var(--tc)}
+.pross5 .img{flex:none;width:min(34%,260px);min-height:150px;background:#E9DCC5 center/cover}
+.pross5 .tx{padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.pross5 small{font-weight:600;color:var(--tc);font-size:13px}
+.pross5 b{font:500 26px/1.1 'Newsreader',Georgia,serif}
+.pross5 span span,.pross5 .tx>span{color:#5c4f42;font-size:15.5px;line-height:1.45}
+.pross5 em{font-style:normal;font-weight:600;color:var(--tc)}
+header h1.marchio{cursor:pointer}
 </style>
 
 </head>
