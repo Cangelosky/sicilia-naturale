@@ -2394,16 +2394,67 @@ function sapCatalogo() {
 
 /* ---- calendario */
 function sapCalendario() {
-  const D = SAP.D, m = SAP.mese;
-  const fe = Object.entries(D.feste).filter(([, f]) => f.m.includes(m));
-  const st = Object.values(D.voci).filter(v => (v.m || []).includes(m));
-  $('cat').dataset.v = 'sap-cal'; $('cat').scrollTop = 0;
-  $('cat').innerHTML = `<div class="in"><h2>Calendario dei sapori</h2><p class="lead">Feste, dolci delle feste e prodotti di stagione, mese per mese. ${PROVA}</p>
-    <div class="mesi big">${MESI.map((x, i) => `<button data-mese="${i + 1}" class="${m === i + 1 ? 'on' : ''}">${x}</button>`).join('')}</div>
-    <h3>Feste di ${MESIL[m - 1]}</h3>${fe.length ? fe.map(([i, f]) => { const dl = Object.values(D.voci).filter(v => (v.feste || []).includes(i));
-      return `<div class="festa"><b>${esc(f.n)}</b><small>${f.d === 'mobile' ? 'data mobile' : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}${f.paesi.length ? ' · ' + f.paesi.map(p => D.paesi[p].n).join(', ') : ''}</small><div class="griglia">${dl.map(v => `<button class="card" data-sc="${v.k}"><span class="ph" style="color:${SAPT[v.t][3]}">${ico(SAPT[v.t][2], 'phi')}</span><span class="tx"><b class="nc">${esc(v.n)}</b><small>${esc(nomiPaesi(v))}</small></span></button>`).join('') || '<p class="note">Nessun dolce collegato nei dati di prova.</p>'}</div></div>`; }).join('') : '<p class="note">Nessuna festa in questo mese nei dati di prova.</p>'}
-    <h3>Di stagione</h3>${st.length ? `<div class="griglia">${st.map(v => `<button class="card" data-sc="${v.k}"><span class="ph" style="color:${SAPT[v.t][3]}">${ico(SAPT[v.t][2], 'phi')}</span><span class="tx"><b class="nc">${esc(v.n)}</b><small>${SAPT[v.t][0]}</small></span></button>`).join('')}</div>` : '<p class="note">Nessun prodotto di stagione nei dati di prova.</p>'}${COPY()}</div>`;
+  if (!SAP.sagre) { SAP.sagre = fetch('data/sagre.json').then(r => r.json()).catch(() => ({ eventi: [] })); }
+  Promise.resolve(SAP.sagre).then(sg => { SAP.sagre = sg; calDisegna(); });
 }
+const TIPI = { sagra: ['Sagre e feste del gusto', 'Sagra', '#E8761A'], mercatino: ['Mercatini', 'Mercatino', '#B85300'], presepe: ['Presepi viventi', 'Presepe vivente', '#7A5C3E'] };
+const GIORNI = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function calDisegna() {
+  const D = SAP.D, E = SAP.sagre.eventi || [], oggi = new Date(), oi = iso(oggi);
+  const C = SAP.cal = SAP.cal || { y: oggi.getFullYear(), m: oggi.getMonth() + 1, sel: '', tipo: '', pv: '' };
+  if (!C.sel) { const pr = E.flatMap(e => e.d).filter(d => d >= oi).sort()[0]; C.sel = pr || oi; const [y, m] = C.sel.split('-'); C.y = +y; C.m = +m; }
+  const ok = e => (!C.tipo || e.t === C.tipo) && (!C.pv || e.pv === C.pv);
+  const vis = E.filter(ok), perG = {}; for (const e of vis) for (const d of e.d) (perG[d] = perG[d] || []).push(e);
+  const futuri = E.filter(e => e.d[e.d.length - 1] >= oi), nS = futuri.filter(e => e.t === 'sagra').length, nP = futuri.filter(e => e.t === 'presepe').length, nM = futuri.filter(e => e.t === 'mercatino').length;
+  // griglia del mese, da lunedì
+  const p1 = new Date(C.y, C.m - 1, 1), off = (p1.getDay() + 6) % 7, gg = new Date(C.y, C.m, 0).getDate(), celle = [];
+  for (let i = 0; i < off; i++) celle.push('<span class="vuoto"></span>');
+  for (let d = 1; d <= gg; d++) { const k = `${C.y}-${String(C.m).padStart(2, '0')}-${String(d).padStart(2, '0')}`, ev = perG[k] || [];
+    celle.push(`<button class="gio${k === C.sel ? ' sel' : ''}${k === oi ? ' oggi' : ''}${k < oi ? ' pass' : ''}${ev.length ? ' pieno' : ''}" data-cday="${k}" aria-label="${d} ${MESIL[C.m - 1]}, ${ev.length} appuntamenti"><b>${d}</b>${ev.slice(0, 3).map(e => `<i class="t-${e.t}">${esc(e.c)}</i>`).join('')}${ev.length > 3 ? `<em>+${ev.length - 3}</em>` : ''}</button>`); }
+  const delG = (perG[C.sel] || []).slice().sort((a, b) => (a.t > b.t) - (a.t < b.t));
+  const [sy, sm, sd] = C.sel.split('-').map(Number), selD = new Date(sy, sm - 1, sd);
+  const nomeG = `${['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'][selD.getDay()]} ${sd} ${MESIL[sm - 1]}`;
+  const delMese = vis.filter(e => e.d.some(d => d.startsWith(`${C.y}-${String(C.m).padStart(2, '0')}`)));
+  const quando = e => { const d = e.d.map(x => +x.slice(8)), m = MESIL[+e.d[0].slice(5, 7) - 1]; if (d.length === 1) return `${d[0]} ${m}`; const cons = d.every((x, i) => !i || x === d[i - 1] + 1); return cons ? `dal ${d[0]} al ${d[d.length - 1]} ${m}` : `${d.join(', ')} ${m}`; };
+  const ics = e => { const a = e.d[0].replace(/-/g, ''), z = new Date(+e.d[e.d.length - 1].slice(0, 4), +e.d[e.d.length - 1].slice(5, 7) - 1, +e.d[e.d.length - 1].slice(8) + 1), b = iso(z).replace(/-/g, '');
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sicilia Naturale//IT\r\nBEGIN:VEVENT\r\nUID:${e.id}@sicilianaturale\r\nDTSTAMP:20261127T000000Z\r\nDTSTART;VALUE=DATE:${a}\r\nDTEND;VALUE=DATE:${b}\r\nSUMMARY:${e.n} a ${e.c}\r\nLOCATION:${e.c} (${e.pv})\r\nDESCRIPTION:${e.desc} Verifica date e orari con gli organizzatori. Fonte: ${e.f}\r\nEND:VEVENT\r\nEND:VCALENDAR`); };
+  const scheda = e => `<article class="ev5 t-${e.t}"><div class="et"><span class="tag">${TIPI[e.t][1]}</span><small>${quando(e)}</small></div><h3>${esc(e.n)}</h3><p class="dove">${esc(e.c)}, provincia di ${esc(PROVN[e.pv] || e.pv)}</p><p>${esc(e.desc)}</p>
+    <div class="ea">${e.p ? `<button data-sc="${e.p}">Cosa si mangia a ${esc(e.c)}</button>` : ''}<a href="${ics(e)}" download="${esc(e.n.replace(/[^\w]+/g, '-'))}.ics">Aggiungi al tuo calendario</a><a href="${esc(e.f)}" target="_blank" rel="noopener">Fonte</a></div></article>`;
+  const punti = delMese.map(e => ({ xy: e.xy, id: e.id, t: e.t, on: e.d.includes(C.sel), tit: `${e.n}, ${e.c}: ${quando(e)}` }));
+  const mesiCon = [...new Set(E.flatMap(e => e.d.map(d => d.slice(0, 7))))].sort();
+  const D2 = SAP.D, fe = Object.entries(D2.feste).filter(([, f]) => f.m.includes(C.m)), st = Object.values(D2.voci).filter(v => (v.m || []).includes(C.m) && v.t !== 'materia');
+  $('cat').dataset.v = 'sap-cal';
+  $('cat').innerHTML = `<div class="sh5 cal5">
+    <section class="s5 tc"><h1>Calendario dei sapori</h1>
+      <p class="lead">Da oggi a fine dicembre in Sicilia ci sono ${nS} sagre e feste del gusto, ${nM} mercatini e ${nP} presepi viventi. Scegli un giorno: vedi dove andare e cosa si mangia.</p>
+      <div class="fil5">${[['', 'Tutto'], ...Object.entries(TIPI).map(([k, v]) => [k, v[0]])].map(([k, n]) => `<button data-ctipo="${k}" class="${C.tipo === k ? 'on' : ''}">${k ? `<i class="t-${k}"></i>` : ''}${n}</button>`).join('')}
+        <label class="pv5"><span class="sr">Provincia</span><select id="cpv"><option value="">Tutta la Sicilia</option>${Object.entries(PROVN).map(([k, n]) => `<option value="${k}"${C.pv === k ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
+    </section>
+    <section class="s5 cg5">
+      <div class="mese5"><div class="mh"><button data-cmese="-1" aria-label="Mese prima">‹</button><h2>${MESIL[C.m - 1][0].toUpperCase() + MESIL[C.m - 1].slice(1)} ${C.y}</h2><button data-cmese="1" aria-label="Mese dopo">›</button></div>
+        <div class="gr5">${GIORNI.map(g => `<span class="gn">${g}</span>`).join('')}${celle.join('')}</div>
+        <p class="leg">${Object.entries(TIPI).map(([k, v]) => `<span><i class="t-${k}"></i>${v[1]}</span>`).join('')}</p></div>
+      <div class="gio5"><h2>${nomeG[0].toUpperCase() + nomeG.slice(1)}</h2>${delG.length ? delG.map(scheda).join('') : `<p class="vuoto5">Nessun appuntamento in questo giorno${C.tipo || C.pv ? ' con i filtri scelti' : ''}. ${mesiCon.length ? 'Scegli un giorno con un punto colorato.' : ''}</p>`}</div>
+    </section>
+    <section class="s5 cm5"><div class="t5"><h2>Dove, in ${MESIL[C.m - 1]}</h2><p>${delMese.length} appuntamenti nel mese. I punti pieni sono quelli del giorno scelto.</p></div>
+      <div class="cmap">${mappaSicilia({ w: 840, nomi: true, punti })}</div></section>
+    ${delMese.length ? `<section class="s5"><div class="t5"><h2>Tutti gli appuntamenti di ${MESIL[C.m - 1]}</h2></div><div class="lista5">${delMese.slice().sort((a, b) => a.d[0] < b.d[0] ? -1 : 1).map(scheda).join('')}</div></section>` : ''}
+    ${fe.length ? `<section class="s5"><div class="t5"><h2>Feste e dolci della tradizione</h2></div><div class="rail5">${fe.map(([i, f]) => `<button class="pz5" data-hfesta="${i}"><span class="img">${ico('calendar')}</span><b>${esc(f.n)}</b><small>${f.d === 'mobile' ? 'Data mobile' : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}${f.paesi.length ? ', ' + esc(f.paesi.map(p => D2.paesi[p].n).join(', ')) : ''}</small></button>`).join('')}</div></section>` : ''}
+    ${st.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[C.m - 1]}</h2></div><div class="rail5">${st.slice(0, 20).map(v => `<button class="pz5" data-sc="${v.k}"><span${imgAttr(v)}>${ico((GUSTO[catDi(v)] || ['', '', 'plant'])[2])}</span><b>${esc(v.n)}</b><small>${esc(nomiPaesi(v) || '')}</small></button>`).join('')}</div></section>` : ''}
+    <p class="note n5">Date raccolte il 27 novembre 2026 da siti di eventi e giornali locali (fonte indicata in ogni scheda). Date e orari possono cambiare: verifica con gli organizzatori prima di partire.</p>${COPY()}</div>`;
+  sapFoto($('cat'));
+  $('cpv').onchange = e => { C.pv = e.target.value; calDisegna(); };
+}
+$('cat').addEventListener('click', e => {
+  if (!SAP.on || $('cat').dataset.v !== 'sap-cal') return;
+  const C = SAP.cal, d = e.target.closest('[data-cday]'), t = e.target.closest('[data-ctipo]'), m = e.target.closest('[data-cmese]'), pt = e.target.closest('[data-cev]'), hf = e.target.closest('[data-hfesta]');
+  if (d) { e.stopPropagation(); C.sel = d.dataset.cday; const y = $('cat').scrollTop; calDisegna(); $('cat').scrollTop = y; return; }
+  if (t) { e.stopPropagation(); C.tipo = t.dataset.ctipo; return calDisegna(); }
+  if (m) { e.stopPropagation(); C.m += +m.dataset.cmese; if (C.m < 1) { C.m = 12; C.y--; } if (C.m > 12) { C.m = 1; C.y++; } C.sel = `${C.y}-${String(C.m).padStart(2, '0')}-01`; return calDisegna(); }
+  if (pt) { e.stopPropagation(); const ev = SAP.sagre.eventi.find(x => x.id === pt.dataset.cev); if (ev) { C.sel = ev.d.find(x => x >= iso(new Date())) || ev.d[0]; calDisegna(); $('cat').querySelector('.gio5').scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+  if (hf) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'tutto', festa: hf.dataset.hfesta, q: '', paese: '', lr: '', fam: '', ric: '', n: 60 }); $('cat').dataset.v = ''; vai('specie'); }
+}, true);
 
 /* ---- itinerari */
 function sapItinerari() {
@@ -2515,7 +2566,7 @@ function mappaSicilia(o) {
   const D = SAP.D, si = D.sic; if (!si) return '';
   const w = o.w, L0 = 11.85, L1 = 15.72, A0 = 36.58, A1 = 38.84, k = Math.cos(37.6 * Math.PI / 180), h = Math.round(w * (A1 - A0) / ((L1 - L0) * k));
   const X = x => ((x - L0) / (L1 - L0) * w).toFixed(1), Y = y => ((A1 - y) / (A1 - A0) * h).toFixed(1);
-  const n = {}; for (const v of Object.values(D.voci)) for (const p of (v.paesi || [])) if (perGusto(v)) n[p] = (n[p] || 0) + 1;
+  const n = {}; if (!o.punti) for (const v of Object.values(D.voci)) for (const p of (v.paesi || [])) if (perGusto(v)) n[p] = (n[p] || 0) + 1;
   const mx = Math.max(1, ...Object.values(n)), s = w / 420;
   const tr = (SAP.visti || []).filter(q => D.paesi[q]).map(q => D.paesi[q].c);
   const com = si.comuni.filter(c => c[1] > L0 && c[1] < L1 && c[2] > A0 && c[2] < A1);
@@ -2527,6 +2578,7 @@ function mappaSicilia(o) {
     ${si.contorno.map(p => `<polygon class="terra" points="${p.filter(([x, y]) => x > L0 && x < L1 && y > A0 && y < A1).map(([x, y]) => X(x) + ',' + Y(y)).join(' ')}"/>`).join('')}
     ${tr.length > 1 ? `<polyline class="trac" points="${tr.map(c => X(c[0]) + ',' + Y(c[1])).join(' ')}"/>` : ''}
     ${com.filter(c => !(c[3] && n[c[3]])).map(dot).join('')}${com.filter(c => c[3] && n[c[3]]).sort((a, b) => n[b[3]] - n[a[3]]).map(dot).join('')}
+    ${(o.punti || []).map(p => `<circle data-cev="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
     ${o.nomi ? cap.map(c => { const f = 11 * Math.min(s, 1.35), dx = ['Trapani', 'Agrigento', 'Ragusa', 'Caltanissetta', 'Messina'].includes(c[0]) ? -1 : 1, x = +X(c[1]) + dx * 7 * Math.min(s, 1.35), y = +Y(c[2]) + (c[0] === 'Messina' ? -7 * s : c[0] === 'Enna' ? -3 * s : 4 * s);
       return `<g class="cap"><circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(2.2 * s).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${dx < 0 ? 'end' : 'start'}" style="font-size:${f.toFixed(1)}px">${c[0]}</text></g>`; }).join('') : ''}
   </svg>`;
@@ -2618,7 +2670,7 @@ $('cat').addEventListener('click', e => {
   if (gu) { e.stopPropagation(); const k = gu.dataset.gusto; SAP.gusti.has(k) ? SAP.gusti.delete(k) : SAP.gusti.add(k); salvaGusti(); SAP.hi = null; return sapHome(); }
   if (e.target.closest('[data-sc]')) return;
   if (fa) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'dolci', fam: fa.dataset.fam, q: '', paese: '', festa: '', lr: '', n: 60 }); $('cat').dataset.v = ''; return vai('specie'); }
-  if (fe) { e.stopPropagation(); SAP.mese = +fe.dataset.hmese; return vai('meteo'); }
+  if (fe) { e.stopPropagation(); SAP.mese = +fe.dataset.hmese; SAP.cal = null; return vai('meteo'); }
   if (p) { e.stopPropagation(); const w = p.dataset.porta;
     if (w === 'viaggio') vai('escursioni'); else if (w === 'calendario') vai('meteo');
     else if (w === 'tutelati') { Object.assign(SAP.fil, { k: 'tutto', fam: '', q: '', paese: '', festa: '', lr: '', ric: 'tut', n: 60 }); $('cat').dataset.v = ''; vai('specie'); } }
