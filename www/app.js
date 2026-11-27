@@ -2710,7 +2710,7 @@ async function natHome() {
     ['EUAP0382', 'Riserva naturale orientata dello Zingaro', 'Lo Zingaro, sette chilometri senza strade', 'La prima riserva naturale della Sicilia: calette, palme nane e un sentiero lungo la costa, solo a piedi.']];
   const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr'].includes(x.t));
   const mese = new Date().getMonth(), S2 = await caricaStag();
-  const ora = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].filter(([tp, i]) => stagione(tp, i, mese, S2).on === true).sort((a, b) => b[2] - a[2]).slice(0, 14);
+  const ora0 = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].filter(([tp, i]) => stagione(tp, i, mese, S2).on === true).sort((a, b) => b[2] - a[2]); const oraF = ora0.filter(x => x[0] === 'funghi' && FUN.s[x[1]][8].length).slice(0, 7), oraP = ora0.filter(x => x[0] === 'piante').slice(0, 7), ora = oraP.flatMap((x, j) => oraF[j] ? [x, oraF[j]] : [x]);
   $('cat').classList.add('on'); document.body.classList.add('cat-on');
   const primo = $('cat').dataset.v !== 'nat-home'; $('cat').dataset.v = 'nat-home'; if (primo) $('cat').scrollTop = 0;
   $('cat').innerHTML = `<div class="sh5 nat5">
@@ -2726,7 +2726,7 @@ async function natHome() {
     <section class="s5"><div class="t5"><h2>Storie e scoperte</h2></div>
       <div class="storie5">${storie.map(([k, wk, t, d]) => `<button class="st5" data-nk="${k}" data-nwk="${esc(wk)}"><span class="tag">Parchi e riserve</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
     ${ora.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[mese]}</h2><button class="lk" data-np="calendario">Tutto il calendario</button><p>Le specie più osservate in questo mese, secondo i dati delle osservazioni.</p></div>
-      <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}"><span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
+      <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}">${tp === 'funghi' && r[8].length ? `<span class="img conf" style="background-image:url('${BASEF + r[8][0]}')">` : `<span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">`}${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
     <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>${parchi.length} parchi, dal mare alle montagne. Tocca per aprire la scheda con zone, regole e sentieri.</p></div>
       <div class="chips5">${parchi.map(([k, x]) => `<button data-nk="${k}">${esc(x.n)}</button>`).join('')}</div></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
