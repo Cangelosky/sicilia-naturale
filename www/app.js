@@ -2177,8 +2177,7 @@ function sapNav() {
   }
 }
 if (!isApp) {
-  document.querySelector('header h1').insertAdjacentHTML('afterend', '<div class="modo" id="modo" role="tablist" aria-label="Natura o Sapori"><button data-m="natura" class="on">Natura</button><button data-m="sapori">Sapori</button></div>');
-  $('modo').onclick = e => { const b = e.target.closest('button'); if (!b) return; TEMI = new Set([b.dataset.m]); salvaTemi(); NAT.home = true; if ((b.dataset.m === 'sapori') !== SAP.on) sapModo(b.dataset.m === 'sapori'); else vai('mappa'); };
+  // il cambio di tema ora è nel filtro dentro la foto d'apertura (temi)
   $('wrap').querySelector('.top').insertAdjacentHTML('beforeend', '<div class="sapf" id="sapf"></div>');
 }
 
