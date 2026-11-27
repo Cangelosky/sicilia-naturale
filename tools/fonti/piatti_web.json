@@ -1,0 +1,1737 @@
+{
+"agg": "2026-11-27",
+"nota": "Elenco dei piatti raccolti dal web (fase 1). Solo nomi, categorie e luoghi: nessun testo di ricetta.",
+"fonti": {
+"sic": "https://it.wikipedia.org/wiki/Cucina_siciliana",
+"pa": "https://it.wikipedia.org/wiki/Cucina_palermitana",
+"ct": "https://it.wikipedia.org/wiki/Cucina_catanese",
+"me": "https://it.wikipedia.org/wiki/Cucina_messinese",
+"tp": "https://it.wikipedia.org/wiki/Cucina_trapanese",
+"sr": "https://it.wikipedia.org/wiki/Cucina_siracusana",
+"rg": "https://it.wikipedia.org/wiki/Cucina_ragusana",
+"ag": "https://it.wikipedia.org/wiki/Cucina_agrigentina",
+"cl1": "https://www.balarm.it/news/pomodoro-sarde-e-pecorino-la-fuata-di-caltanissetta-e-buona-e-facile-da-preparare-117935",
+"cl2": "https://www.sluurpy.it/caltanissetta/ristoranti",
+"cl3": "https://www.distrettoturisticodelleminiere.it/en/stagioni/cose-da-assaggiare-inverno/",
+"en1": "https://www.visitsicily.info/en/?p=3297",
+"en2": "https://www.balarm.it/news/un-entroterra-tutto-da-gustare-i-prodotti-tipici-di-un-antico-borgo-ennese-ricco-di-storia-e-tradizioni-123625",
+"ct2": "https://online.scuola.zanichelli.it/tecnichedicucina-files/La-Sicilia.pdf"
+},
+"piatti": [
+{
+"n": "Caponata",
+"cat": "antipasto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Insalata di arance",
+"cat": "antipasto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Màguru",
+"cat": "antipasto",
+"luoghi": [
+"Sicilia orientale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Nzalata di limiuna",
+"cat": "antipasto",
+"luoghi": [
+"Sicilia occidentale"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Insalata pantesca",
+"cat": "antipasto",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Matarocco",
+"cat": "antipasto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Mulinciani mmuttunati",
+"cat": "antipasto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Frittedda",
+"cat": "antipasto",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Arancina / arancino",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Bomba",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Calia e simenza",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Calzone",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Cipollina",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Crocchè",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Focaccia messinese",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Frittola",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Iris",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Panelle",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pane con la milza",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pidone",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Scaccia",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Scacciata",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Sfincione",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Stigghiole",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Vastedda fritta",
+"cat": "strada",
+"luoghi": [
+"Valle del Belice"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Caldume",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Anelletti al forno",
+"cat": "primo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Busiate",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Cavateddi",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Cuscus alla trapanese",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Frascatule",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Macco di fave",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta alla Palina",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta con le sarde",
+"cat": "primo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta con i broccoli arriminati",
+"cat": "primo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta al pesto di pistacchi",
+"cat": "primo",
+"luoghi": [
+"Bronte"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta alla Norma",
+"cat": "primo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta al nero di seppia",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta con la nunnata",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta con la muddica",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta col capuliatu",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta chi 'nciovi",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta 'ncasciata",
+"cat": "primo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta alla carrettiera",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta con la bottarga",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Spaghetti alla siracusana",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pasta coi ricci",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Risu ô furnu",
+"cat": "primo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pesto alla trapanese",
+"cat": "salsa",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pesto nisseno",
+"cat": "salsa",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Salmoriglio",
+"cat": "salsa",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pane di Lentini",
+"cat": "pane",
+"luoghi": [
+"Lentini"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pane nero di Castelvetrano",
+"cat": "pane",
+"luoghi": [
+"Castelvetrano"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pane cunzatu",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Arrosto panato palermitano",
+"cat": "secondo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Braciolette alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Coniglio lardiato",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Falsomagro",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Involtini alla siciliana",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Salsiccia pasqualora",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Sangeli",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Ghiotta di pesce",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Involtini di pesce spada",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pescestocco alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Purpetti 'i muccu",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Sarde a beccafico",
+"cat": "secondo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Sarde allinguate",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Bastardi affucati",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Ova rutti a l'acqua",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siciliana"
+},
+{
+"n": "Pollànche",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Ravazzate",
+"cat": "contorno",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Rizzuole",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Mussu e carcagnolu",
+"cat": "strada",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Fave a coniglio",
+"cat": "primo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Capretto con patate",
+"cat": "secondo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Carne a sfincione",
+"cat": "secondo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Pittinicchi",
+"cat": "secondo",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Carciofi attuppati",
+"cat": "contorno",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_palermitana"
+},
+{
+"n": "Arrusti e mancia di cavallo",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Bolognese",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Cartocciata",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Crispelle salate",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Cacocciuli arrustuti",
+"cat": "contorno",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Quarumi",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Mauru",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Zuzzu",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Occh'i voi",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Vaccareddi",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Muccuni",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Cotoletta alla catanese",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Pasta ca triaca",
+"cat": "primo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Scacciata con tuma",
+"cat": "strada",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Carne d'asina",
+"cat": "secondo",
+"luoghi": [
+"Catania"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_catanese"
+},
+{
+"n": "Capretto ripieno",
+"cat": "secondo",
+"luoghi": [
+"Randazzo"
+],
+"fonte": "https://online.scuola.zanichelli.it/tecnichedicucina-files/La-Sicilia.pdf"
+},
+{
+"n": "San Daniele",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Scagliozzi",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Taioni",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Virina",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Cucunci",
+"cat": "strada",
+"luoghi": [
+"Lipari"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Polpo alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Salame di Sant'Angelo di Brolo",
+"cat": "salume",
+"luoghi": [
+"Sant'Angelo di Brolo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Melanzane alla messinese",
+"cat": "contorno",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Pasta 'ncaciata",
+"cat": "primo",
+"luoghi": [
+"Mistretta"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Sciusceddu",
+"cat": "primo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Stuppateddi",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Impanata di pesce spada",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Agnello alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Baccalà alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Filetto alla messinese",
+"cat": "secondo",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_messinese"
+},
+{
+"n": "Cuscus di pesce",
+"cat": "primo",
+"luoghi": [
+"San Vito lo Capo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Cuscus di Favignana",
+"cat": "primo",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Pasta cu l'agghia",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Gnocculi",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Pasta con uova di menola",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Cassatelle in brodo",
+"cat": "primo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Tonno ammuttunatu",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Ragù di anguilla",
+"cat": "primo",
+"luoghi": [
+"Salina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Bottarga di tonno",
+"cat": "conserva",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Tunnina",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Musciame",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Ficazza",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Lattume",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Pulmuneddru",
+"cat": "conserva",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Tunnina ca cipuddata",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Scurmi lardiati",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "'Nvultini a trapanisa",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Addina cunzata",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Ghiotta di crastuna",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Babbaluci cu l'agghia",
+"cat": "secondo",
+"luoghi": [
+"Trapani"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_trapanese"
+},
+{
+"n": "Pasta con la salsa moresca",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pasta alla matalotta",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pasta con il sugo alla siracusana",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Zuppa di pesce alla siracusana",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pasta con i taddi",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pasta con le fave novelle",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Minestra di San Giuseppe",
+"cat": "primo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Ravioli di ricotta",
+"cat": "primo",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Cavatelli al sugo di maiale",
+"cat": "primo",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Sucu fintu",
+"cat": "salsa",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Lolli",
+"cat": "primo",
+"luoghi": [
+"Rosolini",
+"Pachino",
+"Portopalo di Capo Passero"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Tuccuna",
+"cat": "primo",
+"luoghi": [
+"Noto",
+"Canicattini Bagni"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Frittura di paranza",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pesce spada alla stimpirata",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Cernia alla matalotta",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Ghiotta di tonno coi peperoni",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Tonnina alla siracusana",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Bottarga di Marzamemi",
+"cat": "conserva",
+"luoghi": [
+"Pachino"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Patelle crude",
+"cat": "crudo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Vuccuna",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Babbuci alla siracusana",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "'Ntuppateddi a 'mbriaca",
+"cat": "secondo",
+"luoghi": [
+"Floridia"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Bobbia",
+"cat": "contorno",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Cunigghio a' stimpirata",
+"cat": "secondo",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Insalata di cedro e cipolla",
+"cat": "contorno",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Salsiccia di Palazzolo Acreide",
+"cat": "salume",
+"luoghi": [
+"Palazzolo Acreide"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Scollo",
+"cat": "pane",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Manuzza",
+"cat": "pane",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Cuddura",
+"cat": "pane",
+"luoghi": [
+"Palazzolo Acreide"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "'Nfasciateddu",
+"cat": "pane",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pizza siracusana",
+"cat": "strada",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pizzolo",
+"cat": "strada",
+"luoghi": [
+"Sortino",
+"Solarino"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Impanata con i lolli",
+"cat": "strada",
+"luoghi": [
+"Pachino"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Zeppole di San Martino salate",
+"cat": "strada",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_siracusana"
+},
+{
+"n": "Pasta co' capuliato",
+"cat": "primo",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Principissedda con sugo di San Giuseppe",
+"cat": "primo",
+"luoghi": [
+"Santa Croce Camerina"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Cavatoni con lenticchie e finocchietto",
+"cat": "primo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pasta che paddunedda",
+"cat": "primo",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Lolli che i favi",
+"cat": "primo",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pasta ca cucuzza longa",
+"cat": "primo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Ravioli di ricotta al nero di seppia",
+"cat": "primo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Manichi 'i fauci",
+"cat": "primo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Cunigghiu 'a pattuisa",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Iaddina co cinu",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Liatina",
+"cat": "antipasto",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pisci r'ovo d'amaredda",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Carciofi ripieni",
+"cat": "secondo",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Zucca gialla fritta",
+"cat": "contorno",
+"luoghi": [
+"Vittoria"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Funcia i carrua a agghiotta",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Cuosti ri maiali cini",
+"cat": "secondo",
+"luoghi": [
+"Chiaramonte Gulfi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pipi arrustuti",
+"cat": "contorno",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Turciniuna",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Sausizza co sanapuni",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Cipolle di Giarratana al forno",
+"cat": "contorno",
+"luoghi": [
+"Giarratana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Trigghiuledda",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Capputtedda",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Razza fritta in agrodolce",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Mitilugghie",
+"cat": "strada",
+"luoghi": [
+"Acate"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Trippa alla ragusana",
+"cat": "secondo",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Arancino modicano",
+"cat": "strada",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Arancini scoperchiati",
+"cat": "strada",
+"luoghi": [
+"Comiso"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pastizzu",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pastieri",
+"cat": "strada",
+"luoghi": [
+"Modica",
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Tomasini ripieni",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Impanate di agnello",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Sfogghiu",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Pesto ragusano",
+"cat": "salsa",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Olive abbunate e cunzate",
+"cat": "conserva",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_ragusana"
+},
+{
+"n": "Minestra di seppie",
+"cat": "primo",
+"luoghi": [
+"Siculiana"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Sogliola alla saccense",
+"cat": "secondo",
+"luoghi": [
+"Sciacca"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Polpette di sarde",
+"cat": "secondo",
+"luoghi": [
+"Licata"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Spaghetti all'isolotto",
+"cat": "primo",
+"luoghi": [
+"Lampedusa e Linosa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Dentice al forno con brodo di carne",
+"cat": "secondo",
+"luoghi": [
+"Lampedusa e Linosa"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Minestra di San Giuseppe",
+"cat": "primo",
+"luoghi": [
+"Ribera"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Pasta con i carciofi",
+"cat": "primo",
+"luoghi": [
+"Menfi"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Pasta con fave e ricotta",
+"cat": "primo",
+"luoghi": [
+"Montevago"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Cavatelli all'agrigentina",
+"cat": "primo",
+"luoghi": [
+"Agrigento"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Stigghiola",
+"cat": "strada",
+"luoghi": [
+"Racalmuto"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "U pitaggiu",
+"cat": "secondo",
+"luoghi": [
+"Castrofilippo"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Macco di fave",
+"cat": "primo",
+"luoghi": [
+"Raffadali"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Mpurnatu",
+"cat": "secondo",
+"luoghi": [
+"Campobello di Licata"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Pasta Elena",
+"cat": "primo",
+"luoghi": [
+"Favara"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Tagano di Aragona",
+"cat": "primo",
+"luoghi": [
+"Aragona"
+],
+"fonte": "https://it.wikipedia.org/wiki/Cucina_agrigentina"
+},
+{
+"n": "Fuata",
+"cat": "strada",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://www.balarm.it/news/pomodoro-sarde-e-pecorino-la-fuata-di-caltanissetta-e-buona-e-facile-da-preparare-117935"
+},
+{
+"n": "Rollò salato",
+"cat": "strada",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://www.sluurpy.it/caltanissetta/ristoranti"
+},
+{
+"n": "Arancina nissena",
+"cat": "strada",
+"luoghi": [
+"Caltanissetta"
+],
+"fonte": "https://www.sluurpy.it/caltanissetta/ristoranti"
+},
+{
+"n": "Focaccia di Mussomeli",
+"cat": "strada",
+"luoghi": [
+"Mussomeli"
+],
+"fonte": "https://www.distrettoturisticodelleminiere.it/en/stagioni/cose-da-assaggiare-inverno/"
+},
+{
+"n": "Piacentinu ennese",
+"cat": "formaggio",
+"luoghi": [
+"Enna"
+],
+"fonte": "https://www.visitsicily.info/en/?p=3297"
+},
+{
+"n": "Provola di Nicosia",
+"cat": "formaggio",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://www.visitsicily.info/en/?p=3297"
+},
+{
+"n": "Supprissata di Nicosia",
+"cat": "salume",
+"luoghi": [
+"Nicosia"
+],
+"fonte": "https://www.visitsicily.info/en/?p=3297"
+},
+{
+"n": "Vastedda cu' sammucu",
+"cat": "formaggio",
+"luoghi": [
+"Troina"
+],
+"fonte": "https://www.visitsicily.info/en/?p=3297"
+},
+{
+"n": "Mostarda di ficodindia",
+"cat": "conserva",
+"luoghi": [
+"Gagliano Castelferrato"
+],
+"fonte": "https://www.visitsicily.info/en/?p=3297"
+},
+{
+"n": "Cuddiruna salati",
+"cat": "pane",
+"luoghi": [
+"Pietraperzia"
+],
+"fonte": "https://www.balarm.it/news/un-entroterra-tutto-da-gustare-i-prodotti-tipici-di-un-antico-borgo-ennese-ricco-di-storia-e-tradizioni-123625"
+}
+]
+}
