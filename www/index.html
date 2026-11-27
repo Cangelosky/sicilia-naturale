@@ -1051,6 +1051,33 @@ header h1.marchio .mt{font-family:'Caprasimo',Georgia,serif;font-weight:400;font
 .pross5 span span,.pross5 .tx>span{color:#5c4f42;font-size:15.5px;line-height:1.45}
 .pross5 em{font-style:normal;font-weight:600;color:var(--tc)}
 header h1.marchio{cursor:pointer}
+
+/* ---- coerenza tra le pagine ---- */
+body{font-family:'Bricolage Grotesque',Roboto,sans-serif}
+.sez button,.cat,.pan,#sheet,.sapf button,input,select,button{font-family:'Bricolage Grotesque',Roboto,sans-serif}
+.sezh{display:none}
+body.z-hm .sez:not(.sezh){display:none}
+body.z-hm .sezh{display:flex}
+body.z-hm header{background:#26231F!important}
+body.z-mare header{background:#1F4E6E!important}body.z-arte header{background:#5B3A26!important}body.z-storia header{background:#4E2740!important}
+body.z-natura header{background:linear-gradient(115deg,#0d241a 0%,#173f2f 55%,#1f5a43 100%)}
+.sezh button i{display:none}
+@media(max-width:899px){body.z-hm .sezh button.on{color:#26231F}body.z-hm .sezh button.on svg{background:#EFE6D6}}
+.sezl{border:0;background:rgba(255,255,255,.16);color:#fff;font:600 13px 'Bricolage Grotesque',sans-serif;padding:5px 11px;border-radius:999px;cursor:pointer;flex:none;margin-left:-2px}
+.sezl:hover{background:rgba(255,255,255,.28)}
+@media(max-width:899px){.sezl{margin-left:auto}}
+/* titoli e fondi uguali in tutte le pagine interne */
+.cat{background:#F6F1E7!important}
+.cat .in h2,.pan h2,.pan .ph-top h2,#sheet .sh h2,.cat .in h3{font-family:'Newsreader',Georgia,serif!important;font-weight:500!important;letter-spacing:-.01em;color:#26231F!important}
+.cat .in h2{font-size:clamp(30px,3.4vw,42px)!important;line-height:1.05}
+.cat .in .lead{color:#4e4034;font-size:16.5px;line-height:1.5}
+.cat .in{max-width:1180px}
+#sheet:not(.narr) .sh h2{font-size:24px!important}
+.pan{background:#FBF8F2}
+body:not(.sap) .cat .in .grp button.on,body:not(.sap) .switch button.on{background:#2D6A4F;color:#fff}
+body.sap .cat .in .grp button.on,body.sap .sapf button.on{background:#E8761A;color:#fff}
+.cat .in .card{border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(70,45,20,.07);border:0}
+@media (max-width:860px){.sh5 .ap5:not(.sl5){padding-top:calc(16vh + 50px)!important}}
 </style>
 
 </head>

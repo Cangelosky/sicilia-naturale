@@ -784,6 +784,7 @@ function vai(v) {
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
   if (sapOn() && v !== 'registra') return sapVai(v);
   if (!sapOn()) { mixLivelli(v); if (v !== 'mappa' && SEZ === 'home') SEZ = 'natura'; }
+  if (typeof aggSez === 'function') aggSez();
   if (v === 'mappa' && NAT.home) return natHome();
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
 }
@@ -2164,7 +2165,7 @@ const PROVA = '<span class="badge prova">Dati di prova</span>';
 /* ---- interruttore Natura | Sapori (solo sito) */
 function sapModo(on) {
   if (!on && $('sapcard')) sapCarta();
-  SAP.on = on; SAP.home = true; if (on) SEZ = 'sapori'; else if (SEZ === 'sapori') SEZ = 'natura'; document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
+  SAP.on = on; SAP.home = true; if (on) SEZ = 'sapori'; else if (SEZ === 'sapori') SEZ = 'natura'; aggSez(); document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
   for (const b of document.querySelectorAll('#modo button')) b.classList.toggle('on', (b.dataset.m === 'sapori') === on);
   sapNav(); chiudi(); $('q').value = ''; $('res').style.display = 'none'; $('q').placeholder = on ? 'Cerca un dolce, un prodotto, un paese' : t('cerca');
   if (map.getLayer('sap-p')) for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'none');
@@ -2843,8 +2844,25 @@ document.addEventListener('click', e => {
   const b = e.target.closest('[data-tema],header h1.marchio'); if (!b || isApp) return; e.preventDefault(); e.stopPropagation();
   entraSez(b.dataset.tema || 'home');
 }, true);
+// testata coerente: colore, menu ed etichetta seguono la sezione in cui sei
+const SEZI = { natura: 'tree', sapori: 'tools-kitchen-2', mare: 'ripple', arte: 'building-church', storia: 'book-2' };
+if (!isApp) {
+  $('sez').insertAdjacentHTML('afterend', `<nav class="sez sezh" id="sezh" aria-label="Sezioni del sito">${Object.entries(TEMA).map(([k, [n]]) => `<button data-tema="${k}" data-ic="${SEZI[k]}">${ico(SEZI[k])}<span>${n}</span></button>`).join('')}</nav>`);
+  document.querySelector('header h1.marchio').insertAdjacentHTML('afterend', '<button class="sezl" id="sezl" aria-label="Torna all\'inizio della sezione"></button>');
+  $('sezl').onclick = e => { e.stopPropagation(); entraSez(SEZ); };
+  document.querySelector('.lang').style.display = 'none';
+}
+function aggSez() {
+  if (isApp) return;
+  const k = SEZ, b = document.body;
+  for (const x of ['home', 'natura', 'sapori', 'mare', 'arte', 'storia']) b.classList.toggle('z-' + x, x === k);
+  b.classList.toggle('z-hm', k === 'home' || !PRONTI.includes(k));
+  $('sezl').textContent = k === 'home' ? '' : TEMA[k][0]; $('sezl').style.display = k === 'home' ? 'none' : '';
+  for (const x of document.querySelectorAll('#sezh button')) x.classList.toggle('on', x.dataset.tema === k);
+}
+setTimeout(aggSez, 0);
 function entraSez(k) {
-  SEZ = k; TEMI = new Set([k]); chiudi(); $('cat').scrollTop = 0; $('cat').dataset.v = '';
+  SEZ = k; aggSez(); TEMI = new Set([k]); chiudi(); $('cat').scrollTop = 0; $('cat').dataset.v = '';
   if (k === 'sapori') { if (!SAP.on) sapModo(true); else { SAP.home = true; vai('mappa'); } return; }
   NAT.home = true; NAT.hi = null;
   if (SAP.on) sapModo(false); else vai('mappa');
