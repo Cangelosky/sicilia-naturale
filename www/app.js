@@ -7,7 +7,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
 const T = (it, en) => LANG === 'it' ? it : en;
 // nota di proprietà, in fondo alle pagine e ai Livelli
 let UPD = '';  // stato degli aggiornamenti automatici, mostrato nel piè di pagina
-const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
+const COPY = () => (() => { try { return altreSez(); } catch (e) { return ''; } })() + `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -530,7 +530,7 @@ function selez(k) {
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
 function chiudiPercorso() { evidenziaPercorso(null); }
-function mostra() { $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
+function mostra() { if (typeof dopoScheda === 'function') setTimeout(dopoScheda, 0); $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
 function tastoEspandi() {
   const c = $('sh').querySelector('.close'); if (!c || $('sh').querySelector('.espandi')) return;
   const big = $('sheet').classList.contains('big');
@@ -2893,6 +2893,24 @@ async function genHome(fo) {
         <button data-via="dolce"><span class="n">2</span><b>Cerco un sapore della tradizione</b><span>Un dolce, un formaggio, un pane: dove nasce e quando si prepara.</span><em>Sapori ${freccia}</em></button>
         <button data-via="mese"><span class="n">3</span><b>Cosa succede questo mese</b><span>Sagre e feste in calendario, e quello che fiorisce in campagna.</span><em>Calendario ${freccia}</em></button>
       </div></section>
+    <section class="s5"><div class="t5"><h2>Per chi è Sicilia Naturale</h2><p>Per chi viaggia, per chi studia, per chi insegna e per chi ricorda. Scegli da dove partire.</p></div>
+      <div class="chi5">
+        <button data-via="sentiero" style="--tc:#2D6A4F"><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Percorsi e sagre</em></button>
+        <button data-via="scuola" style="--tc:#2F7EA8"><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Le specie e i parchi</em></button>
+        <button data-via="bambini" style="--tc:#C8102E"><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Lo sapevi?</em></button>
+        <button data-via="studiosi" style="--tc:#5B3A26"><b>Studiosi e guide</b><span>Elenchi di specie per zona, dati Natura 2000 e GBIF, fonti citate, itinerari in PDF e GPX, osservazioni in Darwin Core.</span><em>Dati e fonti</em></button>
+        <button data-via="dolce" style="--tc:#E8761A"><b>Chi ama il cibo</b><span>Dolci, formaggi, pani e vini: dove nascono, di cosa sono fatti, le versioni documentate e chi li fa ancora.</span><em>Il catalogo dei sapori</em></button>
+        <button data-via="lontano" style="--tc:#7B3F61"><b>Chi è lontano</b><span>Il tuo paese, i suoi dolci, le sue feste. Per ritrovare la Sicilia anche da lontano.</span><em>Cerca il tuo paese</em></button>
+      </div></section>
+    <section class="s5" id="sapevi"><div class="t5"><h2>Lo sapevi?</h2><p>Piccole scoperte da leggere insieme, grandi e piccoli.</p></div>
+      <div class="sap5">${[
+        ['Sull\'Etna vive il Castagno dei Cento Cavalli: è considerato uno degli alberi più vecchi d\'Europa, con migliaia di anni.', 'natura', 'Alberi monumentali'],
+        ['L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine di alberi.', 'natura', 'Specie rare'],
+        ['Il cappero che mangiamo è il bocciolo di un fiore: se non lo raccogli, si apre e fiorisce per un solo giorno.', 'sapori', 'Capperi'],
+        ['La manna si raccoglie d\'estate incidendo la corteccia del frassino: la linfa esce e si indurisce al sole.', 'sapori', 'Manna delle Madonie'],
+        ['Il pistacchio di Bronte cresce sulle colate di lava dell\'Etna, dove pochi altri alberi riescono a vivere.', 'sapori', 'Pistacchio'],
+        ['In Sicilia sono state segnalate più di ' + fmt(Math.floor(FUN.s.length / 100) * 100) + ' specie di funghi. Molte si riconoscono solo al microscopio.', 'natura', 'Funghi']
+      ].map(([t, k, x]) => `<div class="sp5" style="--tc:${TEMA[k][1]}"><small>${x}</small><p>${t}</p></div>`).join('')}</div></section>
     <section class="s5"><div class="t5"><h2>Le cinque sezioni</h2><p>Due sono già aperte, tre sono in preparazione.</p></div>
       <div class="sez5">${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="img" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span><span class="tx"><b><i></i>${x.t}</b><small>${x.s}.</small>${PRONTI.includes(k) ? `<em>${k === 'natura' ? `${conta('pn') + conta('pr')} parchi, ${conta('rn')} riserve, ${fmt(FUN.s.length + PIA.s.length)} specie` : `${fmt(Object.values(D2.voci).filter(v => v.t !== 'materia').length)} sapori in ${Object.keys(D2.paesi).length} comuni`}</em>` : '<em>In preparazione</em>'}</span>${freccia}</button>`).join('')}</div></section>
     ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
@@ -2918,6 +2936,10 @@ $('cat').addEventListener('click', e => {
   if (w === 'sentiero') { SEZ = 'natura'; NAT.home = false; return vai('escursioni'); }
   if (w === 'dolce') return entraSez('sapori');
   if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
+  if (w === 'scuola') { SEZ = 'natura'; NAT.home = false; return vai('piante'); }
+  if (w === 'bambini') return $('sapevi').scrollIntoView({ behavior: 'smooth' });
+  if (w === 'studiosi') { SEZ = 'natura'; NAT.home = false; return vai('funghi'); }
+  if (w === 'lontano') { entraSez('sapori'); return setTimeout(() => { const q = $('hq'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 900); }
 }, true);
 // le sezioni in preparazione: cosa ci sarà
 async function prestoHome(k, fo) {
@@ -3034,6 +3056,32 @@ if (fineP) {
     tipMostra(h, oe.clientX, oe.clientY);
   });
   map.on('mouseout', tipNascondi);
+}
+
+
+/* ---- ogni pagina racconta anche le altre sezioni */
+function altreSez() {
+  if (isApp || typeof SEZT === 'undefined' || ($('cat').dataset.v === 'gen-home')) return '';
+  const qui = SEZ === 'home' ? '' : SEZ, freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  return `<aside class="altre5" aria-label="Le altre sezioni"><p class="t">${qui ? 'Continua a scoprire la Sicilia' : 'Le sezioni di Sicilia Naturale'}</p><div>${Object.entries(SEZT).filter(([k]) => k !== qui).map(([k, x]) => `<button data-tema="${k}" style="--tc:${TEMA[k][1]}"><i></i><b>${x.t}</b><small>${PRONTI.includes(k) ? x.s : 'In preparazione'}</small>${freccia}</button>`).join('')}</div></aside>`;
+}
+function dopoScheda() {
+  if (isApp) return; const sb = $('sb'); if (!sb || sb.querySelector('.altre5m')) return;
+  // schede di Natura: una foto in apertura e il racconto più leggibile
+  if (cur && S[cur] && !sb.querySelector('.eroeN')) { const k = cur; sb.insertAdjacentHTML('afterbegin', `<div class="eroe5 eroeN" id="nre"></div>`); $('sheet').classList.add('natn');
+    wikiVoce(S[k].n.replace(/^(Riserva naturale (orientata|integrale|speciale)?|Parco (regionale|nazionale)?)\s*/i, m => m) ).then(w => { const el = $('nre'); if (!el || cur !== k) return; if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/800px-')}')`; else el.remove(); }); }
+  sb.insertAdjacentHTML('beforeend', `<div class="altre5m">${altreSez()}</div>`);
+}
+// mappa di Natura: un tasto per tornare all'inizio della sezione
+if (!isApp) { document.querySelector('#wrap .top').insertAdjacentHTML('beforeend', '<button class="natT" id="natT">‹ Inizio di Natura</button>'); $('natT').onclick = () => entraSez('natura'); }
+
+/* ---- leggere bene: testo più grande e contrasto alto, per tutti (anziani, bambini, chi legge dal telefono al sole) */
+const LET = (() => { try { return JSON.parse(localStorage.getItem('sn_let') || '{}'); } catch (e) { return {}; } })();
+function applicaLet() { document.body.classList.toggle('tx-l', LET.t === 1); document.body.classList.toggle('tx-xl', LET.t === 2); document.body.classList.toggle('hc', !!LET.c); try { localStorage.setItem('sn_let', JSON.stringify(LET)); } catch (e) {} }
+if (!isApp) {
+  document.querySelector('header .lang').insertAdjacentHTML('beforebegin', `<div class="let5" role="group" aria-label="Leggi meglio"><button data-let="t" aria-label="Testo più grande" title="Testo più grande">A<sup>+</sup></button><button data-let="c" aria-label="Contrasto alto" title="Contrasto alto">◐</button></div>`);
+  document.querySelector('.let5').onclick = e => { const b = e.target.closest('[data-let]'); if (!b) return; if (b.dataset.let === 't') LET.t = ((LET.t || 0) + 1) % 3; else LET.c = !LET.c; applicaLet(); };
+  applicaLet();
 }
 
 }

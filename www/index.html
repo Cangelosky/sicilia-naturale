@@ -1078,6 +1078,45 @@ body:not(.sap) .cat .in .grp button.on,body:not(.sap) .switch button.on{backgrou
 body.sap .cat .in .grp button.on,body.sap .sapf button.on{background:#E8761A;color:#fff}
 .cat .in .card{border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(70,45,20,.07);border:0}
 @media (max-width:860px){.sh5 .ap5:not(.sl5){padding-top:calc(16vh + 50px)!important}}
+
+/* le altre sezioni in fondo a ogni pagina */
+.altre5{margin:36px auto 0;max-width:1180px;padding:0 clamp(16px,4vw,48px)}
+.altre5m .altre5{margin:22px 18px 0;padding:0}
+.altre5 .t{font:500 24px 'Newsreader',Georgia,serif;color:#26231F;margin:0 0 10px}
+.altre5>div{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.altre5m .altre5>div{grid-template-columns:1fr}
+.altre5 button{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;border:0;border-radius:14px;background:#fff;padding:10px 10px 10px 14px;text-align:left;cursor:pointer;font:inherit;color:#26231F;box-shadow:0 2px 8px rgba(70,45,20,.07);border-left:4px solid var(--tc)}
+.altre5 i{grid-row:span 2;width:10px;height:10px;border-radius:50%;background:var(--tc)}
+.altre5 b{font:500 18px 'Newsreader',Georgia,serif}.altre5 small{grid-row:2;grid-column:2;color:#6B5E50;font-size:12.5px}
+.altre5 .fr{grid-row:1/3;grid-column:3;background:#F6F1E7;width:28px;height:28px;border-radius:50%;display:grid;place-items:center}
+.altre5 .fr svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2}
+.altre5 button:hover{box-shadow:0 6px 18px rgba(70,45,20,.12)}
+/* per chi è e lo sapevi */
+.chi5{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.chi5 button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;border:0;border-radius:var(--r);background:#fff;padding:16px 18px;text-align:left;cursor:pointer;font:inherit;color:#26231F;box-shadow:0 4px 16px rgba(70,45,20,.07);border-top:5px solid var(--tc)}
+.chi5 b{font:500 22px 'Newsreader',Georgia,serif}.chi5 span{color:#5c4f42;font-size:15px;line-height:1.45}.chi5 em{font-style:normal;font-weight:600;font-size:14px;color:var(--tc);margin-top:auto}
+.sap5{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.sp5{background:#fff;border-radius:var(--r);padding:16px 18px;box-shadow:0 4px 16px rgba(70,45,20,.07);position:relative;overflow:hidden}
+.sp5::before{content:'?';position:absolute;right:-6px;top:-22px;font:500 110px 'Newsreader',Georgia,serif;color:var(--tc);opacity:.12}
+.sp5 small{font-weight:600;color:var(--tc);font-size:13px}.sp5 p{margin:6px 0 0;font:400 19px/1.35 'Newsreader',Georgia,serif}
+/* foto in apertura delle schede di Natura e racconto più leggibile */
+#sheet .eroeN{margin:0 0 10px;border-radius:14px;height:180px}
+#sheet.natn .racconto p:first-child,#sheet .racconto>p:first-of-type{font:400 18.5px/1.4 'Newsreader',Georgia,serif;color:#26231F}
+/* tasto per tornare all'inizio di Natura dalla mappa */
+.natT{display:none;margin-top:6px;border:0;border-radius:999px;background:#2D6A4F;color:#fff;padding:7px 14px;font:600 13.5px 'Bricolage Grotesque',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.18);align-self:flex-start}
+body.z-natura:not(.cat-on):not(.sap) .natT{display:inline-block}
+/* leggere bene */
+.let5{display:flex;gap:4px;margin-left:8px}
+.let5 button{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;min-width:34px;height:32px;font:700 14px 'Bricolage Grotesque',sans-serif;cursor:pointer}
+.let5 sup{font-size:10px}
+body.tx-l .cat,body.tx-l #sheet .body,body.tx-l .pan{zoom:1.14}
+body.tx-xl .cat,body.tx-xl #sheet .body,body.tx-xl .pan{zoom:1.3}
+body.tx-l .let5 [data-let=t],body.tx-xl .let5 [data-let=t],body.hc .let5 [data-let=c]{background:#fff;color:#26231F}
+body.hc .sh5,body.hc .cat{--sub:#26231F;color:#000}
+body.hc .sh5 small,body.hc .cat small,body.hc .cat .note,body.hc .cat .lead,body.hc #sheet small,body.hc .nar5 .corpo{color:#1a1a1a!important}
+body.hc .gusti5 button,body.hc .chi5 button,body.hc .sez5 button,body.hc .altre5 button,body.hc .card{outline:2px solid #26231F}
+body.hc .ap5::after,body.hc .sl5 .sld::after{background:linear-gradient(0deg,rgba(0,0,0,.85),rgba(0,0,0,.55))!important}
+@media(max-width:899px){.let5{margin-left:6px}.let5 button{min-width:30px;height:30px}}
 </style>
 
 </head>
