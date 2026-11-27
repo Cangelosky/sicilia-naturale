@@ -35,7 +35,10 @@
 "cctp": "https://www.tp.camcom.it/sites/default/files/contenuto_redazione/allegati/archiviodellamemoriatrapani.pdf",
 "itsav": "https://www.italia.it/it/sicilia/savoca",
 "brum": "https://www2.regione.sicilia.it/beniculturali/brum/pdf_tif_sito/cosa_mangiavano_i_nostri_nonni.pdf",
-"vfr": "https://www.balarm.it/eventi/il-fiore-in-tavola-a-villafrati-cooking-show-a-tema-con-lo-chef-carmelo-trentacosti-131906"
+"vfr": "https://www.balarm.it/eventi/il-fiore-in-tavola-a-villafrati-cooking-show-a-tema-con-lo-chef-carmelo-trentacosti-131906",
+"pat24": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf",
+"deco_cb": "https://www.unipa.it/dipartimenti/di.gi./.content/documenti/delibera_giunta_n_5.pdf",
+"arca": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
 },
 "piatti": [
 {
@@ -8257,6 +8260,682 @@
 "Villafrati"
 ],
 "fonte": "https://www.balarm.it/eventi/il-fiore-in-tavola-a-villafrati-cooking-show-a-tema-con-lo-chef-carmelo-trentacosti-131906"
+},
+{
+"n": "Fegato caiolato (ficatu ncaiulatu)",
+"cat": "salume",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Rum di Avola",
+"cat": "prodotto",
+"luoghi": [
+"Avola"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Cece rosso di Cianciana",
+"cat": "prodotto",
+"luoghi": [
+"Cianciana"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Fagiolo di Bisacquino",
+"cat": "prodotto",
+"luoghi": [
+"Bisacquino"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Limone della Conca d'Oro",
+"cat": "prodotto",
+"luoghi": [
+"Palermo"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Pere ucciardona",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Tartufo bianchetto di Buccheri",
+"cat": "prodotto",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Tartufo scorzone di Buccheri",
+"cat": "prodotto",
+"luoghi": [
+"Buccheri"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Carduni vruricatu di Pioppo",
+"cat": "prodotto",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Anguria di Siracusa",
+"cat": "prodotto",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Cavolfiore violetto natalino",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Guastedda facci i vecchia",
+"cat": "pane",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Gidata o girata",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Mbriulata di Milena",
+"cat": "strada",
+"luoghi": [
+"Milena"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "'Mpignulati",
+"cat": "dolce",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Pitone messinese fritto",
+"cat": "strada",
+"luoghi": [
+"Messina"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Purpetta di Crita",
+"cat": "secondo",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Tagano aragonese",
+"cat": "strada",
+"luoghi": [
+"Aragona"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Ncannellate",
+"cat": "dolce",
+"luoghi": [
+"Alessandria della Rocca"
+],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Coddra chi sardi",
+"cat": "strada",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Granita di limone",
+"cat": "dolce",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Ricotta salata",
+"cat": "formaggio",
+"luoghi": [],
+"fonte": "https://www.regione.sicilia.it/sites/default/files/2024-04/ELENCO~1.pdf"
+},
+{
+"n": "Pizzichintì",
+"cat": "dolce",
+"luoghi": [
+"Castelbuono"
+],
+"fonte": "https://www.unipa.it/dipartimenti/di.gi./.content/documenti/delibera_giunta_n_5.pdf"
+},
+{
+"n": "Risu n'taanu",
+"cat": "primo",
+"luoghi": [
+"Castelbuono"
+],
+"fonte": "https://www.unipa.it/dipartimenti/di.gi./.content/documenti/delibera_giunta_n_5.pdf"
+},
+{
+"n": "Polpette d'uovo",
+"cat": "secondo",
+"luoghi": [
+"Castelbuono"
+],
+"fonte": "https://www.unipa.it/dipartimenti/di.gi./.content/documenti/delibera_giunta_n_5.pdf"
+},
+{
+"n": "Lenticchia nera delle colline ennesi",
+"cat": "prodotto",
+"luoghi": [
+"Enna",
+"Leonforte",
+"Calascibetta",
+"Nicosia"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Oliva zaituna",
+"cat": "prodotto",
+"luoghi": [
+"Siracusa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Ape nera sicula",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Patate di montagna dei Nebrodi",
+"cat": "prodotto",
+"luoghi": [
+"Nebrodi"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Caciocavallo di vacca cinisara",
+"cat": "prodotto",
+"luoghi": [
+"Cinisi"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Grani gentili di Sicilia",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Fagioli di carrazzo dei Nebrodi",
+"cat": "prodotto",
+"luoghi": [
+"Ucria",
+"Floresta"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pomodoro pizzutello delle Valli Ericine",
+"cat": "prodotto",
+"luoghi": [
+"Erice",
+"Paceco"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Fava di Ustica",
+"cat": "prodotto",
+"luoghi": [
+"Ustica"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Peperone di Polizzi Generosa",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Sesamo di Ispica",
+"cat": "prodotto",
+"luoghi": [
+"Ispica"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pesca nel sacchetto",
+"cat": "prodotto",
+"luoghi": [
+"Leonforte"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cavolo vecchio di Rosolini",
+"cat": "prodotto",
+"luoghi": [
+"Rosolini"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Fava cottoia di Modica",
+"cat": "prodotto",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pomodoro siccagno della valle del Belice",
+"cat": "prodotto",
+"luoghi": [
+"Valle del Belice"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Fagiolo cosaruciaru di Scicli",
+"cat": "prodotto",
+"luoghi": [
+"Scicli"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Fagiolo badda di Polizzi Generosa",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Asino ragusano",
+"cat": "prodotto",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Capra girgentana",
+"cat": "prodotto",
+"luoghi": [
+"Agrigento"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Masculina da magghia",
+"cat": "pesce",
+"luoghi": [
+"Aci Castello",
+"Catania"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Oliva minuta",
+"cat": "prodotto",
+"luoghi": [
+"Naso",
+"Sinagra"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pomodoro seccagno di Salina",
+"cat": "prodotto",
+"luoghi": [
+"Salina"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Tunnina salata di Marzamemi",
+"cat": "conserva",
+"luoghi": [
+"Pachino"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Salsiccia al ceppo di Linguaglossa",
+"cat": "salume",
+"luoghi": [
+"Linguaglossa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Scattata di Alia",
+"cat": "dolce",
+"luoghi": [
+"Alia"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cipolla paglina di Castrofilippo",
+"cat": "prodotto",
+"luoghi": [
+"Castrofilippo"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cardo interrato di Pioppo",
+"cat": "prodotto",
+"luoghi": [
+"Monreale"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Bottarga di tonno di Favignana",
+"cat": "conserva",
+"luoghi": [
+"Favignana"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Oliva calatina",
+"cat": "prodotto",
+"luoghi": [
+"Caltagirone"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Oliva brandofino",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Carruba di Ragusa",
+"cat": "prodotto",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Virciddratu di Sutera",
+"cat": "dolce",
+"luoghi": [
+"Sutera"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Ciambella di San Cataldo",
+"cat": "dolce",
+"luoghi": [
+"San Cataldo"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Arancia moro",
+"cat": "prodotto",
+"luoghi": [
+"Lentini",
+"Scordia",
+"Francofonte"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cipolla dolce di Partanna",
+"cat": "prodotto",
+"luoghi": [
+"Partanna"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pane tradizionale di Lentini",
+"cat": "pane",
+"luoghi": [
+"Lentini"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cudduruni di Lentini",
+"cat": "pane",
+"luoghi": [
+"Lentini"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cassatella di Custonaci",
+"cat": "dolce",
+"luoghi": [
+"Custonaci"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Sfoglio ragusano",
+"cat": "strada",
+"luoghi": [
+"Ragusa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Mastazzola di Riesi",
+"cat": "dolce",
+"luoghi": [
+"Riesi"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Spiritu de' fascitrari",
+"cat": "prodotto",
+"luoghi": [
+"Monti Iblei"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cassatedda di ciciri di Partinico",
+"cat": "dolce",
+"luoghi": [
+"Partinico"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Mela lappedda",
+"cat": "prodotto",
+"luoghi": [
+"San Pier Niceto",
+"Monforte San Giorgio"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pupiddi nanau",
+"cat": "dolce",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cicerchia di Licodia Eubea",
+"cat": "prodotto",
+"luoghi": [
+"Licodia Eubea"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Nocciola di Polizzi",
+"cat": "prodotto",
+"luoghi": [
+"Polizzi Generosa"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Vino cotto di fichi d'India",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Grano timilia",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Taralla di Gangi",
+"cat": "dolce",
+"luoghi": [
+"Gangi"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Cucchia",
+"cat": "dolce",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pesca tabacchiera dell'Etna",
+"cat": "prodotto",
+"luoghi": [
+"Etna"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Asino di Pantelleria",
+"cat": "prodotto",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Pecora della Valle del Belice",
+"cat": "prodotto",
+"luoghi": [
+"Valle del Belice"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Capra argentata dell'Etna",
+"cat": "prodotto",
+"luoghi": [
+"Etna"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Uva zibibbo di Pantelleria",
+"cat": "prodotto",
+"luoghi": [
+"Pantelleria"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Arance vaniglia di Ribera",
+"cat": "prodotto",
+"luoghi": [
+"Ribera"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Provola di Floresta",
+"cat": "formaggio",
+"luoghi": [
+"Floresta"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Mela cirino",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Mandorla chiricupara",
+"cat": "prodotto",
+"luoghi": [],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Agnello pasquale di Favara",
+"cat": "dolce",
+"luoghi": [
+"Favara"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Limone della Piana di Bagheria",
+"cat": "prodotto",
+"luoghi": [
+"Bagheria"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Razza bovina modicana",
+"cat": "prodotto",
+"luoghi": [
+"Modica"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
+},
+{
+"n": "Razza bovina cinisara",
+"cat": "prodotto",
+"luoghi": [
+"Cinisi"
+],
+"fonte": "https://www.fondazioneslowfood.com/it/regioni-arca/sicilia-it/"
 }
 ]
 }
