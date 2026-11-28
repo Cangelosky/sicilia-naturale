@@ -1754,6 +1754,19 @@ body #cat .vgp header{background:none!important;position:static!important;box-sh
 @media (min-width:901px){.altre5>div:has(>:nth-child(5):last-child){grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media (max-width:900px){.altre5>div>:last-child:nth-child(odd){grid-column:1/-1}}
 .vgm9 .itl{fill:none;stroke:#E8761A;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}.vgm9 .itp circle{fill:#E8761A;stroke:#fff;stroke-width:2}.vgm9 .smap circle.off{display:none}
+.mem9{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;max-width:900px}
+.mem9 button{aspect-ratio:3/4;border:0;border-radius:14px;cursor:pointer;position:relative;background:none;padding:0;perspective:600px}
+.mem9 .dr,.mem9 .rv{position:absolute;inset:0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;backface-visibility:hidden;transition:transform .35s}
+.mem9 .dr{background:#fff;transform:rotateY(180deg);box-shadow:0 2px 8px rgba(0,0,0,.1)}.mem9 .dr .ico{width:52%;height:auto;stroke-width:1.6}.mem9 .dr small{font-weight:600;color:var(--lava)}
+.mem9 .rv{background:#2D6A4F}.mem9 .rv img{width:55%;filter:brightness(0) invert(1);opacity:.85}
+.mem9 .su .dr{transform:rotateY(0)}.mem9 .su .rv{transform:rotateY(-180deg)}.mem9 .ok .dr{background:#eaf6ec;box-shadow:0 0 0 3px #2b8a3e inset}
+.mst9{margin:12px 0 0;font-size:16px}
+.cas9{display:grid;grid-template-columns:1fr 2fr;gap:16px}.cas9 .an,.cas9 .ca{display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.cas9 button{border:0;border-radius:16px;background:#fff;cursor:pointer;font:inherit;color:var(--lava);box-shadow:0 2px 8px rgba(0,0,0,.08);display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px}
+.cas9 .an button{width:110px}.cas9 .an button .ico{width:44px;height:44px;color:#b85300}.cas9 .an button.on{box-shadow:0 0 0 3px #E8761A;transform:scale(1.05)}
+.cas9 .ca button{flex:1 1 150px;min-height:110px;background:#eef5ef}.cas9 .ca button .ico{width:36px;height:36px;color:#2b6a3e}.cas9 .ca .ok{background:#d8f0dc}.cas9 .ca em{font-style:normal;font-size:14px;display:flex;gap:4px;align-items:center}
+.cas9 .ca .no{animation:no9 .4s}@keyframes no9{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.br9{font-size:20px;margin:0}
+@media (max-width:900px){.mem9{grid-template-columns:repeat(4,minmax(0,1fr))}.cas9{grid-template-columns:1fr}.cas9 .an button{width:calc(33% - 8px)}}
 </style>
 
 </head>

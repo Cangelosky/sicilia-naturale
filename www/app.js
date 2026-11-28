@@ -4171,6 +4171,8 @@ function paginaBambini() {
     <section class="s5"><div class="t5"><h2>Indovina il sapore</h2><p>Guarda la foto e scegli il nome giusto.</p></div><div id="ind6"></div></section>
     <section class="s5"><div class="t5"><h2>Lo sapevi?</h2><p>Tocca una carta per girarla.</p></div>
       <div class="car6">${FATTI.map(([k, t2], i) => `<button class="cart" style="--tc:${TEMA[k][1]}"><span class="fr1"><img src="illustrazioni/${k}-segno.svg" alt=""><b>Curiosità n. ${i + 1}</b><small>Tocca per scoprirla</small></span><span class="fr2">${esc(t2)}</span></button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Gioco della memoria</h2><p>Gira due carte alla volta e trova le coppie: funghi, alberi, animali e frutti di Sicilia.</p></div><div id="mem9"></div></section>
+    <section class="s5"><div class="t5"><h2>Chi vive dove?</h2><p>Tocca un animale, poi la sua casa. Se indovini, si sistema lì.</p></div><div id="cas9"></div></section>
     <section class="s5"><div class="t5"><h2>Caccia al tesoro nel bosco</h2><p>Stampala e portala nella prossima passeggiata. Si guarda, si fotografa, non si raccoglie nulla di vivo.</p></div>
       <div class="cac6">${CACCIA.map(c => `<label><input type="checkbox"><span>${esc(c)}</span></label>`).join('')}</div>
       <p><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa la caccia al tesoro</button></p></section>
@@ -4186,6 +4188,7 @@ function paginaBambini() {
   $('ind6').addEventListener('click', e => { if (e.target.closest('[data-indn]')) { ind.i++; giro(); } });
   if (fot.length >= 3) giro(); else $('ind6').closest('section').remove();
   $('cat').querySelectorAll('.cart').forEach(c => c.onclick = () => c.classList.toggle('gira'));
+  giocoMemoria(); giocoCase();
 }
 
 /* ---------- racconto e strumenti in testa alle pagine di catalogo e ai calendari */
@@ -4497,4 +4500,36 @@ function vgPop(tipo, k) {
   const g = box.querySelector('[data-gwk]'); if (g) wikiVoce(g.dataset.gwk).then(w => { if (w && w.thumbnail) { g.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/600px-')}')`; } });
   box.addEventListener('click', ev => { if (ev.target === box) box.remove(); });
 }
+
+/* ---- giochi per bambini: memoria con disegni e «chi vive dove» */
+const MEM9 = [['mushroom', 'Fungo', '#b85300'], ['tree', 'Albero', '#2b8a3e'], ['butterfly', 'Farfalla', '#c2185b'], ['deer', 'Daino', '#7a5c3e'], ['fish', 'Pesce', '#1971c2'], ['lemon-2', 'Limone', '#e0a800'], ['flower', 'Fiore', '#9c36b5'], ['feather', 'Piuma', '#495057']];
+const MG = { c: [], su: [], ok: new Set(), mosse: 0 };
+function giocoMemoria(nuovo) {
+  const box = $('mem9'); if (!box) return;
+  if (nuovo || !MG.c.length) { MG.c = mescola([...MEM9, ...MEM9].map((x, i) => ({ k: x[0], n: x[1], col: x[2], id: i }))); MG.su = []; MG.ok = new Set(); MG.mosse = 0; }
+  const fine = MG.ok.size === MEM9.length;
+  box.innerHTML = `<div class="mem9">${MG.c.map((x, i) => { const vis = MG.su.includes(i) || MG.ok.has(x.k); return `<button data-mem="${i}" class="${vis ? 'su' : ''}${MG.ok.has(x.k) ? ' ok' : ''}" aria-label="${vis ? x.n : 'Carta coperta'}"><span class="dr" style="color:${x.col}">${ico(x.k)}<small>${x.n}</small></span><span class="rv"><img src="illustrazioni/natura-segno.svg" alt=""></span></button>`; }).join('')}</div>
+    <p class="mst9">${fine ? `Bravissimo! Tutte le coppie in ${MG.mosse} mosse. ` : `Mosse: ${MG.mosse} · Coppie trovate: ${MG.ok.size} di ${MEM9.length} `}<button class="lk" data-mem="nuovo">${fine ? 'Gioca ancora' : 'Ricomincia'}</button></p>`;
+}
+const CASE9 = [['Il daino', 'deer', 'Nel bosco', 'trees'], ['Il pesce', 'fish', 'Nel mare', 'ripple'], ['Il fenicottero', 'feather', 'Nelle saline', 'salt'], ['La farfalla', 'butterfly', 'Nel prato fiorito', 'flower'], ['L\'aquila', 'mountain', 'Sulle rocce di montagna', 'mountain']];
+const CG = { sel: null, fatti: new Set(), err: 0 };
+function giocoCase(nuovo) {
+  const box = $('cas9'); if (!box) return; if (nuovo) { CG.sel = null; CG.fatti = new Set(); CG.err = 0; }
+  const case_ = CASE9.map((x, i) => [x, i]).sort((a, b) => a[0][2].localeCompare(b[0][2]));
+  box.innerHTML = `<div class="cas9"><div class="an">${CASE9.map(([n, ic], i) => CG.fatti.has(i) ? '' : `<button data-can="${i}" class="${CG.sel === i ? 'on' : ''}">${ico(ic)}<span>${n}</span></button>`).join('') || '<p class="br9">Tutti a casa! 🎉</p>'}</div>
+    <div class="ca">${case_.map(([[n, ic, c, ici], i]) => `<button data-cca="${i}" class="${CG.fatti.has(i) ? 'ok' : ''}">${ico(ici)}<b>${c}</b>${CG.fatti.has(i) ? `<em>${ico(ic, 'xs')} ${n}</em>` : ''}</button>`).join('')}</div></div>
+    <p class="mst9">${CG.sel != null ? `Dove vive ${CASE9[CG.sel][0].toLowerCase()}? Tocca la sua casa.` : CG.fatti.size === CASE9.length ? `Fatto${CG.err ? `, con ${CG.err} tentativi sbagliati` : ' senza nemmeno un errore'}! ` : 'Scegli un animale.'} <button class="lk" data-cca="nuovo">Ricomincia</button></p>`;
+}
+document.addEventListener('click', e => {
+  if (!$('cat') || $('cat').dataset.v !== 'pag-bambini') return;
+  const m = e.target.closest('[data-mem]'), a = e.target.closest('[data-can]'), c = e.target.closest('[data-cca]');
+  if (m) { e.stopPropagation(); if (m.dataset.mem === 'nuovo') return giocoMemoria(true);
+    const i = +m.dataset.mem, x = MG.c[i]; if (MG.ok.has(x.k) || MG.su.includes(i) || MG.su.length === 2) return;
+    MG.su.push(i); if (MG.su.length === 2) MG.mosse++; giocoMemoria();
+    if (MG.su.length === 2) { const [p, q] = MG.su; if (MG.c[p].k === MG.c[q].k) { MG.ok.add(MG.c[p].k); MG.su = []; giocoMemoria(); } else setTimeout(() => { MG.su = []; giocoMemoria(); }, 900); }
+    return; }
+  if (a) { e.stopPropagation(); CG.sel = +a.dataset.can; return giocoCase(); }
+  if (c) { e.stopPropagation(); if (c.dataset.cca === 'nuovo') return giocoCase(true); if (CG.sel == null) return;
+    const i = +c.dataset.cca; if (i === CG.sel) { CG.fatti.add(i); CG.sel = null; giocoCase(); } else { CG.err++; c.classList.add('no'); setTimeout(() => c.classList.remove('no'), 500); } }
+}, true);
 }
