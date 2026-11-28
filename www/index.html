@@ -1122,7 +1122,15 @@ header h1.marchio .mt{font-family:'Caprasimo',Georgia,serif;font-weight:400;font
 .sdot.on{width:28px;border-radius:6px;background:var(--tc)!important;box-shadow:0 0 0 2px #fff}
 /* telefono, home: la scheda copre lo schermo; foto in alto, testo in basso, sotto il testo le sezioni con una frase */
 @media (max-width:860px){.sl5{min-height:0!important}.sl5 .sld{padding:56px 20px var(--giu,110px);align-items:flex-start}.sl5 .apt{width:100%}
-  .sl5 .sln,.sl5 .temi{display:none}.sl5 .sld{padding-top:var(--m,28px)}
+  .sl5 .sln,.sl5 .temi{display:none}
+  .sh5 .ap5:not(.sl5){padding:var(--m,28px) 20px 0!important;overflow:visible;border-radius:0;min-height:var(--hp,0)!important}
+  .ap5:not(.sl5) .temi{display:none}
+  .ap5:not(.sl5) .apf,.ap5:not(.sl5)::after{inset:auto;top:0;left:0;right:0;height:var(--hp,100%);border-radius:24px;overflow:hidden}
+  .ap5:not(.sl5) .apf{animation:none;transform:none}
+  .ap5:not(.sl5)::after{background:linear-gradient(0deg,rgba(20,12,6,.8),rgba(20,12,6,.4) 55%,rgba(20,12,6,.2))}
+  .ap5:not(.sl5) .apm{margin:calc(var(--m,28px) - 10px) -20px 0}
+  .tes5.fl{position:static;padding:0;margin-top:22px}
+  .tes5.fl .sz.on .szb i{animation:none;width:100%}.sl5 .sld{padding-top:var(--m,28px)}
   .sl5 .sld::after{background:linear-gradient(0deg,rgba(20,12,6,.82),rgba(20,12,6,.4) 55%,rgba(20,12,6,.2))}
   .sl5 .apt{display:flex;flex-direction:column}
   .sl5 .apt .lead{margin-bottom:10px}
@@ -1185,7 +1193,7 @@ body.z-natura header{background:linear-gradient(115deg,#0d241a 0%,#173f2f 55%,#1
 body:not(.sap) .cat .in .grp button.on,body:not(.sap) .switch button.on{background:#2D6A4F;color:#fff}
 body.sap .cat .in .grp button.on,body.sap .sapf button.on{background:#E8761A;color:#fff}
 .cat .in .card{border-radius:16px;overflow:hidden;box-shadow:0 4px 16px rgba(70,45,20,.07);border:0}
-@media (max-width:860px){.sh5 .ap5:not(.sl5){padding-top:68px!important}}
+
 
 /* le altre sezioni in fondo a ogni pagina */
 .altre5{margin:36px auto 0;max-width:1180px;padding:0 clamp(16px,4vw,48px)}

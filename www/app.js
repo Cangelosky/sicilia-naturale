@@ -3127,6 +3127,21 @@ async function genHome(fo) {
   scorri5();
 }
 let SLT = null;
+/* telefono: le pagine d'inizio delle sezioni composte come la home. La foto è una scheda con lo stesso margine sopra e sotto,
+   in fondo al testo le cinque sezioni a piramide (quella in cui sei è accesa); la mappa ridotta scende sotto la foto. */
+function tessereSez(att) {
+  return `<div class="tes5 fl"><p class="tes5t">Cinque sezioni, un solo patrimonio.</p><div class="tes5g">${Object.entries(SEZT).map(([k, x]) => `<button class="sz${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><span class="szf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : ''}></span>${ico(SEZI[k])}<span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>`;
+}
+function componiAp5() {
+  if (isApp) return; const sec = $('cat').querySelector('.ap5:not(.sl5)'), apt = sec && sec.querySelector('.apt'); if (!apt) return;
+  if (!apt.querySelector('.tes5')) apt.insertAdjacentHTML('beforeend', tessereSez(SEZ));
+  if (innerWidth > 860) { sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
+  const nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+  const schermo = innerHeight - (sec.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10, h = apt.offsetHeight;
+  const min = h + 48, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h) / 2);
+  sec.style.setProperty('--m', m + 'px'); sec.style.setProperty('--hp', H + 'px');
+}
+if (!isApp) { new MutationObserver(() => requestAnimationFrame(componiAp5)).observe($('cat'), { childList: true }); addEventListener('resize', componiAp5); }
 function scorri5() {
   clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
   // sul telefono il riquadro è alto quanto la slide più lunga: niente fascia vuota sopra il titolo
