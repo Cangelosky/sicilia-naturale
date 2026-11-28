@@ -3091,6 +3091,8 @@ async function genHome(fo) {
         <div class="apt"><p class="kick5"><i></i>${x.t}${PRONTI.includes(k) ? '' : ' · in preparazione'}</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p>
           ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
       <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
+      <div class="tes5"><p class="tes5t">Cinque sezioni, un solo patrimonio. <b>Tocca per scoprirle.</b></p>
+        <div class="tes5g" role="tablist" aria-label="Le cinque sezioni">${sl.map(([k, x], i) => `<button class="sz${i === 0 ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-go="${i}" data-k="${k}" role="tab" aria-selected="${i === 0}" style="--tc:${TEMA[k][1]}"><span class="szf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span>${ico(SEZI[k])}<span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>
     </section>
     <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
       <div class="vie5">
@@ -3131,13 +3133,16 @@ function scorri5() {
   // sul telefono la scheda copre tutto lo schermo tra la testata e la barra in basso (mai meno del testo più lungo)
   const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; }
     let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
-    const tm = box.querySelector('.temi'), giu = (tm ? tm.offsetHeight : 0) + 16, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+    const tm = box.querySelector('.tes5'), giu = (tm ? tm.offsetHeight : 0) + 16, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
     box.style.setProperty('--giu', giu + 'px');
     const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
-    box.style.height = Math.max(h + 56 + giu, schermo) + 'px'; };
+    const min = h + 28 + giu; box.style.height = Math.round(min + Math.max(0, schermo - min) / 2) + 'px'; }; // metà dello spazio libero sopra il titolo
   alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
-  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')]; let i = 0, ferma = false;
-  const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i)); };
+  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')], tes = [...box.querySelectorAll('.sz')]; let i = 0, ferma = false;
+  const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i));
+    tes.forEach((x, n) => { x.classList.remove('on'); x.setAttribute('aria-selected', n === i); }); if (tes[i]) { void tes[i].offsetWidth; tes[i].classList.add('on'); } };
+  // le tessere delle sezioni: un tocco mostra la sezione nella foto, un secondo tocco sulla stessa entra
+  tes.forEach(t => t.onclick = e => { e.stopPropagation(); const n = +t.dataset.go; if (n === i) return entraSez(t.dataset.k); va(n); });
   box.querySelector('.slp').onclick = () => va(i - 1); box.querySelector('.sls').onclick = () => va(i + 1);
   dots.forEach(d => d.onclick = () => va(+d.dataset.go));
   box.onmouseenter = box.onfocusin = () => { ferma = true; }; box.onmouseleave = () => { ferma = false; };
