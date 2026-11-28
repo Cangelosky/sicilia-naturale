@@ -2765,14 +2765,95 @@ document.addEventListener('click', e => {
   if (t.dataset.fs) { e.stopPropagation(); return sapApri(t.dataset.fs); }
   if (t.dataset.fpr) { e.stopPropagation(); return sapProduttore(t.dataset.fpr); }
 }, true);
-/* ---- itinerari */
-function sapItinerari() {
-  const D = SAP.D;
-  $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
-  $('cat').innerHTML = `<div class="in"><h2>Itinerari del gusto</h2><p class="lead">Il viaggio delle materie prime lungo la filiera: dal campo al laboratorio, fino alla bottega o alla tavola.</p>
-    ${Object.keys(D.viaggi).length ? '' : `<div class="racconto"><p>I primi itinerari nasceranno dalle visite ai produttori: un viaggio si pubblica solo quando ogni tappa è stata vista di persona.</p><p>Intanto puoi scoprire i produttori, le osterie, le fattorie e i forni che ti segnaliamo, in attesa della visita.</p></div><div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi i produttori segnalati</button></div>`}
-    ${Object.entries(D.viaggi).map(([i, x]) => `<button class="viaggio" data-vg="${i}"><b>${esc(x.n)}</b><span>${x.tappe.map(([p, v]) => `${esc(D.voci[v].n)} <small>${esc(D.paesi[D.produttori[p].paese].n)}</small>`).join(' <em>›</em> ')}</span></button>`).join('')}${COPY()}</div>`;
+/* ---- itinerari del gusto: proposte costruite dai dati (sapori, produttori segnalati, sagre, natura vicina). Le tappe non sono ancora state visitate. */
+const ITIN = [
+  { k: 'etna', n: 'Intorno all\'Etna', s: 'Pistacchio, vino e miele sulle pendici del vulcano', p: ['bronte', 'adrano', 'randazzo', 'castiglione-di-sicilia', 'linguaglossa', 'zafferana-etnea'], m: [9, 10], wk: 'Pistacchio di Bronte', t: 'Un anello sul versante nord e ovest del vulcano: il pistacchio di Bronte cresce sulle colate di lava, le vigne salgono fino a mille metri, i boschi dell\'Etna sono a pochi minuti.' },
+  { k: 'madonie', n: 'Madonie', s: 'Manna, provola e grani antichi tra i borghi di montagna', p: ['castelbuono', 'pollina', 'geraci-siculo', 'petralia-soprana', 'polizzi'], m: [7, 8, 10], wk: 'Madonie', t: 'Dentro il Parco delle Madonie: la manna dei frassini, i formaggi dei pascoli alti, i legumi e i grani dei paesi di montagna.' },
+  { k: 'belice', n: 'Valle del Belice', s: 'Olio, vastedda e pane nero', p: ['castelvetrano', 'campobello-di-mazara', 'partanna', 'santa-ninfa', 'salaparuta', 'poggioreale'], m: [10, 11, 12], f: 'olive-nel-palmo-passulunara', t: 'La terra della Nocellara del Belice e della vastedda di pecora, del pane nero di Castelvetrano e degli uliveti secolari.' },
+  { k: 'iblei', n: 'Monti Iblei', s: 'Cioccolato, ragusano e città barocche', p: ['ragusa', 'chiaramonte-gulfi', 'modica', 'scicli', 'ispica', 'noto'], m: [3, 4, 5, 10], wk: 'Modica', t: 'Tra muretti a secco e città barocche: il cioccolato di Modica, il ragusano dei pascoli iblei, l\'olio della Tonda Iblea.' },
+  { k: 'nebrodi', n: 'Nebrodi', s: 'Suino nero, provola e nocciole nei boschi', p: ['cesaro', 'floresta', 'ucria', 'sinagra', 'ficarra', 'tortorici'], m: [9, 10, 11], wk: 'Monti Nebrodi', t: 'I boschi più grandi della Sicilia: il suino nero allevato all\'aperto, la provola dei Nebrodi, le nocciole dei paesi sulle colline.' },
+  { k: 'trapani', n: 'Tra Trapani ed Erice', s: 'Sale, cuscus e pasticcerie di monastero', p: ['marsala', 'paceco', 'trapani', 'erice', 'favignana'], m: [6, 7, 8, 9], f: 'backsale', t: 'Dalle saline al monte: il sale marino, il cuscus di pesce, i dolci di mandorla di Erice e il mare delle Egadi.' },
+  { k: 'sicani', n: 'Terre sicane', s: 'Arance di Ribera, vino e dolci di Sambuca', p: ['menfi', 'sambuca', 'caltabellotta', 'ribera', 'sciacca'], m: [1, 2, 3, 4], wk: 'Arancia di Ribera', t: 'Tra la costa di Sciacca e le colline dei Sicani: gli aranceti di Ribera, le vigne di Menfi, i dolci di Sambuca.' },
+  { k: 'cuore', n: 'Il cuore dell\'isola', s: 'Grano, piacentinu e pani delle feste', p: ['caltanissetta', 'mussomeli', 'enna', 'leonforte', 'nicosia', 'troina'], m: [5, 6, 7], f: 'pane-di-grano-duro', t: 'Le colline del grano tra Caltanissetta ed Enna: il piacentinu con lo zafferano, le fave e le lenticchie, i pani delle feste.' },
+  { k: 'eolie', n: 'Isole Eolie', s: 'Capperi e malvasia tra i vulcani', p: ['lipari', 'santa-marina-salina', 'malfa', 'leni'], m: [5, 6, 9], f: 'capperi-e-cucunci', t: 'Lipari e Salina: i capperi tra le pietre laviche, la malvasia delle Lipari, il mare intorno.' }
+];
+const hav2 = (a, b) => { const R = 6371, r = x => x * Math.PI / 180, dl = r(b[1] - a[1]), dn = r(b[0] - a[0]); return 2 * R * Math.asin(Math.sqrt(Math.sin(dl / 2) ** 2 + Math.cos(r(a[1])) * Math.cos(r(b[1])) * Math.sin(dn / 2) ** 2)); };
+const itKm = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean).map(x => x.c); let km = 0; for (let i = 1; i < P.length; i++) km += hav2(P[i - 1], P[i]) * 1.35; return Math.round(km / 5) * 5; };
+const itFoto = it => it.f ? ` style="background-image:url('foto/${it.f}.webp')"` : ` data-gwk="${esc(it.wk)}"`;
+const itMesi = it => it.m.map(x => MESIL[x - 1]).join(', ');
+function itMappa(it, w, big) {
+  const D = SAP.D, P = it.p.filter(p => D.paesi[p]);
+  return mappaSicilia({ w, nomi: !big ? false : true, punti: [], extra: (X, Y) => `<polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>` + P.map((p, i) => { const x = +X(D.paesi[p].c[0]), y = +Y(D.paesi[p].c[1]);
+    return `<g class="itp" data-itp="${i}"><circle cx="${x}" cy="${y}" r="${big ? 11 : 7}"/>${big ? `<text x="${x}" y="${y + 4}" text-anchor="middle">${i + 1}</text>` : ''}</g>`; }).join('') });
 }
+function itZoom(it) { // la mappa del dettaglio ritagliata intorno al percorso
+  const svg = $('cat').querySelector('.itd .smap'); if (!svg) return; const b = [...svg.querySelectorAll('.itp circle')].map(c => [+c.getAttribute('cx'), +c.getAttribute('cy')]); if (!b.length) return;
+  const x0 = Math.min(...b.map(q => q[0])), x1 = Math.max(...b.map(q => q[0])) + 40, y0 = Math.min(...b.map(q => q[1])), y1 = Math.max(...b.map(q => q[1])), pad = 30, w = Math.max(x1 - x0 + pad * 2, 120), h = Math.max(y1 - y0 + pad * 2, 100);
+  const W0 = +svg.getAttribute('viewBox').split(' ')[2], H0 = +svg.getAttribute('viewBox').split(' ')[3], ww = Math.max(w, 170), hh = Math.max(h, ww * H0 / W0 * 0.9), k = W0 / ww;
+  svg.setAttribute('viewBox', `${((x0 + x1) / 2 - ww / 2).toFixed(0)} ${((y0 + y1) / 2 - hh / 2).toFixed(0)} ${ww.toFixed(0)} ${hh.toFixed(0)}`); svg.classList.add('zoom');
+  svg.querySelectorAll('.cap text').forEach(t => { t.style.fontSize = (13 / k).toFixed(1) + 'px'; t.style.strokeWidth = (3 / k).toFixed(1) + 'px'; });
+  svg.querySelectorAll('.cap circle, circle.off').forEach(c => c.setAttribute('r', (+c.getAttribute('r') / k * 1.4).toFixed(2)));
+  svg.querySelectorAll('.itp circle').forEach(c => { c.setAttribute('r', (13 / k).toFixed(1)); c.style.strokeWidth = (2.5 / k).toFixed(2); }); svg.querySelectorAll('.itp text').forEach(t => { t.style.fontSize = (13 / k).toFixed(1) + 'px'; t.setAttribute('y', (+t.getAttribute('y') - 4 + 4.5 / k).toFixed(1)); });
+  svg.querySelectorAll('.itl').forEach(l => { l.style.strokeWidth = (3.5 / k).toFixed(2); l.style.strokeDasharray = `${(2 / k).toFixed(2)} ${(8 / k).toFixed(2)}`; });
+  svg.querySelectorAll('.terra').forEach(t => t.style.strokeWidth = (.8 / k).toFixed(2));
+  // i nomi dei paesi delle tappe
+  const D = SAP.D, messi = []; it.p.filter(p => D.paesi[p]).forEach((p, i) => { const c = svg.querySelector(`.itp[data-itp="${i}"] circle`); if (!c) return;
+    const cx = +c.getAttribute('cx'), cy = +c.getAttribute('cy'), fs = 14 / k, nm = D.paesi[p].n, lw = nm.length * fs * 0.56, r = 18 / k;
+    const prove = [[cx + r, cy + fs * 0.35, 'start'], [cx - r, cy + fs * 0.35, 'end'], [cx, cy + r + fs * 0.8, 'middle'], [cx, cy - r - fs * 0.2, 'middle']];
+    const box = ([x, y, a]) => [a === 'start' ? x : a === 'end' ? x - lw : x - lw / 2, y - fs, lw, fs * 1.2];
+    const urta = b => messi.some(q => b[0] < q[0] + q[2] && q[0] < b[0] + b[2] && b[1] < q[1] + q[3] && q[1] < b[1] + b[3]) || [...svg.querySelectorAll('.itp circle')].some(o => o !== c && Math.abs(+o.getAttribute('cx') - (b[0] + b[2] / 2)) < b[2] / 2 + 10 / k && Math.abs(+o.getAttribute('cy') - (b[1] + b[3] / 2)) < b[3] / 2 + 10 / k);
+    const sc = prove.find(q => !urta(box(q))) || prove[0]; messi.push(box(sc));
+    svg.insertAdjacentHTML('beforeend', `<text class="itn2" x="${sc[0].toFixed(1)}" y="${sc[1].toFixed(1)}" text-anchor="${sc[2]}" style="font-size:${fs.toFixed(1)}px;stroke-width:${(3 / k).toFixed(1)}px">${esc(nm)}</text>`); });
+}
+function sapItinerari() {
+  const D = SAP.D; SAP.itk = null;
+  $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
+  const m = new Date().getMonth() + 1, ora = ITIN.filter(it => it.m.includes(m));
+  const carta = it => `<button class="it6" data-itk="${it.k}"><span class="ph"${itFoto(it)}><span class="mm">${itMappa(it, 300)}</span>${it.m.includes(m) ? '<em>Adesso è il momento</em>' : ''}</span><span class="tx"><b>${esc(it.n)}</b><span>${esc(it.s)}</span>
+    <small>${it.p.length} tappe · circa ${itKm(it)} km · ${it.p.length > 5 ? '2–3 giorni' : '1–2 giorni'} · ${itMesi(it)}</small></span></button>`;
+  $('cat').innerHTML = `<div class="in its6">
+    <section class="ith"><div class="ith-t"><p class="sub">Itinerari del gusto</p><h2>Nove viaggi <i>per assaggiare la Sicilia.</i></h2><p class="lead">Ogni itinerario unisce paesi vicini, i loro sapori, i produttori segnalati, le sagre in calendario e la natura intorno. Sono proposte costruite dai dati del sito: le tappe non le abbiamo ancora visitate di persona.</p>
+      <div class="itn">${[[ITIN.length, 'itinerari'], [ITIN.reduce((a, it) => a + it.p.length, 0), 'tappe'], [ora.length, 'consigliati adesso']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
+      <div class="ith-m">${mappaSicilia({ w: 560, nomi: true, punti: [], extra: (X, Y) => ITIN.map((it, n) => { const P = it.p.filter(p => D.paesi[p]); const c = P.reduce((a, p) => [a[0] + D.paesi[p].c[0] / P.length, a[1] + D.paesi[p].c[1] / P.length], [0, 0]);
+        return `<g class="itg" data-itk="${it.k}"><polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>${P.map(p => `<circle cx="${X(D.paesi[p].c[0])}" cy="${Y(D.paesi[p].c[1])}" r="4"/>`).join('')}<text x="${X(c[0])}" y="${(+Y(c[1]) - 12).toFixed(1)}" text-anchor="middle">${esc(it.n)}</text></g>`; }).join('') })}</div></section>
+    ${ora.length ? `<section class="filg"><h3>Da fare adesso</h3><p class="gt">I viaggi che danno il meglio a ${MESIL[m - 1]}.</p><div class="itgr">${ora.map(carta).join('')}</div></section>` : ''}
+    <section class="filg"><h3>Tutti gli itinerari</h3><div class="itgr">${ITIN.filter(it => !ora.includes(it)).map(carta).join('')}</div></section>
+    <section class="filg itnota"><h3>Come nascono</h3><p class="gt">Per ogni paese raccogliamo i sapori documentati, i produttori segnalati da fonti pubbliche, le sagre e i parchi vicini. Quando avremo visitato le tappe, ogni itinerario diventerà un viaggio verificato, con i nomi delle persone incontrate.</p>
+      <div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi tutti i produttori segnalati</button></div></section>
+    ${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; });
+}
+async function sapItinerario(k) {
+  const D = SAP.D, it = ITIN.find(x => x.k === k); if (!it) return sapItinerari();
+  SAP.itk = k; $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
+  const sg = await SAGRE(), oi = new Date().toISOString().slice(0, 10), P = it.p.filter(p => D.paesi[p]);
+  const sapori = p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && v.t !== 'materia' && v.t !== 'semi').sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).filter(r => r !== 'PAT').length - (a.ric || []).filter(r => r !== 'PAT').length) || (!!b.wk - !!a.wk)).slice(0, 6);
+  const tappa = (p, i) => { const x = D.paesi[p], sv = sapori(p), chi = Object.values(D.produttori).filter(q => q.paese === p).slice(0, 4), ev = (sg.eventi || []).filter(e => e.p === p && e.d[e.d.length - 1] >= oi).slice(0, 2), nat = natVicina(x.c).slice(0, 2);
+    return `<li data-itp="${i}"><span class="nt">${i + 1}</span><div class="tc"><div class="th"><h4>${esc(x.n)}</h4><small>${esc(PROVN[x.pv] || '')}${i ? ` · ${Math.round(hav2(D.paesi[P[i - 1]].c, x.c) * 1.35)} km dalla tappa ${i}` : ''}</small><button class="lk" data-sc="${p}">Tutto su ${esc(x.n)}</button></div>
+      ${sv.length ? `<div class="mini5">${sv.map(v => `<button data-sc="${v.k}"><span${imgAttr(v)}></span><b>${esc(v.n)}</b></button>`).join('')}</div>` : '<p class="note">Nessun sapore ancora documentato.</p>'}
+      ${chi.length || ev.length || nat.length ? `<div class="links">${chi.map(q => `<button data-sc="${q.k}">${ico('building-store', 'xs')} ${esc(q.n)}<br><small>${esc(q.tipo || RUOLO[q.r][0])} · segnalato</small></button>`).join('')}${ev.map(e => `<button data-scal="${e.id}">${ico('calendar-event', 'xs')} ${esc(e.n)}<br><small>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</small></button>`).join('')}${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>` : ''}</div></li>`; };
+  $('cat').innerHTML = `<div class="in its6 itd">
+    <button class="lk itb" data-itall="1">‹ Tutti gli itinerari</button>
+    <section class="ith itdh"><div class="ph"${itFoto(it)}></div><div class="ith-t"><p class="sub">Itinerario del gusto · proposta</p><h2>${esc(it.n)}</h2><p class="lead">${esc(it.s)}.</p><p>${esc(it.t)}</p>
+      <div class="itn">${[[P.length, 'tappe'], ['~' + itKm(it), 'km'], [it.p.length > 5 ? '2–3' : '1–2', 'giorni']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
+      <p class="quando">${ico('calendar', 'xs')} Il periodo migliore: <b>${itMesi(it)}</b></p></div></section>
+    <div class="itb2"><div class="itm"><div class="cmap">${itMappa(it, 560, true)}</div><p class="note">Distanze in linea d'aria aumentate di un terzo: sono indicative.</p></div>
+      <ol class="itt">${P.map(tappa).join('')}</ol></div>
+    <p class="avv6">${ico('alert-triangle', 'xs')} Proposta costruita dai dati: tappe, produttori e sagre non sono ancora stati visitati. Prima di partire verifica orari e date.</p>
+    <section class="filg"><h3>Altri itinerari</h3><div class="itgr">${ITIN.filter(x => x.k !== k).slice(0, 3).map(x => `<button class="it6" data-itk="${x.k}"><span class="ph"${itFoto(x)}></span><span class="tx"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  itZoom(it); sapFoto($('cat'));
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
+  const L = $('cat').querySelector('.itt'), M = $('cat').querySelector('.itm');
+  const acc = i => { $('cat').querySelectorAll('.itd .hl').forEach(x => x.classList.remove('hl')); if (i != null) $('cat').querySelectorAll(`.itd [data-itp="${i}"]`).forEach(x => x.classList.add('hl')); };
+  L.addEventListener('mouseover', e => { const li = e.target.closest('li[data-itp]'); acc(li ? li.dataset.itp : null); });
+  M.addEventListener('mouseover', e => { const g = e.target.closest('[data-itp]'); acc(g ? g.dataset.itp : null); });
+  M.addEventListener('click', e => { const g = e.target.closest('[data-itp]'); if (g) { const li = L.querySelector(`li[data-itp="${g.dataset.itp}"]`); if (li) li.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-itk],[data-itall],.itd [data-nat],.itd [data-scal]'); if (!b || !$('cat').contains(b)) return; e.stopPropagation();
+  if (b.dataset.nat) { sapModo(false); return setTimeout(() => { vai('mappa'); setTimeout(() => apri(b.dataset.nat, true), 300); }, 300); }
+  if (b.dataset.scal) { const ev = (SAP.sagre.eventi || []).find(x => x.id === b.dataset.scal); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d[0], tipo: '', pv: '' }; vai('meteo'); } return; }
+  if (b.dataset.itall) return sapItinerari(); sapItinerario(b.dataset.itk); }, true);
 $('cat').addEventListener('click', e => {
   if (!SAP.on) return;
   const c = e.target.closest('[data-sc]'), g = e.target.closest('[data-sk]'), m = e.target.closest('[data-mese]'), vg = e.target.closest('[data-vg]');
@@ -3530,7 +3611,7 @@ function rottaAttuale() {
   if (v.startsWith('pag-')) return '#/metodo';
   if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
   if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
-  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari', 'sap-fil': '#/sapori/' + SAP.fk }[v]
+  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari' + (SAP.itk ? '/' + SAP.itk : ''), 'sap-fil': '#/sapori/' + SAP.fk }[v]
     || (vista === 'mappa' && !SAP.home ? '#/sapori/mappa' : null);
   if (v === 'nat-home') return '#/natura';
   if (v === 'cal') return '#/natura/calendario';
@@ -3569,7 +3650,7 @@ async function applicaRotta(h) {
     } else if (a === 'sapori') {
       if (!sapOn()) entraSez('sapori'); else if (!b) entraSez('sapori');
       await aspetta(() => sapOn() && SAP.D);
-      if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') vai('escursioni');
+      if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') { vai('escursioni'); if (c) { await attesa(150); sapItinerario(c); } }
       else if (b === 'mappa') { SAP.home = false; vai('mappa'); }
       else if (b === 'scheda' && c) { const k = c.replace(/ /g, '_'), D2 = SAP.D; const kk = D2.voci[k] || D2.paesi[k] || D2.produttori[k] ? k : c; await attesa(300); sapApri(kk); }
       else if (b) sapFiliera(b);
