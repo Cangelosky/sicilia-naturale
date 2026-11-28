@@ -844,7 +844,7 @@ function limitiArea(a) {
   for (const k of ks) { const b = S[k].bb; bb[0] = Math.min(bb[0], b[0]); bb[1] = Math.min(bb[1], b[1]); bb[2] = Math.max(bb[2], b[2]); bb[3] = Math.max(bb[3], b[3]); }
   return ks.length ? [[bb[0], bb[1]], [bb[2], bb[3]]] : [[12.3, 36.55], [15.7, 38.35]];
 }
-const padMappa = () => innerWidth >= 900 ? { top: 40, bottom: 40, left: 40, right: 430 } : { top: 20, bottom: Math.round(innerHeight * 0.44) + 10, left: 16, right: 16 };
+const padMappa = () => { if (innerWidth >= 900) return { top: 40, bottom: 40, left: 40, right: 430 }; const m = $('map').getBoundingClientRect(), sh = $('sheet') && $('sheet').getBoundingClientRect(), b = sh && sh.height > 40 && sh.top < m.bottom ? Math.round(m.bottom - sh.top) + 16 : Math.round(innerHeight * 0.44) + 10; return { top: 24, bottom: Math.min(b, Math.round(m.height * 0.7)), left: 24, right: 24 }; };
 /* zone evidenziate sulla mappa (Escursioni, Meteo): confini colorati per punteggio, nome e numero */
 function evidenzia(items) {
   if (!map.getSource('hl')) return;
@@ -1017,6 +1017,8 @@ async function apriPercorso(id) {
   if (modo.escursioni !== 'mappa' && vista === 'escursioni') { modo.escursioni = 'mappa'; vai('escursioni'); }
   evidenziaPercorso(p); cur = null;
   map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: padMappa(), duration: 800, maxZoom: 15 });
+  // la scheda si apre dopo: si rifà lo zoom con lo spazio vero lasciato libero, così il percorso si vede tutto
+  clearTimeout(apriPercorso.t); apriPercorso.t = setTimeout(() => map.fitBounds([[p.bb[0], p.bb[1]], [p.bb[2], p.bb[3]]], { padding: padMappa(), duration: 700, maxZoom: 15 }), 650);
   const it = LANG === 'it', c = CAI[p.c];
   $('sh').innerHTML = `<div><h2>${esc(p.n)}</h2><div class="badges"><span class="badge" style="background:#e7edf9;color:#1d4ed8">${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}</span>${c ? `<span class="badge cai c-${p.c}">${p.c} · ${T(...c)}</span>` : ''}${uff(p) ? `<span class="badge uffb">${ico('shield-check', 'xs')} ${T(...UFF[uff(p)])}</span>` : ''}</div><div class="avv" id="pc-avv"></div></div><button class="close" aria-label="${t('chiudi')}">×</button>`;
   $('sb').innerHTML = `<div class="kpi"><div><b>${num1(p.km)}</b><span>km</span></div><div><b id="pc-up">${p.up ? '+' + fmt(p.up) : '…'}</b><span>m D+</span></div><div><b id="pc-dn">${p.dn ? '−' + fmt(p.dn) : '…'}</b><span>m D−</span></div><div><b>${p.dur ? durata(p.dur) : '–'}</b><span>${T('tempo', 'time')}</span></div></div>
@@ -4240,7 +4242,7 @@ document.addEventListener('click', e => {
 }, true);
 
 /* ---------- suggerimenti mentre si scrive nelle caselle di ricerca delle pagine d'inizio */
-function suggerimenti(q, dove) {
+function suggCerca(q, dove) {
   const v = norm(q.trim()); if (v.length < 2) return [];
   const w = v.split(/\s+/), ok = n => w.every(x => contiene(n, x)), out = [];
   const D = SAP.D, nat = dove === 'nq', sap = dove === 'hq';
@@ -4257,7 +4259,7 @@ function suggerimenti(q, dove) {
 }
 const SUG = { el: null, i: -1, inp: null };
 function mostraSug(inp) {
-  const l = suggerimenti(inp.value, inp.id); let box = inp.closest('label').querySelector('.sug8');
+  const l = suggCerca(inp.value, inp.id); let box = inp.closest('label').querySelector('.sug8');
   if (!box) { inp.closest('label').insertAdjacentHTML('beforeend', '<div class="sug8" role="listbox"></div>'); box = inp.closest('label').querySelector('.sug8'); }
   SUG.inp = inp; SUG.i = -1;
   if (!l.length) { box.innerHTML = inp.value.trim().length >= 2 ? '<p class="vuoto">Nessun risultato. Prova con un\'altra parola.</p>' : ''; box.classList.toggle('on', inp.value.trim().length >= 2); return; }
