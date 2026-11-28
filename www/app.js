@@ -428,18 +428,27 @@ $('l-it').onclick = () => setLang('it'); $('l-en').onclick = () => setLang('en')
 
 /* ---------- ricerca */
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+// confronto tollerante: "porcino" trova anche "porcini", "arancina" anche "arancine"
+const contiene = (n, x) => n.includes(x.length > 4 ? x.slice(0, -1) : x);
 $('q').oninput = () => {
   const v = norm($('q').value.trim()); $('qx').style.display = v ? 'block' : 'none';
   if (v.length < 2) { $('res').style.display = 'none'; return; }
   chiudiLiv();
   if (sapOn()) return sapCerca(v);
   const w = v.split(/\s+/);
-  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => n.includes(x)); })
+  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => contiene(n, x)); })
     .sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || b[1].ha - a[1].ha).slice(0, 30);
-  $('res').innerHTML = r.length ? r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
+  // anche le specie (nome comune, siciliano o scientifico): la casella promette "un parco, un sentiero, una specie"
+  const sp = [];
+  if (FUN && PIA && v.length > 2) for (const [tp, D] of [['funghi', FUN], ['piante', PIA]]) D.s.forEach((x, i) => { const k = tp === 'funghi' ? x[7] : x[4]; const n = norm(x[0] + ' ' + (NOMI[k] || []).join(' ')); if (w.every(y => contiene(n, y))) sp.push([tp, i, nomeC(tp, i), x[0], tp === 'funghi' ? x[6] : 0]); });
+  sp.sort((a, b) => (!!b[2] - !!a[2]) || b[4] - a[4]);
+  const rs = r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('')
+    + sp.slice(0, 8).map(([tp, i, c, sc]) => `<button data-spr="${tp}:${i}">${esc(c || sc)}<small>${tp === 'funghi' ? T('Fungo', 'Fungus') : T('Pianta', 'Plant')}${c ? ' · <i>' + esc(sc) + '</i>' : ''}</small></button>`).join('');
+  $('res').innerHTML = rs || `<button disabled>${t('nessuno')}</button>`;
   $('res').style.display = 'block';
 };
-$('res').onclick = e => { const b = e.target.closest('button[data-id]'); if (!b) return; $('res').style.display = 'none'; $('q').blur(); apri(b.dataset.id, true); };
+$('res').onclick = e => { const s = e.target.closest('button[data-spr]'); if (s) { $('res').style.display = 'none'; $('q').blur(); const [tp, i] = s.dataset.spr.split(':'); return apriSpecie(tp, +i); }
+  const b = e.target.closest('button[data-id]'); if (!b) return; $('res').style.display = 'none'; $('q').blur(); apri(b.dataset.id, true); };
 $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); };
 
 /* ---------- click sulla mappa */
@@ -630,7 +639,9 @@ const WCACHE = {};
 /* regola del progetto: nessuna informazione sulla commestibilità (né funghi né piante).
    Dai testi di Wikipedia si tolgono le frasi che parlano di commestibilità, tossicità, cucina o consumo. */
 const NOCOMM = /commestib|non commest|edul|eduli|mangerecc|mangiar|mangia|cucin|culinar|gastronom|ricett|prelibat|apprezzat[oi] (in|per|come)|sapore|consum|velen|tossic|mortal|letal|avvelen|intossic|allucinog|psicoattiv|edible|inedible|eaten|eating|cook|culinary|recipe|taste|poison|toxic|deadly|lethal|hallucinog|psychoactive|consum/i;
-const senzaComm = tx => { const f = String(tx || '').split(/(?<=[.!?])\s+/).filter(x => x && !NOCOMM.test(x)); return f.join(' '); };
+// le frasi si dividono sul punto, ma non dopo le abbreviazioni degli autori ("L.", "Fr.", "Bull.") né dopo "ca.", "es.", "sec."
+const frasi = tx => String(tx || '').split(/(?<=[.!?])\s+/).reduce((a, x) => { const u = a[a.length - 1]; if (u && (/(^|[\s(])([A-Z][a-z]{0,2}|Bull|Schaeff|Pers|Quél|Sacc|Kumm|Gillet|ca|es|sec|var|subsp|ssp|cfr|sp)\.$/.test(u) || /^[a-z(]/.test(x))) a[a.length - 1] = u + ' ' + x; else a.push(x); return a; }, []);
+const senzaComm = tx => { const f = frasi(tx).filter(x => x && !NOCOMM.test(x)); return f.join(' '); };
 const getJ = u => WCACHE[u] || (WCACHE[u] = fetch(u).then(r => r.ok ? r.json() : null).catch(() => null));
 const pulito = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const binomio = sp => { const w = (sp || '').replace(/\(.*?\)/g, ' ').split(/[\s,;]+/).filter(Boolean); if (w.length < 2) return ''; return w[1] === 'x' && w[2] ? w.slice(0, 3).join(' ') : w.slice(0, 2).join(' '); };
@@ -831,11 +842,11 @@ function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
     if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
-    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3] + ' ' + (NOMI[r[7]] || []).join(' ')); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3] + ' ' + (NOMI[r[7]] || []).join(' ')); return w.every(x => contiene(n, x)); });
   return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
     if (st.g === 'alb' && !r[1]) return false; if (st.g === 'ali' && !r[7]) return false; if (['orc', 'fel', 'gra', 'erb'].includes(st.g) && tipoP(r) !== st.g) return false; if (st.g === 'n2k' && !r[2].length) return false;
     if (st.fam && r[5] !== st.fam) return false;
-    const n = norm(r[0] + ' ' + (r[5] || '') + ' ' + (NOMI[r[4]] || []).join(' ')); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + (r[5] || '') + ' ' + (NOMI[r[4]] || []).join(' ')); return w.every(x => contiene(n, x)); });
 }
 function catalogo(soloTesti) {
   Promise.all([CAT, caricaStag()]).then(([, S2]) => {
@@ -2564,7 +2575,7 @@ function sapCatalogo() {
   const tutti = Object.values(D.voci);
   const okK = v => F.k === 'tutto' || (F.k === 'ingr' ? (v.t === 'materia' || v.t === 'semi') : (catDi(v) === F.k && v.t !== 'materia' && v.t !== 'semi'));
   const okR = v => !F.ric || (F.ric === 'tut' ? (v.ric || []).some(r => r === 'DOP' || r === 'IGP') : (v.ric || []).includes('PAT'));
-  const lista = F.k === 'prod' ? [] : tutti.filter(v => okK(v) && okR(v) && (!F.paese || (v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && (!F.fam || v.fam === F.fam) && w.every(x => norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + nomiPaesi(v)).includes(x)));
+  const lista = F.k === 'prod' ? [] : tutti.filter(v => okK(v) && okR(v) && (!F.paese || (v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && (!F.fam || v.fam === F.fam) && w.every(x => contiene(norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + nomiPaesi(v)), x)));
   const prod = (F.k === 'prod' || F.k === 'tutto') ? Object.values(D.produttori).filter(p => (!F.paese || p.paese === F.paese) && w.every(x => norm(p.n + ' ' + D.paesi[p.paese].n).includes(x))) : [];
   const conta = k => k === 'tutto' ? tutti.length : k === 'prod' ? Object.keys(D.produttori).length : tutti.filter(v => (F.k = k, okK(v))).length;
   const kk = F.k, cat = [['tutto', 'Tutto'], ...GUSTI.map(g => [g[0], g[1]]), ['ingr', 'Ingredienti'], ['prod', 'Produttori']];
@@ -2832,7 +2843,7 @@ function sapHome() {
       <div class="apf" style="background-image:url('foto/${hf.f}.webp')" role="img" aria-label="${esc(hf.t || '')}"></div>
       <div class="apt">
         <h1>La Sicilia,<br>una tavola <i>da scoprire.</i></h1>
-        <p class="lead">Ci sono isole che si visitano. E poi ci sono isole che si imparano ad ascoltare: ${nDolci} dolci, ${nPat} prodotti tradizionali e ${nDop} DOP e IGP, in ${nComuni} comuni.</p>
+        <p class="lead">Ci sono isole che si visitano. E poi ci sono isole che si imparano a tavola: ${fmt(tutti.length)} sapori in ${nComuni} comuni, tra cui ${fmt(nDolci)} dolci, ${nPat} prodotti tradizionali e ${nDop} DOP e IGP.</p>
         <label class="cerca5">${ico('map-pin-search')}<input id="hq" type="search" placeholder="Cerca un paese, un dolce, un formaggio…" autocomplete="off" aria-label="Cerca"><button id="hgo" aria-label="Cerca">${freccia}</button></label>
         <button class="apc" data-sc="${hf.v || ''}" ${hf.v ? '' : 'disabled'}>${esc(hf.t || '')}, foto di Oscar Cangelosi</button>
       </div>
@@ -2868,7 +2879,7 @@ function sapHome() {
     </section>
     <section class="s5"><button class="pross5" data-tema="natura" style="--tc:#2D6A4F"><span class="img" style="background-image:url('foto/natura/campagna.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Da dove viene quello che mangi</b><span>Il pistacchio sull'Etna, la manna sulle Madonie, la provola sui Nebrodi. Cammina nei luoghi dove nascono i sapori.</span><em>Entra in Natura</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
-    <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: segnalati da presìdi e Alleanza Slow Food, Chiocciole, fattorie didattiche della Regione e guide del Gambero Rosso; non ancora visitati da noi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
+    <p class="note n5">Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: segnalati da presìdi e Alleanza Slow Food, Chiocciole, fattorie didattiche della Regione e guide del Gambero Rosso; non ancora visitati da noi. ${fmt(tutti.filter(v => v.web).length)} piatti trovati sul web sono segnati «da verificare» finché non li confrontiamo con i libri.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
   sapFoto($('cat'));
   const tip = $('ctip'), cmap = $('cat').querySelector('.com5 svg');
   if (cmap) cmap.onmouseover = e => { const t = e.target.closest('circle'), ti = t && t.querySelector('title'); if (ti) tip.textContent = ti.textContent; };
@@ -3066,7 +3077,7 @@ async function genHome(fo) {
         ['In Sicilia sono state segnalate più di ' + fmt(Math.floor(FUN.s.length / 100) * 100) + ' specie di funghi. Molte si riconoscono solo al microscopio.', 'natura', 'Funghi']
       ].map(([t, k, x]) => `<div class="sp5" style="--tc:${TEMA[k][1]}"><small>${x}</small><p>${t}</p></div>`).join('')}</div></section>
     <section class="s5"><div class="t5"><h2>Le cinque sezioni</h2><p>Due sono già aperte, tre sono in preparazione.</p></div>
-      <div class="sez5">${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="img" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span><span class="tx"><b><i></i>${x.t}</b><small>${x.s}.</small>${PRONTI.includes(k) ? `<em>${k === 'natura' ? `${conta('pn') + conta('pr')} parchi, ${conta('rn')} riserve, ${fmt(FUN.s.length + PIA.s.length)} specie` : `${fmt(Object.values(D2.voci).filter(v => v.t !== 'materia').length)} sapori in ${Object.keys(D2.paesi).length} comuni`}</em>` : '<em>In preparazione</em>'}</span>${freccia}</button>`).join('')}</div></section>
+      <div class="sez5">${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="img" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span><span class="tx"><b><i></i>${x.t}</b><small>${x.s}.</small>${PRONTI.includes(k) ? `<em>${k === 'natura' ? `${conta('pn') + conta('pr')} parchi, ${conta('rn')} riserve, ${fmt(FUN.s.length + PIA.s.length)} specie` : `${fmt(Object.values(D2.voci).filter(v => v.t !== 'materia' && v.t !== 'semi').length)} sapori in ${Object.keys(D2.paesi).length} comuni`}</em>` : '<em>In preparazione</em>'}</span>${freccia}</button>`).join('')}</div></section>
     ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
