@@ -801,6 +801,10 @@ const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || wind
 // plugin del telefono: da Capacitor 3 non sempre compaiono in Capacitor.Plugins, vanno registrati per nome
 const plug = n => { if (!isApp) return null; const C = window.Capacitor; try { return (C.Plugins && C.Plugins[n]) || (C.registerPlugin ? (C.Plugins[n] = C.registerPlugin(n)) : null); } catch (e) { return null; } };
 const modo = { escursioni: 'mappa', meteo: 'mappa', registra: 'mappa' };
+// velo: mentre si cambia pagina la pagina resta coperta, così non si vede la mappa per un istante
+const VELO = { t: null };
+new MutationObserver(() => { if ($('cat').dataset.v && $('cat').innerHTML && !VELO.rotta) document.body.classList.remove('velo'); }).observe($('cat'), { attributes: true, attributeFilter: ['data-v'] });
+new MutationObserver(() => { if ($('sheet').classList.contains('open') && !VELO.rotta) document.body.classList.remove('velo'); }).observe($('sheet'), { attributes: true, attributeFilter: ['class'] });
 const sapOn = () => !!(SAP && SAP.on);
 const mappaVista = v => !sapOn() && (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
 let ultimaSpecie = 'funghi';
@@ -823,6 +827,7 @@ function vai(v) {
   if (typeof aggSez === 'function') aggSez();
   if (v === 'mappa' && NAT.home) return natHome();
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
+  if (v !== 'mappa' && mm || (v === 'mappa' && !NAT.home && !(SAP.on && SAP.home))) document.body.classList.remove('velo');
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-modo]'); if (b && modo[vista] && modo[vista] !== b.dataset.modo) { modo[vista] = b.dataset.modo; vai(vista); } });
@@ -3214,10 +3219,11 @@ function aggSez() {
 }
 setTimeout(aggSez, 0);
 function entraSez(k) {
+  document.body.classList.add('velo'); clearTimeout(VELO.t); VELO.t = setTimeout(() => document.body.classList.remove('velo'), 2500);
   SEZ = k; aggSez(); TEMI = new Set([k]); chiudi(); $('cat').scrollTop = 0; $('cat').dataset.v = '';
   if (k === 'sapori') { if (!SAP.on) sapModo(true); else { SAP.home = true; vai('mappa'); } return; }
   NAT.home = true; NAT.hi = null;
-  if (SAP.on) sapModo(false); else vai('mappa');
+  if (SAP.on) { vista = 'mappa'; sapModo(false); } else vai('mappa');
 }
 function applicaTemi() { entraSez([...TEMI][0]); }
 // la home: le sezioni che scorrono e invitano a entrare
@@ -3641,6 +3647,7 @@ function segnaRotta() {
 async function applicaRotta(h) {
   if (isApp) return;
   ROTTA.applico = true; clearTimeout(ROTTA.t);
+  VELO.rotta = true; document.body.classList.add('velo'); clearTimeout(VELO.t); VELO.t = setTimeout(() => { VELO.rotta = false; document.body.classList.remove('velo'); }, 4000);
   try {
     const [a, b, c] = h.replace(/^#\/?/, '').split('/').map(x => decodeURIComponent(x || '').replace(/_/g, ' '));
     const natura = async () => { if (SEZ !== 'natura' || sapOn()) { entraSez('natura'); await aspetta(() => !sapOn()); } NAT.home = false; };
@@ -3666,7 +3673,9 @@ async function applicaRotta(h) {
     else if (a === 'glossario' || a === 'metodo' || a === 'scuole') pagina(a);
     else if (TEMA[a]) entraSez(a);
     else entraSez('home');
+    if (!a || ((a === 'natura' || a === 'sapori') && !b) || (TEMA[a] && a !== 'natura' && a !== 'sapori')) await aspetta(() => $('cat').dataset.v, 3000).catch(() => {});
   } catch (e) { console.warn('rotta', e); }
+  VELO.rotta = false; setTimeout(() => document.body.classList.remove('velo'), 60);
   await attesa(700);
   ROTTA.applico = false;
   // se il link non porta dove dice (scheda inesistente…), l'indirizzo si corregge su ciò che si vede
