@@ -3133,10 +3133,11 @@ function scorri5() {
   // sul telefono la scheda copre tutto lo schermo tra la testata e la barra in basso (mai meno del testo più lungo)
   const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; }
     let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
-    const tm = box.querySelector('.tes5'), giu = (tm ? tm.offsetHeight : 0) + 16, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
-    box.style.setProperty('--giu', giu + 'px');
+    const tm = box.querySelector('.tes5'), th = tm ? tm.offsetHeight : 0, gap = 18, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
     const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
-    const min = h + 28 + giu; box.style.height = Math.round(min + Math.max(0, schermo - min) / 2) + 'px'; }; // metà dello spazio libero sopra il titolo
+    const min = h + gap + th + 48, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
+    // testo e sezioni centrati nella scheda: stesso margine sopra e sotto
+    box.style.setProperty('--m', m + 'px'); box.style.setProperty('--giu', (m + th + gap) + 'px'); box.style.height = H + 'px'; };
   alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
   const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')], tes = [...box.querySelectorAll('.sz')]; let i = 0, ferma = false;
   const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i));
