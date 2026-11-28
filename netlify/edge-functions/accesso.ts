@@ -3,7 +3,7 @@
 export default async (request: Request, context: any) => {
   const utente = Netlify.env.get("SN_UTENTE");
   const password = Netlify.env.get("SN_PASSWORD");
-  if (!utente || !password) return context.next();
+  if (!utente || !password) { const r = await context.next(); r.headers.set("x-sn-accesso", "libero"); return r; }
   const h = request.headers.get("authorization") || "";
   if (h.startsWith("Basic ")) {
     try {
