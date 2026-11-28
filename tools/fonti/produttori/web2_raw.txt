@@ -1,0 +1,43 @@
+# nome | tipo | comune | fonte | url   (ricerca del 28/11/2026, fonti giornalistiche e di settore)
+Monastero di Santo Spirito (dolci delle benedettine)|pasticceria monastica|Agrigento|balarm.it|https://www.balarm.it/news/scrigno-d-arte-e-di-bonta-il-monastero-di-santo-spirito-di-agrigento-e-tappa-d-obbligo-118783
+Monastero benedettino (dolci delle monache)|pasticceria monastica|Palma di Montechiaro|lasicilia.it|https://www.lasicilia.it/gallery/buongusto/1160650/nel-paese-del-gattopardo-gli-irresistibili-dolci-fatti-dalle-monache-di-clausura.html
+Monastero di clausura (dolci di badia)|pasticceria monastica|Mazara del Vallo|balarm.it|https://www.balarm.it/news/couscous-dolce-muccunetti-e-olivette-la-sfida-a-colpi-di-colesterolo-delle-suorine-di-sicilia-125208
+Badia Nuova, monastero delle Benedettine|pasticceria monastica|Alcamo|linkiesta.it|https://www.linkiesta.it/2024/01/le-minni-di-virgini-e-altri-capolavori-di-pasticceria-prodotti-nei-monasteri-di-alcamo/
+I Segreti del Chiostro (monastero di Santa Caterina)|pasticceria monastica|Palermo|greenme.it|https://www.greenme.it/mangiare/pasticceria-convento-santa-caterina/
+Pasticceria Maria Grammatico|pasticceria|Erice|dissapore.com|https://www.dissapore.com/locali/sicilia-dolci-natale-da-riscoprire
+Extrabar (famiglia Petta)|pasticceria|Piana degli Albanesi|scattidigusto.it|https://www.scattidigusto.it/cannoli-piana-degli-albanesi-fatti-in-casa-extrabar
+Bar Pasticceria Cuccia - La Casa del Cannolo|pasticceria|Piana degli Albanesi|scattidigusto.it|https://www.scattidigusto.it/30-migliori-cannoli-siciliani
+Pasticceria Giorgio Clesceri|pasticceria|Piana degli Albanesi|eatingeurope.com|https://www.eatingeurope.com/blog/best-cannoli-in-sicily/
+Bar di Noto|pasticceria|Piana degli Albanesi|dissapore.com|https://www.dissapore.com/locali/cannoli-siciliani-meglio-dattilo-o-piana-degli-albanesi/
+Euro Bar (Dattilo)|pasticceria|Paceco|dissapore.com|https://www.dissapore.com/locali/cannoli-siciliani-meglio-dattilo-o-piana-degli-albanesi/
+Antica Dolceria Bonajuto|dolceria|Modica|ilpost.it|https://www.ilpost.it/2025/09/22/cioccolato-modica/
+Sabadì|cioccolateria|Modica|scattidigusto.it|https://www.scattidigusto.it/cioccolato-di-modica-e-record-come-si-fa-e-da-chi-comprarlo-online
+Donna Elvira|dolceria|Modica|ilpost.it|https://www.ilpost.it/2025/09/22/cioccolato-modica/
+Dolceria Rizza|dolceria|Modica|ilpost.it|https://www.ilpost.it/2025/09/22/cioccolato-modica/
+Dolceria Peluso|dolceria|Modica|ilpost.it|https://www.ilpost.it/2025/09/22/cioccolato-modica/
+Antica Focacceria San Francesco (dal 1834)|focacceria storica|Palermo|Locali Storici d'Italia (balarm.it)|https://www.balarm.it/eventi/giornata-dei-locali-storici-d-italia-appuntamenti-a-palermo-monreale-e-giarre-134038
+Ristorante La Botte 1929|ristorante storico|Monreale|Locali Storici d'Italia (balarm.it)|https://www.balarm.it/eventi/giornata-dei-locali-storici-d-italia-appuntamenti-a-palermo-monreale-e-giarre-134038
+Fabbrica Finocchiaro (dal 1924)|cioccolateria storica|Giarre|Locali Storici d'Italia (balarm.it)|https://www.balarm.it/eventi/giornata-dei-locali-storici-d-italia-appuntamenti-a-palermo-monreale-e-giarre-134038
+Antica Pasticceria Caffetteria Leto|pasticceria storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Panificio Pensabene|panificio storico|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Veniero confetti|confetteria storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Drogheria Scannavino|drogheria storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Pasticceria Costa|pasticceria storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Gastronomia Armetta|gastronomia storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Tutone Anice Unico|bottega storica|Palermo|botteghe storiche, Confcommercio Palermo|https://livesicilia.it/?p=377780
+Oleificio Guccione|frantoio|Chiaramonte Gulfi|Guida agli extravergini Slow Food (greenme.it)|https://www.greenme.it/lifestyle/sai-cosa-compri/grandi-oli-extravergini-italiani-slow-food/
+Frantoi Cutrera|frantoio|Chiaramonte Gulfi|Guida agli extravergini Slow Food (greenme.it)|https://www.greenme.it/lifestyle/sai-cosa-compri/grandi-oli-extravergini-italiani-slow-food/
+Tenuta Valle delle Ferle|vignaiolo indipendente|Caltagirone|FIVI Sicilia (blogsicilia.it)|https://www.blogsicilia.it/palermo/giornata-del-vignaiolo-palermo-tappa-siciliana-dellevento-nazionale/1132950/
+Gaglio Vignaioli dal 1910|cantina di famiglia|Oliveri|lasicilia.it|https://www.lasicilia.it/news/oggi/3013001/donne-del-vino-sicilia-cambio-al-vertice-flora-mondello-succede-a-roberta-urso.html
+Xeravuli|piccola cantina|Piana degli Albanesi|islands.com|https://www.islands.com/1783192/situated-sicily-itlay-scenic-mountains-albanian-town-piana-degli-alabanesi-best-cannoli-island
+Terre Frumentarie (Simenza)|azienda agricola, grani antichi|Raddusa|identitagolose.com|https://www.identitagolose.com/sito/en/6/21818/chef/giuseppe.html
+Antichi Granai dei F.lli Passamonte|azienda agricola, grani antichi|Catenanuova|progetto Mixwheat (rsr.bio)|https://rsr.bio/?p=28974
+Agricola Cavalli|azienda agricola, grani antichi|Augusta|progetto Mixwheat (rsr.bio)|https://rsr.bio/wp-content/uploads/2026/02/Scheda-34_Diversita-locale-e-adattamento_A3_stampa.pdf
+Green Bio di Terre di Sant'Agata|azienda agricola con mulino a pietra|Piana degli Albanesi|progetto Mixwheat (rsr.bio)|https://rsr.bio/wp-content/uploads/2026/02/Scheda-34_Diversita-locale-e-adattamento_A3_stampa.pdf
+Dara Guccione Biofarm|azienda agricola, grani antichi|Alia|progetto Mixwheat (rsr.bio)|https://rsr.bio/wp-content/uploads/2026/02/Scheda-34_Diversita-locale-e-adattamento_A3_stampa.pdf
+Panificio Fratantonio|panificio con mulino a pietra|Modica|gamberorosso.it|https://www.gamberorosso.it/attualita/modica-panificio-fratantonio/
+Terre e Tradizioni|pastificio, grani antichi|Raddusa|macrolibrarsi.it|https://www.macrolibrarsi.it/marche/_terre-e-tradizioni.php?ord=titolo
+Agriturismo Torre di Renda|agriturismo|San Giuseppe Jato|agriturismi.it|https://www.agriturismi.it/blog/?p=10962
+Baglio Fasana|struttura storica|Modica|tg24.sky.it|https://tg24.sky.it/lifestyle/2025/08/14/sicilia-case-vacanza-val-di-noto
+Villa Carcara (masseria dell'Ottocento)|masseria storica|Ragusa|tg24.sky.it|https://tg24.sky.it/lifestyle/2025/08/14/sicilia-case-vacanza-val-di-noto
+Feudi del Pisciotto (feudo del Settecento)|cantina e relais storico|Niscemi|tg24.sky.it|https://tg24.sky.it/lifestyle/2021/07/24/sicilia-case-vacanza-val-di-noto

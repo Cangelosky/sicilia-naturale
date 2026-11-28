@@ -116,6 +116,27 @@ for nome in ['Ginger People&Food', 'Mé Cumpari Turiddu', 'Ristorante Le Macine'
     for k, p in prod.items():
         if p['n'] == nome and [ALTRE['chiocciola'][0], ALTRE['chiocciola'][1]] not in p['seg']:
             p['seg'].append(list(ALTRE['chiocciola']))
+# ricerca libera sul web (giornali e guide di settore)
+FA = {'pasticceria@Piana degli Albanesi': ['cannolo'], 'pasticceria@Paceco': ['cannolo'], 'dolceria@Modica': ['dop-cioccolato-di-modica'],
+      'cioccolateria@Modica': ['dop-cioccolato-di-modica'], 'frantoio@Chiaramonte Gulfi': ['dop-monti-iblei'],
+      'Monastero di Santo Spirito (dolci delle benedettine)': ['d-cuscus-dolce-agrigento'], 'I Segreti del Chiostro (monastero di Santa Caterina)': ['d-minne-di-vergine-palermo'],
+      'Badia Nuova, monastero delle Benedettine': ['d-minne-di-vergine-alcamo'], 'Monastero di clausura (dolci di badia)': ['d-muccunetti-di-mazzara-del-vallo-vedi-boc-alcamo'],
+      'Pasticceria Maria Grammatico': ['d-cassata-ericina-tp']}
+def ruolo_di(t):
+    if any(x in t for x in ('azienda agricola', 'agriturismo', 'vignaiolo', 'cantina', 'masseria')): return 'coltiva'
+    if any(x in t for x in ('pasticceria', 'dolceria', 'cioccolateria', 'panificio', 'pastificio', 'frantoio', 'confetteria', 'focacceria')): return 'trasforma'
+    return 'vende'
+for l in (RAW.parent / 'web2_raw.txt').read_text().splitlines():
+    if not l.strip() or l.startswith('#'): continue
+    n, tipo, com, fo, u = l.split('|')
+    pk = chiave.get(slug(com))
+    if not pk: manca.add(com); continue
+    k = 'sf-' + slug(n) + '-' + pk
+    p = prod.setdefault(k, {'n': n, 'r': ruolo_di(tipo), 'paese': pk, 'fa': [], 'liv': 'Segnalato', 'seg': [], 'tipo': tipo})
+    if [fo, u] not in p['seg']: p['seg'].append([fo, u])
+    # Bonajuto non aderisce all'IGP: niente collegamento al Cioccolato di Modica IGP
+    for vk in FA.get(n, []) + ([] if n == 'Antica Dolceria Bonajuto' else FA.get(tipo + '@' + com, [])):
+        if vk in d['voci'] and vk not in p['fa']: p['fa'].append(vk)
 d['produttori'].update(prod)
 d['nota'] = ('Testi provvisori da verificare. Produttori: per ora quelli segnalati dalle schede dei presìdi Slow Food, '
              'non ancora visitati da noi.')
