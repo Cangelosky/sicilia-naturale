@@ -1285,10 +1285,13 @@ abbr.gl:focus-visible{outline:2px solid #E8761A;border-radius:3px}
   .ap5:not(.sl5) .apc{margin-top:10px}
   /* due metà: testo al centro della metà sinistra, mappa al centro della destra; stesso spazio ai bordi e in mezzo */
   .sh5 .ap5:not(.sl5){--g:clamp(40px,3.5vw,64px);padding:48px var(--g)!important;align-items:center;justify-content:center;gap:var(--g)}
-  .ap5:not(.sl5) .apt{flex:1 1 auto;width:auto;max-width:none}
+  .ap5:not(.sl5) .apt{flex:1 1 0;min-width:0;width:auto;max-width:none}
   .ap5:not(.sl5) .lead{max-width:60ch}
   .ap5:not(.sl5) .apm{width:min(544px,38vw);align-self:center;margin:0;flex:none;right:auto;top:auto}
-  .tes5.fl{display:block;position:static;margin-top:30px;padding:0}
+  .sh5 .ap5:not(.sl5){flex-wrap:wrap;row-gap:30px}
+  .tes5.fl{display:block;position:relative;z-index:3;margin:0;padding:0;flex:0 0 100%}
+  .tes5.fl .tes5g{grid-template-columns:repeat(5,minmax(0,128px));justify-content:center}
+  .sl5 .tes5g{grid-template-columns:repeat(5,minmax(0,112px));justify-content:center}
   .tes5.fl .sz.on .szb i{animation:none;width:100%}
 }
 </style>

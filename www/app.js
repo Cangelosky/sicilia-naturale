@@ -3035,12 +3035,12 @@ function filtroTemi() {
   return `<nav class="temi" aria-label="Sezioni del sito">${SEZ === 'home' ? '<p class="temil">Cinque sezioni, un solo patrimonio. Da dove vuoi partire?</p>' : ''}<div class="temib"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</div></nav>`;
 }
 // scheda della sezione, come sulla mappa: col mouse si apre passandoci sopra; sul telefono, nella home, il primo tocco la apre e il secondo entra
-const tipSez = (b, x, y) => { const k = b.dataset.tema, z = SEZT[k]; if (!z) return false;
-  const tocco = !fineP;
-  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d)}</span>${tipHint(PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
-  if (tocco) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
+const tipSez = (b, x, y) => { const k = b.dataset.tema || b.dataset.k, z = SEZT[k]; if (!z) return false;
+  const tocco = !fineP, anteprima = b.dataset.go != null && !b.classList.contains('on'); // tessera della home non accesa: il clic la mostra nella foto
+  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d)}</span>${tipHint(anteprima ? 'Clicca per vederla nella foto, poi clicca ancora per entrare' : PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
+  if (tocco || b.classList.contains('sz')) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
   TIP.dataset.k = 'sez:' + k; return true; };
-document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema]'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi')) tipNascondi(); });
+document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema], .sz'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi, .sz')) tipNascondi(); });
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-tema],header h1.marchio');
   if (!b) { if (String(TIP.dataset.k).startsWith('sez:')) tipNascondi(); return; }
@@ -3091,7 +3091,7 @@ async function genHome(fo) {
         <div class="apt"><p class="kick5"><i></i>${x.t}${PRONTI.includes(k) ? '' : ' · in preparazione'}</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p>
           ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
       <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
-      <div class="tes5"><p class="tes5t">Cinque sezioni, un solo patrimonio. <b>Tocca per scoprirle.</b></p>
+      <div class="tes5"><p class="tes5t">Cinque sezioni, un solo patrimonio. <b>${fineP ? 'Clicca' : 'Tocca'} per scoprirle.</b></p>
         <div class="tes5g" role="tablist" aria-label="Le cinque sezioni">${sl.map(([k, x], i) => `<button class="sz${i === 0 ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-go="${i}" data-k="${k}" role="tab" aria-selected="${i === 0}" style="--tc:${TEMA[k][1]}"><span class="szf" style="background-image:url('illustrazioni/${k}.svg')"></span><span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>
     </section>
     <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
@@ -3134,8 +3134,10 @@ function tessereSez(att) {
 }
 function componiAp5() {
   if (isApp) return; const sec = $('cat').querySelector('.ap5:not(.sl5)'), apt = sec && sec.querySelector('.apt'); if (!apt) return;
-  if (!apt.querySelector('.tes5')) apt.insertAdjacentHTML('beforeend', tessereSez(SEZ));
-  if (innerWidth > 860) { sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
+  let ts = sec.querySelector('.tes5'); if (!ts) { apt.insertAdjacentHTML('beforeend', tessereSez(SEZ)); ts = apt.querySelector('.tes5'); }
+  // sul computer le tessere stanno in una riga sotto le due colonne, sul telefono dentro la foto sotto il testo
+  if (innerWidth > 860) { if (ts.parentNode !== sec) sec.appendChild(ts); sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
+  if (ts.parentNode !== apt) apt.appendChild(ts);
   const nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
   const schermo = innerHeight - (sec.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10, h = apt.offsetHeight;
   const min = h + 48, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h) / 2);
