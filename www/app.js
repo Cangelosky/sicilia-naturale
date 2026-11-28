@@ -2302,6 +2302,7 @@ function racconto5(v) {
   if (v.feste && v.feste.length) out.push(`Si prepara per ${elencoE(v.feste.map(f => D.feste[f].n))}.`);
   else if (v.m && v.m.length && v.m.length < 12) { const M = new Set(v.m), ini = [...M].find(m => !M.has(m === 1 ? 12 : m - 1)), fin = [...M].find(m => !M.has(m === 12 ? 1 : m + 1)); if (ini && fin && [...M].length === ((fin - ini + 12) % 12) + 1) out.push(ini === fin ? `Il suo mese è ${MESIL[ini - 1]}.` : `Il suo tempo va da ${MESIL[ini - 1]} a ${MESIL[fin - 1]}.`); }
   if (v.usi.length) out.push(`Lo ritrovi dentro ${elencoE(v.usi.slice(0, 3).map(u => D.voci[u].n))}${v.usi.length > 3 ? ' e altro ancora' : ''}.`);
+  if (v.web) out.push(`${!P.length && v.zona ? `Lo segnalano per ${v.zona}. ` : ''}Lo abbiamo trovato in ${v.fw.length > 1 ? v.fw.length + ' fonti del web' : 'una fonte del web'}: nome e luogo sono un primo indizio, ricetta e storia vanno ancora verificate sui libri.`);
   if (v.elenco && !out.length) out.push(`Uno dei dolci dell'elenco di Oscar Cangelosi${v.nota ? `: ${v.nota}` : ''}.`);
   return out;
 }
@@ -2334,8 +2335,8 @@ function sapVoce(k) {
   const nat = v.paesi ? natVicina(D.paesi[v.paesi[0]].c) : [];
   if (stesso.length) h += `<section class="ns5"><h3>Nello stesso posto</h3><div class="mini5">${stesso.map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b></button>`).join('')}</div></section>`;
   if (nat.length) h += `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>`;
-  const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : []))].map(f => D.fonti[f]).filter(Boolean);
-  h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
+  const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : [], v.fw || []))].map(f => D.fonti[f]).filter(Boolean);
+  h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => f.web ? `<a href="${esc(f.u[0])}" target="_blank" rel="noopener">${esc(f.a)}</a>` : esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
   if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
     if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/800px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
@@ -2361,7 +2362,7 @@ function sapPaese(k) {
   const prod = Object.values(D.produttori).filter(x => x.paese === k), fe = Object.entries(D.feste).filter(([, f]) => f.paesi.includes(k)), nat = natVicina(p.c);
   const dol = voci.filter(v => v.t === 'dolce').length, dop = voci.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')), pat = voci.filter(v => v.pat).length;
   const nC = {}; for (const v of Object.values(D.voci)) for (const q of (v.paesi || [])) nC[q] = (nC[q] || 0) + 1;
-  const inProv = Object.entries(D.paesi).filter(([, x]) => x.pv === p.pv && nC[x]).map(([q]) => q);
+  const inProv = Object.entries(D.paesi).filter(([q, x]) => x.pv === p.pv && nC[q]).map(([q]) => q);
   const rk = Object.keys(D.paesi).filter(q => D.paesi[q].pv === p.pv).sort((a, b) => (nC[b] || 0) - (nC[a] || 0)).indexOf(k) + 1;
   const vicini = Object.entries(D.paesi).filter(([q]) => q !== k && nC[q]).map(([q, x]) => [q, hav(p.c, x.c)]).sort((a, b) => a[1] - b[1]).slice(0, 5);
   const top = voci.slice().sort((a, b) => ((b.ric || []).length + !!b.fo * 2 + !!b.wk) - ((a.ric || []).length + !!a.fo * 2 + !!a.wk));
@@ -2434,7 +2435,7 @@ function sapCatalogo() {
   const conta = k => k === 'tutto' ? tutti.length : k === 'prod' ? Object.keys(D.produttori).length : tutti.filter(v => (F.k = k, okK(v))).length;
   const kk = F.k, cat = [['tutto', 'Tutto'], ...GUSTI.map(g => [g[0], g[1]]), ['ingr', 'Ingredienti'], ['prod', 'Produttori']];
   const sel = (id, val, opts, vuoto) => `<select class="tendina" id="${id}"><option value="">${vuoto}</option>${opts.map(([k, n]) => `<option value="${k}"${val === k ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
-  const card = v => tessera(v, [(v.ric || []).join(', '), v.paesi ? nomiPaesi(v) : v.prov ? (v.prov.length === 9 ? 'tutta la Sicilia' : 'provincia di ' + v.prov.map(x => PROVN[x]).join(', ')) : '', v.fam && v.fam !== 'Altri dolci' ? v.fam : ''].filter(Boolean).join(', ').slice(0, 110));
+  const card = v => tessera(v, [(v.ric || []).join(', '), v.paesi ? nomiPaesi(v) : v.prov ? (v.prov.length === 9 ? 'tutta la Sicilia' : 'provincia di ' + v.prov.map(x => PROVN[x]).join(', ')) : v.zona || '', v.fam && v.fam !== 'Altri dolci' ? v.fam : '', v.web ? 'da verificare' : ''].filter(Boolean).join(', ').slice(0, 110));
   const cardP = p => `<button class="card prodc" data-sc="${p.k}"><span class="ph" style="color:${RUOLO[p.r][2]}">${ico(RUOLO[p.r][1], 'phi')}</span><span class="tx"><b class="nc">${esc(p.n)}</b><small>${esc(RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n)}</small><span class="tag">${esc(p.liv)}</span></span></button>`;
   const fresh = $('cat').dataset.v !== 'sap-cat';
   if (fresh) {
