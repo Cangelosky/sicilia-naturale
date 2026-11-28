@@ -2476,6 +2476,7 @@ const SAGRE = () => SAP.sagre && SAP.sagre.eventi ? Promise.resolve(SAP.sagre) :
 function sagreDi(paesi, nome) { const oi = new Date().toISOString().slice(0, 10), w = norm(nome || '').split(/\s+/).filter(x => x.length > 4);
   return Promise.resolve(SAGRE()).then(sg => { SAP.sagre = sg; return (sg.eventi || []).filter(e => e.d[e.d.length - 1] >= oi && e.t !== 'presepe' && ((e.p && paesi.includes(e.p)) || (w.length && w.some(x => norm(e.n).includes(x))))); }); }
 function eroe5(id, img, cap) { return `<div class="eroe5" id="${id}"${img ? ` style="background-image:url('${img}')"` : ''}></div>${cap ? `<p class="cap5" id="${id}c">${cap}</p>` : `<p class="cap5" id="${id}c"></p>`}`; }
+const LIBRI = () => SAP.L || (SAP.L = fetch('data/libri.json').then(r => r.json()).catch(() => null));
 function sapVoce(k) {
   const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez(''); $('sheet').classList.add('narr');
   const g = GUSTO[catDi(v)], cat = g ? g[1] : SAPT[v.t][0];
@@ -2503,11 +2504,14 @@ function sapVoce(k) {
   if (nat.length) h += `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>`;
   const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : [], v.fw || []))].map(f => D.fonti[f]).filter(Boolean);
   if (v.sfu && !fonti.some(f => f.u && f.u[0] === v.sfu)) fonti.push({ a: 'scheda del presidio Slow Food', web: true, u: [v.sfu] });
+  h += '<div id="slib"></div>';
   h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => f.web ? `<a href="${esc(f.u[0])}" target="_blank" rel="noopener">${esc(f.a)}</a>` : esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
   if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
     if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/960px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
     else sapImgV(k).then(r => { if (r) metti(r.u, `${esc(r.a ? r.a + ', ' : '')}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a>`); }); }
+  if (!isApp) LIBRI().then(L => { const x = L && L.v[k]; if (!x || cur !== 'SAP:' + k || !$('slib')) return;
+    $('slib').innerHTML = `<section class="ns5 lib5"><h3>Nei libri</h3><ul>${x.map(([b, p]) => { const l = L.libri[b]; return `<li><b><i>${esc(l[0])}</i>${l[1] ? ', ' + esc(l[1]) : ''}</b><span>${p.includes(',') ? 'pagine' : 'pagina'} ${esc(p)}</span></li>`; }).join('')}</ul><p class="note">Dagli indici dei libri della biblioteca di Oscar: solo titolo e pagina, la ricetta è nel libro.</p></section>`; });
   sagreDi(v.paesi || [], v.n).then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Da segnare in calendario</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}</small></span></button>`).join('')}</section>`; });
   if (v.paesi && vista === 'mappa' && !SAP.home) sapVola(D.paesi[v.paesi[0]].c, 9);
 }
