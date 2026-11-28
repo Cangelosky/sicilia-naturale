@@ -1,6 +1,6 @@
 """Cataloghi delle sezioni Micologia e Botanica -> www/data/funghi.json, www/data/piante.json.
 Micologia: specie di Micelio (sito Inzenga, data/raw/micelio/specie.json) segnalate in Sicilia su GBIF; foto di Micelio
-(data/raw/micelio/foto.json), mostrate dal sito Inzenga senza copiarle.
+(data/raw/micelio/foto.json); le foto sono copiate nel sito, in www/foto/funghi.
 Botanica: piante dei formulari Natura 2000 dei siti siciliani (www/data/specie.json + schede.json), più le specie
 degli alberi monumentali e dei boschi da seme (schede.json). Uso: dopo costruisci_dati.py e costruisci_sif.py."""
 import json, re, collections

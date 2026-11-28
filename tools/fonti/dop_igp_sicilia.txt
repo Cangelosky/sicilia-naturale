@@ -1,0 +1,38 @@
+# DOP e IGP della Sicilia (escluso vino): nome | sigla | settore | zona indicativa (da verificare sui disciplinari)
+# Fonte elenco: Regione Siciliana, SRG 10 All. 5 "Elenco prodotti agricoli e alimentari rientranti nei regimi di qualità" (marzo 2026)
+Monti Iblei|DOP|olio|RG, SR, CT
+Val di Mazara|DOP|olio|PA, AG
+Valli Trapanesi|DOP|olio|TP
+Monte Etna|DOP|olio|CT, EN, ME
+Valle del Belìce|DOP|olio|Castelvetrano, Campobello di Mazara, Partanna, Poggioreale, Salaparuta, Santa Ninfa
+Valdemone|DOP|olio|ME
+Sicilia|IGP|olio|Tutte
+Arancia Rossa di Sicilia|IGP|ortofrutta|CT, EN, SR
+Cappero di Pantelleria|IGP|ortofrutta|Pantelleria
+Nocellara del Belice|DOP|ortofrutta|Castelvetrano, Campobello di Mazara, Partanna
+Uva da tavola di Canicattì|IGP|ortofrutta|Canicattì, Castrofilippo, Naro, Delia, Sommatino
+Pomodoro di Pachino|IGP|ortofrutta|Pachino, Portopalo di Capo Passero, Noto, Ispica
+Uva da tavola di Mazzarrone|IGP|ortofrutta|Mazzarrone, Caltagirone, Licodia Eubea, Acate, Chiaramonte Gulfi
+Ficodindia dell'Etna|DOP|ortofrutta|Bronte, Adrano, Biancavilla, Belpasso, Camporotondo Etneo, Paternò, Santa Maria di Licodia, Ragalna
+Limone Interdonato Messina|IGP|ortofrutta|Messina, Nizza di Sicilia, Alì Terme, Furci Siculo, Santa Teresa di Riva
+Pistacchio Verde di Bronte|DOP|ortofrutta|Bronte, Adrano, Biancavilla
+Pesca di Leonforte|IGP|ortofrutta|Leonforte, Enna, Calascibetta, Agira, Assoro
+Arancia di Ribera|DOP|ortofrutta|Ribera, Sciacca, Caltabellotta, Menfi, Burgio, Calamonaci, Villafranca Sicula
+Limone di Siracusa|IGP|ortofrutta|Siracusa, Avola, Noto, Melilli, Augusta, Floridia, Priolo Gargallo, Rosolini
+Carota Novella di Ispica|IGP|ortofrutta|Ispica, Pachino, Noto, Rosolini, Modica
+Pesca di Bivona|IGP|ortofrutta|Bivona, Alessandria della Rocca, Santo Stefano Quisquina
+Ciliegia dell'Etna|DOP|ortofrutta|Adrano, Bronte, Giarre, Milo, Zafferana Etnea, Trecastagni, Pedara, Nicolosi, Mascali, Castiglione di Sicilia
+Ficodindia di San Cono|DOP|ortofrutta|San Cono, San Michele di Ganzaria, Piazza Armerina, Mazzarino
+Pistacchio di Raffadali|DOP|ortofrutta|Raffadali, Joppolo Giancaxio, Santa Elisabetta, Agrigento, Aragona
+Cappero delle Isole Eolie|DOP|ortofrutta|Lipari, Santa Marina Salina, Malfa, Leni
+Limone dell'Etna|IGP|ortofrutta|Acireale, Giarre, Riposto, Mascali, Aci Castello, Aci Catena, Calatabiano, Fiumefreddo di Sicilia
+Pesca di Delia|IGP|ortofrutta|Delia, Sommatino, Caltanissetta, Riesi, Canicattì
+Cioccolato di Modica|IGP|dolci|Modica
+Sale Marino di Trapani|IGP|altri|Trapani, Paceco, Marsala
+Salame Sant'Angelo|IGP|salumi|Sant'Angelo di Brolo
+Pagnotta del Dittaino|DOP|pane|Enna, Assoro, Leonforte, Agira, Catenanuova, Centuripe, Nissoria, Regalbuto
+Pecorino Siciliano|DOP|formaggi|Tutte
+Ragusano|DOP|formaggi|RG, Noto, Palazzolo Acreide, Rosolini
+Piacentinu Ennese|DOP|formaggi|Enna, Aidone, Assoro, Barrafranca, Calascibetta, Piazza Armerina, Pietraperzia, Valguarnera Caropepe, Villarosa
+Vastedda della Valle del Belìce|DOP|formaggi|Castelvetrano, Partanna, Poggioreale, Salaparuta, Santa Ninfa, Gibellina, Menfi, Montevago, Santa Margherita di Belice, Sambuca di Sicilia, Contessa Entellina
+Provola dei Nebrodi|DOP|formaggi|Floresta, Tortorici, Cesarò, San Fratello, Ucria, Galati Mamertino, Longi, Randazzo, Bronte, Maniace

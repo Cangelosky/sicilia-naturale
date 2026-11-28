@@ -1,0 +1,51 @@
+# fonte | locale | tipo | comune
+alleanza|Agorà Restaurant|ristorante|Castelvetrano
+alleanza|La Poesia del Cibo|home restaurant|Castelvetrano
+alleanza|La Tovaglia Volante Arte e Cucina|ristorante|Messina
+alleanza|Frangipane|ristorante|Milazzo
+alleanza|Non Solo Cibus|ristorante|Messina
+alleanza|Sine Bar a Vin|enoteca con cucina|San Filippo del Mela
+alleanza|Trattoria La Carruba 1980|trattoria|Sant'Agata di Militello
+alleanza|L'Osteria di Cantine Nicosia|osteria|Trecastagni
+alleanza|Occhiovivo Bistrot|ristorante|Palermo
+alleanza|Oasi Osteria del Mare|osteria|Licata
+alleanza|La Calandra Ristorante|ristorante|Marsala
+alleanza|Frumento|ristorante|Acireale
+alleanza|OraSea|ristorante|Castelvetrano
+alleanza|Osteria del Maiale Nero (Fattoria Borrello)|osteria|Raccuja
+alleanza|Palmento Martinella|ristorante|Linguaglossa
+alleanza|Cucina e vino|ristorante|Ragusa
+alleanza|Il Giardino del Sole|ristorante|Carlentini
+alleanza|Luigi Pastificio e Cucina|pastificio con cucina|Messina
+alleanza|In un Angolo di Mondo|ristorante|Acireale
+alleanza|Totò passami l'olio|ristorante|Milazzo
+alleanza|Balice|ristorante|Milazzo
+alleanza|Agriturismo Lago Verde|agriturismo|Alia
+alleanza|Ristorante E Pulera|ristorante|Lipari
+alleanza|Panificio Francesco Arena|panificio|Messina
+alleanza|Piano B|ristorante|Siracusa
+alleanza|Trattoria del Gallo|trattoria|Palazzolo Acreide
+alleanza|Agriturismo Case Damma|agriturismo|Siracusa
+alleanza|Agriturismo Giannavì|agriturismo|Palazzolo Acreide
+alleanza|Latteria Mamma Iabica|latteria con cucina|Siracusa
+alleanza|Kasbah|ristorante|Lipari
+alleanza|Le Chat Noir|ristorante|Cefalù
+alleanza|Ginger People&Food|ristorante|Agrigento
+alleanza|Casale Drinzi|agriturismo|Collesano
+alleanza|Casa & Putia|ristorante|Messina
+alleanza|Ristorante Le Macine|ristorante|Lipari
+alleanza|Mé Cumpari Turiddu|trattoria|Catania
+alleanza|Trattoria Da Luciana|trattoria|San Piero Patti
+alleanza|Lo Scrigno dei Sapori|ristorante|Palazzolo Acreide
+alleanza|Agriturismo Vultaggio|agriturismo|Trapani
+alleanza|Hostaria del Vicolo|osteria|Sciacca
+alleanza|Trattoria Cantina Siciliana|trattoria|Trapani
+alleanza|Trattoria 4 Archi|trattoria|Milo
+alleanza|Andrea Sapori Montani|ristorante|Palazzolo Acreide
+chiocciola|Nangalarruni|osteria|Castelbuono
+chiocciola|Arrhais|ristorante|Pollina
+chiocciola|San Giorgio e il Drago|osteria|Randazzo
+chiocciola|U Sulicce'nti|osteria|Rosolini
+chiocciola|Fratelli Borrello|trattoria|Sinagra
+chiocciola|Corona Trattoria|trattoria|Palermo
+chiocciola|Caupona Taverna di Sicilia|osteria|Trapani

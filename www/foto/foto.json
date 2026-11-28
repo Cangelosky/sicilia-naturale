@@ -1,0 +1,243 @@
+[
+{
+"f": "arancia-bionda-di-scillato-1",
+"t": "Arance bionde di Scillato",
+"v": "pat-arancia-biondo-di-scillato",
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "arrostita",
+"t": "La carne sulla brace, all'aperto",
+"v": null,
+"g": "salumi"
+},
+{
+"f": "backcassatelle",
+"t": "Cassatelle di pasta reale e frutta candita",
+"v": "d-cassatella-fritta",
+"g": "dolci",
+"h": 1
+},
+{
+"f": "backmandorle",
+"t": "Mandorle nel cesto",
+"v": "mandorla",
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "backolive",
+"t": "Olive appena raccolte",
+"v": null,
+"g": "conserve e condimenti"
+},
+{
+"f": "backpignoccata",
+"t": "Pignoccata con il miele",
+"v": "d-pignoccata-pignolata-pagnuccata",
+"g": "dolci"
+},
+{
+"f": "backsale",
+"t": "Sale marino sulle tegole",
+"v": "dop-sale-marino-di-trapani",
+"g": "conserve e condimenti",
+"h": 1
+},
+{
+"f": "caciotta-affumicata-2",
+"t": "Caciotta affumicata",
+"v": "pat-caciotta-degli-elimi",
+"g": "formaggi"
+},
+{
+"f": "capperi-e-cucunci",
+"t": "Capperi e cucunci",
+"v": "pat-capperi-e-cucunci",
+"g": "conserve e condimenti"
+},
+{
+"f": "capperi-e-sale",
+"t": "Capperi sotto sale",
+"v": "pat-capperi-chiappari",
+"g": "conserve e condimenti"
+},
+{
+"f": "carne-per-ragu",
+"t": "La carne per il ragù della domenica",
+"v": null,
+"g": "salumi"
+},
+{
+"f": "cavolfiore",
+"t": "Cavolfiore nell'orto",
+"v": "pat-cavolfiore-violetto-natalino",
+"g": "frutta e ortaggi"
+},
+{
+"f": "fagiolina",
+"t": "Fagiolini appena colti",
+"v": null,
+"g": "frutta e ortaggi"
+},
+{
+"f": "fichi-d-india",
+"t": "Fichi d'india",
+"v": "dop-ficodindia-dell-etna",
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "finocchietto-2",
+"t": "Un mazzo di finocchietto selvatico",
+"v": null,
+"g": "frutta e ortaggi"
+},
+{
+"f": "finocchietto",
+"t": "Finocchietto selvatico",
+"v": null,
+"g": "frutta e ortaggi"
+},
+{
+"f": "fiore-di-cappero",
+"t": "Il fiore del cappero",
+"v": "dop-cappero-di-pantelleria",
+"g": "conserve e condimenti",
+"h": 1
+},
+{
+"f": "granita-e-brioche-con-tuppo",
+"t": "Granita di gelsi e brioche col tuppo",
+"v": "pat-granita-di-gelsi-neri",
+"g": "dolci"
+},
+{
+"f": "limone-verdello",
+"t": "Limoni verdelli",
+"v": "pat-limone-verdello",
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "mandarini-in-cassa",
+"t": "Mandarini nella cassetta",
+"v": "pat-mandarino-tardivo-di-ciaculli",
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "noci-nel-palmo",
+"t": "Noci nel palmo della mano",
+"v": null,
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "olive-nel-palmo-passulunara",
+"t": "Olive passulunare nel palmo",
+"v": "pat-oliva-nera-passulunara",
+"g": "conserve e condimenti",
+"h": 1
+},
+{
+"f": "olive-schiacciate-condite",
+"t": "Olive schiacciate e condite",
+"v": null,
+"g": "conserve e condimenti"
+},
+{
+"f": "pane-a-pasta-dura",
+"t": "Pane decorato a pasta dura",
+"v": "pat-pane-di-san-giuseppe",
+"g": "pane e pasta"
+},
+{
+"f": "pane-di-grano-duro",
+"t": "Pane di grano duro",
+"v": null,
+"g": "pane e pasta"
+},
+{
+"f": "pasta-con-tenerumi",
+"t": "Pasta con i tenerumi",
+"v": null,
+"g": "gastronomia"
+},
+{
+"f": "pasta-ricci",
+"t": "Spaghetti ai ricci di mare",
+"v": null,
+"g": "pesce"
+},
+{
+"f": "pesce-pulito",
+"t": "Pesce del giorno",
+"v": null,
+"g": "pesce"
+},
+{
+"f": "pisellini",
+"t": "Piselli freschi",
+"v": null,
+"g": "frutta e ortaggi"
+},
+{
+"f": "ricotta-di-pecora-in-fascetta",
+"t": "Ricotta di pecora nella fascella",
+"v": "ricotta",
+"g": "formaggi"
+},
+{
+"f": "sparacello",
+"t": "Sparacello, il broccolo palermitano",
+"v": "pat-cavolo-broccolo-o-sparacello-palermitano",
+"g": "frutta e ortaggi"
+},
+{
+"f": "susina-santu-vitu",
+"t": "Susine di San Vito",
+"v": null,
+"g": "frutta e ortaggi",
+"h": 1
+},
+{
+"f": "timo-mazzetto",
+"t": "Un mazzetto di timo",
+"v": null,
+"g": "miele",
+"h": 1
+},
+{
+"f": "tuma-con-siero-nel-piatto",
+"t": "Tuma con il suo siero",
+"v": "pat-picurinu-tuma-primosale-secondo-sale-stagionat",
+"g": "formaggi"
+},
+{
+"f": "tuma-nel-suo-siero",
+"t": "Tuma fresca",
+"v": "pat-picurinu-tuma-primosale-secondo-sale-stagionat",
+"g": "formaggi"
+},
+{
+"f": "tuma-nella-pentola",
+"t": "La tuma nella pentola",
+"v": null,
+"g": "formaggi"
+},
+{
+"f": "vigna-con-uva-1",
+"t": "La vigna carica d'uva",
+"v": "dop-uva-da-tavola-di-canicatti",
+"g": "vini",
+"h": 1
+},
+{
+"f": "zucca-rossa-e-centenaria",
+"t": "Zucca rossa e zucchina centenaria",
+"v": null,
+"g": "frutta e ortaggi"
+}
+]

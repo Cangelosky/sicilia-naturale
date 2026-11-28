@@ -7,7 +7,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '
 const T = (it, en) => LANG === 'it' ? it : en;
 // nota di proprietà, in fondo alle pagine e ai Livelli
 let UPD = '';  // stato degli aggiornamenti automatici, mostrato nel piè di pagina
-const COPY = () => `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
+const COPY = () => (() => { try { return altreSez(); } catch (e) { return ''; } })() + (isApp ? '' : '<p class="serv5"><button data-pag="glossario">Glossario</button><button data-pag="metodo">Metodo e fonti</button></p>') + `<p class="copy">© ${new Date().getFullYear()} Oscar Cangelosi · Sicilia Naturale · ${T('versione', 'version')} ${(window.SN_VER || {}).v || ''}${UPD ? ' (' + esc(UPD) + ')' : ''}. ${T('Tutti i diritti riservati su app, testi, grafica e progetto. Dati e immagini di terzi appartengono ai rispettivi titolari e sono usati secondo le loro licenze.', 'All rights reserved on app, texts, design and project. Third-party data and images belong to their owners and are used under their licences.')}</p>`;
 const fmt = n => Math.round(n).toLocaleString(LANG === 'it' ? 'it-IT' : 'en-GB');
 let LANG = 'it';
 try { if (localStorage.getItem('sn_lang') === 'en') LANG = 'en'; } catch (e) {}
@@ -65,14 +65,14 @@ const TX = {
     DIR: ['nord', 'nord-est', 'est', 'sud-est', 'sud', 'sud-ovest', 'ovest', 'nord-ovest'],
     terFonte: 'Quota: modello del terreno Copernicus 90 m (Open-Meteo). Geologia: Carta Litologica d’Italia 1:100.000 (ISPRA, CC BY 4.0).',
     piovoso: 'pioggia', ventoso: 'vento forte', caldo: 'caldo', freddo: 'freddo', fango: 'terreno bagnato', temporale: 'temporali', ok: 'buono',
-    tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
+    tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
     tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante vascolari della Sicilia: quelle dei siti Natura 2000, degli alberi monumentali e dei boschi da seme, più tutte le altre segnalate in Sicilia su GBIF. Tocca una specie per la scheda e i luoghi dove cresce.`, famiglia: 'Famiglia', tutteFam: 'Tutte le famiglie', inN2k: 'Nei siti Natura 2000', torna: 'Torna a',
     cercaSp: 'Cerca per nome comune o scientifico, genere, famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
     GF: { aga: 'A lamelle', bol: 'Boleti', rus: 'Russule e lattari', pol: 'Polipori e funghi del legno', can: 'Cantarelli, idni e clavarie', pez: 'Spugnole, pezize e tartufi', pal: 'Vesce, geastri e falli', gel: 'Gelatinosi', alt: 'Altri' },
     segn: n => `${fmt(n)} segnalazioni in Sicilia`, nsiti: n => n === 1 ? '1 sito Natura 2000' : `${fmt(n)} siti Natura 2000`,
     dove: 'Dove si trova', vediMappa: 'Vedi sulla mappa dove è stata segnalata', gbifChip: 'Segnalazioni GBIF:',
     nocomm: 'Sicilia Naturale non dà indicazioni sulla commestibilità. Per il consumo rivolgiti sempre a un ispettorato micologico.',
-    fotoMic: 'Foto: Micelio, Associazione Micologica G. Inzenga', gbif: 'Scheda su GBIF',
+    fotoMic: '', gbif: 'Scheda su GBIF',
     G: { P: 'Piante', B: 'Uccelli', I: 'Invertebrati', R: 'Rettili', M: 'Mammiferi', A: 'Anfibi', F: 'Pesci', L: 'Licheni' } },
   en: { cerca: 'Search a forest, park or reserve…', aree: 'Parks and reserves', n2k: 'Natura 2000', tutti: 'All forests', solo: 'Only areas with forests',
     pn: 'National park', pr: 'Regional park', rn: 'Nature reserve', amp: 'Marine protected area', ap: 'Protected area', zsc: 'SAC (Natura 2000)', zps: 'SPA (Natura 2000)', zsczps: 'SAC and SPA (Natura 2000)',
@@ -126,14 +126,14 @@ const TX = {
     DIR: ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'],
     terFonte: 'Elevation: Copernicus 90 m terrain model (Open-Meteo). Geology: Lithological Map of Italy 1:100,000 (ISPRA, CC BY 4.0).',
     piovoso: 'rain', ventoso: 'strong wind', caldo: 'heat', freddo: 'cold', fango: 'wet ground', temporale: 'thunderstorms', ok: 'good',
-    tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
+    tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily (GBIF records). Tap a species for its page, photos and where it was found.`,
     tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} vascular plants of Sicily: those of the Natura 2000 sites, monumental trees and seed stands, plus all others recorded in Sicily on GBIF. Tap a species for its page and the places where it grows.`, famiglia: 'Family', tutteFam: 'All families', inN2k: 'In Natura 2000 sites', torna: 'Back to',
     cercaSp: 'Search by common or scientific name, genus, family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
     GF: { aga: 'Gilled', bol: 'Boletes', rus: 'Russulas and milkcaps', pol: 'Polypores and wood fungi', can: 'Chanterelles, hedgehogs and corals', pez: 'Morels, cups and truffles', pal: 'Puffballs, earthstars and stinkhorns', gel: 'Jelly fungi', alt: 'Others' },
     segn: n => `${fmt(n)} records in Sicily`, nsiti: n => n === 1 ? '1 Natura 2000 site' : `${fmt(n)} Natura 2000 sites`,
     dove: 'Where it grows', vediMappa: 'Show on the map where it was recorded', gbifChip: 'GBIF records:',
     nocomm: 'Sicilia Naturale gives no information on edibility. Always ask a mycological inspectorate before eating any fungus.',
-    fotoMic: 'Photo: Micelio, G. Inzenga Mycological Association', gbif: 'Page on GBIF',
+    fotoMic: '', gbif: 'Page on GBIF',
     G: { P: 'Plants', B: 'Birds', I: 'Invertebrates', R: 'Reptiles', M: 'Mammals', A: 'Amphibians', F: 'Fish', L: 'Lichens' } }
 };
 const BOSCO_EN = { '9180': 'Lime-maple ravine forests', '91AA': 'Downy oak woods', '91B0': 'Narrow-leaved ash woods', '91E0': 'Alder woods', '91M0': 'Turkey oak woods',
@@ -152,13 +152,23 @@ function pack(name) {
     return { idx: JSON.parse(new TextDecoder().decode(new Uint8Array(b, 4, n))), b, o: 4 + n };
   }).catch(e => { delete packs[name]; throw e; }));
 }
+/* sul sito, finché una pagina copre la mappa (inizio, schede, catalogo) i pezzi di mappa non si scaricano:
+   si aspetta che la mappa diventi visibile. Così la prima pagina pesa circa 2 MB invece di 13. */
+// all'avvio la mappa resta ferma finché non si sa quale pagina si apre (1,5 s al massimo)
+let mappaAvvio = !window.Capacitor; setTimeout(() => { mappaAvvio = false; liberaMappa(); }, 1500);
+const mappaCoperta = () => !window.Capacitor && (mappaAvvio || (document.body.classList.contains('cat-on') && !document.body.classList.contains('mm')));
+let attesaMappa = [];
+const liberaMappa = () => { if (attesaMappa.length && !mappaCoperta()) attesaMappa.splice(0).forEach(f => f()); };
+new MutationObserver(liberaMappa).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+const mappaVisibile = () => mappaCoperta() ? new Promise(r => attesaMappa.push(r)) : null;
 maplibregl.addProtocol('loc', async params => {
   const k = decodeURIComponent(params.url.slice(6)); // v/z/x/y, d/z/x/y, g/font/range
   const p = k.split('/');
+  { const w = mappaVisibile(); if (w) await w; }
   let name = 'base';
   if (p[0] === 'f') { const s = +p[1] - 9; name = 'cf_' + (p[2] >> s) + '_' + (p[3] >> s); }
   else if (p[0] === 's') { const s = +p[1] - 9; name = 'st_' + (p[2] >> s) + '_' + (p[3] >> s); }
-  else if (p[0] !== 'g') { const z = +p[1]; if (z > 7) { const s = z - 7; name = 'c_' + (p[2] >> s) + '_' + (p[3] >> s); } }
+  else if (p[0] !== 'g') { const z = +p[1]; if (z === 8) name = 'm_' + (p[2] >> 1) + '_' + (p[3] >> 1); else if (z === 9) name = 'c8_' + (p[2] >> 1) + '_' + (p[3] >> 1); else if (z > 9) { const s = z - 9; name = 'c9_' + (p[2] >> s) + '_' + (p[3] >> s); } } // pacchetti piccoli per zoom: tools/ridividi_tiles.py
   let P; try { P = await pack(name); } catch (e) { if (p[0] !== 'd') return { data: new ArrayBuffer(0) }; throw e; }
   const e = P.idx[k];
   if (!e) { if (p[0] === 'd') throw new Error('no tile'); return { data: new ArrayBuffer(0) }; }
@@ -267,6 +277,19 @@ const CAT = Promise.all(['funghi', 'piante', 'nomi'].map(n => fetch('data/' + n 
 // nome comune (italiano; in siciliano se c'è) di una specie del catalogo
 const nomeC = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? (LANG === 'it' ? n[0] : n[0]) : ''; };
 const nomeScn = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? n[1] : ''; };
+/* Bollino di pericolo (deciso da Oscar il 28/11/2026): si segnalano SOLO le specie velenose o mortali, mai quelle commestibili.
+   Elenco prudente, dalla letteratura micologica italiana; l'assenza del bollino non vuol dire che una specie sia commestibile. */
+const PERICOLO = {
+  mortale: ['Amanita phalloides', 'Amanita verna', 'Lepiota subincarnata', 'Lepiota castanea', 'Galerina marginata'],
+  velenoso: ['Amanita pantherina', 'Amanita muscaria', 'Amanita gemmata', 'Amanita proxima', 'Rubroboletus satanas', 'Rubroboletus legaliae', 'Rubroboletus rhodoxanthus',
+    'Entoloma sinuatum', 'Omphalotus olearius', 'Agaricus xanthodermus', 'Clitocybe rivulosa', 'Clitocybe phyllophila', 'Tricholoma equestre', 'Hypholoma fasciculare',
+    'Chlorophyllum molybdites', 'Scleroderma verrucosum', 'Mycena pura'],
+  generi: { Inocybe: 'velenoso' }
+};
+const pericolo = (tipo, i) => { if (tipo !== 'funghi' || !FUN) return ''; const n = FUN.s[i][0];
+  return PERICOLO.mortale.includes(n) ? 'mortale' : PERICOLO.velenoso.includes(n) ? 'velenoso' : PERICOLO.generi[n.split(' ')[0]] || ''; };
+const PERN = { mortale: ['Mortale', 'Deadly'], velenoso: ['Velenoso', 'Poisonous'] };
+const bollino = p => p ? `<span class="tag peric ${p}">${ico('alert-triangle', 'xs')}${T(...PERN[p])}</span>` : '';
 
 map.on('load', () => D.then(() => {
   map.addSource('z', { type: 'geojson', data: GJ, promoteId: 'id' });
@@ -412,7 +435,8 @@ function testi() {
   for (const b of document.querySelectorAll('#sez button')) { b.querySelector('span').textContent = t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[b.dataset.v]); if (!b.querySelector('svg')) b.insertAdjacentHTML('afterbegin', ico(b.dataset.ic)); }
   if (vista === 'funghi' || vista === 'piante') catalogo(true); else if (vista === 'meteo') meteo(); else if (vista === 'escursioni' && window.escursioni) escursioni();
   D.then(() => { if ($('liv').classList.contains('open')) pannello(); legenda(); });
-  if (cur) apri(cur, false);
+  if (sapOn()) { sapNav(); $('q').placeholder = 'Cerca un dolce, un prodotto, un paese'; }
+  if (cur && !String(cur).startsWith('SAP:')) apri(cur, false);
 }
 function legenda() {
   let h = [['#2d6a4f', 'legA', 1, ON.aree], ['#1d6fa5', 'legM', 1, ON.aree], ['#2f7ea8', 'legZ', 0, ON.n2k], ['#7a5ea8', 'legP', 0, ON.n2k]].filter(x => x[3]).map(([c, k, f]) => `<div><i style="background:${c}${f ? '55' : '22'};border:1.5px ${k === 'legP' ? 'dashed' : 'solid'} ${c}"></i>${t(k)}</div>`).join('');
@@ -427,30 +451,43 @@ $('l-it').onclick = () => setLang('it'); $('l-en').onclick = () => setLang('en')
 
 /* ---------- ricerca */
 const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+// confronto tollerante: "porcino" trova anche "porcini", "arancina" anche "arancine"
+const contiene = (n, x) => n.includes(x.length > 4 ? x.slice(0, -1) : x);
 $('q').oninput = () => {
   const v = norm($('q').value.trim()); $('qx').style.display = v ? 'block' : 'none';
   if (v.length < 2) { $('res').style.display = 'none'; return; }
   chiudiLiv();
+  if (sapOn()) return sapCerca(v);
   const w = v.split(/\s+/);
-  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => n.includes(x)); })
+  const r = Object.entries(S).filter(([k, s]) => { const n = norm(s.n + ' ' + k + ' ' + (s.sp || '') + ' ' + (s.vg || '') + ' ' + (s.com || '')); return w.every(x => contiene(n, x)); })
     .sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || b[1].ha - a[1].ha).slice(0, 30);
-  $('res').innerHTML = r.length ? r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
+  // anche le specie (nome comune, siciliano o scientifico): la casella promette "un parco, un sentiero, una specie"
+  const sp = [];
+  if (FUN && PIA && v.length > 2) for (const [tp, D] of [['funghi', FUN], ['piante', PIA]]) D.s.forEach((x, i) => { const k = tp === 'funghi' ? x[7] : x[4]; const n = norm(x[0] + ' ' + (NOMI[k] || []).join(' ')); if (w.every(y => contiene(n, y))) sp.push([tp, i, nomeC(tp, i), x[0], tp === 'funghi' ? x[6] : 0]); });
+  sp.sort((a, b) => (!!b[2] - !!a[2]) || b[4] - a[4]);
+  const rs = r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('')
+    + sp.slice(0, 8).map(([tp, i, c, sc]) => `<button data-spr="${tp}:${i}">${esc(c || sc)}<small>${tp === 'funghi' ? T('Fungo', 'Fungus') : T('Pianta', 'Plant')}${c ? ' · <i>' + esc(sc) + '</i>' : ''}${(p => p ? ' · <b class="peric-t">' + T(...PERN[p]).toLowerCase() + '</b>' : '')(pericolo(tp, i))}</small></button>`).join('');
+  $('res').innerHTML = rs || `<button disabled>${t('nessuno')}</button>`;
   $('res').style.display = 'block';
 };
-$('res').onclick = e => { const b = e.target.closest('button[data-id]'); if (!b) return; $('res').style.display = 'none'; $('q').blur(); apri(b.dataset.id, true); };
+$('res').onclick = e => { const s = e.target.closest('button[data-spr]'); if (s) { $('res').style.display = 'none'; $('q').blur(); const [tp, i] = s.dataset.spr.split(':'); return apriSpecie(tp, +i); }
+  const b = e.target.closest('button[data-id]'); if (!b) return; $('res').style.display = 'none'; $('q').blur(); apri(b.dataset.id, true); };
 $('qx').onclick = () => { $('q').value = ''; $('q').oninput(); $('q').focus(); };
 
 /* ---------- click sulla mappa */
 map.on('click', e => {
   chiudiLiv();
   if (document.body.classList.contains('recon')) return;
+  if (sapOn()) return sapClick(e);
+  if (misto() && TEMI.has('sapori') && map.getLayer('sap-p') && map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ['sap-c', 'sap-p'] }).length) return sapClick(e);
   if (PIAN) return pianClick(e);
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
+    if (po.length && !isApp) { SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaPunto(po[0].properties, po[0].geometry.coordinates); }
     if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small>${gmapsLink(po[0].geometry.coordinates)}<div class="poiph"></div></div>`).addTo(map); fotoPunto(po[0].geometry.coordinates); return; }
     const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r', ...(map.getLayer('prv') && vista === 'escursioni' ? ['prv'] : [])] });
-    if (pr.length) { apriPercorso(pr[0].properties.id); return; }
+    if (pr.length) { if (!isApp) { SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaPercorso(pr[0].properties.id); } apriPercorso(pr[0].properties.id); return; }
   }
   if (document.body.classList.contains('mm')) {
     const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
@@ -462,10 +499,11 @@ map.on('click', e => {
   const fp = map.queryRenderedFeatures(box, { layers: L.filter(l => l === 'am-c' || l === 'bv-p') });
   const f = fp.length ? fp : map.queryRenderedFeatures(e.point, { layers: L });
   const ids = [...new Set(f.map(x => x.layer.id === 'cf-f' ? 'CF:' + x.properties.c : x.properties.id))].filter(k => S[k] || k.startsWith('CF:'));
-  $('res').style.display = 'none';
+  $('res').style.display = 'none'; if (!isApp && typeof sapCarta === 'function') sapCarta();
   punto = e.lngLat;
   if (!ids.length) { cur = null; selez(''); $('sh').innerHTML = `<div><h2>${t('questo')}</h2><small class="note">${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}</small></div><button class="close" aria-label="Chiudi">×</button>`; $('sb').innerHTML = '<div id="ter"></div>'; mostra(); return terreno(e.lngLat); }
-  if (ids.length === 1) { apri(ids[0], false); $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); return terreno(e.lngLat); }
+  if (ids.length === 1 && ids[0].startsWith('CF:') && !isApp) { if (e.originalEvent) SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaBosco(ids[0].slice(3)); }
+  if (ids.length === 1) { if (!ids[0].startsWith('CF:') && !isApp) { if (e.originalEvent) SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return natCarta(ids[0]); } apri(ids[0], false); $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); return terreno(e.lngLat); }
   const rank = k => k.startsWith('CF:') ? 9 : AMB.includes(S[k].t) ? 0 : AREE.includes(S[k].t) ? 1 : 2;
   ids.sort((a, b) => rank(a) - rank(b) || (S[a] && S[b] ? S[a].ha - S[b].ha : 0));
   cur = null; selez('');
@@ -515,24 +553,25 @@ async function terreno(ll) {
 }
 
 /* ---------- scheda zona */
-let cur = null;
+let cur = null, PERC_SEL = null;
 const cls = tp => tp === 'amp' ? 'mare' : tp === 'zps' ? 'zps' : N2K.includes(tp) ? 'n2k' : AMB.includes(tp) ? tp : '';
 const tipoCF = c => (CFN.tipi[c] || [c])[0];
 function selez(k) {
+  $('sheet').classList.remove('narr');
   if (!map.getLayer('sel')) return;
   const tp = S[k] ? S[k].t : '';
   map.setFilter('sel', ['==', ['get', 'id'], AMB.includes(tp) ? '' : k]);
   for (const x of AMB) map.setFilter('sel-' + x, ['==', ['get', 'id'], tp === x ? k : '']);
 }
 function chiudiPercorso() { evidenziaPercorso(null); }
-function mostra() { $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
+function mostra() { if (typeof dopoScheda === 'function') setTimeout(dopoScheda, 0); $('sheet').classList.remove('mini'); $('sheet').classList.add('open'); document.body.classList.add('side'); $('sb').scrollTop = 0; tastoEspandi(); }
 function tastoEspandi() {
   const c = $('sh').querySelector('.close'); if (!c || $('sh').querySelector('.espandi')) return;
   const big = $('sheet').classList.contains('big');
   c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
 }
 $('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; altSheet($('sheet').classList.contains('big') ? 1 : 2); });
-function chiudi() { evidenziaPercorso(null); vediZint(null); if (!PIAN && map.getSource('pian')) disegnaIt([], []); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+function chiudi() { evidenziaPercorso(null); vediZint(null); if (!PIAN && map.getSource('pian')) disegnaIt([], []); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); if (isApp) try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 // schede e pannelli sul telefono: si trascinano dalla maniglia (o dal titolo) per abbassarli, nasconderli o allargarli
 function altezze(el, maniglia, chiudiDelTutto) {
   const stato = () => el.classList.contains('big') ? 2 : el.classList.contains('mini') ? 0 : 1;
@@ -557,14 +596,14 @@ $('sheet').addEventListener('click', e => {
 const COL = { pn: '#1b4332', pr: '#2d6a4f', rn: '#2d6a4f', ap: '#2d6a4f', amp: '#1d6fa5', zsc: '#2f7ea8', zsczps: '#2f7ea8', zps: '#7a5ea8', bv: '#c2571a', am: '#5b3a1a', bs: '#9a7b2f' };
 const colore = k => k.startsWith('CF:') ? (CFC[k.slice(3, 5)] || '#5a8f29') : (COL[S[k].t] || '#2d6a4f');
 const nomiBoschi = (b, n) => b.slice(0, n).map(x => nb(x[0]).toLowerCase());
-const elenco = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + (LANG === 'it' ? ' e ' : ' and ') + a[a.length - 1];
+const elencoE = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + (LANG === 'it' ? ' e ' : ' and ') + a[a.length - 1];
 function sintesi(k) {
   if (k.startsWith('CF:')) { const c = k.slice(3); return esc(CFN.macro[c.slice(0, 2)] || '') + ' · ' + (LANG === 'it' ? 'tipo di bosco della particella' : 'forest type of the stand'); }
   const s = S[k], p = [];
   if (s.t === 'am') return esc([s.vg, s.circ ? fmt(s.circ) + ' cm' : '', s.alt ? fmt(s.alt) + ' m' : ''].filter(Boolean).join(' · '));
   if (s.ha) p.push(fmt(s.ha) + ' ha');
   if (s.t === 'bv' || s.t === 'bs') { p.push(esc(s.tf || s.sp || '')); return p.filter(Boolean).join(' · '); }
-  if (s.b && s.b.length) p.push(esc(elenco(nomiBoschi(s.b, 2))));
+  if (s.b && s.b.length) p.push(esc(elencoE(nomiBoschi(s.b, 2))));
   const d = DENTRO[k] || [], nv = d.filter(x => S[x].t === 'bv').length, na = d.filter(x => S[x].t === 'am').length;
   if (nv) p.push(t('vb')(nv)); if (na) p.push(t('va')(na));
   p.push(N2K.includes(s.t) ? (s.t === 'zps' ? (LANG === 'it' ? 'tutela gli uccelli' : 'protects birds') : (LANG === 'it' ? 'tutela habitat e specie' : 'protects habitats and species')) : (LANG === 'it' ? 'ente e regolamento propri' : 'own managing body and rules'));
@@ -602,16 +641,16 @@ function racconto(k) {
     const area = !k.startsWith('ITA');
     P.push(DESC[LANG][s.t] || '');
     P.push(it ? `Si estende per ${fmt(s.ha)} ettari${s.anno && /^\d{4}/.test(String(s.anno)) ? ` ed è tutelato dal ${String(s.anno).slice(0, 4)}` : ''}.` : `It covers ${fmt(s.ha)} ha${s.anno && /^\d{4}/.test(String(s.anno)) ? ` and was established in ${String(s.anno).slice(0, 4)}` : ''}.`);
-    if (s.b && s.b.length) P.push(it ? `I boschi coprono circa ${fmt(s.bha)} ettari${area ? ' nei siti Natura 2000 collegati' : ''}: i più estesi sono ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`
-                                     : `Forests cover about ${fmt(s.bha)} ha${area ? ' in the linked Natura 2000 sites' : ''}; the largest are ${esc(elenco(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`);
+    if (s.b && s.b.length) P.push(it ? `I boschi coprono circa ${fmt(s.bha)} ettari${area ? ' nei siti Natura 2000 collegati' : ''}: i più estesi sono ${esc(elencoE(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`
+                                     : `Forests cover about ${fmt(s.bha)} ha${area ? ' in the linked Natura 2000 sites' : ''}; the largest are ${esc(elencoE(s.b.slice(0, 3).map(x => nb(x[0]).toLowerCase() + (x[1] ? ` (${fmt(x[1])} ha)` : ''))))}.`);
     const sp = specieDi(k), pi = sp.filter(i => SP.gr[i] === 'P');
-    if (pi.length) P.push(it ? `Tra le specie segnalate ci sono ${fmt(pi.length)} piante, come ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.` : `Recorded species include ${fmt(pi.length)} plants, such as ${elenco(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.`);
+    if (pi.length) P.push(it ? `Tra le specie segnalate ci sono ${fmt(pi.length)} piante, come ${elencoE(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.` : `Recorded species include ${fmt(pi.length)} plants, such as ${elencoE(pi.slice(0, 3).map(i => '<i>' + esc(SP.nomi[i]) + '</i>'))}.`);
     const d = DENTRO[k] || [], v = d.filter(x => S[x].t === 'bv'), a = d.filter(x => S[x].t === 'am').sort((x, y) => (S[y].circ || 0) - (S[x].circ || 0));
     if (v.length || a.length) {
       const pz = [];
-      if (v.length) pz.push(t('vb')(v.length) + (v.length <= 3 ? ` (${esc(elenco(v.map(x => S[x].n)))})` : ''));
+      if (v.length) pz.push(t('vb')(v.length) + (v.length <= 3 ? ` (${esc(elencoE(v.map(x => S[x].n)))})` : ''));
       if (a.length) pz.push(t('va')(a.length));
-      let f = (it ? 'Al suo interno ci sono ' : 'Inside there are ') + elenco(pz) + '.';
+      let f = (it ? 'Al suo interno ci sono ' : 'Inside there are ') + elencoE(pz) + '.';
       if (a.length) { const g = S[a[0]]; f += it ? ` Il più grande è ${g.vg ? `<b>${esc(g.vg)}</b> ` : ''}in località ${esc(g.n)}, con un tronco di ${fmt(g.circ)} cm di circonferenza.` : ` The largest is ${g.vg ? `<b>${esc(g.vg)}</b> ` : 'the tree '}at ${esc(g.n)}, with a trunk ${fmt(g.circ)} cm around.`; }
       P.push(f);
     }
@@ -623,7 +662,9 @@ const WCACHE = {};
 /* regola del progetto: nessuna informazione sulla commestibilità (né funghi né piante).
    Dai testi di Wikipedia si tolgono le frasi che parlano di commestibilità, tossicità, cucina o consumo. */
 const NOCOMM = /commestib|non commest|edul|eduli|mangerecc|mangiar|mangia|cucin|culinar|gastronom|ricett|prelibat|apprezzat[oi] (in|per|come)|sapore|consum|velen|tossic|mortal|letal|avvelen|intossic|allucinog|psicoattiv|edible|inedible|eaten|eating|cook|culinary|recipe|taste|poison|toxic|deadly|lethal|hallucinog|psychoactive|consum/i;
-const senzaComm = tx => { const f = String(tx || '').split(/(?<=[.!?])\s+/).filter(x => x && !NOCOMM.test(x)); return f.join(' '); };
+// le frasi si dividono sul punto, ma non dopo le abbreviazioni degli autori ("L.", "Fr.", "Bull.") né dopo "ca.", "es.", "sec."
+const frasi = tx => String(tx || '').split(/(?<=[.!?])\s+/).reduce((a, x) => { const u = a[a.length - 1]; if (u && (/(^|[\s(])([A-Z][a-z]{0,2}|Bull|Schaeff|Pers|Quél|Sacc|Kumm|Gillet|ca|es|sec|var|subsp|ssp|cfr|sp)\.$/.test(u) || /^[a-z(]/.test(x))) a[a.length - 1] = u + ' ' + x; else a.push(x); return a; }, []);
+const senzaComm = tx => { const f = frasi(tx).filter(x => x && !NOCOMM.test(x)); return f.join(' '); };
 const getJ = u => WCACHE[u] || (WCACHE[u] = fetch(u).then(r => r.ok ? r.json() : null).catch(() => null));
 const pulito = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 const binomio = sp => { const w = (sp || '').replace(/\(.*?\)/g, ' ').split(/[\s,;]+/).filter(Boolean); if (w.length < 2) return ''; return w[1] === 'x' && w[2] ? w.slice(0, 3).join(' ') : w.slice(0, 2).join(' '); };
@@ -640,7 +681,7 @@ async function wikiCerca(nome) {
   const parole = norm(nome).split(/[^a-z0-9]+/).filter(w => w.length > 3);
   for (const r of (j && j.query && j.query.search) || []) {
     const tt = norm(r.title), ok = parole.filter(w => tt.includes(w)).length;
-    if (parole.length && ok / parole.length >= 0.6) return wikiVoce(r.title);
+    if (parole.length && ok / parole.length >= 0.75) { const w = await wikiVoce(r.title); if (w && /sicil|sicily|palerm|catan|messin|siracus|syracus|trapan|agrigent|ragus|caltaniss|enna|etna|egad|eolie|aeolian|pantelleria|lampedusa|ustica|madonie|nebrodi|iblei|peloritani|sicani/i.test(w.extract || '')) return w; }
   }
   return null;
 }
@@ -659,7 +700,7 @@ async function arricchisci(k) {
   const lon = (s.bb[0] + s.bb[2]) / 2, lat = (s.bb[1] + s.bb[3]) / 2;
   const diag = Math.hypot((s.bb[2] - s.bb[0]) * 88000, (s.bb[3] - s.bb[1]) * 111000);
   const rag = s.t === 'am' ? 600 : Math.round(Math.min(10000, Math.max(1500, diag / 2)));
-  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=330&format=json&origin=*`);
   if (cur !== k || !$('gal')) return;
   // via immagini da satellite, mappe, carte e foto dallo spazio: non mostrano il luogo come lo vede chi ci va
   const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
@@ -718,7 +759,7 @@ function apri(k, vola) {
   if (k.startsWith('CF:')) return apriCF(k.slice(3));
   const s = S[k]; if (!s) return; cur = k;
   selez(k);
-  try { history.replaceState(null, '', '#' + k); } catch (e) {}
+  if (isApp) try { history.replaceState(null, '', '#' + k); } catch (e) {} // sul sito l'indirizzo lo scrive il navigatore (#/zona/...)
   const lato = innerWidth >= 900;
   if (vola) inquadra(s.bb, s.t === 'am' ? 12 : 13);
   if (AMB.includes(s.t)) {
@@ -753,19 +794,24 @@ window.addEventListener('hashchange', () => { const h = location.hash.slice(1); 
 /* ---------- sezioni: Esplora, Micologia, Botanica */
 let vista = 'mappa';
 const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60, fam: '' } };
-const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
+const BASEF = 'foto/funghi/'; // foto di Oscar Cangelosi, nel sito
 const ICOC = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
 const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
 // plugin del telefono: da Capacitor 3 non sempre compaiono in Capacitor.Plugins, vanno registrati per nome
 const plug = n => { if (!isApp) return null; const C = window.Capacitor; try { return (C.Plugins && C.Plugins[n]) || (C.registerPlugin ? (C.Plugins[n] = C.registerPlugin(n)) : null); } catch (e) { return null; } };
 const modo = { escursioni: 'mappa', meteo: 'mappa', registra: 'mappa' };
-const mappaVista = v => (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
+// velo: mentre si cambia pagina la pagina resta coperta, così non si vede la mappa per un istante
+const VELO = { t: null };
+new MutationObserver(() => { if ($('cat').dataset.v && $('cat').innerHTML && !VELO.rotta) document.body.classList.remove('velo'); }).observe($('cat'), { attributes: true, attributeFilter: ['data-v'] });
+new MutationObserver(() => { if ($('sheet').classList.contains('open') && !VELO.rotta) document.body.classList.remove('velo'); }).observe($('sheet'), { attributes: true, attributeFilter: ['class'] });
+const sapOn = () => !!(SAP && SAP.on);
+const mappaVista = v => !sapOn() && (v === 'escursioni' || v === 'meteo' || v === 'registra') && modo[v] === 'mappa';
 let ultimaSpecie = 'funghi';
 if (isApp) document.body.classList.add('app');
 function vai(v) {
   vista = v; document.body.classList.remove('escreg'); document.body.classList.remove('vm-esc', 'vm-met'); document.body.classList.add(v === 'escursioni' ? 'vm-esc' : v === 'meteo' ? 'vm-met' : 'vm-x');
-  if (v === 'specie') return vai(ultimaSpecie);
+  if (v === 'specie' && !sapOn()) return vai(ultimaSpecie);
   if (v !== 'escursioni') prcSel.zona = '';
   if (v === 'funghi' || v === 'piante') ultimaSpecie = v;
   for (const b of document.querySelectorAll('#sez button')) b.classList.toggle('on', b.dataset.v === v || (b.dataset.v === 'specie' && (v === 'funghi' || v === 'piante')));
@@ -776,7 +822,12 @@ function vai(v) {
   evidenzia(null);
   $('cat').dataset.v = ''; $('cat').innerHTML = '';
   if (v === 'mappa' || mm) { map.resize(); if (!REG) map.fitBounds([[12.3, 36.55], [15.7, 38.35]], { padding: innerWidth >= 900 ? { top: 30, bottom: 30, left: 30, right: mm ? 430 : 30 } : { top: 20, bottom: mm ? Math.round(innerHeight * 0.42) : 20, left: 10, right: 10 }, duration: 600 }); }
+  if (sapOn() && v !== 'registra') return sapVai(v);
+  if (!sapOn()) { mixLivelli(v); if (v !== 'mappa' && SEZ === 'home') SEZ = 'natura'; }
+  if (typeof aggSez === 'function') aggSez();
+  if (v === 'mappa' && NAT.home) return natHome();
   if (v === 'meteo') meteo(); else if (v === 'escursioni') escursioni(); else if (v === 'registra') registra(); else if (v !== 'mappa') catalogo();
+  if (v !== 'mappa' && mm || (v === 'mappa' && !NAT.home && !(SAP.on && SAP.home))) document.body.classList.remove('velo');
 }
 const sw = () => `<div class="switch" role="tablist">${['mappa', 'elenco'].map(m => `<button role="tab" data-modo="${m}" class="${modo[vista] === m ? 'on' : ''}" aria-selected="${modo[vista] === m}">${m === 'mappa' ? t('vMap') : t('vList')}</button>`).join('')}</div>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-modo]'); if (b && modo[vista] && modo[vista] !== b.dataset.modo) { modo[vista] = b.dataset.modo; vai(vista); } });
@@ -819,11 +870,11 @@ function elencoCat() {
   const st = cs[vista], w = norm(st.q.trim()).split(/\s+/).filter(Boolean);
   if (vista === 'funghi') return FUN.s.map((r, i) => i).filter(i => { const r = FUN.s[i];
     if (st.g === '*f' && !r[8].length) return false; if (st.g && st.g !== '*f' && r[4] !== st.g) return false;
-    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3] + ' ' + (NOMI[r[7]] || []).join(' ')); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + r[2] + ' ' + r[3] + ' ' + (NOMI[r[7]] || []).join(' ')); return w.every(x => contiene(n, x)); });
   return PIA.s.map((r, i) => i).filter(i => { const r = PIA.s[i];
     if (st.g === 'alb' && !r[1]) return false; if (st.g === 'ali' && !r[7]) return false; if (['orc', 'fel', 'gra', 'erb'].includes(st.g) && tipoP(r) !== st.g) return false; if (st.g === 'n2k' && !r[2].length) return false;
     if (st.fam && r[5] !== st.fam) return false;
-    const n = norm(r[0] + ' ' + (r[5] || '') + ' ' + (NOMI[r[4]] || []).join(' ')); return w.every(x => n.includes(x)); });
+    const n = norm(r[0] + ' ' + (r[5] || '') + ' ' + (NOMI[r[4]] || []).join(' ')); return w.every(x => contiene(n, x)); });
 }
 function catalogo(soloTesti) {
   Promise.all([CAT, caricaStag()]).then(([, S2]) => {
@@ -836,11 +887,11 @@ function catalogo(soloTesti) {
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
-      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}${ph ? '' : ` style="color:${TIPO_IC[f ? 'fun' : tipoP(r)][1]}"`}>${ph ? '' : ico(TIPO_IC[f ? 'fun' : tipoP(r)][0], 'phi')}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}${ph ? '' : ` style="color:${TIPO_IC[f ? 'fun' : tipoP(r)][1]}"`}>${ph ? '' : ico(TIPO_IC[f ? 'fun' : tipoP(r)][0], 'phi')}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${bollino(pericolo(vista, i))}${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
-      $('cat').innerHTML = `<div class="in"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p>${f ? REGOLE_FUNGHI() : ''}
+      $('cat').innerHTML = `<div class="in"><h2>${f ? t('tFunghi') : t('tPiante')}</h2><p class="lead">${f ? t('lFunghi')(FUN.s.length) : t('lPiante')(PIA.s.length)}</p><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${vista === x ? 'on' : ''}" aria-selected="${vista === x}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>${f ? REGOLE_FUNGHI() : ''}
         <div class="cerca"><input id="cq" type="search" placeholder="${t('cercaSp')}" value="${esc(st.q)}" autocomplete="off"></div>
         <div class="grp" id="cg"></div>${f ? '' : `<select class="tendina" id="cf"><option value="">${t('tutteFam')}</option>${[...new Set(PIA.s.map(r => r[5]).filter(Boolean))].sort().map(x => `<option${st.fam === x ? ' selected' : ''}>${esc(x)}</option>`).join('')}</select>`}<p class="cnt" id="cn"></p><div class="griglia" id="gr"></div><button class="altri" id="ca"></button>${COPY()}</div>`;
       $('cq').oninput = e => { cs[vista].q = e.target.value; cs[vista].n = 60; catalogo(); };
@@ -885,26 +936,28 @@ function apriSpecie(tipo, i) {
   const nc = nomeC(tipo, i), ns = nomeScn(tipo, i);
   $('sh').innerHTML = `<div>${da}${nc ? `<h2>${esc(nc)}</h2><p class="sci"><i>${esc(r[0])}</i>${ns ? ` · ${T('in siciliano', 'in Sicilian')} <b>${esc(ns)}</b>` : ''}</p>` : ''}<h2${nc ? ' hidden' : ''}><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
   let h = '<div class="racconto">';
+  const pz = pericolo(tipo, i);
+  if (pz) h += `<div class="avv-per ${pz}">${ico('alert-triangle')}<div><b>${pz === 'mortale' ? T('Fungo mortale', 'Deadly mushroom') : T('Fungo velenoso', 'Poisonous mushroom')}</b><p>${pz === 'mortale' ? T('Può uccidere anche in piccole quantità. Non raccoglierlo e non toccarlo insieme ad altri funghi.', 'It can kill even in small amounts. Do not pick it or mix it with other mushrooms.') : T('Può causare intossicazioni anche gravi.', 'It can cause poisoning, even severe.')} ${T('In caso di dubbio chiama il 118 o un centro antiveleni.', 'If in doubt call 118 or a poison control centre.')}</p><small>${T('Segnaliamo solo le specie pericolose: l’assenza di questo avviso non vuol dire che un fungo sia commestibile.', 'We only flag dangerous species: the absence of this warning does not mean a mushroom is edible.')}</small></div></div>`;
   if (f) {
-    h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
-            : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in the southern Italy covered by Micelio` : ''}.</p>`;
+    h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale` : ''}.</p>`
+            : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in southern Italy` : ''}.</p>`;
   } else {
     const am = r[3].filter(k => S[k] && S[k].t === 'am'), bs = r[3].filter(k => S[k] && S[k].t === 'bs');
     if (r[5]) h += it ? `<p><i>${esc(r[0])}</i> è una pianta della famiglia ${esc(r[5])}${r[6] ? `, con ${fmt(r[6])} segnalazioni in Sicilia nel database mondiale della biodiversità GBIF` : ''}.</p>`
                       : `<p><i>${esc(r[0])}</i> is a plant of the family ${esc(r[5])}${r[6] ? `, with ${fmt(r[6])} records in Sicily in the GBIF global biodiversity database` : ''}.</p>`;
-    if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
-                             : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elenco(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
-    if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
-                                        : `<p>In Sicily it is the species of ${elenco([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
+    if (r[2].length) h += it ? `<p><i>${esc(r[0])}</i> è elencata nei formulari di ${t('nsiti')(r[2].length)} in Sicilia${r[2].length > 1 ? `, tra cui ${esc(elencoE(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`
+                             : `<p><i>${esc(r[0])}</i> is listed in the forms of ${t('nsiti')(r[2].length)} in Sicily${r[2].length > 1 ? `, including ${esc(elencoE(r[2].slice(0, 2).map(k => S[k].n)))}` : ` (${esc(S[r[2][0]].n)})`}.</p>`;
+    if (am.length || bs.length) h += it ? `<p>In Sicilia è la specie di ${elencoE([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 bosco da seme' : bs.length + ' boschi da seme') : ''].filter(Boolean))}.</p>`
+                                        : `<p>In Sicily it is the species of ${elencoE([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
   }
   h += '</div>';
-  if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0 · ${t('fotoMic')}</p>`;
+  if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0</p>`;
   h += `<button class="btnmap" id="btnmap"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>${t('vediMappa')}</button>`;
   h += '<div id="wk"></div>';
   if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
   if (f) h += REGOLE_FUNGHI();
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
-  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
+  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
   verificata(tipo, r[0], cur);
   $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null), !f && sensibile('piante', i));
@@ -927,7 +980,7 @@ const POIC = { rifugio: '#c2570c', riparo: '#c2570c', picnic: '#2b8a3e', campegg
 const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
 // foto del punto di interesse da Wikimedia Commons (entro 150 m), senza immagini da satellite o mappe
 async function fotoPunto(c) {
-  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${(+c[1]).toFixed(5)}|${(+c[0]).toFixed(5)}&ggsradius=150&ggsnamespace=6&ggslimit=15&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=240&format=json&origin=*`);
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${(+c[1]).toFixed(5)}|${(+c[0]).toFixed(5)}&ggsradius=150&ggsnamespace=6&ggslimit=15&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=330&format=json&origin=*`);
   const el = document.querySelector('.maplibregl-popup .poiph'); if (!el) return;
   const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
     return !NOFOTO.test([p.title, pulito((m.ImageDescription || {}).value), pulito((m.Categories || {}).value)].join(' ')); }).sort((a, b) => (a.index || 0) - (b.index || 0)).slice(0, 3);
@@ -954,6 +1007,7 @@ const UFF = { si: ['Sentiero Italia CAI', 'Sentiero Italia CAI'], cai: ['Sentier
 const uffTag = p => { const u = uff(p); return u ? `<span class="uff">${ico('shield-check', 'xs')}${T(...UFF[u])}</span>` : ''; };
 const pctTag = p => [uffTag(p), `${num1(p.km)} km`, p.up ? `+${fmt(p.up)} m` : '', p.dur ? durata(p.dur) : '', p.c ? `<span class="cai c-${p.c}">${p.c}</span>` : ''].filter(Boolean).join(' · ');
 function evidenziaPercorso(p) {
+  PERC_SEL = p ? p.id : null;
   if (!map.getSource('prc')) return;
   map.getSource('prc').setData({ type: 'FeatureCollection', features: p ? [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: p.g } }] : [] });
 }
@@ -1123,7 +1177,7 @@ function suggerimenti(tutti) {  // le 12 zone più adatte agli interessi scelti
     const pi = specieDi(k).filter(i => SP.gr[i] === 'P').length;
     const fungB = z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).reduce((a, b) => a + b[1], 0);
     let sc = 0; const why = [];
-    if (intSel.has('funghi') && fungB) { sc += Math.log10(1 + fungB) * 2; why.push((LANG === 'it' ? 'boschi adatti ai funghi: ' : 'forests good for fungi: ') + elenco(z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).slice(0, 2).map(b => nb(b[0]).toLowerCase()))); }
+    if (intSel.has('funghi') && fungB) { sc += Math.log10(1 + fungB) * 2; why.push((LANG === 'it' ? 'boschi adatti ai funghi: ' : 'forests good for fungi: ') + elencoE(z.b.filter(b => ['9260', '9340', '91AA', '9210', '91M0', '9330', '9540', '9530'].includes(b[0])).slice(0, 2).map(b => nb(b[0]).toLowerCase()))); }
     if (intSel.has('alberi') && (na || nv)) { sc += Math.log10(1 + na + 3 * nv) * 3; why.push([na ? t('va')(na) : '', nv ? t('vb')(nv) : ''].filter(Boolean).join(', ')); }
     if (intSel.has('boschi') && z.bha) { sc += Math.log10(1 + z.bha) * 1.5; why.push(fmt(z.bha) + (LANG === 'it' ? ' ha di bosco' : ' ha of forest')); }
     if (intSel.has('flora') && pi) { sc += Math.log10(1 + pi) * 2; why.push(fmt(pi) + (LANG === 'it' ? ' specie di piante segnalate' : ' plant species recorded')); }
@@ -1660,10 +1714,13 @@ function meteo() {
   caricaMeteo().then(() => {
     if (vista !== 'meteo') return;
     if (!MET) { dove.innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="avviso">${t('errMeteo')}</p>`; return; }
+    if (!MC.dati) meteoComuni().then(() => { if (vista === 'meteo') { if (MC.sez !== 'natura') meteo(); mostraComuni(); } });
+    else setTimeout(mostraComuni, 0);
+    if (MC.sez !== 'natura') { evidenzia(null); return meteoSezione(dove, MET[LUOGHI()[0][0]].G); }
     const ks = LUOGHI().map(x => x[0]).filter(k => mt0.area === 'tutte' || areaDi(k) === mt0.area);
     const giorni = MET[ks[0] || LUOGHI()[0][0]].G;
     const top = [...ks].sort((a, b) => valDi(b, mt0.day) - valDi(a, mt0.day));
-    const ctrl = `<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
+    const ctrl = `${sezMeteo()}<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
       <div class="days">${giorni.map((g, n) => `<button data-day="${n}" class="${mt0.day === n ? 'on' : ''}"><small>${n === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>
       <div class="aree">${ORD_AREE.map(a => `<button data-area="${a}" class="${mt0.area === a ? 'on' : ''}">${t('AR')[a]}</button>`).join('')}</div>
       <select class="tendina aree-sel" id="mt-area">${ORD_AREE.map(a => `<option value="${a}"${mt0.area === a ? ' selected' : ''}>${t('AR')[a]}</option>`).join('')}</select>
@@ -1700,7 +1757,7 @@ function apriMeteoZona(k) {
   const { M, i0, oggi, G } = MET[k];
   cur = null; selez('');
   const topE = [...G].sort((a, b) => b.e.v - a.e.v).slice(0, 3).map(x => x.d), topF = [...G].sort((a, b) => b.f.est - a.f.est).slice(0, 3).map(x => x.d);
-  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elenco([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
+  const box = (tit, nota, key, top) => `<div class="mt-box"><h3>${tit}</h3><p class="mt-best">${t('migliori')}: <b>${elencoE([...top].sort().map(d => giorno(d, { weekday: 'long', day: 'numeric', month: 'long' })))}</b></p>
     <div class="giorni">${G.map(g => { const v = key === 'e' ? g.e.v : g.f.est, sub = key === 'e' ? (g.e.perche.length ? g.e.perche.join(', ') : t('ok')) : g.f.parola;
       return `<div class="gg${top.includes(g.d) ? ' best' : ''}"><b>${g.d === oggi ? t('oggi') : giorno(g.d)}</b><span class="sc">${num1(v)}<i><span style="width:${v * 10}%;background:${colore10(v)}"></span></i></span>${cella(M, g.i)}<small>${esc(sub)}</small></div>`; }).join('')}</div>
     <p class="note" style="margin-top:10px">${nota}</p></div>`;
@@ -1911,8 +1968,8 @@ async function calendario() {
   const k = x => x.tp === 'funghi' ? FUN.s[x.i][7] : PIA.s[x.i][4], nuove = on.filter(x => { const mk = S2[k(x)]; return mk && mk[prima] === '0'; });
   const sez = (tit, ic, l, max) => l.length ? `<h3>${ico(ic, 'sm')} ${tit} <em>${fmt(l.length)}</em></h3><div class="trova">${uniciNome(l).slice(0, max).map(x => `<button data-sp="${x.tp}:${x.i}">${icoSp(x.tp, x.i)}${esc(nomeC(x.tp, x.i) || (x.tp === 'funghi' ? FUN.s : PIA.s)[x.i][0])}</button>`).join('')}</div>` : '';
   $('cat').dataset.v = 'cal'; $('cat').scrollTop = 0;
-  $('cat').innerHTML = `<div class="in cal"><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
-    <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p>
+  $('cat').innerHTML = `<div class="in cal">
+    <h2>${T('Calendario della natura', 'Nature calendar')}</h2><p class="lead">${T('Cosa si vede in Sicilia mese per mese, secondo i mesi delle osservazioni su GBIF. Prima le specie più osservate.', 'What can be seen in Sicily month by month, from the months of GBIF records. Most recorded species first.')}</p><div class="switch spsw" role="tablist">${['funghi', 'piante', 'cal'].map(x => `<button role="tab" data-specie="${x}" class="${x === 'cal' ? 'on' : ''}">${x === 'funghi' ? T('Funghi', 'Fungi') : x === 'piante' ? T('Piante', 'Plants') : T('Calendario', 'Calendar')}</button>`).join('')}</div>
     <select class="tendina mesesel" id="cal-m">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(j => `<option value="${j}"${j === m ? ' selected' : ''}>${nomeMese(j)[0].toUpperCase() + nomeMese(j).slice(1)}${j === new Date().getMonth() ? T(' (ora)', ' (now)') : ''}</option>`).join('')}</select>
     ${sez(T('Iniziano questo mese', 'Starting this month'), 'sparkles', nuove, 16)}
     ${sez(T('Fioriture', 'In flower'), 'flower', on.filter(x => x.tp === 'piante' && x.st.lab === T('in fioritura', 'in flower')), 30)}
@@ -2128,4 +2185,2091 @@ async function pdfIt(x) {
   inquadra(comePercorso(x).bb, 15.5);
 }
 { const h = location.hash.slice(1); if (h.startsWith('it=')) D.then(() => setTimeout(() => apriLinkIt(h.slice(3)), 600)); }
+
+/* ---------- Sapori: atlante agroalimentare ed enogastronomico (per ora solo sul sito, dati di prova) */
+var SAP = { home: true, on: false, d: null, fil: { k: 'tutto', q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }, mese: new Date().getMonth() + 1, liv: { paesi: true, prod: true } };
+const SAPD = () => SAP.d || (SAP.d = Promise.all([fetch('data/sapori.json').then(r => r.json()), fetch('foto/foto.json').then(r => r.json()).catch(() => []), fetch('data/sicilia.json').then(r => r.json()).catch(() => null)]).then(([d, fo, si]) => {
+  d.foto = fo; d.sic = si; for (const x of fo) if (x.v && d.voci[x.v] && !d.voci[x.v].fo) d.voci[x.v].fo = x;
+  // dove si usa: legame inverso della distinta
+  for (const [k, v] of Object.entries(d.voci)) { v.k = k; v.usi = v.usi || []; }
+  for (const [k, v] of Object.entries(d.voci)) for (const [c] of (v.dist || [])) if (d.voci[c]) d.voci[c].usi.push(k);
+  for (const [k, p] of Object.entries(d.produttori)) p.k = k;
+  return (SAP.D = d);
+}));
+const SAPT = {
+  materia: ['Materia prima', 'Materie prime', 'wheat', '#5c940d'], semi: ['Semilavorato', 'Semilavorati', 'stack-2', '#c77700'],
+  prodotto: ['Prodotto', 'Prodotti', 'basket', '#1d6fa5'], dolce: ['Dolce', 'Dolci', 'cake', '#b85e3d'], piatto: ['Piatto', 'Piatti', 'bowl', '#7a5ea8']
+};
+const RUOLO = { coltiva: ['Coltiva, alleva o pesca', 'tractor', '#2b8a3e'], trasforma: ['Trasforma', 'building-factory-2', '#c77700'], vende: ['Vende o cucina', 'building-store', '#b85e3d'] };
+const LRC = { vivo: '#2b8a3e', raro: '#c77700', 'a rischio': '#c2185b', perduto: '#495057', 'da valutare': '#868e96' };
+const SAPL = ['sap-c', 'sap-cl', 'sap-p', 'sap-pl', 'sap-pr', 'sap-v'];
+const MESI = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
+const MESIL = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+const icoV = v => { const x = SAPT[v.t] || SAPT.dolce; return `<span class="tpi" style="color:${x[3]}">${ico(x[2], 'xs')}</span>`; };
+const nomiPaesi = v => (v.paesi || []).map(p => SAP.D.paesi[p] ? SAP.D.paesi[p].n : p).join(', ');
+const PROVA = '<span class="badge prova">Dati di prova</span>';
+
+/* ---- interruttore Natura | Sapori (solo sito) */
+function sapModo(on) {
+  if (!on && $('sapcard')) sapCarta();
+  SAP.on = on; SAP.home = true; if (on) SEZ = 'sapori'; else if (SEZ === 'sapori') SEZ = 'natura'; aggSez(); document.body.classList.toggle('sap', on); if (!on) document.body.classList.remove('sapmap');
+  for (const b of document.querySelectorAll('#modo button')) b.classList.toggle('on', (b.dataset.m === 'sapori') === on);
+  sapNav(); chiudi(); $('q').value = ''; $('res').style.display = 'none'; $('q').placeholder = on ? 'Cerca un dolce, un prodotto, un paese' : t('cerca');
+  if (map.getLayer('sap-p')) for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'none');
+  if (on) SAPD().then(() => vai(vista === 'funghi' || vista === 'piante' ? 'specie' : vista)); else vai(vista === 'specie' ? 'specie' : vista);
+}
+function sapNav() {
+  const L = SAP.on ? { mappa: ['Esplora', 'map'], escursioni: ['Itinerari', 'route-2'], registra: [T('Registra', 'Record'), 'player-record'], meteo: ['Calendario', 'calendar'], specie: ['Catalogo', 'tools-kitchen-2'] } : null;
+  for (const b of document.querySelectorAll('#sez button')) {
+    const v = b.dataset.v, [n, ic] = L ? L[v] : [t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[v]), b.dataset.ic];
+    b.querySelector('span').textContent = n; const s = b.querySelector('svg'); if (s) s.remove(); b.insertAdjacentHTML('afterbegin', ico(ic));
+  }
+}
+if (!isApp) {
+  // il cambio di tema ora è nel filtro dentro la foto d'apertura (temi)
+  $('wrap').querySelector('.top').insertAdjacentHTML('beforeend', '<div class="sapf" id="sapf"></div>');
+}
+
+/* ---- chiamata da vai(): mostra la vista Sapori */
+function sapVai(v) {
+  if (v === 'mappa' && SAP.home && misto()) { NAT.home = true; return sapModo(false); }
+  if (v !== 'mappa' || SAP.home) sapCarta();
+  SAPD().then(() => {
+    if (!SAP.on) return;
+    evidenzia([]); document.body.classList.toggle('sapmap', v === 'mappa'); // nasconde i livelli di Natura
+    if (v === 'mappa') { if (SAP.home) sapHome(); else sapMappa(); }
+    else if (v === 'specie') sapCatalogo();
+    else if (v === 'meteo') sapCalendario();
+    else if (v === 'escursioni') sapItinerari();
+  });
+}
+
+/* ---- mappa */
+function sapGeo(cosa) {
+  const D = SAP.D, f = [];
+  const nPaese = {}; for (const v of Object.values(D.voci)) if (perGusto(v)) for (const p of (v.paesi || [])) nPaese[p] = (nPaese[p] || 0) + 1;
+  if (cosa === 'paese' && SAP.liv.paesi) for (const [k, p] of Object.entries(D.paesi)) if (nPaese[k]) f.push({ type: 'Feature', properties: { k, tipo: 'paese', n: p.n, c: nPaese[k] }, geometry: { type: 'Point', coordinates: p.c } });
+  if (cosa === 'prod' && SAP.liv.prod) for (const p of Object.values(D.produttori)) { const c = D.paesi[p.paese].c, o = (p.k.charCodeAt(1) % 5 - 2) * 0.012; f.push({ type: 'Feature', properties: { k: p.k, tipo: 'prod', n: p.n, r: p.r }, geometry: { type: 'Point', coordinates: [c[0] + o, c[1] - 0.012] } }); }
+  return { type: 'FeatureCollection', features: f };
+}
+function sapLayers() {
+  if (map.getSource('sap')) return;
+  map.addSource('sap', { type: 'geojson', data: sapGeo('prod') });
+  map.addSource('sapp', { type: 'geojson', data: sapGeo('paese'), cluster: true, clusterMaxZoom: 9, clusterRadius: 48, clusterProperties: { tot: ['+', ['get', 'c']] } });
+  map.addSource('sapv', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'sap-v', type: 'line', source: 'sapv', layout: { 'line-cap': 'round', 'line-join': 'round' }, paint: { 'line-color': '#C2185B', 'line-width': 4, 'line-dasharray': [1.5, 1.2], 'line-opacity': .9 } });
+  map.addLayer({ id: 'sap-c', type: 'circle', source: 'sapp', filter: ['has', 'point_count'], paint: { 'circle-color': '#E8761A', 'circle-opacity': .92, 'circle-stroke-color': '#fff', 'circle-stroke-width': 3, 'circle-radius': ['interpolate', ['linear'], ['get', 'tot'], 2, 16, 40, 26, 200, 38] } });
+  map.addLayer({ id: 'sap-cl', type: 'symbol', source: 'sapp', filter: ['has', 'point_count'], layout: { 'text-field': ['to-string', ['get', 'tot']], 'text-font': ['Noto Sans Bold'], 'text-size': 14, 'text-allow-overlap': true }, paint: { 'text-color': '#fff' } });
+  map.addLayer({ id: 'sap-p', type: 'circle', source: 'sapp', filter: ['!', ['has', 'point_count']], paint: { 'circle-color': '#E8761A', 'circle-opacity': .9, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2.5, 'circle-radius': ['interpolate', ['linear'], ['get', 'c'], 1, 8, 10, 15] } });
+  map.addLayer({ id: 'sap-pl', type: 'symbol', source: 'sapp', filter: ['!', ['has', 'point_count']], layout: { 'text-field': ['concat', ['get', 'n'], ' · ', ['to-string', ['get', 'c']]], 'text-font': ['Noto Sans Regular'], 'text-size': 12.5, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'text-optional': true }, paint: { 'text-color': '#8A3B00', 'text-halo-color': '#fff', 'text-halo-width': 1.6 } });
+  map.addLayer({ id: 'sap-pr', type: 'circle', source: 'sap', minzoom: 8, paint: { 'circle-color': ['match', ['get', 'r'], 'coltiva', RUOLO.coltiva[2], 'trasforma', RUOLO.trasforma[2], RUOLO.vende[2]], 'circle-radius': 7, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+}
+function sapMappa() {
+  sapLayers(); map.getSource('sap').setData(sapGeo('prod')); map.getSource('sapp').setData(sapGeo('paese'));
+  for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'visible');
+  $('sapf').innerHTML = `<button class="on" data-home="1">${ico('sparkles', 'xs')}Scopri</button><button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#E8761A"></i>Comuni e loro sapori</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button>`;
+}
+document.addEventListener('click', e => { if (e.target.closest('#sapf [data-home]')) { SAP.home = true; chiudi(); return vai('mappa'); } const b = e.target.closest('#sapf [data-l]'); if (!b) return; SAP.liv[b.dataset.l] = !SAP.liv[b.dataset.l]; sapMappa(); });
+function sapClick(e) {
+  if (e.originalEvent) SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY];
+  const box = [[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]];
+  const cl = map.getLayer('sap-c') ? map.queryRenderedFeatures(box, { layers: ['sap-c'] }) : [];
+  if (cl.length) return sapGruppo(cl[0]);
+  const f = map.queryRenderedFeatures(box, { layers: ['sap-pr', 'sap-p'].filter(l => map.getLayer(l)) });
+  if (!f.length) { sapCarta(); return chiudi(); }
+  const p = f[0].properties; if (p.tipo === 'prod') return sapCartaProd(p.k);
+  sapCartaPaese(p.k);
+}
+// la carta che racconta, in basso sulla mappa
+function sapCarta(html) {
+  let c = $('sapcard'); if (!c) { c = document.createElement('div'); c.id = 'sapcard'; c.className = 'sapcard'; $('wrap').appendChild(c);
+    c.addEventListener('click', e => { const b = e.target.closest('[data-cp],[data-cv],[data-cz],[data-cx],[data-cpr],[data-cn],[data-cperc],[data-ccf],[data-cevc],[data-cfv]'); if (!b) return;
+      if (b.dataset.cfv) { sapCarta(); const [fk, vk] = b.dataset.cfv.split(':'); return sapVarieta(fk, vk); }
+      if (b.dataset.cpr) { sapCarta(); return sapProduttore(b.dataset.cpr); }
+      if (b.dataset.cperc) { sapCarta(); return apriPercorso(b.dataset.cperc); }
+      if (b.dataset.ccf) { sapCarta(); return apriCF(b.dataset.ccf); }
+      if (b.dataset.cevc) { const ev = SAP.sagre.eventi.find(x => x.id === b.dataset.cevc); sapCarta(); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d.find(x => x >= iso(new Date())) || ev.d[0], tipo: '', pv: '' }; versoSapori(() => vai('meteo')); } return; }
+      if (b.dataset.cn && $('cat').classList.contains('on')) { const k = b.dataset.cn; sapCarta(); if (sapOn()) sapModo(false); natMappa(); return setTimeout(() => apri(k, true), 650); }
+      if (b.dataset.cn) { sapCarta(); apri(b.dataset.cn, false); if (punto) { $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); terreno(punto); } return; }
+      if (b.dataset.cx != null) return sapCarta();
+      if (b.dataset.cp) { sapCarta(); return sapPaese(b.dataset.cp); }
+      if (b.dataset.cv) { sapCarta(); return sapVoce(b.dataset.cv); }
+      if (b.dataset.cz) { const p = SAP.D.paesi[b.dataset.cz]; sapVola(p.c, 11.5); return sapCartaPaese(b.dataset.cz, true); } }); }
+  c.innerHTML = html || ''; c.classList.toggle('on', !!html); tipNascondi();
+  // sul computer la carta si apre accanto al punto toccato
+  const a = SAP.ancora; SAP.ancora = null; c.classList.toggle('anc', !!(html && a && innerWidth >= 900));
+  if (html && a && innerWidth >= 900) { const w = c.offsetWidth, h = c.offsetHeight; let l = a[0] + 16, t = a[1] - h / 2; if (l + w > innerWidth - 12) l = a[0] - w - 16; t = Math.max(70, Math.min(t, innerHeight - h - 12)); c.style.left = l + 'px'; c.style.top = t + 'px'; c.style.bottom = 'auto'; }
+  else { c.style.left = ''; c.style.top = ''; c.style.bottom = ''; }
+}
+function sapCartaPaese(k, vicino) {
+  const D = SAP.D, p = D.paesi[k], voci = Object.values(D.voci).filter(v => (v.paesi || []).includes(k) && perGusto(v));
+  const pref = voci.slice().sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).length - (a.ric || []).length) || (!!b.wk - !!a.wk));
+  const top = pref.slice(0, 3), fo = pref.find(v => v.fo), dol = voci.filter(v => v.t === 'dolce').length;
+  const frase = voci.length === 1 ? `A ${p.n} è documentato un sapore: ${top[0].n}.`
+    : `A ${p.n} sono documentati ${voci.length} sapori${dol ? `, di cui ${dol} dolci` : ''}. Tra questi ${top.map(v => v.n).join(', ')}.`;
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button>
+    <div class="cc">${fo ? `<span class="cf" style="background-image:url('foto/${fo.fo.f}.webp')"></span>` : top[0] && top[0].wk ? `<span class="cf" data-wk="${esc(top[0].wk)}"></span>` : ''}
+    <div><small>Provincia di ${esc(PROVN[p.pv] || '')}</small><h3>${esc(p.n)}</h3><p>${esc(frase)}</p>
+    ${(() => { const pr = Object.values(D.produttori).filter(x => x.paese === k); return pr.length ? `<p class="cmeta"><b>${pr.length} ${pr.length === 1 ? 'produttore o locale segnalato' : 'produttori e locali segnalati'}</b></p><div class="cchip">${pr.slice(0, 4).map(x => `<button data-cpr="${x.k}">${esc(x.n)}<small>${esc(x.tipo || RUOLO[x.r][0])}</small></button>`).join('')}</div>` : ''; })()}
+    ${(() => { const fe = Object.values(D.feste).filter(f => f.paesi.includes(k)); return fe.length ? `<p class="cmeta">Feste: ${fe.slice(0, 3).map(f => esc(f.n)).join(', ')}</p>` : ''; })()}
+    <div class="ca"><button class="pri" data-cp="${k}">Apri la scheda completa</button>${vicino ? '' : `<button data-cz="${k}">Avvicinati</button>`}${top[0] ? `<button data-cv="${top[0].k}">${esc(top[0].n)}</button>` : ''}</div></div></div>`);
+  sapFoto($('sapcard'));
+}
+function sapCartaProd(k) {
+  const D = SAP.D, p = D.produttori[k]; if (!p) return; const pa = D.paesi[p.paese];
+  const tipo = p.tipo ? p.tipo[0].toUpperCase() + p.tipo.slice(1) : RUOLO[p.r][0];
+  const v0 = (p.fa || []).map(x => D.voci[x]).find(v => v && (v.fo || v.wk));
+  const vic = Object.values(D.produttori).filter(x => x.k !== k && x.paese === p.paese).length;
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button>
+    <div class="cc">${v0 ? (v0.fo ? `<span class="cf" style="background-image:url('foto/${v0.fo.f}.webp')"></span>` : `<span class="cf" data-wk="${esc(v0.wk)}"></span>`) : ''}
+    <div><small>${esc(tipo)} · ${esc(pa.n)} (${esc(pa.pv)})</small><h3>${esc(p.n)}</h3>
+    <span class="badge liv">${p.liv === 'Segnalato' ? 'Segnalato · da visitare' : esc(p.liv)}</span>
+    ${(p.fa || []).length ? `<p class="cmeta">Custodisce: ${p.fa.map(x => D.voci[x] ? `<button class="cl5" data-cv="${x}">${esc(D.voci[x].n)}</button>` : '').join(', ')}</p>` : ''}
+    ${(p.seg || []).length ? `<p class="cmeta">Lo segnalano: ${p.seg.map(([a]) => esc(a)).join('; ')}.</p>` : ''}
+    ${vic ? `<p class="cmeta">A ${esc(pa.n)} ne segnaliamo altri ${vic}.</p>` : ''}
+    <div class="ca"><button class="pri" data-cpr="${k}">Apri la scheda completa</button><button data-cz="${p.paese}">Cosa si mangia a ${esc(pa.n)}</button>${p.sito ? `<a class="cab" href="${esc(p.sito)}" target="_blank" rel="noopener">Sito</a>` : ''}</div></div></div>`);
+  sapFoto($('sapcard'));
+}
+var TIPZ = { pn: 'Parco nazionale', pr: 'Parco regionale', rn: 'Riserva naturale', amp: 'Area marina protetta', ap: 'Area protetta', am: 'Albero monumentale', bv: 'Bosco vetusto', bs: 'Bosco da seme', zsc: 'Zona speciale di conservazione', zps: 'Zona di protezione speciale', zsczps: 'Zona speciale di conservazione e di protezione', sic: 'Sito di importanza comunitaria' };
+const testoBreve = html => { const d = document.createElement('div'); d.innerHTML = html; const p = d.querySelector('p'); return (p ? p.textContent : d.textContent).trim(); };
+function natCarta(k) {
+  const z = S[k]; if (!z) return apri(k, false); let sp = []; try { sp = specieDi(k); } catch (e) {}
+  const dati = [z.ha ? `<b>${fmt(z.ha)} ha</b><span>superficie</span>` : '', z.bha ? `<b>${fmt(z.bha)} ha</b><span>di bosco</span>` : '', sp.length ? `<b>${fmt(sp.length)}</b><span>specie</span>` : z.anno ? `<b>${z.anno}</b><span>istituita</span>` : '', z.alt ? `<b>${fmt(z.alt)} m</b><span>quota</span>` : '', z.circ ? `<b>${fmt(z.circ)} cm</b><span>tronco</span>` : ''].filter(Boolean).slice(0, 3);
+  let frase = ''; try { frase = testoBreve(racconto(k)); } catch (e) {} if (frase.length > 260) frase = frase.slice(0, 250).replace(/\s\S*$/, '') + '…';
+  const bosco = (z.b || [])[0] ? nb(z.b[0][0]) : '';
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button>
+    <div class="cc nat"><span class="cf" id="ncf"></span>
+    <div><small>${esc(TIPZ[z.t] || t(z.t) || '')}${z.com ? ' · ' + esc(z.com) : ''}</small><h3>${esc(z.n)}</h3>
+    ${dati.length ? `<div class="cstat">${dati.map(x => `<div>${x}</div>`).join('')}</div>` : ''}
+    ${frase ? `<p>${esc(frase)}</p>` : ''}${bosco ? `<p class="cmeta">Bosco più esteso: ${esc(bosco)}</p>` : ''}
+    <div class="ca"><button class="pri" data-cn="${k}">Apri la scheda completa</button></div></div></div>`);
+  if (typeof wikiVoce === 'function') wikiVoce(z.n).then(w => { const el = $('ncf'); if (!el) return; if (w && w.thumbnail && !(typeof NOFOTO !== 'undefined' && NOFOTO.test(w.thumbnail.source))) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; else el.remove(); }).catch(() => { const el = $('ncf'); if (el) el.remove(); });
+  else $('ncf').remove();
+}
+var PRCA = null; // elenco dei percorsi, per i suggerimenti
+function cartaEvento(id) {
+  const ev = ((SAP.sagre || {}).eventi || []).find(x => x.id === id); if (!ev) return;
+  const oggi = iso(new Date()), pr = ev.d.find(x => x >= oggi) || ev.d[0], dd = pr.split('-');
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc"><div><small>${esc(ev.t === 'sagra' ? 'Sagra' : ev.t === 'festa' ? 'Festa' : 'Appuntamento')} · ${esc(ev.c)} (${esc(ev.pv)})</small><h3>${esc(ev.n)}</h3>
+    <div class="cstat"><div><b>${+dd[2]} ${MESIL[+dd[1] - 1]}</b><span>${ev.d.length > 1 ? `per ${ev.d.length} giorni` : 'un giorno'}</span></div></div>
+    ${ev.desc ? `<p>${esc(ev.desc)}</p>` : ''}
+    <div class="ca"><button class="pri" data-cevc="${esc(id)}">Vedi nel calendario</button>${ev.p && SAP.D && SAP.D.paesi[ev.p] ? `<button data-cp="${ev.p}">Cosa si mangia a ${esc(SAP.D.paesi[ev.p].n)}</button>` : ''}${ev.f ? `<a class="cab" href="${esc(ev.f)}" target="_blank" rel="noopener">Fonte</a>` : ''}</div></div></div>`);
+}
+function cartaPercorso(id) {
+  if (!PRCA) return caricaPercorsi().then(a => { PRCA = a; cartaPercorso(id); });
+  const p = PRCA.find(x => x.id === +id); if (!p) return;
+  const c = CAI[p.c];
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}${c ? ' · ' + esc(T(...c)) : ''}</small><h3>${esc(p.n || p.r || 'Percorso')}</h3>
+    <div class="cstat"><div><b>${num1(p.km)} km</b><span>lunghezza</span></div>${p.up ? `<div><b>+${fmt(p.up)} m</b><span>salita</span></div>` : ''}${p.dur ? `<div><b>${esc(durata(p.dur))}</b><span>tempo</span></div>` : ''}</div>
+    ${p.da || p.a ? `<p>Da <b>${esc(p.da || '–')}</b> a <b>${esc(p.a || '–')}</b>${p.giro ? ', ad anello' : ''}.</p>` : ''}${p.desc ? `<p>${esc(p.desc.length > 220 ? p.desc.slice(0, 210).replace(/\s\S*$/, '') + '…' : p.desc)}</p>` : ''}
+    <div class="ca"><button class="pri" data-cperc="${p.id}">Apri la scheda completa</button></div></div></div>`);
+}
+function cartaPunto(q, c) {
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>${esc(T(...(POIN[q.t] || ['Punto', 'Point'])))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small><h3>${esc(q.n || T(...(POIN[q.t] || ['Punto', 'Point'])))}</h3>
+    <p>Un punto utile lungo i sentieri, dai dati di OpenStreetMap.</p><div class="ca">${gmapsLink(c, 'cab')}</div></div></div>`);
+}
+function cartaBosco(cf) {
+  const [n, v] = (CFN.tipi[cf] || [cf, []]);
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>Carta forestale della Regione</small><h3>${esc(n)}</h3>
+    <p>${esc(CFN.macro[cf.slice(0, 2)] || '')}</p><div class="ca"><button class="pri" data-ccf="${esc(cf)}">Apri la scheda completa</button></div></div></div>`);
+}
+/* ---- le filiere: vino, olio, grano, formaggio, pane */
+var FIL = null; const FILD = () => FIL || (FIL = fetch('data/filiere.json').then(r => r.json()));
+const FILK = ['grano', 'olio', 'vino', 'formaggio']; // le quattro materie (28/11): Grano, Ulivo, Vitigno, Latte. Il pane resta nei dati (#/sapori/pane)
+const FILFO = { vino: ['vigna-con-uva-1', 'Una vigna con l’uva matura'], olio: ['olive-nel-palmo-passulunara', 'Olive nel palmo della mano'], grano: ['pane-di-grano-duro', 'Pane di grano duro'], formaggio: ['tuma-nel-suo-siero', 'Tuma nel suo siero'], pane: ['pane-a-pasta-dura', 'Pane a pasta dura'] };
+const filVar = (F, fk, vk) => { for (const g of F.filiere[fk].gruppi) for (const v of (g.v || [])) if (v.k === vk) return [v, g]; return [null, null]; };
+// l'anno di ogni materia e il cammino dal campo alla tavola (testi generali, scritti da noi)
+const ANNO6 = {
+  grano: [['Semina', [11, 12], 'Il grano si semina in autunno, dopo le prime piogge.'], ['Crescita', [1, 2, 3], 'D\'inverno il grano cresce verde e fitto nei campi.'], ['Spighe', [4, 5], 'In primavera spuntano le spighe e i chicchi si riempiono.'], ['Mietitura', [6, 7], 'A inizio estate i campi diventano oro: si miete e si trebbia.'], ['Riposo', [8, 9, 10], 'I campi riposano o si alternano con fave e altri legumi.']],
+  olio: [['Potatura', [1, 2, 3], 'Si alleggeriscono le chiome perché entri la luce.'], ['Fioritura', [4, 5], 'Fiori piccoli e bianchi: da qui nasceranno le olive.'], ['Crescita', [6, 7, 8, 9], 'Le olive crescono verdi e poi cominciano a cambiare colore.'], ['Raccolta e frantoio', [10, 11, 12], 'Si raccoglie e si porta subito al frantoio: nasce l\'olio nuovo.']],
+  vino: [['Potatura', [12, 1, 2], 'D\'inverno si potano i tralci, la vite riposa.'], ['Germogli', [3, 4], 'In primavera la vite si risveglia e mette le foglie.'], ['Fioritura', [5, 6], 'Fioriscono i grappoli, piccoli e verdi.'], ['Invaiatura', [7], 'Gli acini cambiano colore e si addolciscono.'], ['Vendemmia', [8, 9, 10], 'In Sicilia si comincia ad agosto con le uve precoci e si finisce a ottobre sull\'Etna.'], ['In cantina', [11], 'Il mosto fermenta e diventa vino.']],
+  formaggio: [['Pascoli verdi', [11, 12, 1, 2, 3, 4, 5], 'Con le piogge l\'erba torna: il latte è abbondante e profumato.'], ['Estate', [6, 7, 8], 'L\'erba secca e il latte cala; molte greggi salgono in montagna.'], ['Nuovi nati', [9, 10], 'In autunno nascono gli agnelli e riprende la mungitura.']]
+};
+const CAMMINO6 = {
+  grano: [['wheat', 'Il campo', 'Grani antichi seminati nelle colline dell\'interno.'], ['tractor', 'La trebbiatura', 'Il chicco si separa dalla paglia.'], ['windmill', 'Il mulino', 'Dal grano duro la semola, dal tenero la farina.'], ['bread', 'Pane e pasta', 'Pani di semola, pasta, dolci delle feste.']],
+  olio: [['tree', 'L\'oliveto', 'Alberi anche secolari, dalla costa alla collina.'], ['basket', 'La raccolta', 'A mano o con le reti, tra ottobre e dicembre.'], ['building-factory-2', 'Il frantoio', 'Le olive si frangono entro poche ore.'], ['bottle', 'Olio e olive', 'Olio extravergine e olive da tavola.']],
+  vino: [['leaf', 'La vigna', 'Dalla costa ai mille metri dell\'Etna.'], ['basket', 'La vendemmia', 'Grappoli raccolti a mano nelle cassette.'], ['building-store', 'La cantina', 'Pigiatura, fermentazione, affinamento.'], ['glass-full', 'Il vino', 'Bianchi, rossi e vini dolci delle isole.']],
+  formaggio: [['paw', 'Il pascolo', 'Pecore, capre e vacche all\'aperto.'], ['milk', 'La mungitura', 'Latte spesso crudo, lavorato subito.'], ['cheese', 'Il caseificio', 'Cagliata nella tina; dal siero nasce la ricotta.'], ['calendar', 'La stagionatura', 'Da pochi giorni a più di un anno.']]
+};
+const ICOF = { grano: 'wheat', olio: 'tree', vino: 'glass-full', formaggio: 'cheese' };
+const PAROLEF = { grano: /grano|frumento|triticum/i, olio: /oliv/i, vino: /vitign|uva |vite|vino/i, formaggio: /formagg|latte|ricott/i };
+// foto di una varietà: da Wikipedia solo se la pagina parla davvero di quella pianta
+function fotoVarieta(fk, v) {
+  const tit = [v.n.split(',')[0], v.n.split(',')[0] + (fk === 'vino' ? ' (vitigno)' : fk === 'olio' ? ' (olivo)' : ' (grano)')];
+  const buona = w => w && w.thumbnail && PAROLEF[fk].test(w.extract || '') && !NOFOTO.test(w.thumbnail.source);
+  return (async () => { for (const t of tit) { const w = await wikiVoce(t); if (buona(w)) return w; }
+    const w = await wikiCerca(v.n.split(',')[0].replace(/’/g, "'")).catch(() => null); return buona(w) ? w : null; })();
+}
+function sapFiliera(fk) {
+  Promise.all([FILD(), SAPD()]).then(([F]) => {
+    const D = SAP.D, f = F.filiere[fk]; if (!f) return; SAP.fk = fk; SAP.filC = F;
+    $('cat').dataset.v = 'sap-fil'; $('cat').scrollTop = 0; SAP.home = false; if (String(cur).startsWith('SAP:fv:')) chiudi();
+    const conV = f.gruppi.some(g => g.v), punti = [], paesi = new Set();
+    f.gruppi.forEach((g, gi) => { for (const v of (g.v || [])) for (const p of v.paesi) { paesi.add(p); if (D.paesi[p] && v.paesi.indexOf(p) < 2) punti.push({ a: 'fv', id: fk + ':' + v.k, xy: D.paesi[p].c, t: v.lr ? 'riserva' : 'sagra', on: !v.lr, tit: v.n }); }
+      for (const k of (g.voci || [])) { const v = D.voci[k]; if (!v) continue; for (const p of (v.paesi || []).slice(0, 2)) { paesi.add(p); if (D.paesi[p]) punti.push({ a: 'fs', id: k, xy: D.paesi[p].c, t: 'sagra', on: true, tit: v.n }); } } });
+    const vociF = new Set(); for (const g of f.gruppi) { for (const v of (g.v || [])) v.dop.forEach(x => vociF.add(x)); (g.voci || []).forEach(x => vociF.add(x)); }
+    const chi = Object.values(D.produttori).filter(p => (p.fa || []).some(x => vociF.has(x))).slice(0, 16);
+    const fonti = [...new Set([...(f.fonti || []), ...f.gruppi.flatMap(g => (g.v || []).flatMap(v => v.f))])].map(x => F.fonti[x]).filter(Boolean);
+    const fo = FILFO[fk], m = new Date().getMonth() + 1, anno = ANNO6[fk] || [], ora = anno.find(a => a[1].includes(m));
+    const nV = f.gruppi.reduce((a, g) => a + (g.v || g.voci || []).length, 0);
+    const prodotti = conV ? [...vociF].map(k => D.voci[k]).filter(Boolean) : [];
+    const carta = (v, g, gi) => `<button class="vc6${v.lr ? ' lr' : ''}" data-fv="${fk}:${v.k}" data-g="${gi}"><span class="ph" data-fvi="${gi}:${v.k}">${ico(ICOF[fk])}</span><span class="tx"><small>${esc(g.n)}</small><b>${esc(v.n)}</b>${v.sin ? `<i>${esc(v.sin)}</i>` : ''}<span>${esc(v.t.split('. ')[0].replace(/\.$/, ''))}.</span>${v.paesi.length ? `<em>${ico('map-pin', 'xs')} ${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : ''}</span>${v.lr ? '<span class="salva">Da salvare</span>' : ''}</button>`;
+    const cartaV = (k, g, gi) => { const v = D.voci[k]; if (!v) return ''; return `<button class="vc6" data-fs="${k}" data-g="${gi}"><span${imgAttr(v).replace('class="img', 'class="ph img')}>${ico(ICOF[fk])}</span><span class="tx"><small>${esc(g.n)}</small><b>${esc(v.n)}</b>${v.nd && norm(v.nd) !== norm(v.n) ? `<i>${esc(v.nd)}</i>` : ''}<span>${esc((v.breve || '').split('. ')[0] || (v.ric || []).join(' · '))}</span>${v.paesi ? `<em>${ico('map-pin', 'xs')} ${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : v.prov ? `<em>${ico('map-pin', 'xs')} ${v.prov.length === 9 ? 'Tutta la Sicilia' : v.prov.map(x => PROVN[x]).join(', ')}</em>` : ''}</span>${(v.ric || []).filter(r => r !== 'PAT')[0] ? `<span class="salva dop">${esc(v.ric.filter(r => r !== 'PAT')[0])}</span>` : ''}</button>`; };
+    const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+    $('cat').innerHTML = `<div class="in fil5 fil6">
+      <section class="mh6" style="background-image:url('foto/${fo[0]}.webp')"><div class="mh6t">
+        <nav class="filtab6" aria-label="Le quattro materie">${FILK.map(k => `<button data-fil="${k}" class="${k === fk ? 'on' : ''}" aria-current="${k === fk}"><span style="background-image:url('foto/${FILFO[k][0]}.webp')"></span>${esc(F.filiere[k].n)}</button>`).join('')}</nav>
+        <p class="sub">${esc(f.sub)}</p><h2>${esc(f.n)}</h2><p class="lead">${esc(f.intro[0])}</p>
+        <div class="num6">${[[nV, conV ? 'varietà' : 'formaggi e ricotte'], [prodotti.length || vociF.size, conV ? 'prodotti DOP e IGP' : 'prodotti'], [paesi.size, 'comuni'], [chi.length, 'produttori segnalati']].filter(x => x[0]).map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
+        <p class="cr">${esc(fo[1])}, foto di Oscar Cangelosi</p></section>
+      ${f.intro.length > 1 ? `<section class="int6">${f.intro.slice(1).map(p => `<p>${esc(p)}</p>`).join('')}</section>` : ''}
+      ${anno.length ? `<section class="filg"><h3>L'anno ${fk === 'formaggio' ? 'del latte' : fk === 'vino' ? 'della vigna' : fk === 'olio' ? 'dell\'olivo' : 'del grano'}</h3>${ora ? `<p class="gt">Adesso, a ${MESIL[m - 1]}: <b>${esc(ora[0].toLowerCase())}</b>. ${esc(ora[2])}</p>` : ''}
+        <div class="anno6">${MESI.map((mm, i) => { const a = anno.find(x => x[1].includes(i + 1)), ai = anno.indexOf(a); return `<button class="${i + 1 === m ? 'ora' : ''} f${ai % 6}" data-fase="${ai}" title="${esc(a ? a[0] : '')}"><small>${mm}</small><span>${i === 0 || !anno.find(x => x[1].includes(i)) || anno.find(x => x[1].includes(i)) !== a ? esc(a ? a[0] : '') : ''}</span></button>`; }).join('')}</div>
+        <div class="fasi6">${anno.map((a, i) => `<div class="f${i % 6}${a === ora ? ' on' : ''}" data-fase="${i}"><b>${esc(a[0])}</b><span>${esc(a[2])}</span></div>`).join('')}</div></section>` : ''}
+      <section class="filg"><h3>Dal campo alla tavola</h3><div class="cam6">${(CAMMINO6[fk] || []).map(([ic, t2, d], i) => `<div><span class="ic">${ico(ic)}</span><small>${i + 1}</small><b>${esc(t2)}</b><span>${esc(d)}</span></div>`).join('')}</div></section>
+      <section class="filg esp6"><h3>${conV ? 'Le varietà e dove crescono' : 'I formaggi e dove nascono'}</h3><p class="gt">Passa su una scheda per vederla sulla mappa, o tocca un punto della mappa. ${conV ? 'I punti chiari sono le varietà da salvare.' : ''}</p>
+        <div class="chips6">${['Tutte', ...f.gruppi.map(g => g.n)].map((n, i) => `<button data-gr="${i - 1}" class="${i === 0 ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>
+        <div class="espb"><div class="espm"><div class="cmap">${mappaSicilia({ w: 560, nomi: true, punti })}</div><p class="gtx" id="gtx"></p></div>
+        <div class="espl">${f.gruppi.map((g, gi) => (g.v || []).map(v => carta(v, g, gi)).join('') + (g.voci || []).map(k => cartaV(k, g, gi)).join('')).join('')}</div></div></section>
+      ${prodotti.length ? `<section class="filg"><h3>${fk === 'vino' ? 'Nei vini' : fk === 'olio' ? 'Negli oli e nelle olive' : 'Nei prodotti'}</h3><p class="gt">I prodotti a denominazione che nascono da queste varietà.</p><div class="prod6">${prodotti.map(v => `<button data-fs="${v.k}"><span${imgAttr(v)}>${ico(ICOF[fk])}</span><b>${esc(v.n)}</b><small>${esc((v.ric || []).filter(r => r !== 'PAT').join(' · ') || 'Prodotto tradizionale')}</small></button>`).join('')}</div></section>` : ''}
+      ${chi.length ? `<section class="filg"><h3>Chi li custodisce</h3><p class="gt">Produttori e laboratori segnalati che lavorano questi prodotti. Non li abbiamo ancora visitati.</p><div class="chi6">${chi.map(p => `<button data-fpr="${p.k}"><span class="ic">${ico(p.tipo === 'frantoio' ? 'building-factory-2' : p.tipo === 'cantina' ? 'glass-full' : p.tipo === 'caseificio' ? 'cheese' : 'tractor')}</span><b>${esc(p.n)}</b><small>${esc(p.tipo || RUOLO[p.r][0])} · ${esc(D.paesi[p.paese].n)}</small></button>`).join('')}</div></section>` : ''}
+      <section class="filg"><h3>Le altre materie</h3><div class="alt6">${FILK.filter(k => k !== fk).map(k => `<button data-fil="${k}"><span class="bg" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${esc(F.filiere[k].n)}</b><small>${esc(F.filiere[k].sub)}</small>${freccia}</button>`).join('')}</div></section>
+      <p class="src">Testi scritti da noi a partire da queste fonti, da verificare sui libri: ${fonti.map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}. L'anno e il cammino sono una descrizione generale.</p>
+      ${COPY()}</div>`;
+    sapFoto($('cat'));
+    // foto delle varietà
+    for (const el of $('cat').querySelectorAll('[data-fvi]')) { const [gi, vk] = el.dataset.fvi.split(':'), v = (f.gruppi[+gi].v || []).find(x => x.k === vk);
+      if (v) fotoVarieta(fk, v).then(w => { if (w) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/330px-')}')`; el.classList.add('ok'); el.title = 'Foto da Wikipedia: ' + w.title; } }); }
+    const box = $('cat').querySelector('.esp6'), mapp = box.querySelector('.smap'), lst = box.querySelector('.espl');
+    const accendi = id => { mapp.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')); lst.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')); if (!id) return;
+      mapp.querySelectorAll(`[data-fv="${id}"],[data-fs="${id}"]`).forEach(x => { x.classList.add('hl'); x.parentNode.appendChild(x); }); const c = lst.querySelector(`[data-fv="${id}"],[data-fs="${id}"]`); if (c) c.classList.add('hl'); return c; };
+    lst.addEventListener('mouseover', e => { const c = e.target.closest('.vc6'); accendi(c ? (c.dataset.fv || c.dataset.fs) : null); });
+    lst.addEventListener('mouseleave', () => accendi(null));
+    mapp.addEventListener('mouseover', e => { const c = e.target.closest('[data-fv],[data-fs]'); const el = accendi(c ? (c.dataset.fv || c.dataset.fs) : null); if (el && innerWidth > 860) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+    box.querySelector('.chips6').addEventListener('click', e => { const b = e.target.closest('[data-gr]'); if (!b) return; e.stopPropagation();
+      box.querySelectorAll('.chips6 button').forEach(x => x.classList.toggle('on', x === b)); const gi = +b.dataset.gr, g = f.gruppi[gi];
+      lst.querySelectorAll('.vc6').forEach(c => c.hidden = gi >= 0 && +c.dataset.g !== gi);
+      const ids = new Set([...lst.querySelectorAll('.vc6:not([hidden])')].map(c => c.dataset.fv || c.dataset.fs));
+      mapp.querySelectorAll('[data-fv],[data-fs]').forEach(x => x.classList.toggle('spento', !ids.has(x.dataset.fv || x.dataset.fs)));
+      $('gtx').textContent = g && g.testo ? g.testo : ''; });
+    $('cat').querySelectorAll('[data-fase]').forEach(x => x.addEventListener('mouseenter', () => $('cat').querySelectorAll('[data-fase]').forEach(y => y.classList.toggle('acc', y.dataset.fase === x.dataset.fase))));
+    $('cat').querySelector('.anno6') && $('cat').querySelector('.anno6').parentNode.addEventListener('mouseleave', () => $('cat').querySelectorAll('.acc').forEach(y => y.classList.remove('acc')));
+  });
+}
+function sapVarieta(fk, vk) {
+  FILD().then(F => {
+    const D = SAP.D, [v, g] = filVar(F, fk, vk); if (!v) return; cur = 'SAP:fv:' + fk + ':' + vk; selez('');
+    testata(v.n, `${esc(F.filiere[fk].sub)} · ${esc(g.n)}`, v.lr ? '<span class="badge prova">Da salvare</span>' : '');
+    const chi = Object.values(D.produttori).filter(p => (p.fa || []).some(x => v.dop.includes(x))).slice(0, 8);
+    let h = `<div class="racconto"><p>${esc(v.t)}</p>${v.sin ? `<p>Altri nomi: <b>${esc(v.sin)}</b>.</p>` : ''}</div>`;
+    if (v.paesi.length) h += `<section class="ns5"><h3>Dove cresce</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, evid: v.paesi })}</div><div class="chips5">${v.paesi.map(p => `<button data-s="${p}">${esc(D.paesi[p].n)}</button>`).join('')}</div></section>`;
+    if (v.dop.length) h += `<section class="ns5"><h3>${fk === 'vino' ? 'Nei vini' : fk === 'olio' ? 'Negli oli e nelle olive' : 'Nei prodotti'}</h3><div class="links">${v.dop.filter(x => D.voci[x]).map(x => lnk(x)).join('')}</div></section>`;
+    if (chi.length) h += `<section class="ns5"><h3>Chi la lavora</h3><div class="links">${chi.map(p => lnk(p.k)).join('')}</div></section>`;
+    h += `<section class="ns5"><h3>Le altre varietà</h3><div class="chips5">${g.v.filter(x => x.k !== vk).map(x => `<button data-fv="${fk}:${x.k}">${esc(x.n)}</button>`).join('')}</div><p><button class="lk" data-fil="${fk}">Tutta la sezione «${esc(F.filiere[fk].n)}»</button></p></section>`;
+    h += `<p class="src">Fonti: ${v.f.map(x => F.fonti[x]).filter(Boolean).map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}. Testo scritto da noi, da verificare sui libri.</p>`;
+    $('sb').innerHTML = h; mostra();
+  });
+}
+function tipVarieta(id) {
+  if (!SAP.filC) { FILD().then(F => { SAP.filC = F; TIP.dataset.k = ''; }); return ''; }
+  const [fk, vk] = id.split(':'), [v, g] = filVar(SAP.filC, fk, vk); if (!v) return '';
+  return `<span class="tt">${esc(g.n)}</span><b>${esc(v.n)}</b><small>${esc(v.paesi.slice(0, 3).map(p => SAP.D.paesi[p].n).join(' · '))}</small><span class="tl">${esc(v.t.split('. ')[0])}.</span>${tipHint('Clic per saperne di più')}`;
+}
+function cartaVarieta(id) {
+  FILD().then(F => {
+    SAP.filC = F; const [fk, vk] = id.split(':'), [v, g] = filVar(F, fk, vk); if (!v) return;
+    const frase = v.t.length > 260 ? v.t.slice(0, 250).replace(/\s\S*$/, '') + '…' : v.t;
+    sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc"><div><small>${esc(F.filiere[fk].sub)} · ${esc(g.n)}</small><h3>${esc(v.n)}</h3>${v.sin ? `<p class="cmeta">Detto anche ${esc(v.sin)}</p>` : ''}<p>${esc(frase)}</p>
+      ${v.dop.length ? `<p class="cmeta">${v.dop.filter(x => SAP.D.voci[x]).slice(0, 4).map(x => `<button class="cl5" data-cv="${x}">${esc(SAP.D.voci[x].n)}</button>`).join(', ')}</p>` : ''}
+      <div class="ca"><button class="pri" data-cfv="${esc(id)}">Apri la scheda completa</button></div></div></div>`);
+  });
+}
+function sapGruppo(g) {
+  const src = map.getSource('sapp'), id = g.properties.cluster_id;
+  Promise.resolve(src.getClusterLeaves(id, 200, 0)).then(fs => {
+    fs = (fs || []).map(f => f.properties).sort((a, b) => b.c - a.c);
+    const tot = fs.reduce((s, x) => s + x.c, 0), pv = [...new Set(fs.map(f => PROVN[SAP.D.paesi[f.k].pv]))];
+    sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cl"><small>${pv.length === 1 ? 'Provincia di ' + esc(pv[0]) : esc(pv.slice(0, 3).join(', '))}</small>
+      <h3>${fs.length} comuni, ${tot} sapori</h3><p>Ecco i comuni di questa zona, dal più ricco. Toccane uno per sapere cosa si mangia lì.</p>
+      <ol class="gl">${fs.slice(0, 40).map(f => `<li><button data-cz="${f.k}"><b>${esc(f.n)}</b><em>${f.c}</em></button></li>`).join('')}</ol></div>`);
+    const b = fs.reduce((b, f) => { const c = SAP.D.paesi[f.k].c; return [Math.min(b[0], c[0]), Math.min(b[1], c[1]), Math.max(b[2], c[0]), Math.max(b[3], c[1])]; }, [180, 90, -180, -90]);
+    map.fitBounds([[b[0], b[1]], [b[2], b[3]]], { padding: Object.assign({}, padMappa(), { bottom: Math.min(innerHeight * .45, 360) }), maxZoom: 11, duration: 700 });
+  });
+}
+function sapVola(c, z) { map.flyTo({ center: c, zoom: z || 10, padding: padMappa(), duration: 700 }); }
+
+/* ---- schede */
+function sapApri(k) { const v = SAP.D.voci[k]; if (v) sapVoce(k); else if (SAP.D.produttori[k]) sapProduttore(k); else if (SAP.D.paesi[k]) sapPaese(k); }
+const lnk = (k, sub) => { const D = SAP.D, v = D.voci[k], p = D.produttori[k], pa = D.paesi[k];
+  const n = v ? v.n : p ? p.n : pa ? pa.n : k, s = sub != null ? sub : v ? SAPT[v.t][0] + (v.paesi ? ' · ' + nomiPaesi(v) : '') : p ? (p.tipo ? p.tipo[0].toUpperCase() + p.tipo.slice(1) : RUOLO[p.r][0]) + ' · ' + D.paesi[p.paese].n : 'Paese';
+  return `<button data-s="${k}">${v ? icoV(v) + ' ' : ''}${esc(n)}<br><small>${esc(s)}</small></button>`; };
+function testata(tit, sub, badge) { $('sh').innerHTML = `<div><h2>${esc(tit)}</h2>${sub ? `<p class="sci">${sub}</p>` : ''}${badge || ''}</div><button class="close" aria-label="Chiudi">×</button>`; }
+function natVicina(c) {
+  if (typeof S === 'undefined') return [];
+  return Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn'].includes(x.t) && x.bb).map(([k, x]) => [k, hav(c, centro(x))]).filter(x => x[1] < 25000).sort((a, b) => a[1] - b[1]).slice(0, 3);
+}
+function distinta(k, liv) {
+  const v = SAP.D.voci[k]; if (!v || !v.dist || liv > 4) return '';
+  return `<ul class="dist">${v.dist.map(([c, nota]) => { const x = SAP.D.voci[c]; if (!x) return '';
+    return `<li><button data-s="${c}">${icoV(x)} ${esc(x.n)}${nota ? ` <small>(${esc(nota)})</small>` : ''}</button>${distinta(c, liv + 1)}</li>`; }).join('')}</ul>`;
+}
+// ---- schede narrative: un racconto costruito dai dati, senza inventare
+const ARTICOLO = { dolci: 'Un dolce', formaggi: 'Un formaggio', 'frutta e ortaggi': 'Un frutto della terra', 'pane e pasta': 'Un pane', gastronomia: 'Un piatto', vini: 'Un vino', salumi: 'Un salume', pesce: 'Un sapore di mare', miele: 'Un miele', 'conserve e condimenti': 'Un condimento', bevande: 'Un liquore' };
+function racconto5(v) {
+  const D = SAP.D, out = [], cat = catDi(v), P = (v.paesi || []).map(p => D.paesi[p].n);
+  const dove = P.length ? (P.length > 4 ? `${elencoE(P.slice(0, 3))} e in altri ${P.length - 3} comuni` : elencoE(P)) : v.prov ? (v.prov.length === 9 ? 'tutta la Sicilia' : 'provincia di ' + elencoE(v.prov.map(x => PROVN[x]))) : '';
+  if (v.t === 'materia') out.push(`${v.n} è una materia prima: da qui partono ricette, dolci e prodotti di tutta l'isola.`);
+  else if (dove) out.push(`${ARTICOLO[cat] || 'Un sapore'} ${P.length ? 'di ' : 'diffuso in '}${dove}${v.nd && norm(v.nd) !== norm(v.n) ? `, che in siciliano si chiama «${v.nd}»` : ''}.`);
+  const ric = v.ric || [];
+  if (ric.includes('DOP')) out.push('È una DOP: il nome, la zona e il modo di produrlo sono protetti da un disciplinare europeo.');
+  else if (ric.includes('IGP')) out.push('È una IGP: l\'Europa riconosce il suo legame con il territorio da cui viene.');
+  else if (ric.some(r => /DOC|IGT/.test(r))) out.push(`È un vino a denominazione (${ric.filter(r => /DOC|IGT/.test(r)).join(', ')}): uve, zona e metodo seguono un disciplinare.`);
+  if (v.pat) out.push('È nell\'elenco nazionale dei prodotti tradizionali: si prepara allo stesso modo da almeno venticinque anni.');
+  if (ric.some(r => /Slow/i.test(r))) out.push('È un presidio Slow Food, custodito da chi lo produce ancora.');
+  if (v.fam && v.fam !== 'Altri dolci') out.push(`Appartiene alla famiglia dei ${v.fam.toLowerCase()}.`);
+  if (v.lr) out.push(v.lr === 'vivo' ? 'Si prepara ancora con continuità.' : v.lr === 'perduto' ? 'Oggi è considerato perduto: resta nei libri e nella memoria.' : `Oggi è ${v.lr}: pochi lo preparano ancora, ed è il motivo per cui lo raccontiamo.`);
+  if (v.dist && v.dist.length) out.push(`È fatto di ${elencoE(v.dist.map(([c]) => (D.voci[c] || {}).n).filter(Boolean).map(x => x.toLowerCase()))}.`);
+  if (v.feste && v.feste.length) out.push(`Si prepara per ${elencoE(v.feste.map(f => D.feste[f].n))}.`);
+  else if (v.m && v.m.length && v.m.length < 12) { const M = new Set(v.m), ini = [...M].find(m => !M.has(m === 1 ? 12 : m - 1)), fin = [...M].find(m => !M.has(m === 12 ? 1 : m + 1)); if (ini && fin && [...M].length === ((fin - ini + 12) % 12) + 1) out.push(ini === fin ? `Il suo mese è ${MESIL[ini - 1]}.` : `Il suo tempo va da ${MESIL[ini - 1]} a ${MESIL[fin - 1]}.`); }
+  if (v.usi.length) out.push(`Lo ritrovi dentro ${elencoE(v.usi.slice(0, 3).map(u => D.voci[u].n))}${v.usi.length > 3 ? ' e altro ancora' : ''}.`);
+  if (v.web) out.push(`${!P.length && v.zona ? `Lo segnalano per ${v.zona}. ` : ''}Lo abbiamo trovato in ${v.fw.length > 1 ? v.fw.length + ' fonti del web' : 'una fonte del web'}: nome e luogo sono un primo indizio, ricetta e storia vanno ancora verificate sui libri.`);
+  if (v.elenco && !out.length) out.push(`Uno dei dolci dell'elenco di Oscar Cangelosi${v.nota ? `: ${v.nota}` : ''}.`);
+  return out;
+}
+const SAGRE = () => SAP.sagre && SAP.sagre.eventi ? Promise.resolve(SAP.sagre) : (SAP.sagre = fetch('data/sagre.json').then(r => r.json()).catch(() => ({ eventi: [] })));
+function sagreDi(paesi, nome) { const oi = new Date().toISOString().slice(0, 10), w = norm(nome || '').split(/\s+/).filter(x => x.length > 4);
+  return Promise.resolve(SAGRE()).then(sg => { SAP.sagre = sg; return (sg.eventi || []).filter(e => e.d[e.d.length - 1] >= oi && e.t !== 'presepe' && ((e.p && paesi.includes(e.p)) || (w.length && w.some(x => norm(e.n).includes(x))))); }); }
+function eroe5(id, img, cap) { return `<div class="eroe5" id="${id}"${img ? ` style="background-image:url('${img}')"` : ''}></div>${cap ? `<p class="cap5" id="${id}c">${cap}</p>` : `<p class="cap5" id="${id}c"></p>`}`; }
+const RICETTE = () => SAP.R || (SAP.R = fetch('data/ricette.json').then(r => r.json()).catch(() => null));
+// quantità per un numero di persone: arrotondate in modo leggibile
+const dose = (q, k) => { if (q == null) return ''; const x = q * k; if (x >= 100) return String(Math.round(x / 10) * 10); if (x >= 10) return String(Math.round(x)); const r = Math.round(x * 4) / 4; return (r || 0.25).toLocaleString('it-IT'); };
+function ricettaIn(box, r, pers) {
+  const k = pers / r.p;
+  box.innerHTML = `<section class="ns5 ric6"><div class="rh"><h3>La ricetta</h3><span class="prova">Ricetta di prova · da verificare</span></div>
+    <div class="rmeta"><span>${ico('calendar', 'xs')} ${esc(r.t)}</span><span>${ico('chef-hat', 'xs')} ${esc(r.d)}</span><span class="pers">${ico('user-check', 'xs')} Per <button data-rp="-1" aria-label="Meno persone">−</button><b>${pers}</b><button data-rp="1" aria-label="Più persone">+</button> ${pers === 1 ? 'persona' : 'persone'}</span></div>
+    <div class="rcol"><div><h4>Ingredienti</h4><ul class="ring6">${r.i.map(([q, u, x]) => `<li><label><input type="checkbox"><span>${q != null ? `<b>${u ? dose(q, k) : Math.max(1, Math.round(q * k))}${u ? ' ' + esc(u) : ''}</b> ` : ''}${esc(x)}</span></label></li>`).join('')}</ul></div>
+    <div><h4>Preparazione</h4><ol class="rpas6">${r.f.map(f => `<li><label><input type="checkbox"><span>${esc(f)}</span></label></li>`).join('')}</ol></div></div>
+    ${r.nota ? `<p class="note">${esc(r.nota)}</p>` : ''}
+    <p class="note">Ricetta scritta da noi per provare la sezione: la confronteremo con le versioni dei libri qui sotto e la correggeremo.</p></section>`;
+  box.onclick = e => { const b = e.target.closest('[data-rp]'); if (!b) return; e.stopPropagation(); ricettaIn(box, r, Math.max(1, Math.min(24, pers + +b.dataset.rp))); };
+}
+const LIBRI = () => SAP.L || (SAP.L = fetch('data/libri.json').then(r => r.json()).catch(() => null));
+function sapVoce(k) {
+  const D = SAP.D, v = D.voci[k]; cur = 'SAP:' + k; selez(''); $('sheet').classList.add('narr');
+  const g = GUSTO[catDi(v)], cat = g ? g[1] : SAPT[v.t][0];
+  testata(v.n, '', '');
+  const fr = racconto5(v), kick = [cat, ...(v.ric || []).filter(r => r !== 'PAT'), v.pat ? 'Prodotto tradizionale' : '', v.lr ? 'Lista rossa: ' + v.lr : ''].filter(Boolean);
+  let h = `<article class="nar5">${eroe5('sve', v.fo ? `foto/${v.fo.f}.webp` : '', v.fo ? `${esc(v.fo.t)}. Foto di Oscar Cangelosi` : '')}
+    <div class="nh5"><p class="kick">${kick.map(esc).join(' · ')}</p><h2>${esc(v.n)}</h2>${v.nd && norm(v.nd) !== norm(v.n) ? `<p class="dial">in siciliano <i>${esc(v.nd)}</i></p>` : ''}</div>
+    ${fr.length ? `<p class="lede">${esc(fr[0])}</p>${fr.length > 1 ? `<p class="corpo">${esc(fr.slice(1).join(' '))}</p>` : ''}` : ''}
+    <div class="cta5">${v.paesi ? `<button data-vmap="${k}">${ico('map-pin', 'xs')} Vedi sulla mappa</button>` : ''}${v.paesi && v.paesi.length === 1 ? `<button data-s="${v.paesi[0]}">${ico('basket', 'xs')} Cosa si mangia a ${esc(D.paesi[v.paesi[0]].n)}</button>` : ''}</div>
+    <div id="swk"></div><div id="ssag"></div>`;
+  if (v.paesi || v.prov) h += `<section class="ns5"><h3>Dove nasce</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, evid: v.paesi || [] })}</div>${v.paesi ? `<div class="chips5">${v.paesi.map(p => `<button data-s="${p}">${esc(D.paesi[p].n)}</button>`).join('')}</div>` : `<p class="note">${v.prov.length === 9 ? 'In tutta la Sicilia' : 'Provincia di ' + v.prov.map(x => PROVN[x]).join(', ')}.</p>`}${v.zind ? '<p class="note">Zona indicativa: i comuni esatti sono nel disciplinare di produzione.</p>' : ''}</section>`;
+  if (v.sp) h += `<section class="ns5"><h3>Nella natura</h3><div class="links"><button data-spn="${esc(v.sp)}">${ico('leaf', 'xs')} <i>${esc(v.sp)}</i><br><small>La pianta, dove cresce e quando fiorisce</small></button></div></section>`;
+  if (v.dist) h += `<section class="ns5"><h3>Di cosa è fatto</h3>${distinta(k, 0)}</section>`;
+  if (v.usi.length) h += `<section class="ns5"><h3>Dove si usa</h3><div class="links">${v.usi.map(u => lnk(u)).join('')}</div></section>`;
+  if (v.ver) h += `<section class="ns5"><h3>Versioni documentate</h3>${v.ver.map(x => { const f = D.fonti[x.f] || {}, tit = { rif: 'Versione di riferimento', var: 'Variante lecita', dev: 'Non tradizionale' }[x.tipo];
+    return `<div class="ver ${x.tipo}"><b>${tit}</b>${x.cert ? ` <span class="cert">${esc(x.cert)}</span>` : ''}<small>${esc(f.a || '')}${f.t ? ', <i>' + esc(f.t) + '</i>' : ''}</small>${x.ingr ? `<p>${esc(x.ingr.join(' · '))}</p>` : ''}${x.nota ? `<p class="note">${esc(x.nota)}</p>` : ''}</div>`; }).join('')}</section>`;
+  if (v.m || v.feste) h += `<section class="ns5"><h3>Quando</h3>${v.m ? `<div class="mesi">${MESI.map((m, i) => `<span class="${v.m.includes(i + 1) ? 'on' : ''}">${m}</span>`).join('')}</div>` : ''}${v.feste ? `<div class="links">${v.feste.map(f => `<button data-festa="${f}">${ico('calendar-event', 'xs')} ${esc(D.feste[f].n)}<br><small>${D.feste[f].d === 'mobile' ? 'data mobile' : +D.feste[f].d.slice(3) + ' ' + MESIL[+D.feste[f].d.slice(0, 2) - 1]}</small></button>`).join('')}</div>` : ''}</section>`;
+  const chi = Object.values(D.produttori).filter(p => p.fa.includes(k));
+  if (chi.length) h += `<section class="ns5"><h3>Chi lo fa oggi</h3><div class="links">${chi.map(p => lnk(p.k, RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n + ' · ' + p.liv)).join('')}</div></section>`;
+  const vg = Object.entries(D.viaggi).filter(([, x]) => x.voce === k || x.tappe.some(t => t[1] === k));
+  if (vg.length) h += `<section class="ns5"><h3>Segui il viaggio</h3><div class="links">${vg.map(([i, x]) => `<button data-viaggio="${i}">${ico('route-2', 'xs')} ${esc(x.n)}<br><small>${x.tappe.length} tappe, dal campo alla tavola</small></button>`).join('')}</div></section>`;
+  const stesso = Object.values(D.voci).filter(x => x.k !== k && x.paesi && v.paesi && x.paesi.some(p => v.paesi.includes(p))).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk)).slice(0, 6);
+  const nat = v.paesi ? natVicina(D.paesi[v.paesi[0]].c) : [];
+  if (stesso.length) h += `<section class="ns5"><h3>Nello stesso posto</h3><div class="mini5">${stesso.map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b></button>`).join('')}</div></section>`;
+  if (nat.length) h += `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>`;
+  const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : [], v.fw || []))].map(f => D.fonti[f]).filter(Boolean);
+  if (v.sfu && !fonti.some(f => f.u && f.u[0] === v.sfu)) fonti.push({ a: 'scheda del presidio Slow Food', web: true, u: [v.sfu] });
+  h += '<div id="sric"></div><div id="slib"></div>';
+  h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => f.web ? `<a href="${esc(f.u[0])}" target="_blank" rel="noopener">${esc(f.a)}</a>` : esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
+  $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
+  if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
+    if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/960px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
+    else sapImgV(k).then(r => { if (r) metti(r.u, `${esc(r.a ? r.a + ', ' : '')}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a>`); }); }
+  if (!isApp) RICETTE().then(R => { const id = R && R.v[k]; if (!id || cur !== 'SAP:' + k || !$('sric')) return; ricettaIn($('sric'), R.r[id], R.r[id].p); });
+  if (!isApp) LIBRI().then(L => { const x = L && L.v[k]; if (!x || cur !== 'SAP:' + k || !$('slib')) return;
+    $('slib').innerHTML = `<section class="ns5 lib5"><h3>Nei libri</h3><ul>${x.map(([b, p]) => { const l = L.libri[b]; return `<li><b><i>${esc(l[0])}</i>${l[1] ? ', ' + esc(l[1]) : ''}</b><span>${p.includes(',') ? 'pagine' : 'pagina'} ${esc(p)}</span></li>`; }).join('')}</ul><p class="note">Dagli indici dei libri della biblioteca di Oscar: solo titolo e pagina, la ricetta è nel libro.</p></section>`; });
+  sagreDi(v.paesi || [], v.n).then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Da segnare in calendario</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}</small></span></button>`).join('')}</section>`; });
+  if (v.paesi && vista === 'mappa' && !SAP.home) sapVola(D.paesi[v.paesi[0]].c, 9);
+}
+function sapProduttore(k) {
+  const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r], seg = p.liv === 'Segnalato'; cur = 'SAP:' + k; selez('');
+  testata(p.n, `${p.tipo ? esc(p.tipo[0].toUpperCase() + p.tipo.slice(1)) : r[0]} · ${esc(D.paesi[p.paese].n)}`, seg ? `<span class="badge liv">Segnalato · da visitare</span>` : `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
+  let h = seg ? `<div class="racconto"><p>Lo segnalano: ${(p.seg || []).map(([a, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(a)}</a>`).join('; ')}.</p><p>Non lo abbiamo ancora visitato. Dopo la visita qui troverai la sua storia, le persone, le foto e la filiera.</p></div>`
+    : `<div class="racconto"><p>Scheda di prova: qui andranno la storia dell'azienda, le persone, le foto e la filiera dichiarata o verificata.</p></div>`;
+  if (p.fa.length) h += `<h3>Cosa fa</h3><div class="links">${p.fa.map(x => lnk(x)).join('')}</div>`;
+  if (p.da) h += `<h3>Da chi compra</h3><div class="links">${p.da.map(x => lnk(x)).join('')}</div>`;
+  if (p.a) h += `<h3>A chi vende</h3><div class="links">${p.a.map(x => lnk(x)).join('')}</div>`;
+  if (p.esp) h += `<h3>Esperienze</h3><p class="racconto">${esc(p.esp)}</p>`;
+  if (p.sito) h += `<h3>Contatti</h3><div class="links"><a class="btnl" href="${esc(p.sito)}" target="_blank" rel="noopener">${ico('link', 'sm')} Sito dell'azienda</a></div>`;
+  const vic = Object.values(D.produttori).filter(x => x.k !== k && x.paese === p.paese).slice(0, 6);
+  if (vic.length) h += `<h3>Nello stesso paese</h3><div class="links">${vic.map(x => lnk(x.k)).join('')}</div>`;
+  h += `<h3>Livelli di verifica</h3><p class="note"><b>Segnalato</b>: lo indica una fonte pubblica affidabile, ma non lo abbiamo ancora visitato. <b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali. Nessuno entra pagando.</p><p class="src">${seg ? 'Fonti consultate il 28/11/2026. Se trovi un errore, scrivici.' : esc(D.nota)}</p>`;
+  $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(D.paesi[p.paese].c, 10);
+}
+function sapPaese(k) {
+  const D = SAP.D, p = D.paesi[k]; if (!p) return; cur = 'SAP:' + k; selez(''); $('sheet').classList.add('narr');
+  SAP.visti = (SAP.visti || []).filter(x => x !== k).concat(k).slice(-12);
+  const voci = Object.values(D.voci).filter(v => (v.paesi || []).includes(k)), prov = Object.values(D.voci).filter(v => !(v.paesi || []).includes(k) && (v.prov || []).includes(p.pv) && (v.prov || []).length < 9);
+  const prod = Object.values(D.produttori).filter(x => x.paese === k), fe = Object.entries(D.feste).filter(([, f]) => f.paesi.includes(k)), nat = natVicina(p.c);
+  const dol = voci.filter(v => v.t === 'dolce').length, dop = voci.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')), pat = voci.filter(v => v.pat).length;
+  const nC = {}; for (const v of Object.values(D.voci)) for (const q of (v.paesi || [])) nC[q] = (nC[q] || 0) + 1;
+  const inProv = Object.entries(D.paesi).filter(([q, x]) => x.pv === p.pv && nC[q]).map(([q]) => q);
+  const rk = Object.keys(D.paesi).filter(q => D.paesi[q].pv === p.pv).sort((a, b) => (nC[b] || 0) - (nC[a] || 0)).indexOf(k) + 1;
+  const vicini = Object.entries(D.paesi).filter(([q]) => q !== k && nC[q]).map(([q, x]) => [q, hav(p.c, x.c)]).sort((a, b) => a[1] - b[1]).slice(0, 5);
+  const top = voci.slice().sort((a, b) => ((b.ric || []).length + !!b.fo * 2 + !!b.wk) - ((a.ric || []).length + !!a.fo * 2 + !!a.wk));
+  testata(p.n, '', '');
+  const fr = [];
+  if (voci.length) fr.push(`A ${p.n} sono documentati ${voci.length} ${voci.length === 1 ? 'sapore' : 'sapori'}${dol ? `, ${dol === voci.length ? 'tutti dolci' : `di cui ${dol} ${dol === 1 ? 'dolce' : 'dolci'}`}` : ''}.`);
+  if (dop.length) fr.push(`Qui nasce ${elencoE(dop.map(v => v.n))}, con denominazione riconosciuta in Europa.`);
+  else if (top[0]) fr.push(`Il più conosciuto è ${top[0].n}.`);
+  if (rk && rk <= 3 && voci.length > 3) fr.push(`È tra i tre comuni più ricchi di sapori della provincia di ${PROVN[p.pv]}.`);
+  if (fe.length) fr.push(`Le feste da segnare: ${elencoE(fe.map(([, f]) => f.n))}.`);
+  if (nat[0]) fr.push(`A ${Math.round(nat[0][1] / 1000)} km c'è ${S[nat[0][0]].n}.`);
+  let h = `<article class="nar5">${eroe5('spe', '', '')}
+    <div class="nh5"><p class="kick">Comune · Provincia di ${esc(PROVN[p.pv] || '')}</p><h2>${esc(p.n)}</h2></div>
+    ${fr.length ? `<p class="lede">${esc(fr[0])}</p>${fr.length > 1 ? `<p class="corpo">${esc(fr.slice(1).join(' '))}</p>` : ''}` : '<p class="lede">Qui non abbiamo ancora documentato sapori. Se ne conosci uno, raccontacelo.</p>'}
+    <div class="cta5"><button data-pmap="${k}">${ico('map-pin', 'xs')} Vedi sulla mappa</button></div>
+    <div id="ssag"></div>
+    ${voci.length ? `<section class="ns5"><h3>Cosa assaggiare</h3><div class="mini5 big">${top.slice(0, 6).map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b><small>${esc([(x.ric || []).join(', '), x.fam && x.fam !== 'Altri dolci' ? x.fam : ''].filter(Boolean).join(', ') || SAPT[x.t][0])}</small></button>`).join('')}</div>
+      ${top.length > 6 ? `<details class="prov"><summary>E altri ${top.length - 6}</summary><div class="chips5">${top.slice(6).map(x => `<button data-s="${x.k}">${esc(x.n)}</button>`).join('')}</div></details>` : ''}</section>` : ''}
+    <section class="ns5"><h3>Dove si trova</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, sel: k })}</div><p class="note">${inProv.length} comuni della provincia di ${esc(PROVN[p.pv])} hanno sapori documentati.</p></section>
+    ${fe.length ? `<section class="ns5"><h3>Feste</h3><div class="links">${fe.map(([i, f]) => `<button data-festa="${i}">${ico('calendar-event', 'xs')} ${esc(f.n)}</button>`).join('')}</div></section>` : ''}
+    ${nat.length ? `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>` : ''}
+    ${vicini.length ? `<section class="ns5"><h3>Qui vicino</h3><div class="chips5">${vicini.map(([q, d]) => `<button data-s="${q}">${esc(D.paesi[q].n)}<em>${Math.round(d / 1000)} km</em></button>`).join('')}</div></section>` : ''}
+    ${prov.length ? `<details class="prov"><summary>In provincia di ${esc(PROVN[p.pv])}: altri ${prov.length} prodotti tradizionali</summary><div class="links">${prov.map(v => lnk(v.k)).join('')}</div></details>` : ''}
+    ${prod.length ? `<section class="ns5"><h3>Chi lo fa qui</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div></section>` : ''}
+    <p class="src">Il racconto è costruito dai dati: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. ${esc(D.nota)}</p></article>`;
+  $('sb').innerHTML = h; mostra(); sapFoto($('sb'));
+  wikiVoce(p.n + (['Licata', 'Ribera'].includes(p.n) ? '' : '')).then(w => { if (!w || cur !== 'SAP:' + k || !$('spe') || !w.thumbnail || NOFOTO.test(w.thumbnail.source)) return;
+    $('spe').style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; $('spec').innerHTML = `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`; });
+  sagreDi([k], '').then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Prossimamente a ${esc(p.n)}</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.desc)}</small></span></button>`).join('')}</section>`; });
+  if (vista === 'mappa' && !SAP.home) sapVola(p.c, 10);
+}
+function sapViaggio(i) {
+  const D = SAP.D, x = D.viaggi[i];
+  const go = () => {
+    const pts = x.tappe.map(([p]) => { const c = D.paesi[D.produttori[p].paese].c; return c; });
+    map.getSource('sapv').setData({ type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: pts } }] });
+    const bb = pts.reduce((b, c) => [Math.min(b[0], c[0]), Math.min(b[1], c[1]), Math.max(b[2], c[0]), Math.max(b[3], c[1])], [180, 90, -180, -90]);
+    map.fitBounds([[bb[0], bb[1]], [bb[2], bb[3]]], { padding: padMappa(), maxZoom: 10, duration: 700 });
+    cur = 'SAP:v:' + i; selez('');
+    testata(x.n, 'Il viaggio della materia prima', PROVA);
+    $('sb').innerHTML = `<ol class="tappe">${x.tappe.map(([p, v], n) => { const P = D.produttori[p], V = D.voci[v]; return `<li><span class="nt">${n + 1}</span><div><button data-s="${p}"><b>${esc(P.n)}</b><small>${esc(RUOLO[P.r][0])} · ${esc(D.paesi[P.paese].n)}</small></button><button data-s="${v}" class="vv">${icoV(V)} ${esc(V.n)}</button></div></li>`; }).join('')}</ol><p class="note">Sulla mappa la linea collega le tappe in ordine. In futuro: itinerario da fare davvero, con PDF e link come per i percorsi.</p><p class="src">${esc(D.nota)}</p>`;
+    mostra();
+  };
+  if (vista !== 'mappa' || SAP.home) { SAP.home = false; vai('mappa'); setTimeout(go, 400); } else go();
+}
+function sapFesta(i) { SAP.mese = (SAP.D.feste[i].m || [SAP.mese])[0]; vai('meteo'); }
+$('sheet').addEventListener('click', e => {
+  const vm = e.target.closest('[data-vmap],[data-pmap],[data-scal],.mm5 circle[data-sc]');
+  if (vm) { e.stopPropagation(); const D = SAP.D;
+    if (vm.dataset.scal) { const ev = (SAP.sagre.eventi || []).find(x => x.id === vm.dataset.scal); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d[0], tipo: '', pv: '' }; versoSapori(() => vai('meteo')); } return; }
+    if (vm.dataset.sc) return sapPaese(vm.dataset.sc);
+    const c = vm.dataset.vmap ? D.paesi[D.voci[vm.dataset.vmap].paesi[0]].c : D.paesi[vm.dataset.pmap].c, keep = cur;
+    const vola = () => { sapVola(c, 10); };
+    if (vista !== 'mappa' || SAP.home || NAT.home) { SAP.home = false; NAT.home = false; vai('mappa'); setTimeout(() => { vola(); const kk = keep.slice(4); D.voci[kk] ? sapVoce(kk) : sapPaese(kk); }, 450); } else vola();
+    return; }
+  const b = e.target.closest('[data-s],[data-viaggio],[data-festa],[data-spn],[data-nat]'); if (!b || (!SAP.on && !String(cur).startsWith('SAP:'))) return;
+  if (b.dataset.s) sapApri(b.dataset.s); else if (b.dataset.viaggio) sapViaggio(b.dataset.viaggio); else if (b.dataset.festa) sapFesta(b.dataset.festa);
+  else if (b.dataset.spn) CAT.then(() => { const i = trovaPianta(b.dataset.spn); if (i >= 0) apriSpecie('piante', i); });
+  else if (b.dataset.nat) { sapModo(false); setTimeout(() => apri(b.dataset.nat, true), 300); }
+});
+
+/* ---- catalogo */
+function sapCatalogo() {
+  if (typeof segnaRotta === 'function') setTimeout(segnaRotta, 0);
+  const D = SAP.D, F = SAP.fil, w = norm(F.q.trim()).split(/\s+/).filter(Boolean);
+  const tutti = Object.values(D.voci);
+  const okK = v => F.k === 'tutto' || (F.k === 'ingr' ? (v.t === 'materia' || v.t === 'semi') : (catDi(v) === F.k && v.t !== 'materia' && v.t !== 'semi'));
+  const okR = v => !F.ric || (F.ric === 'tut' ? (v.ric || []).some(r => r === 'DOP' || r === 'IGP') : (v.ric || []).includes('PAT'));
+  const lista = F.k === 'prod' ? [] : tutti.filter(v => okK(v) && okR(v) && (!F.paese || (v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && (!F.fam || v.fam === F.fam) && w.every(x => contiene(norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + nomiPaesi(v)), x)));
+  const prod = (F.k === 'prod' || F.k === 'tutto') ? Object.values(D.produttori).filter(p => (!F.paese || p.paese === F.paese) && w.every(x => norm(p.n + ' ' + D.paesi[p.paese].n).includes(x))) : [];
+  const conta = k => k === 'tutto' ? tutti.length : k === 'prod' ? Object.keys(D.produttori).length : tutti.filter(v => (F.k = k, okK(v))).length;
+  const kk = F.k, cat = [['tutto', 'Tutto'], ...GUSTI.map(g => [g[0], g[1]]), ['ingr', 'Ingredienti'], ['prod', 'Produttori']];
+  const sel = (id, val, opts, vuoto) => `<select class="tendina" id="${id}"><option value="">${vuoto}</option>${opts.map(([k, n]) => `<option value="${k}"${val === k ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
+  const card = v => tessera(v, [(v.ric || []).join(', '), v.paesi ? nomiPaesi(v) : v.prov ? (v.prov.length === 9 ? 'tutta la Sicilia' : 'provincia di ' + v.prov.map(x => PROVN[x]).join(', ')) : v.zona || '', v.fam && v.fam !== 'Altri dolci' ? v.fam : '', v.web ? 'da verificare' : ''].filter(Boolean).join(', ').slice(0, 110));
+  const cardP = p => `<button class="card prodc" data-sc="${p.k}"><span class="ph" style="color:${RUOLO[p.r][2]}">${ico(RUOLO[p.r][1], 'phi')}</span><span class="tx"><b class="nc">${esc(p.n)}</b><small>${esc(RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n)}</small><span class="tag">${esc(p.liv)}</span></span></button>`;
+  const fresh = $('cat').dataset.v !== 'sap-cat';
+  if (fresh) {
+    $('cat').dataset.v = 'sap-cat'; $('cat').scrollTop = 0;
+    $('cat').innerHTML = `<div class="in"><h2 id="sgt">${GUSTO[F.k] ? esc(GUSTO[F.k][1]) : 'Catalogo dei sapori'}</h2><p class="lead" id="sgl">${GUSTO[F.k] && DESCG[F.k] ? DESCG[F.k] + '. Filtra per paese, festa o riconoscimento, oppure cambia famiglia qui sotto.' : 'Dolci, prodotti tradizionali, DOP e IGP, piatti, ingredienti e chi li fa.'}</p>
+      <div class="cerca"><input id="sq" type="search" placeholder="Cerca un dolce, un ingrediente, un paese" value="${esc(F.q)}" autocomplete="off"></div>
+      <div class="grp" id="sg"></div>
+      <div class="sfil">${sel('sfp', F.paese, Object.entries(D.paesi).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, p]) => [k, p.n]), 'Tutti i paesi')}${sel('sff', F.festa, Object.entries(D.feste).map(([k, f]) => [k, f.n]), 'Tutte le feste')}${sel('sfa', F.fam, [...new Set(tutti.map(v => v.fam).filter(Boolean))].sort().map(x => [x, x]), 'Tutte le famiglie')}${sel('sfr', F.ric || '', [['tut', 'DOP e IGP'], ['pat', 'Prodotti tradizionali (PAT)']], 'Tutti i riconoscimenti')}${sel('sfl', F.lr, Object.keys(LRC).map(k => [k, k]), 'Lista rossa: tutti')}</div>
+      <p class="cnt" id="sn"></p><div class="griglia" id="sgr"></div><button class="altri" id="sz" style="display:none"></button>${COPY()}</div>`;
+    $('sq').oninput = e => { SAP.fil.q = e.target.value; sapCatalogo(); };
+    $('sfp').onchange = e => { SAP.fil.paese = e.target.value; sapCatalogo(); };
+    $('sff').onchange = e => { SAP.fil.festa = e.target.value; sapCatalogo(); };
+    $('sfl').onchange = e => { SAP.fil.lr = e.target.value; sapCatalogo(); };
+    $('sfr').onchange = e => { SAP.fil.ric = e.target.value; SAP.fil.n = 60; sapCatalogo(); };
+    $('sfa').onchange = e => { SAP.fil.fam = e.target.value; SAP.fil.n = 60; sapCatalogo(); };
+    $('sz').onclick = () => { SAP.fil.n += 60; sapCatalogo(); };
+  }
+  const cnt = Object.fromEntries(cat.map(([k]) => [k, conta(k)])); F.k = kk;
+  $('sg').innerHTML = cat.map(([k, n]) => `<button data-sk="${k}" class="${F.k === k ? 'on' : ''}">${GUSTO[k] ? `<span class="tpi" style="color:${GUSTO[k][3]}">${ico(GUSTO[k][2], 'xs')}</span>` : ''}${n}<em>${cnt[k]}</em></button>`).join('');
+  const nf = (F.paese ? 1 : 0) + (F.festa ? 1 : 0) + (F.lr ? 1 : 0) + (F.fam ? 1 : 0) + (F.ric ? 1 : 0);
+  $('sn').innerHTML = `${lista.length + prod.length} risultati${nf ? ` · <button class="azzera" id="saz">Azzera filtri</button>` : ''}`;
+  const tot = lista.map(card).concat(prod.map(cardP)); $('sgr').innerHTML = tot.slice(0, F.n).join(''); $('sz').textContent = 'Mostra altri'; $('sz').style.display = tot.length > F.n ? 'block' : 'none'; sapFoto($('sgr'));
+  if ($('saz')) $('saz').onclick = () => { Object.assign(SAP.fil, { paese: '', festa: '', lr: '', fam: '', ric: '' }); $('cat').dataset.v = ''; sapCatalogo(); };
+}
+
+/* ---- calendario */
+function sapCalendario() {
+  if (!SAP.sagre) { SAP.sagre = fetch('data/sagre.json').then(r => r.json()).catch(() => ({ eventi: [] })); }
+  Promise.resolve(SAP.sagre).then(sg => { SAP.sagre = sg; calDisegna(); });
+}
+const TIPI = { sagra: ['Sagre e feste del gusto', 'Sagra', '#E8761A'], mercatino: ['Mercatini', 'Mercatino', '#B85300'], presepe: ['Presepi viventi', 'Presepe vivente', '#7A5C3E'] };
+const GIORNI = ['lun', 'mar', 'mer', 'gio', 'ven', 'sab', 'dom'];
+const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+function calDisegna() {
+  const D = SAP.D, E = SAP.sagre.eventi || [], oggi = new Date(), oi = iso(oggi);
+  const C = SAP.cal = SAP.cal || { y: oggi.getFullYear(), m: oggi.getMonth() + 1, sel: '', tipo: '', pv: '' };
+  if (!C.sel) { const pr = E.flatMap(e => e.d).filter(d => d >= oi).sort()[0]; C.sel = pr || oi; const [y, m] = C.sel.split('-'); C.y = +y; C.m = +m; }
+  const ok = e => (!C.tipo || e.t === C.tipo) && (!C.pv || e.pv === C.pv);
+  const vis = E.filter(ok), perG = {}; for (const e of vis) for (const d of e.d) (perG[d] = perG[d] || []).push(e);
+  const futuri = E.filter(e => e.d[e.d.length - 1] >= oi), nS = futuri.filter(e => e.t === 'sagra').length, nP = futuri.filter(e => e.t === 'presepe').length, nM = futuri.filter(e => e.t === 'mercatino').length;
+  // griglia del mese, da lunedì
+  const p1 = new Date(C.y, C.m - 1, 1), off = (p1.getDay() + 6) % 7, gg = new Date(C.y, C.m, 0).getDate(), celle = [];
+  for (let i = 0; i < off; i++) celle.push('<span class="vuoto"></span>');
+  for (let d = 1; d <= gg; d++) { const k = `${C.y}-${String(C.m).padStart(2, '0')}-${String(d).padStart(2, '0')}`, ev = perG[k] || [];
+    celle.push(`<button class="gio${k === C.sel ? ' sel' : ''}${k === oi ? ' oggi' : ''}${k < oi ? ' pass' : ''}${ev.length ? ' pieno' : ''}" data-cday="${k}" aria-label="${d} ${MESIL[C.m - 1]}, ${ev.length} appuntamenti"><b>${d}</b>${ev.slice(0, 3).map(e => `<i class="t-${e.t}">${esc(e.c)}</i>`).join('')}${ev.length > 3 ? `<em>+${ev.length - 3}</em>` : ''}</button>`); }
+  const delG = (perG[C.sel] || []).slice().sort((a, b) => (a.t > b.t) - (a.t < b.t));
+  const [sy, sm, sd] = C.sel.split('-').map(Number), selD = new Date(sy, sm - 1, sd);
+  const nomeG = `${['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'][selD.getDay()]} ${sd} ${MESIL[sm - 1]}`;
+  const delMese = vis.filter(e => e.d.some(d => d.startsWith(`${C.y}-${String(C.m).padStart(2, '0')}`)));
+  const quando = e => { const d = e.d.map(x => +x.slice(8)), m = MESIL[+e.d[0].slice(5, 7) - 1]; if (d.length === 1) return `${d[0]} ${m}`; const cons = d.every((x, i) => !i || x === d[i - 1] + 1); return cons ? `dal ${d[0]} al ${d[d.length - 1]} ${m}` : `${d.join(', ')} ${m}`; };
+  const ics = e => { const a = e.d[0].replace(/-/g, ''), z = new Date(+e.d[e.d.length - 1].slice(0, 4), +e.d[e.d.length - 1].slice(5, 7) - 1, +e.d[e.d.length - 1].slice(8) + 1), b = iso(z).replace(/-/g, '');
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Sicilia Naturale//IT\r\nBEGIN:VEVENT\r\nUID:${e.id}@sicilianaturale\r\nDTSTAMP:20261127T000000Z\r\nDTSTART;VALUE=DATE:${a}\r\nDTEND;VALUE=DATE:${b}\r\nSUMMARY:${e.n} a ${e.c}\r\nLOCATION:${e.c} (${e.pv})\r\nDESCRIPTION:${e.desc} Verifica date e orari con gli organizzatori. Fonte: ${e.f}\r\nEND:VEVENT\r\nEND:VCALENDAR`); };
+  const scheda = e => `<article class="ev5 t-${e.t}"><div class="et"><span class="tag">${TIPI[e.t][1]}</span><small>${quando(e)}</small></div><h3>${esc(e.n)}</h3><p class="dove">${esc(e.c)}, provincia di ${esc(PROVN[e.pv] || e.pv)}</p><p>${esc(e.desc)}</p>
+    <div class="ea">${e.p ? `<button data-sc="${e.p}">Cosa si mangia a ${esc(e.c)}</button>` : ''}<a href="${ics(e)}" download="${esc(e.n.replace(/[^\w]+/g, '-'))}.ics">Aggiungi al tuo calendario</a><a href="${esc(e.f)}" target="_blank" rel="noopener">Fonte</a></div></article>`;
+  const punti = delMese.map(e => ({ xy: e.xy, id: e.id, t: e.t, on: e.d.includes(C.sel), tit: `${e.n}, ${e.c}: ${quando(e)}` }));
+  const mesiCon = [...new Set(E.flatMap(e => e.d.map(d => d.slice(0, 7))))].sort();
+  const D2 = SAP.D, fe = Object.entries(D2.feste).filter(([, f]) => f.m.includes(C.m)), st = Object.values(D2.voci).filter(v => (v.m || []).includes(C.m) && v.t !== 'materia');
+  $('cat').dataset.v = 'sap-cal';
+  $('cat').innerHTML = `<div class="sh5 cal5">
+    <section class="s5 tc"><h1>Calendario dei sapori</h1>
+      <p class="lead">Da oggi a fine dicembre in Sicilia ci sono ${nS} sagre e feste del gusto, ${nM} mercatini e ${nP} presepi viventi. Scegli un giorno: vedi dove andare e cosa si mangia.</p>
+      <div class="fil5">${[['', 'Tutto'], ...Object.entries(TIPI).map(([k, v]) => [k, v[0]])].map(([k, n]) => `<button data-ctipo="${k}" class="${C.tipo === k ? 'on' : ''}">${k ? `<i class="t-${k}"></i>` : ''}${n}</button>`).join('')}
+        <label class="pv5"><span class="sr">Provincia</span><select id="cpv"><option value="">Tutta la Sicilia</option>${Object.entries(PROVN).map(([k, n]) => `<option value="${k}"${C.pv === k ? ' selected' : ''}>${n}</option>`).join('')}</select></label></div>
+    </section>
+    <section class="s5 cg5">
+      <div class="mese5"><div class="mh"><button data-cmese="-1" aria-label="Mese prima">‹</button><h2>${MESIL[C.m - 1][0].toUpperCase() + MESIL[C.m - 1].slice(1)} ${C.y}</h2><button data-cmese="1" aria-label="Mese dopo">›</button></div>
+        <div class="gr5">${GIORNI.map(g => `<span class="gn">${g}</span>`).join('')}${celle.join('')}</div>
+        <p class="leg">${Object.entries(TIPI).map(([k, v]) => `<span><i class="t-${k}"></i>${v[1]}</span>`).join('')}</p></div>
+      <div class="gio5"><h2>${nomeG[0].toUpperCase() + nomeG.slice(1)}</h2>${delG.length ? delG.map(scheda).join('') : `<p class="vuoto5">Nessun appuntamento in questo giorno${C.tipo || C.pv ? ' con i filtri scelti' : ''}. ${mesiCon.length ? 'Scegli un giorno con un punto colorato.' : ''}</p>`}</div>
+    </section>
+    <section class="s5 cm5"><div class="t5"><h2>Dove, in ${MESIL[C.m - 1]}</h2><p>${delMese.length} appuntamenti nel mese. I punti pieni sono quelli del giorno scelto.</p></div>
+      <div class="cmap">${mappaSicilia({ w: 840, nomi: true, punti })}</div></section>
+    ${delMese.length ? `<section class="s5"><div class="t5"><h2>Tutti gli appuntamenti di ${MESIL[C.m - 1]}</h2></div><div class="lista5">${delMese.slice().sort((a, b) => a.d[0] < b.d[0] ? -1 : 1).map(scheda).join('')}</div></section>` : ''}
+    ${fe.length ? `<section class="s5"><div class="t5"><h2>Feste e dolci della tradizione</h2></div><div class="rail5">${fe.map(([i, f]) => `<button class="pz5" data-hfesta="${i}"><span class="img">${ico('calendar')}</span><b>${esc(f.n)}</b><small>${f.d === 'mobile' ? 'Data mobile' : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}${f.paesi.length ? ', ' + esc(f.paesi.map(p => D2.paesi[p].n).join(', ')) : ''}</small></button>`).join('')}</div></section>` : ''}
+    ${st.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[C.m - 1]}</h2></div><div class="rail5">${st.slice(0, 20).map(v => `<button class="pz5" data-sc="${v.k}"><span${imgAttr(v)}>${ico((GUSTO[catDi(v)] || ['', '', 'plant'])[2])}</span><b>${esc(v.n)}</b><small>${esc(nomiPaesi(v) || '')}</small></button>`).join('')}</div></section>` : ''}
+    <p class="note n5">Date raccolte il 27 novembre 2026 da siti di eventi e giornali locali (fonte indicata in ogni scheda). Date e orari possono cambiare: verifica con gli organizzatori prima di partire.</p>${COPY()}</div>`;
+  sapFoto($('cat'));
+  $('cpv').onchange = e => { C.pv = e.target.value; calDisegna(); };
+}
+$('cat').addEventListener('click', e => {
+  if (!SAP.on || $('cat').dataset.v !== 'sap-cal') return;
+  const C = SAP.cal, d = e.target.closest('[data-cday]'), t = e.target.closest('[data-ctipo]'), m = e.target.closest('[data-cmese]'), pt = e.target.closest('[data-cev]'), hf = e.target.closest('[data-hfesta]');
+  if (d) { e.stopPropagation(); C.sel = d.dataset.cday; const y = $('cat').scrollTop; calDisegna(); $('cat').scrollTop = y; return; }
+  if (t) { e.stopPropagation(); C.tipo = t.dataset.ctipo; return calDisegna(); }
+  if (m) { e.stopPropagation(); C.m += +m.dataset.cmese; if (C.m < 1) { C.m = 12; C.y--; } if (C.m > 12) { C.m = 1; C.y++; } C.sel = `${C.y}-${String(C.m).padStart(2, '0')}-01`; return calDisegna(); }
+  if (pt) { e.stopPropagation(); const ev = SAP.sagre.eventi.find(x => x.id === pt.dataset.cev); if (ev) { C.sel = ev.d.find(x => x >= iso(new Date())) || ev.d[0]; calDisegna(); $('cat').querySelector('.gio5').scrollIntoView({ behavior: 'smooth', block: 'start' }); } return; }
+  if (hf) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'tutto', festa: hf.dataset.hfesta, q: '', paese: '', lr: '', fam: '', ric: '', n: 60 }); $('cat').dataset.v = ''; vai('specie'); }
+}, true);
+
+document.addEventListener('click', e => {
+  const t = e.target.closest && e.target.closest('[data-fil],[data-fv],[data-fs],[data-fpr]'); if (!t || t.closest('#sapcard')) return;
+  if (t.dataset.fil) { e.stopPropagation(); if (!SAP.on) return versoSapori(() => sapFiliera(t.dataset.fil)); if ($('cat').classList.contains('on')) return sapFiliera(t.dataset.fil); vai('specie'); return setTimeout(() => sapFiliera(t.dataset.fil), 60); }
+  if (t.dataset.fv) { e.stopPropagation(); const [fk, vk] = t.dataset.fv.split(':'); return sapVarieta(fk, vk); }
+  if (t.dataset.fs) { e.stopPropagation(); return sapApri(t.dataset.fs); }
+  if (t.dataset.fpr) { e.stopPropagation(); return sapProduttore(t.dataset.fpr); }
+}, true);
+/* ---- itinerari del gusto: proposte costruite dai dati (sapori, produttori segnalati, sagre, natura vicina). Le tappe non sono ancora state visitate. */
+const ITIN = [
+  { k: 'etna', n: 'Intorno all\'Etna', s: 'Pistacchio, vino e miele sulle pendici del vulcano', p: ['bronte', 'adrano', 'randazzo', 'castiglione-di-sicilia', 'linguaglossa', 'zafferana-etnea'], m: [9, 10], wk: 'Pistacchio di Bronte', t: 'Un anello sul versante nord e ovest del vulcano: il pistacchio di Bronte cresce sulle colate di lava, le vigne salgono fino a mille metri, i boschi dell\'Etna sono a pochi minuti.' },
+  { k: 'madonie', n: 'Madonie', s: 'Manna, provola e grani antichi tra i borghi di montagna', p: ['castelbuono', 'pollina', 'geraci-siculo', 'petralia-soprana', 'polizzi'], m: [7, 8, 10], wk: 'Madonie', t: 'Dentro il Parco delle Madonie: la manna dei frassini, i formaggi dei pascoli alti, i legumi e i grani dei paesi di montagna.' },
+  { k: 'belice', n: 'Valle del Belice', s: 'Olio, vastedda e pane nero', p: ['castelvetrano', 'campobello-di-mazara', 'partanna', 'santa-ninfa', 'salaparuta', 'poggioreale'], m: [10, 11, 12], f: 'olive-nel-palmo-passulunara', t: 'La terra della Nocellara del Belice e della vastedda di pecora, del pane nero di Castelvetrano e degli uliveti secolari.' },
+  { k: 'iblei', n: 'Monti Iblei', s: 'Cioccolato, ragusano e città barocche', p: ['ragusa', 'chiaramonte-gulfi', 'modica', 'scicli', 'ispica', 'noto'], m: [3, 4, 5, 10], wk: 'Modica', t: 'Tra muretti a secco e città barocche: il cioccolato di Modica, il ragusano dei pascoli iblei, l\'olio della Tonda Iblea.' },
+  { k: 'nebrodi', n: 'Nebrodi', s: 'Suino nero, provola e nocciole nei boschi', p: ['cesaro', 'floresta', 'ucria', 'sinagra', 'ficarra', 'tortorici'], m: [9, 10, 11], wk: 'Monti Nebrodi', t: 'I boschi più grandi della Sicilia: il suino nero allevato all\'aperto, la provola dei Nebrodi, le nocciole dei paesi sulle colline.' },
+  { k: 'trapani', n: 'Tra Trapani ed Erice', s: 'Sale, cuscus e pasticcerie di monastero', p: ['marsala', 'paceco', 'trapani', 'erice', 'favignana'], m: [6, 7, 8, 9], f: 'backsale', t: 'Dalle saline al monte: il sale marino, il cuscus di pesce, i dolci di mandorla di Erice e il mare delle Egadi.' },
+  { k: 'sicani', n: 'Terre sicane', s: 'Arance di Ribera, vino e dolci di Sambuca', p: ['menfi', 'sambuca', 'caltabellotta', 'ribera', 'sciacca'], m: [1, 2, 3, 4], wk: 'Arancia di Ribera', t: 'Tra la costa di Sciacca e le colline dei Sicani: gli aranceti di Ribera, le vigne di Menfi, i dolci di Sambuca.' },
+  { k: 'cuore', n: 'Il cuore dell\'isola', s: 'Grano, piacentinu e pani delle feste', p: ['caltanissetta', 'mussomeli', 'enna', 'leonforte', 'nicosia', 'troina'], m: [5, 6, 7], f: 'pane-di-grano-duro', t: 'Le colline del grano tra Caltanissetta ed Enna: il piacentinu con lo zafferano, le fave e le lenticchie, i pani delle feste.' },
+  { k: 'eolie', n: 'Isole Eolie', s: 'Capperi e malvasia tra i vulcani', p: ['lipari', 'santa-marina-salina', 'malfa', 'leni'], m: [5, 6, 9], f: 'capperi-e-cucunci', t: 'Lipari e Salina: i capperi tra le pietre laviche, la malvasia delle Lipari, il mare intorno.' }
+];
+const hav2 = (a, b) => { const R = 6371, r = x => x * Math.PI / 180, dl = r(b[1] - a[1]), dn = r(b[0] - a[0]); return 2 * R * Math.asin(Math.sqrt(Math.sin(dl / 2) ** 2 + Math.cos(r(a[1])) * Math.cos(r(b[1])) * Math.sin(dn / 2) ** 2)); };
+const itKm = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean).map(x => x.c); let km = 0; for (let i = 1; i < P.length; i++) km += hav2(P[i - 1], P[i]) * 1.35; return Math.round(km / 5) * 5; };
+const itFoto = it => it.f ? ` style="background-image:url('foto/${it.f}.webp')"` : ` data-gwk="${esc(it.wk)}"`;
+const itMesi = it => it.m.map(x => MESIL[x - 1]).join(', ');
+function itMappa(it, w, big) {
+  const D = SAP.D, P = it.p.filter(p => D.paesi[p]);
+  return mappaSicilia({ w, nomi: !big ? false : true, punti: [], extra: (X, Y) => `<polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>` + P.map((p, i) => { const x = +X(D.paesi[p].c[0]), y = +Y(D.paesi[p].c[1]);
+    return `<g class="itp" data-itp="${i}"><circle cx="${x}" cy="${y}" r="${big ? 11 : 7}"/>${big ? `<text x="${x}" y="${y + 4}" text-anchor="middle">${i + 1}</text>` : ''}</g>`; }).join('') });
+}
+function itZoom(it) { // la mappa del dettaglio ritagliata intorno al percorso
+  const svg = $('cat').querySelector('.itd .smap'); if (!svg) return; const b = [...svg.querySelectorAll('.itp circle')].map(c => [+c.getAttribute('cx'), +c.getAttribute('cy')]); if (!b.length) return;
+  const x0 = Math.min(...b.map(q => q[0])), x1 = Math.max(...b.map(q => q[0])) + 40, y0 = Math.min(...b.map(q => q[1])), y1 = Math.max(...b.map(q => q[1])), pad = 30, w = Math.max(x1 - x0 + pad * 2, 120), h = Math.max(y1 - y0 + pad * 2, 100);
+  const W0 = +svg.getAttribute('viewBox').split(' ')[2], H0 = +svg.getAttribute('viewBox').split(' ')[3], ww = Math.max(w, 170), hh = Math.max(h, ww * H0 / W0 * 0.9), k = W0 / ww;
+  svg.setAttribute('viewBox', `${((x0 + x1) / 2 - ww / 2).toFixed(0)} ${((y0 + y1) / 2 - hh / 2).toFixed(0)} ${ww.toFixed(0)} ${hh.toFixed(0)}`); svg.classList.add('zoom');
+  svg.querySelectorAll('.cap text').forEach(t => { t.style.fontSize = (13 / k).toFixed(1) + 'px'; t.style.strokeWidth = (3 / k).toFixed(1) + 'px'; });
+  svg.querySelectorAll('.cap circle, circle.off').forEach(c => c.setAttribute('r', (+c.getAttribute('r') / k * 1.4).toFixed(2)));
+  svg.querySelectorAll('.itp circle').forEach(c => { c.setAttribute('r', (13 / k).toFixed(1)); c.style.strokeWidth = (2.5 / k).toFixed(2); }); svg.querySelectorAll('.itp text').forEach(t => { t.style.fontSize = (13 / k).toFixed(1) + 'px'; t.setAttribute('y', (+t.getAttribute('y') - 4 + 4.5 / k).toFixed(1)); });
+  svg.querySelectorAll('.itl').forEach(l => { l.style.strokeWidth = (3.5 / k).toFixed(2); l.style.strokeDasharray = `${(2 / k).toFixed(2)} ${(8 / k).toFixed(2)}`; });
+  svg.querySelectorAll('.terra').forEach(t => t.style.strokeWidth = (.8 / k).toFixed(2));
+  // i nomi dei paesi delle tappe
+  const D = SAP.D, messi = []; it.p.filter(p => D.paesi[p]).forEach((p, i) => { const c = svg.querySelector(`.itp[data-itp="${i}"] circle`); if (!c) return;
+    const cx = +c.getAttribute('cx'), cy = +c.getAttribute('cy'), fs = 14 / k, nm = D.paesi[p].n, lw = nm.length * fs * 0.56, r = 18 / k;
+    const prove = [[cx + r, cy + fs * 0.35, 'start'], [cx - r, cy + fs * 0.35, 'end'], [cx, cy + r + fs * 0.8, 'middle'], [cx, cy - r - fs * 0.2, 'middle']];
+    const box = ([x, y, a]) => [a === 'start' ? x : a === 'end' ? x - lw : x - lw / 2, y - fs, lw, fs * 1.2];
+    const urta = b => messi.some(q => b[0] < q[0] + q[2] && q[0] < b[0] + b[2] && b[1] < q[1] + q[3] && q[1] < b[1] + b[3]) || [...svg.querySelectorAll('.itp circle')].some(o => o !== c && Math.abs(+o.getAttribute('cx') - (b[0] + b[2] / 2)) < b[2] / 2 + 10 / k && Math.abs(+o.getAttribute('cy') - (b[1] + b[3] / 2)) < b[3] / 2 + 10 / k);
+    const sc = prove.find(q => !urta(box(q))) || prove[0]; messi.push(box(sc));
+    svg.insertAdjacentHTML('beforeend', `<text class="itn2" x="${sc[0].toFixed(1)}" y="${sc[1].toFixed(1)}" text-anchor="${sc[2]}" style="font-size:${fs.toFixed(1)}px;stroke-width:${(3 / k).toFixed(1)}px">${esc(nm)}</text>`); });
+}
+function sapItinerari() {
+  const D = SAP.D; SAP.itk = null;
+  $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
+  const m = new Date().getMonth() + 1, ora = ITIN.filter(it => it.m.includes(m));
+  const carta = it => `<button class="it6" data-itk="${it.k}"><span class="ph"${itFoto(it)}><span class="mm">${itMappa(it, 300)}</span>${it.m.includes(m) ? '<em>Adesso è il momento</em>' : ''}</span><span class="tx"><b>${esc(it.n)}</b><span>${esc(it.s)}</span>
+    <small>${it.p.length} tappe · circa ${itKm(it)} km · ${it.p.length > 5 ? '2–3 giorni' : '1–2 giorni'} · ${itMesi(it)}</small></span></button>`;
+  $('cat').innerHTML = `<div class="in its6">
+    <section class="ith"><div class="ith-t"><p class="sub">Itinerari del gusto</p><h2>Nove viaggi <i>per assaggiare la Sicilia.</i></h2><p class="lead">Ogni itinerario unisce paesi vicini, i loro sapori, i produttori segnalati, le sagre in calendario e la natura intorno. Sono proposte costruite dai dati del sito: le tappe non le abbiamo ancora visitate di persona.</p>
+      <div class="itn">${[[ITIN.length, 'itinerari'], [ITIN.reduce((a, it) => a + it.p.length, 0), 'tappe'], [ora.length, 'consigliati adesso']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
+      <div class="ith-m">${mappaSicilia({ w: 560, nomi: true, punti: [], extra: (X, Y) => ITIN.map((it, n) => { const P = it.p.filter(p => D.paesi[p]); const c = P.reduce((a, p) => [a[0] + D.paesi[p].c[0] / P.length, a[1] + D.paesi[p].c[1] / P.length], [0, 0]);
+        return `<g class="itg" data-itk="${it.k}"><polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>${P.map(p => `<circle cx="${X(D.paesi[p].c[0])}" cy="${Y(D.paesi[p].c[1])}" r="4"/>`).join('')}<text x="${X(c[0])}" y="${(+Y(c[1]) - 12).toFixed(1)}" text-anchor="middle">${esc(it.n)}</text></g>`; }).join('') })}</div></section>
+    ${ora.length ? `<section class="filg"><h3>Da fare adesso</h3><p class="gt">I viaggi che danno il meglio a ${MESIL[m - 1]}.</p><div class="itgr">${ora.map(carta).join('')}</div></section>` : ''}
+    <section class="filg"><h3>Tutti gli itinerari</h3><div class="itgr">${ITIN.filter(it => !ora.includes(it)).map(carta).join('')}</div></section>
+    <section class="filg itnota"><h3>Come nascono</h3><p class="gt">Per ogni paese raccogliamo i sapori documentati, i produttori segnalati da fonti pubbliche, le sagre e i parchi vicini. Quando avremo visitato le tappe, ogni itinerario diventerà un viaggio verificato, con i nomi delle persone incontrate.</p>
+      <div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi tutti i produttori segnalati</button></div></section>
+    ${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; });
+}
+async function sapItinerario(k) {
+  const D = SAP.D, it = ITIN.find(x => x.k === k); if (!it) return sapItinerari();
+  SAP.itk = k; $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
+  const sg = await SAGRE(), oi = new Date().toISOString().slice(0, 10), P = it.p.filter(p => D.paesi[p]);
+  const sapori = p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && ['piatto', 'dolce', 'prodotto'].includes(v.t)).sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).filter(r => r !== 'PAT').length - (a.ric || []).filter(r => r !== 'PAT').length) || (!!b.wk - !!a.wk)).slice(0, 6);
+  const tappa = (p, i) => { const x = D.paesi[p], sv = sapori(p), chi = Object.values(D.produttori).filter(q => q.paese === p).slice(0, 4), ev = (sg.eventi || []).filter(e => e.p === p && e.d[e.d.length - 1] >= oi).slice(0, 2), nat = natVicina(x.c).slice(0, 2);
+    return `<li data-itp="${i}"><span class="nt">${i + 1}</span><div class="tc"><div class="th"><h4>${esc(x.n)}</h4><small>${esc(PROVN[x.pv] || '')}${i ? ` · ${Math.round(hav2(D.paesi[P[i - 1]].c, x.c) * 1.35)} km dalla tappa ${i}` : ''}</small><button class="lk" data-sc="${p}">Tutto su ${esc(x.n)}</button></div>
+      ${sv.length ? `<div class="mini5">${sv.map(v => `<button data-sc="${v.k}"><span${imgAttr(v)}></span><b>${esc(v.n)}</b></button>`).join('')}</div>` : '<p class="note">Nessun sapore ancora documentato.</p>'}
+      ${chi.length || ev.length || nat.length ? `<div class="links">${chi.map(q => `<button data-sc="${q.k}">${ico('building-store', 'xs')} ${esc(q.n)}<br><small>${esc(q.tipo || RUOLO[q.r][0])} · segnalato</small></button>`).join('')}${ev.map(e => `<button data-scal="${e.id}">${ico('calendar-event', 'xs')} ${esc(e.n)}<br><small>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</small></button>`).join('')}${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div>` : ''}</div></li>`; };
+  $('cat').innerHTML = `<div class="in its6 itd">
+    <button class="lk itb" data-itall="1">‹ Tutti gli itinerari</button>
+    <section class="ith itdh"><div class="ph"${itFoto(it)}></div><div class="ith-t"><p class="sub">Itinerario del gusto · proposta</p><h2>${esc(it.n)}</h2><p class="lead">${esc(it.s)}.</p><p>${esc(it.t)}</p>
+      <div class="itn">${[[P.length, 'tappe'], ['~' + itKm(it), 'km'], [it.p.length > 5 ? '2–3' : '1–2', 'giorni']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
+      <p class="quando">${ico('calendar', 'xs')} Il periodo migliore: <b>${itMesi(it)}</b></p></div></section>
+    <div class="itb2"><div class="itm"><div class="cmap">${itMappa(it, 560, true)}</div><p class="note">Distanze in linea d'aria aumentate di un terzo: sono indicative.</p></div>
+      <ol class="itt">${P.map(tappa).join('')}</ol></div>
+    <p class="avv6">${ico('alert-triangle', 'xs')} Proposta costruita dai dati: tappe, produttori e sagre non sono ancora stati visitati. Prima di partire verifica orari e date.</p>
+    <section class="filg"><h3>Altri itinerari</h3><div class="itgr">${ITIN.filter(x => x.k !== k).slice(0, 3).map(x => `<button class="it6" data-itk="${x.k}"><span class="ph"${itFoto(x)}></span><span class="tx"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  itZoom(it); sapFoto($('cat'));
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
+  const L = $('cat').querySelector('.itt'), M = $('cat').querySelector('.itm');
+  const acc = i => { $('cat').querySelectorAll('.itd .hl').forEach(x => x.classList.remove('hl')); if (i != null) $('cat').querySelectorAll(`.itd [data-itp="${i}"]`).forEach(x => x.classList.add('hl')); };
+  L.addEventListener('mouseover', e => { const li = e.target.closest('li[data-itp]'); acc(li ? li.dataset.itp : null); });
+  M.addEventListener('mouseover', e => { const g = e.target.closest('[data-itp]'); acc(g ? g.dataset.itp : null); });
+  M.addEventListener('click', e => { const g = e.target.closest('[data-itp]'); if (g) { const li = L.querySelector(`li[data-itp="${g.dataset.itp}"]`); if (li) li.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-itk],[data-itall],.itd [data-nat],.itd [data-scal]'); if (!b || !$('cat').contains(b)) return; e.stopPropagation();
+  if (!SAP.on && b.dataset.itk) return vaiRotta('#/sapori/itinerari/' + b.dataset.itk);
+  if (b.dataset.nat) { sapModo(false); return setTimeout(() => { vai('mappa'); setTimeout(() => apri(b.dataset.nat, true), 300); }, 300); }
+  if (b.dataset.scal) { const ev = (SAP.sagre.eventi || []).find(x => x.id === b.dataset.scal); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d[0], tipo: '', pv: '' }; vai('meteo'); } return; }
+  if (b.dataset.itall) return sapItinerari(); sapItinerario(b.dataset.itk); }, true);
+$('cat').addEventListener('click', e => {
+  if (!SAP.on) return;
+  const c = e.target.closest('[data-sc]'), g = e.target.closest('[data-sk]'), m = e.target.closest('[data-mese]'), vg = e.target.closest('[data-vg]');
+  if (g) { SAP.fil.k = g.dataset.sk; $('cat').dataset.v = ''; sapCatalogo(); } else if (m) { SAP.mese = +m.dataset.mese; sapCalendario(); } else if (vg) sapViaggio(vg.dataset.vg); else if (c) { if (c.matches('svg.smap circle')) { SAP.ancora = [e.clientX, e.clientY]; return sapCartaPaese(c.dataset.sc, true); } sapApri(c.dataset.sc); }
+}, true);
+
+/* ---- ricerca nella barra in alto */
+function sapCerca(v) {
+  const D = SAP.D; if (!D) return;
+  const w = v.split(/\s+/), r = [];
+  for (const x of Object.values(D.voci)) if (w.every(y => norm(x.n + ' ' + (x.nd || '') + ' ' + nomiPaesi(x)).includes(y))) r.push([x.k, x.n, SAPT[x.t][0]]);
+  for (const [k, p] of Object.entries(D.paesi)) if (w.every(y => norm(p.n).includes(y))) r.push([k, p.n, 'Paese']);
+  for (const p of Object.values(D.produttori)) if (w.every(y => norm(p.n).includes(y))) r.push([p.k, p.n, 'Produttore']);
+  $('res').innerHTML = r.length ? r.slice(0, 30).map(([k, n, s]) => `<button data-sres="${k}">${esc(n)}<small>${esc(s)}</small></button>`).join('') : `<button disabled>${t('nessuno')}</button>`;
+  $('res').style.display = 'block';
+}
+$('res').addEventListener('click', e => { const b = e.target.closest('[data-sres]'); if (!b) return; e.stopPropagation(); $('res').style.display = 'none'; $('q').blur(); sapApri(b.dataset.sres); }, true);
+
+/* ---- inizio di Sapori: una domanda, poi ciò che interessa */
+const GUSTI = [['dolci', 'Dolci', 'cake'], ['formaggi', 'Formaggi', 'cheese'], ['frutta e ortaggi', 'Frutta e ortaggi', 'lemon-2'], ['pane e pasta', 'Pane e pasta', 'bread'],
+  ['gastronomia', 'Piatti', 'bowl'], ['vini', 'Vini', 'glass-full'], ['salumi', 'Salumi e carni', 'meat'], ['pesce', 'Pesce e mare', 'fish'], ['miele', 'Miele', 'droplet'], ['conserve e condimenti', 'Olio, sale e conserve', 'bottle'], ['bevande', 'Liquori', 'bottle']].map(g => g.concat('#E8761A'));
+const GUSTO = Object.fromEntries(GUSTI.map(g => [g[0], g]));
+var DESCG = { dolci: 'Paste di mandorla, cassate, biscotti delle feste', formaggi: 'Pecorino, ricotta, tuma, provola', 'frutta e ortaggi': 'Agrumi, ficodindia, legumi e ortaggi antichi', 'pane e pasta': 'Pani rituali e grani antichi', gastronomia: 'Piatti di casa e di strada', vini: 'Denominazioni e vitigni dell\'isola', salumi: 'Carni e salumi delle razze locali', pesce: 'Pesce azzurro e conserve di mare', miele: 'Mieli di timo, agrumi, carrubo', 'conserve e condimenti': 'Olio, sale, capperi, conserve', bevande: 'Rosoli e liquori di casa' };
+const PROVN = { AG: 'Agrigento', CL: 'Caltanissetta', CT: 'Catania', EN: 'Enna', ME: 'Messina', PA: 'Palermo', RG: 'Ragusa', SR: 'Siracusa', TP: 'Trapani' };
+SAP.gusti = new Set((() => { try { return JSON.parse(localStorage.getItem('sn_gusti') || '[]'); } catch (e) { return []; } })());
+const salvaGusti = () => { try { localStorage.setItem('sn_gusti', JSON.stringify([...SAP.gusti])); } catch (e) {} };
+const catDi = v => v.cat || (v.t === 'dolce' ? 'dolci' : v.t === 'piatto' ? 'gastronomia' : '');
+const perGusto = v => !SAP.gusti.size || SAP.gusti.has(catDi(v));
+const SAPWK = {};
+function sapImg(t) { const ok = w => w && w.thumbnail && !NOFOTO.test(w.thumbnail.source) ? w : null; return SAPWK[t] || (SAPWK[t] = wikiVoce(t).then(w => ok(w) || wikiCerca(t.replace(/\(.*?\)/g, '')).then(ok)).catch(() => null)); }
+// foto per le voci senza foto propria: Wikipedia poi Wikimedia Commons, solo se il titolo contiene tutte le parole del nome
+const STOPW = new Set('di del della dello dei degli delle da dal dalla e ed o od a al alla allo ai agli alle in con per tra fra il lo la i gli le un uno una sotto sott sicilia siciliano siciliana siciliani siciliane tipico tipica dop igp pat igt doc docg ct pa me ag tp sr rg cl en'.split(' '));
+const paroleN = n => norm(n.split('/')[0].split(':')[0].replace(/\(.*?\)/g, ' ')).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOPW.has(w));
+const FUORI = /\b(cines|giappon|indian|american|frances|tedesc|spagnol|portoghes|grec[oaie]|turc[oaih]|arab[oaie]|marocchin|tunisin|ingles|pugli|salent|lecc[ei]|calabr|napol|campan|sard[oaie]|sardegna|tosc|roman[oaie]|lazial|emilia|piemont|lombard|venet|friul|ligur|abruzz|molis|lucan|basilicat|umbr|march[ei]giano|trentin|valdostan|maltes|chines|japan|china|indian)\w*/;
+const titoloOk = (n, t, largo) => { const p = paroleN(n), tt = norm(t).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+  const simile = (w, x) => x === w || (w.length > 4 && x.startsWith(w.slice(0, -1)) && Math.abs(x.length - w.length) <= 2);
+  if (!p.length || !p.every(w => tt.some(x => simile(w, x)))) return false;
+  if (FUORI.test(norm(t))) return false;
+  const paesi = SAP.D ? SAP.D._np || (SAP.D._np = new Set(Object.values(SAP.D.paesi).flatMap(q => norm(q.n).split(/[^a-z]+/)))) : new Set();
+  const extra = tt.filter(x => x.length > 2 && !STOPW.has(x) && !/\d/.test(x) && !/^(jpg|jpeg|png|tif|tiff|webp|file|foto|img|dsc|photo)$/.test(x) && !/^(palermitan|catanes|messines|trapanes|siracusan|ragusan|nissen|ennes|agrigentin|eolian|pantesc|modican|mazares|marsales|netin|acesi|madonit|nebroide|iblei|etne)/.test(x) && !paesi.has(x) && !p.some(w => simile(w, x)));
+  return extra.length <= (largo ? 2 : 0); };
+const IMGC = (() => { try { return JSON.parse(localStorage.getItem('sn_img3') || '{}'); } catch (e) { return {}; } })();
+const salvaImg = () => { try { localStorage.setItem('sn_img3', JSON.stringify(IMGC)); } catch (e) {} };
+const IMGP = {};
+const BRUTTE = /stemma|coat of arms|logo|\bmaps?\b|mappa|flag|bandiera|\.svg|\.pdf|\.tif/i;
+function sapImgV(k) {
+  const v = SAP.D.voci[k]; if (!v) return Promise.resolve(null);
+  if (v.im) return Promise.resolve(v.im);
+  if (k in IMGC) return Promise.resolve(IMGC[k]);
+  return IMGP[k] || (IMGP[k] = (async () => {
+    let r = null;
+    const nomi = [...new Set([v.n, ...v.n.split('/').map(x => x.trim()), v.nd || ''].filter(x => x && paroleN(x).length))].slice(0, 3);
+    for (const n of nomi) {
+      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages|extracts&exintro=1&explaintext=1&exchars=700&piprop=thumbnail&pithumbsize=500`);
+      const pg = Object.values((j && j.query && j.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
+      for (const x of pg) if (x.thumbnail && titoloOk(n, x.title) && (v.t === 'materia' || /sicil|palerm|catan|messin|siracus|trapan|agrigent|ragus|nissen|enna|etna|egadi|eolie|pantelleria/.test(norm(x.extract || ''))) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
+      if (r) break;
+      const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500`);
+      const cp = Object.values((c && c.query && c.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
+      for (const x of cp) { const t = x.title.slice(5), ii = (x.imageinfo || [])[0] || {}, m = ii.extmetadata || {}, lic = (m.LicenseShortName || {}).value || '';
+        if (!titoloOk(n, t, true) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
+        r = { u: ii.thumburl, p: ii.descriptionurl, t, a: pulito((m.Artist || {}).value || '').slice(0, 80), l: lic, src: 'Wikimedia Commons' }; break; }
+      if (r) break;
+    }
+    IMGC[k] = r; salvaImg(); return r;
+  })());
+}
+const VIS = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { VIS.unobserve(e.target); caricaV(e.target); } }, { rootMargin: '300px' }) : null;
+function caricaV(el) { sapImgV(el.dataset.vk).then(r => { if (r) { el.style.backgroundImage = `url('${r.u}')`; el.classList.add('conf'); } }); }
+function sapFoto(root) { for (const el of root.querySelectorAll('[data-vk]:not(.fok)')) { el.classList.add('fok'); VIS ? VIS.observe(el) : caricaV(el); }
+  for (const el of root.querySelectorAll('[data-wk]:not(.fok)')) { el.classList.add('fok'); sapImg(el.dataset.wk).then(w => { if (w) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } }); } }
+function sapWiki(v, k) {
+  if (!v.wk) { if (!v.fo) sapImgV(v.k).then(r => { if (!r || cur !== k || !$('swk')) return;
+    $('swk').innerHTML = `<figure class="fmia"><img src="${esc(r.u)}" alt="${esc(v.n)}" loading="lazy"><figcaption>${esc(r.t)}. ${r.a ? esc(r.a) + ', ' : ''}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a></figcaption></figure>`; }); return; }
+  sapImg(v.wk).then(w => { if (!w || cur !== k || !$('swk')) return;
+    $('swk').innerHTML = `<div class="wiki${v.fo ? ' noimg' : ''}"><img src="${esc(w.thumbnail.source.replace(/\/\d+px-/, '/500px-'))}" alt="${esc(v.n)}" loading="lazy"><div class="wt"><b>Da Wikipedia: ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">Leggi su Wikipedia</a>, CC BY-SA</div></div></div>`; });
+}
+function prossimaFesta() {
+  const oggi = new Date(), y = oggi.getFullYear(), D = SAP.D, o = new Date(y, oggi.getMonth(), oggi.getDate());
+  return Object.entries(D.feste).filter(([, f]) => f.d !== 'mobile').map(([k, f]) => { let d = new Date(y, +f.d.slice(0, 2) - 1, +f.d.slice(3)); if (d < o) d = new Date(y + 1, d.getMonth(), d.getDate()); return [k, f, Math.round((d - o) / 864e5)]; }).sort((a, b) => a[2] - b[2])[0];
+}
+// ciò che mettiamo in evidenza, con il perché
+function inEvidenza() {
+  const D = SAP.D, V = Object.values(D.voci).filter(v => ['dolce', 'prodotto', 'piatto'].includes(v.t) && perGusto(v)), m = new Date().getMonth() + 1, out = [], visti = new Set();
+  const add = (v, perche) => { if (v && !visti.has(v.k)) { visti.add(v.k); out.push([v, perche]); } };
+  const [fk, f, gg] = prossimaFesta();
+  for (const v of V.filter(v => (v.feste || []).includes(fk))) add(v, `Per ${f.n}, fra ${gg} giorni`);
+  for (const v of V.filter(v => (v.m || []).includes(m))) add(v, `Di stagione a ${MESIL[m - 1]}`);
+  for (const v of V.filter(v => v.wk)) add(v, (v.ric || []).filter(r => r !== 'PAT')[0] || 'Un simbolo della Sicilia');
+  for (const v of V.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP'))) add(v, (v.ric || [])[0] + (v.prov ? (v.prov.length === 9 ? ', tutta la Sicilia' : ', provincia di ' + PROVN[v.prov[0]]) : v.paesi ? ', ' + D.paesi[v.paesi[0]].n : ''));
+  for (const v of V.filter(v => v.pat && v.paesi)) add(v, 'Prodotto tradizionale di ' + D.paesi[v.paesi[0]].n);
+  return out.slice(0, 8);
+}
+function comuniTop(n) {
+  const D = SAP.D, c = {};
+  for (const v of Object.values(D.voci)) if (perGusto(v)) for (const p of (v.paesi || [])) c[p] = (c[p] || 0) + 1;
+  return Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, n);
+}
+const tessera = (v, perche) => { const g = GUSTO[catDi(v)] || ['', '', SAPT[v.t] ? SAPT[v.t][2] : 'plant', '#E8761A'];
+  return `<button class="tess" data-sc="${v.k}" style="--c:${g[3]}"><span${imgAttr(v)}>${ico(g[2])}</span><span class="tt"><b>${esc(v.n)}</b><small>${esc(perche)}</small></span></button>`; };
+// foto: prima quelle di Oscar, poi Wikipedia
+const fotoMie = g => (SAP.D.foto || []).filter(x => !g || x.g === g);
+const fotoDi = v => v.fo ? `foto/${v.fo.f}.webp` : '';
+const imgAttr = v => v.fo ? ` style="background-image:url('foto/${v.fo.f}.webp')" class="img conf"` : ` class="img"${v.wk ? ` data-wk="${esc(v.wk)}"` : ` data-vk="${v.k}"`}`;
+// mappa disegnata della Sicilia: contorno, tutti i comuni, capoluoghi con il nome
+const CAPO = { Palermo: 'PA', Catania: 'CT', Messina: 'ME', Siracusa: 'SR', Ragusa: 'RG', Trapani: 'TP', Agrigento: 'AG', Caltanissetta: 'CL', Enna: 'EN' };
+function mappaSicilia(o) {
+  const D = SAP.D, si = D.sic; if (!si) return '';
+  const w = o.w, L0 = 11.85, L1 = 15.72, A0 = 36.58, A1 = 38.84, k = Math.cos(37.6 * Math.PI / 180), h = Math.round(w * (A1 - A0) / ((L1 - L0) * k));
+  const X = x => ((x - L0) / (L1 - L0) * w).toFixed(1), Y = y => ((A1 - y) / (A1 - A0) * h).toFixed(1);
+  const n = {}; if (!o.punti) for (const v of Object.values(D.voci)) for (const p of (v.paesi || [])) if (perGusto(v)) n[p] = (n[p] || 0) + 1;
+  const mx = Math.max(1, ...Object.values(n)), s = w / 420;
+  const tr = (SAP.visti || []).filter(q => D.paesi[q]).map(q => D.paesi[q].c);
+  const com = si.comuni.filter(c => c[1] > L0 && c[1] < L1 && c[2] > A0 && c[2] < A1);
+  const dot = c => { const q = c[3], m = q && n[q]; return m
+    ? `<circle data-sc="${q}" cx="${X(c[1])}" cy="${Y(c[2])}" r="${((1.8 + 4.2 * Math.sqrt(m / mx)) * s).toFixed(1)}" class="on${o.sel === q || (o.evid && o.evid.includes(q)) ? ' sel' : ''}"><title>${esc(c[0])}: ${m} ${m === 1 ? 'sapore' : 'sapori'}</title></circle>`
+    : `<circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(1.3 * s).toFixed(1)}" class="off"><title>${esc(c[0])}: ancora nessun sapore documentato</title></circle>`; };
+  const cap = com.filter(c => CAPO[c[0]]);
+  return `<svg class="smap" viewBox="0 0 ${w} ${h}" role="img" aria-label="Mappa della Sicilia con i comuni e i loro sapori">
+    ${si.contorno.map(p => `<polygon class="terra" points="${p.filter(([x, y]) => x > L0 && x < L1 && y > A0 && y < A1).map(([x, y]) => X(x) + ',' + Y(y)).join(' ')}"/>`).join('')}
+    ${tr.length > 1 ? `<polyline class="trac" points="${tr.map(c => X(c[0]) + ',' + Y(c[1])).join(' ')}"/>` : ''}
+    ${com.filter(c => !(c[3] && n[c[3]])).map(dot).join('')}${com.filter(c => c[3] && n[c[3]]).sort((a, b) => n[b[3]] - n[a[3]]).map(dot).join('')}
+    ${(o.punti || []).filter(p => p.xy[0] > L0 && p.xy[0] < L1 && p.xy[1] > A0 && p.xy[1] < A1).map(p => `<circle data-${p.a || 'cev'}="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
+    ${o.nomi ? cap.map(c => { const f = 11 * Math.min(s, 1.35), dx = ['Trapani', 'Agrigento', 'Ragusa', 'Caltanissetta', 'Messina'].includes(c[0]) ? -1 : 1, x = +X(c[1]) + dx * 7 * Math.min(s, 1.35), y = +Y(c[2]) + (c[0] === 'Messina' ? -7 * s : c[0] === 'Enna' ? -3 * s : 4 * s);
+      return `<g class="cap"><circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(2.2 * s).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${dx < 0 ? 'end' : 'start'}" style="font-size:${f.toFixed(1)}px">${c[0]}</text></g>`; }).join('') : ''}
+    ${o.extra ? o.extra(X, Y, s) : ''}
+  </svg>`;
+}
+function sapHome() {
+  const D = SAP.D;
+  const conta = Object.fromEntries(GUSTI.map(g => [g[0], 0])), esempio = {};
+  for (const v of Object.values(D.voci)) if (['dolce', 'prodotto', 'piatto'].includes(v.t) && conta[catDi(v)] != null) { conta[catDi(v)]++; if (v.wk && !esempio[catDi(v)]) esempio[catDi(v)] = v.wk; }
+  // famiglie senza una voce con foto: una pagina di Wikipedia che la rappresenti, così nessun riquadro resta vuoto
+  for (const [k, w] of Object.entries({ bevande: 'Rosolio', miele: 'Miele', salumi: 'Salame Sant\'Angelo', pesce: 'Sarde a beccafico', 'pane e pasta': 'Pane nero di Castelvetrano', formaggi: 'Pecorino siciliano', vini: 'Nero d\'Avola', 'conserve e condimenti': 'Cappero' })) if (!esempio[k]) esempio[k] = w;
+  const ev = inEvidenza(), [fk, f, gg] = prossimaFesta(), sel = SAP.gusti.size;
+  const nomeSel = sel ? [...SAP.gusti].map(k => GUSTO[k][1].toLowerCase()).join(', ') : '';
+  const cm = comuniTop(400).filter(([, n]) => n >= 2), mx = cm.length ? cm[0][1] : 1;
+  const alfa = cm.slice().sort((a, b) => D.paesi[a[0]].n.localeCompare(D.paesi[b[0]].n, 'it'));
+  const tutti = Object.values(D.voci).filter(v => v.t !== 'materia' && v.t !== 'semi');
+  const nComuni = Object.keys(D.paesi).length, nDolci = conta.dolci, nPat = tutti.filter(v => v.pat).length, nDop = tutti.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')).length;
+  // foto d'apertura: tra quelle di Oscar, del sapore scelto se c'è
+  const pool = sel ? fotoMie().filter(x => SAP.gusti.has(x.g)) : fotoMie().filter(x => x.h);
+  const fh = (pool.length ? pool : fotoMie());
+  SAP.hi = (SAP.hi == null ? Math.floor(Math.random() * fh.length) : SAP.hi) % Math.max(fh.length, 1);
+  const hf = fh[SAP.hi] || {};
+  const fotoG = {}; for (const x of fotoMie()) if (!fotoG[x.g]) fotoG[x.g] = x.f;
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  const primo = $('cat').dataset.v !== 'sap-home';
+  $('cat').dataset.v = 'sap-home'; if (primo) $('cat').scrollTop = 0;
+  const storie = [
+    ['ricotta-di-pecora-in-fascetta', 'Dalla fascella alla cassata', 'La ricotta di pecora regge cannoli, cassate e cassatelle. Seguila dal pascolo alla pasticceria.', 'ricotta'],
+    ['backcassatelle', 'I dolci che rischiano di sparire', `${nDolci} dolci documentati in Sicilia. Molti vivono solo nella memoria di chi li prepara ancora: monasteri, famiglie, piccoli forni.`, 'fam:Conventuali'],
+    ['fiore-di-cappero', 'Capperi, sale e vento', 'Il cappero cresce tra le pietre di Pantelleria e delle Eolie. Prima di diventare condimento è un fiore che dura un giorno.', 'dop-cappero-di-pantelleria']
+  ].filter(x => fotoMie().some(f => f.f === x[0]));
+  const DESC = { dolci: 'Paste di mandorla, cassate, biscotti delle feste', formaggi: 'Pecorino, ricotta, tuma, provola', 'frutta e ortaggi': 'Agrumi, ficodindia, legumi e ortaggi antichi', 'pane e pasta': 'Pani rituali e grani antichi', gastronomia: 'Piatti di casa e di strada', vini: 'Denominazioni e vitigni dell\'isola', salumi: 'Carni e salumi delle razze locali', pesce: 'Pesce azzurro e conserve di mare', miele: 'Mieli di timo, agrumi, carrubo', 'conserve e condimenti': 'Olio, sale, capperi, conserve', bevande: 'Rosoli e liquori di casa' };
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  $('cat').innerHTML = `<div class="sh5">
+    <section class="ap5">${filtroTemi()}
+      <div class="apf" style="background-image:url('foto/${hf.f}.webp')" role="img" aria-label="${esc(hf.t || '')}"></div>
+      <div class="apt">
+        <h1>La Sicilia,<br>una tavola <i>da scoprire.</i></h1>
+        <p class="lead">Ci sono isole che si visitano. E poi ci sono isole che si imparano a tavola: ${fmt(tutti.length)} sapori in ${nComuni} comuni, tra cui ${fmt(nDolci)} dolci, ${nPat} prodotti tradizionali e ${nDop} DOP e IGP.</p>
+        <label class="cerca5">${ico('map-pin-search')}<input id="hq" type="search" placeholder="Cerca un paese, un dolce, un formaggio…" autocomplete="off" aria-label="Cerca"><button id="hgo" aria-label="Cerca">${freccia}</button></label>
+        <button class="apc" data-sc="${hf.v || ''}" ${hf.v ? '' : 'disabled'}>${esc(hf.t || '')}, foto di Oscar Cangelosi</button>
+      </div>
+      <div class="apm">${mappaSicilia({ w: 420, nomi: true })}<button id="hmap">Esplora la mappa ${freccia}</button></div>
+    </section>
+    <section class="s5 fil5h">
+      <div class="t5"><h2>Le quattro materie della tavola siciliana</h2><p>Grano, ulivo, vitigno e latte: le varietà, i territori e chi le custodisce.</p></div>
+      <div class="filcards">${FILK.map(k => `<button data-fil="${k}"><span class="img conf" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${{ vino: 'Vitigno', olio: 'Ulivo', grano: 'Grano', formaggio: 'Latte', pane: 'Il pane' }[k]}</b><small>${{ vino: 'I vitigni di Sicilia', olio: 'Le cultivar dell’olivo', grano: 'I grani antichi', formaggio: 'Formaggi, caci e ricotte', pane: 'Pani di semola e di festa' }[k]}</small></button>`).join('')}</div>
+    </section>
+    <section class="s5">
+      <div class="t5"><h2>Cosa ti va di scoprire?</h2><p>${sel ? `Stai guardando ${esc(nomeSel)}. ` : ''}Tocca una famiglia di sapori per entrare ed esplorarla.${sel ? ' <button id="hreset" class="lk">Mostra tutto</button>' : ''}</p></div>
+      <div class="gusti5">${GUSTI.map(([k, n, ic]) => `<button data-gusto="${k}"><span class="img${fotoG[k] ? ' conf' : ''}"${fotoG[k] ? ` style="background-image:url('foto/${fotoG[k]}.webp')"` : esempio[k] ? ` data-wk="${esc(esempio[k])}"` : ''}>${ico(ic)}</span><span class="tx"><b>${n}</b><small>${DESC[k] || ''}</small><em>${conta[k]} ${conta[k] === 1 ? 'voce' : 'voci'}</em></span>${freccia}</button>`).join('')}</div>
+    </section>
+    ${storie.length ? `<section class="s5"><div class="t5"><h2>Storie e scoperte</h2></div><div class="storie5">${storie.map(([fo, t, d, dove]) => `<button class="st5" ${dove.startsWith('fam:') ? `data-fam="${dove.slice(4)}"` : `data-sc="${dove}"`} style="background-image:url('foto/${fo}.webp')"><span class="tag">${dove.startsWith('fam:') ? 'Tradizioni' : 'Prodotti'}</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>` : ''}
+    <section class="s5">
+      <div class="t5"><h2>In evidenza${sel ? ` per chi cerca ${esc(nomeSel)}` : ''}</h2><button id="hsor" class="lk">Sorprendimi</button></div>
+      <div class="rail5">${ev.map(([v, p]) => `<button class="pz5" data-sc="${v.k}"><span${imgAttr(v)}>${ico((GUSTO[catDi(v)] || GUSTI[0])[2])}</span><b>${esc(v.n)}</b><small>${esc(p)}</small></button>`).join('')}</div>
+    </section>
+    <section class="s5 due5">
+      ${(!sel || SAP.gusti.has('dolci')) ? `<button class="festa5" data-hmese="${f.m[0]}"><small>${gg === 0 ? 'Oggi' : gg === 1 ? 'Domani' : `Fra ${gg} giorni`}, ${+f.d.slice(3)} ${MESIL[+f.d.slice(0, 2) - 1]}</small><b>${esc(f.n)}</b><span>${f.paesi.length ? esc(f.paesi.map(p => D.paesi[p].n).join(' e ')) + '. ' : ''}Cosa si prepara per la festa, paese per paese.</span><em>Apri il calendario ${freccia}</em></button>` : ''}
+      <div class="porte5">
+        <button data-porta="viaggio">${ico('route-2')}<b>Segui un viaggio</b><span>Dal campo alla tavola</span>${freccia}</button>
+        <button data-porta="calendario">${ico('calendar')}<b>Mese per mese</b><span>Feste e stagioni</span>${freccia}</button>
+        <button data-fam="Conventuali">${ico('building-church')}<b>Dolci dei monasteri</b><span>Ricette a rischio</span>${freccia}</button>
+        <button data-porta="tutelati">${ico('shield-check')}<b>DOP e IGP</b><span>Le denominazioni</span>${freccia}</button>
+      </div>
+    </section>
+    <section class="s5">
+      <div class="t5"><h2>I comuni${sel ? ` con ${esc(nomeSel)}` : ' da assaggiare'}</h2><p>Tutti i comuni della Sicilia: in arancio quelli con sapori documentati, più grande il punto più sapori. Tocca un comune per aprirlo.</p></div>
+      <div class="com5"><div class="cm">${mappaSicilia({ w: 840, nomi: true })}<p class="tip" id="ctip" aria-live="polite"></p></div>
+        <div class="ric5"><p>I più ricchi</p>${cm.slice(0, 12).map(([p, n]) => `<button data-sc="${p}"><span><b>${esc(D.paesi[p].n)}</b><small>Provincia di ${esc(PROVN[D.paesi[p].pv] || '')}</small></span><em>${n}</em></button>`).join('')}</div></div>
+      <button id="hmap2" class="tutti5">Apri la mappa grande ${freccia}</button>
+    </section>
+    <section class="s5"><button class="pross5" data-tema="natura" style="--tc:#2D6A4F"><span class="img" style="background-image:url('foto/natura/campagna.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Da dove viene quello che mangi</b><span>Il pistacchio sull'Etna, la manna sulle Madonie, la provola sui Nebrodi. Cammina nei luoghi dove nascono i sapori.</span><em>Entra in Natura</em></span></button></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: segnalati da presìdi e Alleanza Slow Food, Chiocciole, fattorie didattiche della Regione e guide del Gambero Rosso; non ancora visitati da noi. ${fmt(tutti.filter(v => v.web).length)} piatti trovati sul web sono segnati «da verificare» finché non li confrontiamo con i libri.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
+  sapFoto($('cat'));
+  const tip = $('ctip'), cmap = $('cat').querySelector('.com5 svg');
+  if (cmap) cmap.onmouseover = e => { const t = e.target.closest('circle'), ti = t && t.querySelector('title'); if (ti) tip.textContent = ti.textContent; };
+  // la foto che segue il puntatore sull'indice dei sapori
+  const fl = $('flut'), fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if (fine) for (const b of $('cat').querySelectorAll('.indice button')) {
+    b.onmouseenter = e => { fl.classList.remove('vis'); fl.style.transform = `translate(${e.clientX + 24}px,${e.clientY - 140}px) rotate(-3deg)`;
+      if (b.dataset.fo) { fl.style.backgroundImage = `url('foto/${b.dataset.fo}.webp')`; fl.classList.add('vis'); return; }
+      const wk = b.dataset.ex; if (!wk) return; sapImg(wk).then(w => { if (w && b.matches(':hover')) { fl.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; fl.classList.add('vis'); } }); };
+    b.onmousemove = e => { fl.style.transform = `translate(${e.clientX + 24}px,${e.clientY - 140}px) rotate(-3deg)`; };
+    b.onmouseleave = () => fl.classList.remove('vis');
+  }
+  const cerca = () => { const q = $('hq').value.trim(); if (!q) return; const n = norm(q), p = Object.entries(D.paesi).find(([, x]) => norm(x.n) === n); if (p) return sapPaese(p[0]); Object.assign(SAP.fil, { q, k: 'tutto', n: 60 }); $('cat').dataset.v = ''; vai('specie'); };
+  $('hq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('hgo').onclick = e => { e.preventDefault(); cerca(); };
+  $('hmap').onclick = $('hmap2').onclick = () => { SAP.home = false; vai('mappa'); };
+  if ($('hreset')) $('hreset').onclick = () => { SAP.gusti.clear(); salvaGusti(); SAP.hi = null; sapHome(); };
+  $('hsor').onclick = () => { const c = Object.values(D.voci).filter(v => v.paesi && perGusto(v) && v.t !== 'materia' && v.t !== 'semi'); const v = c[Math.floor(Math.random() * c.length)]; SAP.home = false; vai('mappa'); setTimeout(() => sapVoce(v.k), 350); };
+}
+$('cat').addEventListener('click', e => {
+  if (!SAP.on || $('cat').dataset.v !== 'sap-home') return;
+  const gu = e.target.closest('[data-gusto]'), p = e.target.closest('[data-porta]'), fa = e.target.closest('[data-fam]'), fe = e.target.closest('.festa3,.festa5');
+  if (gu) { e.stopPropagation(); const k = gu.dataset.gusto; Object.assign(SAP.fil, { k, q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }); SAP.home = false; $('cat').dataset.v = ''; $('cat').scrollTop = 0; return vai('specie'); }
+  if (e.target.closest('[data-sc]')) return;
+  if (fa) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'dolci', fam: fa.dataset.fam, q: '', paese: '', festa: '', lr: '', n: 60 }); $('cat').dataset.v = ''; return vai('specie'); }
+  if (fe) { e.stopPropagation(); SAP.mese = +fe.dataset.hmese; SAP.cal = null; return vai('meteo'); }
+  if (p) { e.stopPropagation(); const w = p.dataset.porta;
+    if (w === 'viaggio') vai('escursioni'); else if (w === 'calendario') vai('meteo');
+    else if (w === 'tutelati') { Object.assign(SAP.fil, { k: 'tutto', fam: '', q: '', paese: '', festa: '', lr: '', ric: 'tut', n: 60 }); $('cat').dataset.v = ''; vai('specie'); } }
+}, true);
+
+
+/* ---- Natura: pagina d'inizio con foto, racconto e mappa disegnata */
+const HASH_ROTTA = location.hash.startsWith('#/'); // link nuovi (#/natura/...): li applica il navigatore in fondo al file
+var NAT = { home: !isApp && (!location.hash.slice(1) || HASH_ROTTA), foto: null, hi: null };
+setTimeout(() => { if (NAT.home && !sapOn() && vista === 'mappa') natHome(); }, 0);
+document.addEventListener('click', e => { const b = e.target.closest('#sez button[data-v="mappa"]'); if (b && !sapOn() && !isApp) NAT.home = true; }, true);
+const NATF = () => NAT.foto || (NAT.foto = fetch('foto/natura.json').then(r => r.json()).catch(() => []));
+const natMappa = () => { NAT.home = false; vai('mappa'); };
+async function natHome() {
+  const [fo] = await Promise.all([NATF(), D, CAT, SAPD().catch(() => null)]);
+  if (sapOn() || vista !== 'mappa' || !NAT.home) return;
+  NAT.foto = fo;
+  if (SEZ !== 'natura') return SEZ === 'home' ? genHome(fo) : prestoHome(SEZ, fo);
+  const conta = t => Object.values(S).filter(x => x.t === t).length;
+  const nPar = conta('pn') + conta('pr'), nRis = conta('rn'), nAmp = conta('amp'), nN2k = conta('zsc') + conta('zsczps') + conta('zps'), nAm = (GA.features || []).length, nBv = (GV.features || []).length, nSp = FUN.s.length + PIA.s.length;
+  const hero = fo.filter(x => x.h); NAT.hi = NAT.hi == null ? Math.floor(Math.random() * hero.length) : NAT.hi; const hf = hero[NAT.hi % hero.length] || {};
+  const fG = g => (fo.find(x => x.g === g) || {}).f;
+  const punti = Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn', 'amp'].includes(x.t) && x.bb).map(([k, x]) => ({ a: 'nk', id: k, xy: centro(x), t: x.t === 'rn' ? 'riserva' : x.t === 'amp' ? 'marina' : 'parco', on: x.t !== 'rn', tit: x.n }));
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const porte = [
+    ['parchi', 'Parchi e riserve', `${nPar} parchi, ${nRis} riserve, ${nAmp} aree marine`, 'tree', fG('mare') ? 'natura/scogliere' : ''],
+    ['sentieri', 'Sentieri e percorsi', 'Oltre 20.000 sentieri, con dislivello e tempi', 'route-2', 'natura/campagna'],
+    ['vetusti', 'Boschi vetusti', `${nBv} boschi antichi, mai tagliati da secoli`, 'trees', ''],
+    ['alberi', 'Alberi monumentali', `${nAm} alberi da andare a trovare`, 'tree', ''],
+    ['funghi', 'Funghi', `${fmt(FUN.s.length)} specie, con le stagioni`, 'mushroom', 'natura/funghi-muschio'],
+    ['piante', 'Piante e fiori', `${fmt(PIA.s.length)} specie della flora siciliana`, 'flower', 'natura/origano-fiore'],
+    ['calendario', 'Cosa fiorisce ora', 'Il calendario della natura, mese per mese', 'calendar', 'natura/fiore-carciofo'],
+    ['meteo', 'Meteo e allerte', 'Prima di partire: pioggia, vento, allerte', 'cloud', '']
+  ];
+  const WK = { vetusti: 'Faggeta', alberi: 'Castagno dei Cento Cavalli', meteo: 'Etna' };
+  const storie = [['EUAP0227', 'Etna', "L'Etna, la montagna che respira", 'Il vulcano attivo più alto d\'Europa: boschi di betulle e faggi, colate, crateri e un parco che sale dal mare a oltre 3.300 metri.'],
+    ['EUAP0228', 'Parco delle Madonie', 'Le Madonie, un\'isola nell\'isola', 'Faggete, agrifogli giganti e l\'abete dei Nebrodi, una specie che esiste solo qui e conta poche decine di alberi in natura.'],
+    ['EUAP0382', 'Riserva naturale orientata dello Zingaro', 'Lo Zingaro, sette chilometri senza strade', 'La prima riserva naturale della Sicilia: calette, palme nane e un sentiero lungo la costa, solo a piedi.']];
+  const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr'].includes(x.t));
+  const mese = new Date().getMonth(), S2 = await caricaStag();
+  const ora0 = [...FUN.s.map((r, i) => ['funghi', i, r[5] || 0]), ...PIA.s.map((r, i) => ['piante', i, r[6] || 0])].filter(([tp, i]) => stagione(tp, i, mese, S2).on === true).sort((a, b) => b[2] - a[2]); const oraF = ora0.filter(x => x[0] === 'funghi' && FUN.s[x[1]][8].length).slice(0, 7), oraP = ora0.filter(x => x[0] === 'piante').slice(0, 7), ora = oraP.flatMap((x, j) => oraF[j] ? [x, oraF[j]] : [x]);
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  const primo = $('cat').dataset.v !== 'nat-home'; $('cat').dataset.v = 'nat-home'; if (primo) $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="sh5 nat5">
+    <section class="ap5">${filtroTemi()}<div class="apf" style="background-image:url('foto/${hf.f}.webp')" role="img" aria-label="${esc(hf.t || '')}"></div>
+      <div class="apt"><h1>La Sicilia,<br>una natura <i>da ascoltare.</i></h1>
+        <p class="lead">Ci sono isole che si visitano. E poi ci sono isole che si imparano ad ascoltare: ${nPar} parchi, ${nRis} riserve naturali, ${nAmp} aree marine protette e più di ${fmt(Math.floor(nSp / 1000) * 1000)} specie di piante e funghi.</p>
+        <label class="cerca5">${ico('map-pin-search')}<input id="nq" type="search" placeholder="Cerca un parco, un sentiero, una specie…" autocomplete="off" aria-label="Cerca"><button id="ngo" aria-label="Cerca">${freccia}</button></label>
+        <p class="apc">${esc(hf.t || '')}, foto di Oscar Cangelosi</p></div>
+      <div class="apm">${mappaSicilia({ w: 420, nomi: true, punti })}<button id="nmap">Esplora la mappa ${freccia}</button></div>
+    </section>
+    <section class="s5"><div class="t5"><h2>Cosa ti va di scoprire?</h2><p>Parti da quello che ti incuriosisce: la mappa e le schede ti portano il resto.</p></div>
+      <div class="gusti5">${porte.map(([k, n, d, ic, f]) => `<button data-np="${k}"><span class="img${f ? ' conf' : ''}"${f ? ` style="background-image:url('foto/${f}.webp')"` : WK[k] ? ` data-nwk="${esc(WK[k])}"` : ''}>${ico(ic)}</span><span class="tx"><b>${n}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Storie e scoperte</h2></div>
+      <div class="storie5">${storie.map(([k, wk, t, d]) => `<button class="st5" data-nk="${k}" data-nwk="${esc(wk)}"><span class="tag">Parchi e riserve</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
+    ${ora.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[mese]}</h2><button class="lk" data-np="calendario">Tutto il calendario</button><p>Le specie più osservate in questo mese, secondo i dati delle osservazioni.</p></div>
+      <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}">${tp === 'funghi' && r[8].length ? `<span class="img conf" style="background-image:url('${BASEF + r[8][0]}')">` : `<span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">`}${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
+    <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>${parchi.length} parchi, dal mare alle montagne. Tocca per aprire la scheda con zone, regole e sentieri.</p></div>
+      <div class="chips5">${parchi.map(([k, x]) => `<button data-nk="${k}">${esc(x.n)}</button>`).join('')}</div></section>
+    <section class="s5"><button class="pross5" data-tema="sapori" style="--tc:#E8761A"><span class="img" style="background-image:url('foto/backcassatelle.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Dopo il sentiero, la tavola</b><span>Ogni parco ha i suoi paesi e ogni paese i suoi sapori. Scopri cosa si mangia dove hai camminato.</span><em>Entra in Sapori</em></span></button></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Dati: EEA Natura 2000, Regione Siciliana SIF, Elenco degli alberi monumentali, OpenStreetMap, GBIF. Foto di Oscar Cangelosi e da Wikipedia. Nessuna indicazione sulla commestibilità di funghi e piante.</p>${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } });
+  const cerca = () => { const q = $('nq').value.trim(); natMappa(); if (q) setTimeout(() => { $('q').value = q; $('q').dispatchEvent(new Event('input', { bubbles: true })); $('q').focus(); }, 300); };
+  $('nq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('ngo').onclick = e => { e.preventDefault(); cerca(); };
+  $('nmap').onclick = natMappa;
+}
+$('cat').addEventListener('click', e => {
+  if (sapOn() || $('cat').dataset.v !== 'nat-home') return;
+  const k = e.target.closest('[data-nk]'), p = e.target.closest('[data-np]'), sp = e.target.closest('[data-sp]');
+  if (k) { e.stopPropagation(); natMappa(); return setTimeout(() => apri(k.dataset.nk, true), 650); }
+  if (sp) { e.stopPropagation(); const [tp, i] = sp.dataset.sp.split(':'); NAT.home = false; vai(tp); return setTimeout(() => apriSpecie(tp, +i), 300); }
+  if (!p) return; e.stopPropagation(); const w = p.dataset.np;
+  if (w === 'parchi' || w === 'vetusti' || w === 'alberi') return mappaTema(w);
+  NAT.home = false;
+  if (w === 'sentieri') return vai('escursioni');
+  if (w === 'funghi' || w === 'piante') return vai(w);
+  if (w === 'calendario') { vai('piante'); return setTimeout(calendario, 200); }
+  if (w === 'meteo') return vai('meteo');
+}, true);
+
+
+/* ---- i temi: filtro in alto nella foto d'apertura, si possono unire */
+const TEMA = { natura: ['Natura', '#2D6A4F'], sapori: ['Sapori', '#E8761A'], mare: ['Mare', '#2F7EA8'], arte: ['Arte', '#8A5A3C'], storia: ['Storia', '#7B3F61'] };
+const PRONTI = ['natura', 'sapori'];
+// le cinque sezioni: si entra dal menu nella foto d'apertura; la home le presenta tutte
+var SEZ = isApp || (location.hash.slice(1) && !HASH_ROTTA) ? 'natura' : 'home';
+var TEMI = new Set(['natura']);
+const misto = () => false;
+const SEZT = {
+  natura: { t: 'Natura', s: 'Una natura da ascoltare', d: 'Boschi mai tagliati da secoli, un vulcano che respira, orchidee che fioriscono solo qui. Sei parchi, settantacinque riserve e oltre ventimila sentieri per camminare la Sicilia, con le regole per farlo bene.', cta: 'Entra in Natura', f: 'natura/campagna' },
+  sapori: { t: 'Sapori', s: 'Una tavola da scoprire', d: 'Ogni paese ha il suo dolce, ogni festa il suo pane. Mille sapori documentati, dalla terra alla tavola: dove nascono, di cosa sono fatti, quando si preparano e le sagre dove assaggiarli.', cta: 'Entra in Sapori', f: 'backcassatelle' },
+  mare: { t: 'Mare', s: 'Un mare che ha fatto la storia', d: 'Isole, fondali, saline e tonnare. Il mare che ha nutrito, difeso e collegato la Sicilia al mondo, con le aree marine protette e i suoi pesci.', cta: 'In preparazione', f: 'natura/scogliere', fut: ['Le sette aree marine protette e i loro fondali', 'Saline, tonnare e borghi di pescatori', 'I pesci del Mediterraneo e le stagioni della pesca'] },
+  arte: { t: 'Arte', s: 'La bellezza costruita in tremila anni', d: 'Templi greci, mosaici arabo-normanni, chiese barocche e le maioliche dei paesi. Opere da vedere dal vivo, con chi le ha fatte e perché.', cta: 'In preparazione', wk: 'Duomo di Monreale', fut: ['Templi, teatri e mosaici da visitare', 'Il barocco del Val di Noto', 'Artigiani di oggi: ceramica, ferro, pietra'] },
+  storia: { t: 'Storia', s: 'Ogni popolo ha lasciato una traccia', d: 'Sicani, Greci, Arabi, Normanni, Spagnoli: la storia dell\'isola letta sulle mappe antiche, nelle foto d\'archivio e nei racconti, con una linea del tempo da percorrere.', cta: 'In preparazione', wk: 'Valle dei Templi', fut: ['Mappe antiche sovrapposte alla Sicilia di oggi', 'Una linea del tempo dai Sicani all\'Unità', 'Foto d\'archivio e racconti di paese'] }
+};
+function filtroTemi() {
+  if (isApp) return '';
+  // nella home, sul telefono, le sezioni stanno in fondo alla foto con una frase che invita a scegliere
+  return `<nav class="temi" aria-label="Sezioni del sito">${SEZ === 'home' ? '<p class="temil">Cinque sezioni, un solo patrimonio. Da dove vuoi partire?</p>' : ''}<div class="temib"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</div></nav>`;
+}
+// scheda della sezione, come sulla mappa: col mouse si apre passandoci sopra; sul telefono, nella home, il primo tocco la apre e il secondo entra
+const tipSez = (b, x, y) => { const k = b.dataset.tema, z = SEZT[k]; if (!z) return false;
+  const tocco = !fineP;
+  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d.split(/(?<=\.)\s/)[0])}</span>${tipHint(PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
+  if (tocco || b.classList.contains('st')) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
+  TIP.dataset.k = 'sez:' + k; return true; };
+document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema], .str5 .st'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi, .str5')) tipNascondi(); });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-tema],header h1.marchio');
+  if (!b) { if (String(TIP.dataset.k).startsWith('sez:')) tipNascondi(); return; }
+  if (isApp) return; e.preventDefault(); e.stopPropagation();
+  const k = b.dataset.tema || 'home';
+  if (!fineP && k !== 'home' && b.closest('.str5') && TIP.dataset.k !== 'sez:' + k) { tipSez(b, 0, 0); return; }
+  tipNascondi(); entraSez(k);
+}, true);
+// testata coerente: colore, menu ed etichetta seguono la sezione in cui sei
+const SEZI = { natura: 'tree', sapori: 'tools-kitchen-2', mare: 'ripple', arte: 'building-church', storia: 'book-2' };
+if (!isApp) {
+  $('sez').insertAdjacentHTML('afterend', `<nav class="sez sezh" id="sezh" aria-label="Sezioni del sito">${Object.entries(TEMA).map(([k, [n]]) => `<button data-tema="${k}" data-ic="${SEZI[k]}">${ico(SEZI[k])}<span>${n}</span></button>`).join('')}</nav>`);
+  document.querySelector('header h1.marchio').insertAdjacentHTML('afterend', '<button class="sezl" id="sezl" aria-label="Torna all\'inizio della sezione"></button>');
+  $('sezl').onclick = e => { e.stopPropagation(); entraSez(SEZ); };
+  document.querySelector('.lang').style.display = 'none';
+}
+function aggSez() {
+  if (isApp) return;
+  const k = SEZ, b = document.body;
+  for (const x of ['home', 'natura', 'sapori', 'mare', 'arte', 'storia']) b.classList.toggle('z-' + x, x === k);
+  b.classList.toggle('z-hm', k === 'home' || !PRONTI.includes(k));
+  $('sezl').textContent = k === 'home' ? '' : TEMA[k][0]; $('sezl').style.display = k === 'home' ? 'none' : '';
+  for (const x of document.querySelectorAll('#sezh button')) x.classList.toggle('on', x.dataset.tema === k);
+}
+setTimeout(aggSez, 0);
+function entraSez(k) {
+  document.body.classList.add('velo'); clearTimeout(VELO.t); VELO.t = setTimeout(() => document.body.classList.remove('velo'), 2500);
+  SEZ = k; aggSez(); TEMI = new Set([k]); chiudi(); $('cat').scrollTop = 0; $('cat').dataset.v = '';
+  if (k === 'sapori') { if (!SAP.on) sapModo(true); else { SAP.home = true; vai('mappa'); } return; }
+  NAT.home = true; NAT.hi = null;
+  if (SAP.on) { vista = 'mappa'; sapModo(false); } else vai('mappa');
+}
+function applicaTemi() { entraSez([...TEMI][0]); }
+// la home: le sezioni che scorrono e invitano a entrare
+async function genHome(fo) {
+  await SAPD(); await SAGRE();
+  const D2 = SAP.D, conta = t => Object.values(S).filter(x => x.t === t).length;
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const oi = new Date().toISOString().slice(0, 10), mese = new Date().getMonth();
+  const prossime = (SAP.sagre.eventi || []).filter(e => e.t === 'sagra' && e.d[e.d.length - 1] >= oi).sort((a, b) => (a.d.find(d => d >= oi) > b.d.find(d => d >= oi) ? 1 : -1)).slice(0, 3);
+  const nh = fo.filter(x => x.h && x.g !== 'mare'), nat = nh[Math.floor(Math.random() * nh.length)] || {};
+  SEZT.natura.f = nat.f || SEZT.natura.f;
+  const sl = Object.entries(SEZT);
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  $('cat').dataset.v = 'gen-home';
+  $('cat').innerHTML = `<div class="sh5 gen5">
+    <section class="ap5 sl5" aria-roledescription="carosello" aria-label="Le sezioni di Sicilia Naturale">${filtroTemi()}
+      ${sl.map(([k, x], i) => `<div class="sld${i === 0 ? ' on' : ''}" data-i="${i}" style="--tc:${TEMA[k][1]}" aria-hidden="${i !== 0}"><div class="apf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></div>
+        <div class="apt"><p class="kick5"><i></i>${x.t}${PRONTI.includes(k) ? '' : ' · in preparazione'}</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p>
+          ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
+      <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
+      ${strisciaSez('natura')}
+    </section>
+    <section class="s5 og5" id="og5"><div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div><p class="note">Carico il meteo…</p></section>
+    <section class="s5"><div class="t5"><h2>Per chi è Sicilia Naturale</h2><p>Per chi viaggia, per chi studia, per chi insegna e per chi ricorda. Scegli da dove partire.</p></div>
+      <div class="chi5">
+        <button data-via="viaggio" style="--tc:#2D6A4F"><span class="bg" style="background-image:url('foto/natura/arco-tramonto.webp')"></span><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Organizza il viaggio</em></button>
+        <button data-via="scuola" style="--tc:#2F7EA8"><span class="bg" style="background-image:url('foto/natura/campagna.webp')"></span><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Quiz e percorsi</em></button>
+        <button data-via="bambini" style="--tc:#C8102E"><span class="bg" style="background-image:url('foto/natura/more-rovo.webp')"></span><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Giochi e scoperte</em></button>
+        <button data-via="studiosi" style="--tc:#5B3A26"><span class="bg" style="background-image:url('foto/natura/acetosella.webp')"></span><b>Studiosi e guide</b><span>Elenchi di specie per zona, dati Natura 2000 e GBIF, fonti citate, itinerari in PDF e GPX, osservazioni in Darwin Core.</span><em>Dati e fonti</em></button>
+        <button data-via="dolce" style="--tc:#E8761A"><span class="bg" style="background-image:url('foto/granita-e-brioche-con-tuppo.webp')"></span><b>Chi ama il cibo</b><span>Dolci, formaggi, pani e vini: dove nascono, di cosa sono fatti, le versioni documentate e chi li fa ancora.</span><em>Il catalogo dei sapori</em></button>
+        <button data-via="lontano" style="--tc:#7B3F61"><span class="bg" style="background-image:url('foto/natura/tramonto-baia.webp')"></span><b>Chi è lontano</b><span>Il tuo paese, i suoi dolci, le sue feste. Per ritrovare la Sicilia anche da lontano.</span><em>Cerca il tuo paese</em></button>
+      </div></section>
+    <section class="s5" id="sapevi"><div class="t5"><h2>Lo sapevi?</h2><p>Piccole scoperte da leggere insieme, grandi e piccoli.</p></div>
+      <div class="sap5">${[
+        ['Sull\'Etna vive il Castagno dei Cento Cavalli: è considerato uno degli alberi più vecchi d\'Europa, con migliaia di anni.', 'natura', 'Alberi monumentali'],
+        ['L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine di alberi.', 'natura', 'Specie rare'],
+        ['Il cappero che mangiamo è il bocciolo di un fiore: se non lo raccogli, si apre e fiorisce per un solo giorno.', 'sapori', 'Capperi'],
+        ['La manna si raccoglie d\'estate incidendo la corteccia del frassino: la linfa esce e si indurisce al sole.', 'sapori', 'Manna delle Madonie'],
+        ['Il pistacchio di Bronte cresce sulle colate di lava dell\'Etna, dove pochi altri alberi riescono a vivere.', 'sapori', 'Pistacchio'],
+        ['In Sicilia sono state segnalate più di ' + fmt(Math.floor(FUN.s.length / 100) * 100) + ' specie di funghi. Molte si riconoscono solo al microscopio.', 'natura', 'Funghi']
+      ].map(([t, k, x]) => `<div class="sp5" style="--tc:${TEMA[k][1]}"><small>${x}</small><p>${t}</p></div>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Le cinque sezioni</h2><p>Due sono già aperte, tre sono in preparazione.</p></div>
+      <div class="sez5">${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="img" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span><span class="tx"><b><i></i>${x.t}</b><small>${x.s}.</small>${PRONTI.includes(k) ? `<em>${k === 'natura' ? `${conta('pn') + conta('pr')} parchi, ${conta('rn')} riserve, ${fmt(FUN.s.length + PIA.s.length)} specie` : `${fmt(Object.values(D2.voci).filter(v => v.t !== 'materia' && v.t !== 'semi').length)} sapori in ${Object.keys(D2.paesi).length} comuni`}</em>` : '<em>In preparazione</em>'}</span>${freccia}</button>`).join('')}</div></section>
+    ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
+  oggiSicilia();
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
+  scorri5();
+}
+let SLT = null;
+/* telefono: le pagine d'inizio delle sezioni composte come la home. La foto è una scheda con lo stesso margine sopra e sotto,
+   in fondo al testo le cinque sezioni a piramide (quella in cui sei è accesa); la mappa ridotta scende sotto la foto. */
+// la striscia delle cinque sezioni: cinque pezzi ritagliati dal lato basso della foto, con simbolo e nome
+function strisciaSez(att) {
+  return `<nav class="str5" aria-label="Le cinque sezioni">${Object.entries(SEZT).map(([k, x], i) => `<button class="st${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" data-i="${i}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><img class="sg" src="illustrazioni/${k}-segno.svg" alt=""><b>${x.t}</b>${PRONTI.includes(k) ? '' : '<em>presto</em>'}</button>`).join('')}</nav>`;
+}
+function componiAp5() {
+  if (isApp) return; const sec = $('cat').querySelector('.ap5:not(.sl5)'), apt = sec && sec.querySelector('.apt'); if (!apt) return;
+  if (!sec.querySelector('.str5')) sec.insertAdjacentHTML('beforeend', strisciaSez(SEZ));
+  if (innerWidth > 860) { sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
+  const nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+  const schermo = innerHeight - (sec.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10, h = apt.offsetHeight, st = sec.querySelector('.str5').offsetHeight;
+  const min = h + 48 + st, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - st) / 2);
+  sec.style.setProperty('--m', m + 'px'); sec.style.setProperty('--hp', H + 'px');
+}
+if (!isApp) { new MutationObserver(() => requestAnimationFrame(componiAp5)).observe($('cat'), { childList: true }); addEventListener('resize', componiAp5); }
+function scorri5() {
+  clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
+  // sul telefono il riquadro è alto quanto la slide più lunga: niente fascia vuota sopra il titolo
+  // sul telefono la scheda copre tutto lo schermo tra la testata e la barra in basso (mai meno del testo più lungo)
+  // sul computer la stessa composizione: altezza fissa (78% dello schermo, massimo 680), testo e sezioni centrati
+  const alto = () => { const desk = innerWidth > 860;
+    let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
+    const tm = box.querySelector('.str5'), th = tm ? tm.offsetHeight : 0, gap = 0, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+    const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
+    const min = h + th + (desk ? 96 : 48), H = Math.round(desk ? Math.max(min, Math.min(innerHeight * 0.78, 680)) : min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
+    // testo e sezioni centrati nella scheda: stesso margine sopra e sotto
+    box.style.setProperty('--m', m + 'px'); box.style.setProperty('--giu', (m + th + gap) + 'px'); box.style.height = H + 'px'; };
+  alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
+  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')], tes = [...box.querySelectorAll('.str5 .st')]; let i = 0, ferma = false;
+  const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i));
+    tes.forEach((x, n) => x.classList.toggle('on', n === i)); }; // la sezione della foto è accesa anche nella striscia
+  box.querySelector('.slp').onclick = () => va(i - 1); box.querySelector('.sls').onclick = () => va(i + 1);
+  dots.forEach(d => d.onclick = () => va(+d.dataset.go));
+  box.onmouseenter = box.onfocusin = () => { ferma = true; }; box.onmouseleave = () => { ferma = false; };
+  let x0 = null; box.ontouchstart = e => { x0 = e.touches[0].clientX; }; box.ontouchend = e => { if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40) va(i + (dx < 0 ? 1 : -1)); x0 = null; };
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) SLT = setInterval(() => { if (!ferma && $('cat').dataset.v === 'gen-home' && document.visibilityState === 'visible') va(i + 1); else if ($('cat').dataset.v !== 'gen-home') clearInterval(SLT); }, 6500);
+}
+$('cat').addEventListener('click', e => {
+  if ($('cat').dataset.v !== 'gen-home') return;
+  const v = e.target.closest('[data-via]'); if (!v) return; e.stopPropagation(); const w = v.dataset.via;
+  if (w === 'sentiero') { SEZ = 'natura'; NAT.home = false; return vai('escursioni'); }
+  if (w === 'dolce') return entraSez('sapori');
+  if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
+  if (w === 'scuola') { SEZ = 'natura'; NAT.home = false; return vai('piante'); }
+  if (w === 'bambini') return vaiRotta('#/bambini');
+  if (w === 'studiosi') return vaiRotta('#/scuole');
+  if (w === 'scuola') return vaiRotta('#/didattica');
+  if (w === 'viaggio') return vaiRotta('#/viaggio');
+  if (w === 'lontano') { entraSez('sapori'); return setTimeout(() => { const q = $('hq'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 900); }
+}, true);
+// le sezioni in preparazione: cosa ci sarà
+async function prestoHome(k, fo) {
+  const x = SEZT[k], freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'presto-home';
+  $('cat').innerHTML = `<div class="sh5 gen5">
+    <section class="ap5" style="--tc:${TEMA[k][1]}">${filtroTemi()}<div class="apf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></div>
+      <div class="apt"><p class="kick5"><i></i>${x.t} · in preparazione</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p></div></section>
+    <section class="s5"><div class="t5"><h2>Cosa troverai</h2><p>Stiamo raccogliendo luoghi, fonti e foto. Ecco cosa arriverà in questa sezione.</p></div>
+      <ol class="fut5">${x.fut.map(f => `<li>${f}</li>`).join('')}</ol></section>
+    <section class="s5"><div class="t5"><h2>Intanto puoi entrare qui</h2></div>
+      <div class="sez5">${PRONTI.map(q => `<button data-tema="${q}" style="--tc:${TEMA[q][1]}"><span class="img" style="background-image:url('foto/${SEZT[q].f}.webp')"></span><span class="tx"><b><i></i>${SEZT[q].t}</b><small>${SEZT[q].s}.</small></span>${freccia}</button>`).join('')}</div></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>${COPY()}</div>`;
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
+}
+// comuni dei sapori sulla mappa di Natura quando i temi sono uniti
+function mixLivelli(v) {
+  const on = v === 'mappa' && misto() && TEMI.has('sapori');
+  if (!on) { if (map.getLayer('sap-p')) for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'none'); return; }
+  SAPD().then(() => { if (sapOn() || vista !== 'mappa') return; sapLayers(); map.getSource('sapp').setData(sapGeo('paese'));
+    for (const l of ['sap-c', 'sap-cl', 'sap-p', 'sap-pl']) map.setLayoutProperty(l, 'visibility', 'visible'); });
+}
+async function mixHome(fo) {
+  await SAPD(); if (!SAP.sagre) SAP.sagre = await fetch('data/sagre.json').then(r => r.json()).catch(() => ({ eventi: [] }));
+  const D2 = SAP.D, n = TEMI.has('natura'), s = TEMI.has('sapori'), altri = [...TEMI].filter(k => !PRONTI.includes(k));
+  const conta = t => Object.values(S).filter(x => x.t === t).length;
+  const nPar = conta('pn') + conta('pr'), nRis = conta('rn');
+  const nSap = Object.values(D2.voci).filter(v => v.t !== 'materia' && v.t !== 'semi').length, nCom = Object.keys(D2.paesi).length;
+  const pool = [...(n ? fo.filter(x => x.h) : []), ...(s ? (D2.foto || []).filter(x => x.h) : [])], pf = pool.length ? pool : fo.filter(x => x.h);
+  NAT.hi = NAT.hi == null ? Math.floor(Math.random() * pf.length) : NAT.hi; const hf = pf[NAT.hi % pf.length] || {};
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const nC = {}; for (const v of Object.values(D2.voci)) for (const p of (v.paesi || [])) nC[p] = (nC[p] || 0) + 1;
+  const punti = [...(n ? Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn', 'amp'].includes(x.t) && x.bb).map(([k, x]) => ({ a: 'nk', id: k, xy: centro(x), t: x.t === 'rn' ? 'riserva' : x.t === 'amp' ? 'marina' : 'parco', on: x.t !== 'rn', tit: x.n })) : []),
+    ...(s ? Object.entries(D2.paesi).filter(([k]) => nC[k]).map(([k, p]) => ({ a: 'mp', id: k, xy: p.c, t: 'sagra', on: nC[k] >= 6, tit: `${p.n}: ${nC[k]} ${nC[k] === 1 ? 'sapore' : 'sapori'}` })) : [])];
+  // dove natura e sapori si incontrano: i comuni dentro ogni parco
+  const geo = {}; for (const f of (GJ.features || [])) geo[f.properties.id] = f.geometry;
+  const ricco = v => ((v.ric || []).some(r => r === 'DOP' || r === 'IGP') ? 3 : 0) + (v.pat ? 1 : 0) + (v.fo ? 2 : 0);
+  const incontri = (n && s) ? Object.entries(S).filter(([k, x]) => ['pn', 'pr'].includes(x.t) && geo[k]).map(([k, x]) => {
+    const vtx = (geo[k].type === 'Polygon' ? [geo[k].coordinates] : geo[k].coordinates).flatMap(pl => pl[0]).filter((_, i) => i % 3 === 0);
+    const com = Object.entries(D2.paesi).filter(([q, p]) => nC[q] && p.c[0] >= x.bb[0] - .05 && p.c[0] <= x.bb[2] + .05 && p.c[1] >= x.bb[1] - .05 && p.c[1] <= x.bb[3] + .05 && (dentroPoligono(p.c, geo[k]) || vtx.some(v => hav(v, p.c) < 3500))).map(([q]) => q);
+    const voci = Object.values(D2.voci).filter(v => (v.paesi || []).some(q => com.includes(q)) && v.t !== 'materia').sort((a, b) => ricco(b) - ricco(a));
+    return { k, x, com, voci };
+  }).filter(o => o.com.length).sort((a, b) => b.voci.length - a.voci.length) : [];
+  const mese = new Date().getMonth(), oi = new Date().toISOString().slice(0, 10);
+  const prossime = (SAP.sagre.eventi || []).filter(e => e.t === 'sagra' && e.d[e.d.length - 1] >= oi).sort((a, b) => (a.d.find(d => d >= oi) > b.d.find(d => d >= oi) ? 1 : -1)).slice(0, 6);
+  const stag = Object.values(D2.voci).filter(v => (v.m || []).includes(mese + 1) && v.t !== 'materia').slice(0, 6);
+  const titolo = n && s ? 'La Sicilia,<br>natura <i>e sapori.</i>' : n ? 'La Sicilia,<br>una natura <i>da ascoltare.</i>' : s ? 'La Sicilia,<br>una tavola <i>da scoprire.</i>' : 'La Sicilia,<br><i>da scoprire.</i>';
+  const lead = n && s ? `Dove cresce una specie spesso nasce un sapore. Sulla stessa mappa: ${nPar} parchi e ${nRis} riserve, ${nCom} comuni e ${fmt(nSap)} sapori documentati.` : 'Ci sono isole che si visitano. E poi ci sono isole che si imparano ad ascoltare.';
+  $('cat').classList.add('on'); document.body.classList.add('cat-on');
+  const primo = $('cat').dataset.v !== 'mix-home'; $('cat').dataset.v = 'mix-home'; if (primo) $('cat').scrollTop = 0;
+  $('cat').innerHTML = `<div class="sh5 mix5">
+    <section class="ap5">${filtroTemi()}<div class="apf" style="background-image:url('foto/${hf.f}.webp')" role="img" aria-label="${esc(hf.t || '')}"></div>
+      <div class="apt"><h1>${titolo}</h1><p class="lead">${lead}</p>
+        <label class="cerca5">${ico('map-pin-search')}<input id="mq" type="search" placeholder="Cerca un parco, un paese, un sapore…" autocomplete="off" aria-label="Cerca"><button id="mgo" aria-label="Cerca">${freccia}</button></label>
+        <p class="apc">${esc(hf.t || '')}, foto di Oscar Cangelosi</p></div>
+      ${n || s ? `<div class="apm">${mappaSicilia({ w: 420, nomi: true, punti })}<p class="leg">${n ? '<span><i class="t-parco"></i>Parchi</span><span><i class="t-riserva"></i>Riserve</span>' : ''}${s ? '<span><i class="t-sagra"></i>Comuni con sapori</span>' : ''}</p><button id="mmap">Esplora la mappa ${freccia}</button></div>` : ''}
+    </section>
+    ${altri.length ? `<section class="s5"><div class="presto5"><b>${altri.map(k => TEMA[k][0]).join(', ')}: in preparazione</b><p>Stiamo raccogliendo luoghi, storie e fonti. Intanto qui trovi ${n || s ? 'quello che è già pronto' : 'natura e sapori: aggiungili dal filtro in alto'}.</p></div></section>` : ''}
+    ${incontri.length ? `<section class="s5"><div class="t5"><h2>Dove natura e sapori si incontrano</h2><p>I comuni dentro o ai margini di ogni parco, e quello che vi si produce. Il bosco, il pascolo e la tavola, nello stesso posto.</p></div>
+      <div class="inc5">${incontri.map(o => `<article class="ic5"><button class="icf" data-nk="${o.k}" data-nwk="${esc(o.x.n)}"><span class="tag">Parco</span><b>${esc(o.x.n)}</b></button>
+        <div class="ict"><p><b>${o.com.length} ${o.com.length === 1 ? 'comune' : 'comuni'}</b> con <b>${o.voci.length} sapori</b> documentati, tra cui ${o.voci.slice(0, 3).map(v => `<button class="lk" data-mv="${v.k}">${esc(v.n)}</button>`).join(', ')}.</p>
+        <div class="chips5">${o.com.sort((a, b) => nC[b] - nC[a]).slice(0, 8).map(q => `<button data-mp="${q}">${esc(D2.paesi[q].n)}<em>${nC[q]}</em></button>`).join('')}</div></div></article>`).join('')}</div></section>` : ''}
+    ${(n || s) ? `<section class="s5"><div class="t5"><h2>Questo mese in Sicilia</h2><p>${[n ? 'cosa fiorisce' : '', s ? 'i sapori di stagione e le prossime sagre' : ''].filter(Boolean).join(', ')}.</p></div>
+      <div class="rail5">${s ? prossime.map(e => `<button class="pz5" data-mcal="1"><span class="img cal"><b>${+e.d.find(d => d >= oi).slice(8)}</b><small>${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</small></span><b>${esc(e.n)}</b><small>${esc(e.c)}, sagra</small></button>`).join('') : ''}${s ? stag.map(v => `<button class="pz5" data-mv="${v.k}"><span${imgAttr(v)}>${ico('basket')}</span><b>${esc(v.n)}</b><small>Di stagione</small></button>`).join('') : ''}</div></section>` : ''}
+    <section class="s5"><div class="t5"><h2>Cosa ti va di scoprire?</h2></div>
+      <div class="gusti5">${[...(n ? [['np:parchi', 'Parchi e riserve', `${nPar} parchi e ${nRis} riserve`, 'tree', 'natura/scogliere'], ['np:sentieri', 'Sentieri', 'Oltre 20.000 sentieri', 'route-2', 'natura/campagna'], ['np:funghi', 'Funghi', `${fmt(FUN.s.length)} specie`, 'mushroom', 'natura/funghi-muschio'], ['np:piante', 'Piante e fiori', `${fmt(PIA.s.length)} specie`, 'flower', 'natura/origano-fiore']] : []),
+        ...(s ? [['ms:dolci', 'Dolci', `${Object.values(D2.voci).filter(v => v.t === 'dolce').length} dolci documentati`, 'cake', 'backcassatelle'], ['ms:formaggi', 'Formaggi', 'Pecorino, ricotta, tuma, provola', 'cheese', 'tuma-con-siero-nel-piatto'], ['ms:vini', 'Vini', 'Denominazioni e vitigni', 'glass-full', 'vigna-con-uva-1'], ['mcal', 'Calendario delle sagre', 'Sagre, mercatini e presepi', 'calendar', 'fichi-d-india']] : [])]
+        .map(([k, t, d, ic, f]) => `<button data-mg="${k}"><span class="img conf" style="background-image:url('foto/${f}.webp')">${ico(ic)}</span><span class="tx"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
+    <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
+    <p class="note n5">Natura: EEA Natura 2000, Regione Siciliana SIF, GBIF. Sapori: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia.</p>${COPY()}</div>`;
+  sapFoto($('cat'));
+  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } });
+  const cerca = () => { const q = $('mq').value.trim(); natMappa(); if (q) setTimeout(() => { $('q').value = q; $('q').dispatchEvent(new Event('input', { bubbles: true })); $('q').focus(); }, 300); };
+  $('mq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('mgo').onclick = e => { e.preventDefault(); cerca(); };
+  if ($('mmap')) $('mmap').onclick = natMappa;
+}
+// porta in Sapori e poi esegue un'azione
+function versoSapori(fn) { SAP.home = false; if (!SAP.on) { sapModo(true); setTimeout(() => SAPD().then(fn), 60); } else fn(); }
+$('cat').addEventListener('click', e => {
+  if ($('cat').dataset.v !== 'mix-home') return;
+  const k = e.target.closest('[data-nk]'), mp = e.target.closest('[data-mp]'), mv = e.target.closest('[data-mv]'), mg = e.target.closest('[data-mg]'), mc = e.target.closest('[data-mcal]');
+  if (k) { e.stopPropagation(); natMappa(); return setTimeout(() => apri(k.dataset.nk, true), 650); }
+  if (mp) { e.stopPropagation(); return sapPaese(mp.dataset.mp); }
+  if (mv) { e.stopPropagation(); return sapVoce(mv.dataset.mv); }
+  if (mc) { e.stopPropagation(); return versoSapori(() => { SAP.cal = null; vai('meteo'); }); }
+  if (!mg) return; e.stopPropagation(); const [a, b] = mg.dataset.mg.split(':');
+  if (a === 'mcal') return versoSapori(() => { SAP.cal = null; vai('meteo'); });
+  if (a === 'ms') return versoSapori(() => { Object.assign(SAP.fil, { k: b, q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }); $('cat').dataset.v = ''; vai('specie'); });
+  if (b === 'parchi') return mappaTema('parchi');
+  NAT.home = false; if (b === 'sentieri') return vai('escursioni'); vai(b);
+}, true);
+
+/* ---- riquadro accanto al puntatore sui punti delle mappe */
+const TIP = (() => { const d = document.createElement('div'); d.className = 'tipm'; d.setAttribute('role', 'tooltip'); document.body.appendChild(d); return d; })();
+const fineP = matchMedia('(hover:hover) and (pointer:fine)').matches;
+function tipMostra(html, x, y) { TIP.innerHTML = html; TIP.classList.add('on'); const w = TIP.offsetWidth, h = TIP.offsetHeight; let l = x + 18, t = y + 14; if (l + w > innerWidth - 8) l = x - w - 14; if (t + h > innerHeight - 8) t = y - h - 10; TIP.style.transform = `translate(${l}px,${t}px)`; }
+const tipNascondi = () => { TIP.classList.remove('on'); TIP.dataset.k = ''; };
+const tipHint = t => `<em class="tk">${t}</em>`;
+// un solo modo di leggere i punti di tutte le mappe disegnate
+function tipSvg(c) {
+  const d = c.dataset;
+  if ((d.sc || d.mp) && SAP.D && SAP.D.paesi[d.sc || d.mp]) return tipPaese(d.sc || d.mp);
+  if (d.nk) return tipZona(d.nk);
+  if (d.cev) return tipEvento(d.cev);
+  if (d.fv) return tipVarieta(d.fv);
+  return '';
+}
+function tipEvento(id) {
+  const ev = ((SAP.sagre || {}).eventi || []).find(x => x.id === id); if (!ev) return '';
+  const oggi = iso(new Date()), pr = ev.d.find(x => x >= oggi) || ev.d[0], dd = pr.split('-');
+  return `<span class="tt">${esc(ev.t === 'sagra' ? 'Sagra' : ev.t === 'festa' ? 'Festa' : 'Appuntamento')} · ${esc(ev.c)}</span><b>${esc(ev.n)}</b><small>${+dd[2]} ${MESIL[+dd[1] - 1]}${ev.d.length > 1 ? `, per ${ev.d.length} giorni` : ''}</small>${tipHint('Clic per saperne di più')}`;
+}
+function tipPercorso(id) {
+  if (!PRCA) { caricaPercorsi().then(a => { PRCA = a; TIP.dataset.k = ''; }); return `<span class="tt">Percorso segnato</span><b>Sentiero</b>${tipHint('Clic per saperne di più')}`; }
+  const p = PRCA.find(x => x.id === +id); if (!p) return '';
+  const c = CAI[p.c];
+  return `<span class="tt">Percorso segnato${c ? ' · ' + esc(T(...c)) : ''}</span><b>${esc(p.n || p.r || 'Sentiero')}</b><small>${num1(p.km)} km${p.up ? ` · +${fmt(p.up)} m` : ''}${p.dur ? ' · ' + esc(durata(p.dur)) : ''}</small>${tipHint('Clic per saperne di più')}`;
+}
+const tipPunto = q => `<span class="tt">${esc(T(...(POIN[q.t] || ['Punto', 'Point'])))}</span><b>${esc(q.n || T(...(POIN[q.t] || ['Punto', 'Point'])))}</b>${q.e ? `<small>${fmt(q.e)} m di quota</small>` : ''}${tipHint('Clic per saperne di più')}`;
+const tipBosco = cf => `<span class="tt">Carta forestale</span><b>${esc(tipoCF(cf))}</b><small>${esc(CFN.macro[cf.slice(0, 2)] || '')}</small>${tipHint('Clic per saperne di più')}`;
+// clic sui punti delle mappe disegnate: sempre la stessa scheda breve
+document.addEventListener('click', e => {
+  const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const d = c.dataset;
+  if (!(d.sc || d.mp || d.nk || d.cev || d.fv)) return;
+  e.stopPropagation(); e.preventDefault(); SAP.ancora = [e.clientX, e.clientY];
+  if (d.sc || d.mp) return sapCartaPaese(d.sc || d.mp, true);
+  if (d.nk) return natCarta(d.nk);
+  if (d.cev) return cartaEvento(d.cev);
+  if (d.fv) return cartaVarieta(d.fv);
+}, true);
+function tipGruppo(p) { return `<span class="tt">Più comuni vicini</span><b>${p.point_count} comuni</b><small>${p.tot} sapori documentati</small>${tipHint('Clic per l’elenco, dal più ricco')}`; }
+function tipPaese(k, p) {
+  const D = SAP.D; if (!D || !D.paesi[k]) return ''; const pa = D.paesi[k];
+  const voci = Object.values(D.voci).filter(v => (v.paesi || []).includes(k)), fo = voci.find(v => v.fo);
+  const top = voci.slice().sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).length - (a.ric || []).length)).slice(0, 3).map(v => v.n);
+  const pr = Object.values(D.produttori).filter(x => x.paese === k).length;
+  return `${fo ? `<span class="ti" style="background-image:url('foto/${fo.fo.f}.webp')"></span>` : ''}<span class="tt">${esc(PROVN[pa.pv] || '')}</span><b>${esc(pa.n)}</b><small>${voci.length} ${voci.length === 1 ? 'sapore' : 'sapori'}${pr ? ` · ${pr} ${pr === 1 ? 'produttore' : 'produttori'}` : ''}</small>${top.length ? `<span class="tl">${top.map(esc).join(' · ')}</span>` : ''}${tipHint('Clic per saperne di più')}`;
+}
+function tipProd(k) {
+  const D = SAP.D, p = D && D.produttori[k]; if (!p) return ''; const pa = D.paesi[p.paese];
+  const tipo = p.tipo ? p.tipo[0].toUpperCase() + p.tipo.slice(1) : RUOLO[p.r][0];
+  const fa = (p.fa || []).map(x => D.voci[x] && D.voci[x].n).filter(Boolean);
+  return `<span class="tt">${esc(tipo)} · ${esc(pa.n)}</span><b>${esc(p.n)}</b>${fa.length ? `<span class="tl">${fa.slice(0, 2).map(esc).join(' · ')}</span>` : ''}<small>${p.liv === 'Segnalato' ? 'Segnalato, da visitare' : esc(p.liv)}</small>${tipHint('Clic per saperne di più')}`;
+}
+function tipZona(k) {
+  const z = S[k]; if (!z) return ''; let n = 0; try { n = specieDi(k).length; } catch (e) {}
+  const tipo = TIPZ[z.t] || '';
+  const dati = z.t === 'am' ? [z.sp ? `<i>${esc(z.sp)}</i>` : '', z.com ? esc(z.com) : '', z.circ ? fmt(z.circ) + ' cm di tronco' : ''] : [z.ha ? fmt(z.ha) + ' ha' : '', z.bha ? fmt(z.bha) + ' ha di bosco' : '', n ? fmt(n) + ' specie' : ''];
+  return `<span class="tt">${esc(tipo)}</span><b>${esc(z.n)}</b><small>${dati.filter(Boolean).join(' · ')}</small>${tipHint('Clic per saperne di più')}`;
+}
+if (fineP) {
+  // mappe disegnate (SVG): il nome al posto del suggerimento del browser
+  document.addEventListener('mouseover', e => { const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const ti = c.querySelector('title'); if (ti) { c.dataset.tip = ti.textContent; ti.remove(); } { const h = tipSvg(c); if (h) return tipMostra(h, e.clientX, e.clientY); } if (c.dataset.tip) tipMostra(`<b>${esc(c.dataset.tip.split(':')[0])}</b>${c.dataset.tip.includes(':') ? `<small>${esc(c.dataset.tip.split(':').slice(1).join(':').trim())}</small>` : ''}`, e.clientX, e.clientY); });
+  document.addEventListener('mousemove', e => { if (!TIP.classList.contains('on')) return; const c = e.target.closest && e.target.closest('svg.smap circle'); if (c) tipMostra(TIP.innerHTML, e.clientX, e.clientY); });
+  document.addEventListener('mouseout', e => { if (e.target.closest && e.target.closest('svg.smap circle')) tipNascondi(); });
+  // mappa vera (MapLibre): comuni dei sapori, aree protette, alberi, boschi
+  map.on('mousemove', e => {
+    const ORD = ['sap-c', 'sap-pr', 'sap-p', 'osm-p', 'am-c', 'bv-p', 'osm-r', 'prv', 'bv-f', 'bs-f', 'aree-f', 'n2k-f', 'zps-f', 'cf-f'];
+    const L = ORD.filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
+    const f = L.length ? map.queryRenderedFeatures([[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]], { layers: L }).sort((a, b) => ORD.indexOf(a.layer.id) - ORD.indexOf(b.layer.id)) : [];
+    if (!f.length) { map.getCanvas().style.cursor = ''; return tipNascondi(); }
+    const x = f[0], p = x.properties, id = x.layer.id, oe = e.originalEvent; map.getCanvas().style.cursor = 'pointer';
+    let h = '';
+    const chiave = id + ':' + (p.k || p.id || p.cluster_id || p.c || p.n); if (TIP.dataset.k === chiave && TIP.classList.contains('on')) return tipMostra(TIP.innerHTML, oe.clientX, oe.clientY);
+    if (id === 'sap-c') h = tipGruppo(p);
+    else if (id === 'sap-p') h = tipPaese(p.k, p);
+    else if (id === 'sap-pr') h = tipProd(p.k);
+    else if (id === 'osm-p') h = tipPunto(p);
+    else if (id === 'osm-r' || id === 'prv') h = tipPercorso(p.id);
+    else if (id === 'cf-f') h = tipBosco(p.c);
+    else h = tipZona(p.id);
+    if (!h) return tipNascondi();
+    TIP.dataset.k = chiave; tipMostra(h, oe.clientX, oe.clientY);
+  });
+  map.on('mouseout', tipNascondi);
+}
+
+
+/* ---- ogni pagina racconta anche le altre sezioni */
+function altreSez() {
+  if (isApp || typeof SEZT === 'undefined' || ($('cat').dataset.v === 'gen-home')) return '';
+  const qui = SEZ === 'home' ? '' : SEZ, freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const foto = x => x.f ? ` style="background-image:url('foto/${x.f}.webp')"` : ` data-gwk="${esc(x.wk)}"`;
+  setTimeout(() => { for (const el of document.querySelectorAll('.altre5 [data-gwk]:not(.fok)')) { el.classList.add('fok'); wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; }); } }, 50);
+  return `<aside class="altre5" aria-label="Le altre sezioni"><p class="t">${qui ? 'Continua a scoprire la Sicilia' : 'Le sezioni di Sicilia Naturale'}</p><div>${Object.entries(SEZT).filter(([k]) => k !== qui).map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="bg"${foto(x)}></span><img class="sg" src="illustrazioni/${k}-segno.svg" alt=""><b>${x.t}</b><small>${PRONTI.includes(k) ? x.s : 'In preparazione'}</small>${PRONTI.includes(k) ? '' : '<em>presto</em>'}</button>`).join('')}</div></aside>`;
+}
+function dopoScheda() {
+  if (isApp) return; const sb = $('sb'); if (!sb || sb.querySelector('.altre5m')) return;
+  // schede di Natura: una foto in apertura e il racconto più leggibile
+  if (cur && S[cur] && !sb.querySelector('.eroeN')) { const k = cur; sb.insertAdjacentHTML('afterbegin', `<div class="eroe5 eroeN" id="nre"></div>`); $('sheet').classList.add('natn');
+    wikiVoce(S[k].n.replace(/^(Riserva naturale (orientata|integrale|speciale)?|Parco (regionale|nazionale)?)\s*/i, m => m) ).then(w => { const el = $('nre'); if (!el || cur !== k) return; if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; else el.remove(); }); }
+  sb.insertAdjacentHTML('beforeend', `<div class="altre5m">${altreSez()}</div>`);
+}
+// mappa di Natura: un tasto per tornare all'inizio della sezione
+if (!isApp) { document.querySelector('#wrap .top').insertAdjacentHTML('beforeend', '<button class="natT" id="natT">‹ Inizio di Natura</button>'); $('natT').onclick = () => entraSez('natura'); }
+
+/* ---- leggere bene: testo più grande e contrasto alto, per tutti (anziani, bambini, chi legge dal telefono al sole) */
+const LET = (() => { try { return JSON.parse(localStorage.getItem('sn_let') || '{}'); } catch (e) { return {}; } })();
+function applicaLet() { document.body.classList.toggle('tx-l', LET.t === 1); document.body.classList.toggle('tx-xl', LET.t === 2); document.body.classList.toggle('hc', !!LET.c); for (const x of document.querySelectorAll('.let5 [data-let]')) { const k = x.dataset.let; x.disabled = (k === 'm' && !LET.t) || (k === 'p' && LET.t === 2); if (k === 'c') x.setAttribute('aria-pressed', !!LET.c); } try { localStorage.setItem('sn_let', JSON.stringify(LET)); } catch (e) {} }
+if (!isApp) {
+  document.querySelector('header .lang').insertAdjacentHTML('beforebegin', `<div class="let5" role="group" aria-label="Leggi meglio"><button data-let="m" aria-label="Testo più piccolo" title="Testo più piccolo">A<sup>−</sup></button><button data-let="p" aria-label="Testo più grande" title="Testo più grande">A<sup>+</sup></button><button data-let="c" aria-label="Contrasto alto: testo più scuro e colori più netti, per leggere meglio" title="Contrasto alto: testo più scuro e colori più netti" aria-pressed="false">◐</button></div>`);
+  document.querySelector('.let5').onclick = e => { const b = e.target.closest('[data-let]'); if (!b) return; const k = b.dataset.let;
+    if (k === 'p') LET.t = Math.min(2, (LET.t || 0) + 1); else if (k === 'm') LET.t = Math.max(0, (LET.t || 0) - 1); else LET.c = !LET.c;
+    applicaLet(); };
+  applicaLet();
+}
+
+
+/* ---- per chi studia: glossario, metodo e fonti, schede da stampare e citare */
+const GLOSS = {
+  'Natura 2000': 'La rete europea di aree protette per conservare habitat e specie rari. In Sicilia comprende ZSC e ZPS.',
+  'ZSC': 'Zona Speciale di Conservazione: un\'area della rete Natura 2000 che protegge habitat e specie elencati da una direttiva europea.',
+  'ZPS': 'Zona di Protezione Speciale: un\'area della rete Natura 2000 dedicata alla tutela degli uccelli selvatici.',
+  'endemica': 'Una specie endemica vive solo in un territorio preciso e in nessun altro posto al mondo.',
+  'habitat': 'L\'ambiente in cui vive una specie: il suolo, il clima, le piante e gli animali che lo caratterizzano.',
+  'riserva orientata': 'Una riserva dove sono ammesse alcune attività dell\'uomo, purché rispettino la natura del luogo.',
+  'riserva integrale': 'Una riserva dove la natura è lasciata a sé stessa e l\'uomo può entrare solo con limiti molto stretti.',
+  'IUCN': 'L\'Unione internazionale per la conservazione della natura: classifica le aree protette e il rischio di estinzione delle specie.',
+  'DOP': 'Denominazione di Origine Protetta: un prodotto fatto interamente in una zona precisa, seguendo un disciplinare approvato in Europa.',
+  'IGP': 'Indicazione Geografica Protetta: un prodotto legato a una zona, dove avviene almeno una fase della produzione.',
+  'PAT': 'Prodotto Agroalimentare Tradizionale: preparato allo stesso modo da almeno venticinque anni, nell\'elenco del Ministero dell\'agricoltura.',
+  'DOCG': 'Denominazione di Origine Controllata e Garantita: il livello più alto di tutela per i vini italiani.',
+  'DOC': 'Denominazione di Origine Controllata: un vino prodotto in una zona precisa con regole su uve e metodo.',
+  'IGT': 'Indicazione Geografica Tipica: un vino legato a un territorio, con regole meno strette di DOC e DOCG.',
+  'Lista rossa': 'L\'elenco di dolci, piatti, varietà e razze che rischiano di sparire, con il loro stato: vivo, raro, a rischio, perduto.',
+  'disciplinare': 'Il documento ufficiale che stabilisce zona, ingredienti e metodo di un prodotto a denominazione.',
+  'GBIF': 'Una banca dati mondiale e libera delle osservazioni di piante, funghi e animali.',
+  'Darwin Core': 'Un formato standard per scambiare dati sulla biodiversità tra musei, università e ricercatori.',
+  'bosco vetusto': 'Un bosco antico, rimasto senza tagli per moltissimo tempo, con alberi vecchi e legno morto che ospitano molta vita.',
+  'albero monumentale': 'Un albero tutelato per età, dimensioni, forma o valore storico, iscritto in un elenco nazionale.'
+};
+const GLRE = new RegExp('(^|[^\\p{L}])(' + Object.keys(GLOSS).sort((a, b) => b.length - a.length).map(k => k.replace(/ /g, '\\s')).join('|') + ')(?![\\p{L}])', 'u');
+function glossa(root) {
+  if (!root || isApp) return; const visti = new Set();
+  const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement.closest('button,a,h2,h3,abbr,.src,.cap5,.kick,script') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+  const nodi = []; while (tw.nextNode()) nodi.push(tw.currentNode);
+  for (const n of nodi) { const m = n.nodeValue.match(GLRE); if (!m) continue; const k = Object.keys(GLOSS).find(x => x.toLowerCase() === m[2].replace(/\s+/g, ' ').toLowerCase()); if (!k || visti.has(k)) continue; visti.add(k);
+    const i = m.index + m[1].length, r = n.splitText(i); r.splitText(m[2].length); const ab = document.createElement('abbr'); ab.className = 'gl'; ab.dataset.gl = k; ab.tabIndex = 0; ab.textContent = r.nodeValue; r.replaceWith(ab); }
+}
+const glMostra = (el, x, y) => tipMostra(`<b>${esc(el.dataset.gl)}</b><small>${esc(GLOSS[el.dataset.gl])}</small>`, x, y);
+document.addEventListener('mouseover', e => { const g = e.target.closest && e.target.closest('abbr.gl'); if (g) glMostra(g, e.clientX, e.clientY); });
+document.addEventListener('mouseout', e => { if (e.target.closest && e.target.closest('abbr.gl')) tipNascondi(); });
+document.addEventListener('click', e => { const g = e.target.closest && e.target.closest('abbr.gl'); if (!g) return; e.stopPropagation(); const r = g.getBoundingClientRect(); glMostra(g, r.left, r.bottom); setTimeout(tipNascondi, 5000); }, true);
+// pagine di servizio: glossario e metodo
+function pagina(k) {
+  chiudi(); $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'pag-' + k; $('cat').scrollTop = 0;
+  const testa = (t, d) => `<div class="sh5 pag5"><section class="s5"><h1>${t}</h1><p class="lead">${d}</p></section>`;
+  if (k === 'scuole') return paginaScuole();
+  if (k === 'viaggio') return paginaViaggio();
+  if (k === 'didattica') return paginaDidattica();
+  if (k === 'bambini') return paginaBambini();
+  if (k === 'glossario') $('cat').innerHTML = testa('Glossario', 'Le parole un po\' difficili che trovi nelle schede, spiegate in modo semplice. Nelle schede sono sottolineate: passaci sopra o toccale per leggere la spiegazione.') +
+    `<section class="s5"><dl class="gl5">${Object.entries(GLOSS).sort((a, b) => a[0].localeCompare(b[0], 'it')).map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl></section>${COPY()}</div>`;
+  else $('cat').innerHTML = testa('Metodo e fonti', 'Come sono raccolti e verificati i dati di Sicilia Naturale, e come citarli in una ricerca o in una tesi.') +
+    `<section class="s5 txt5"><h2>Da dove vengono i dati</h2>
+      <p><b>Natura</b>: aree protette e siti Natura 2000 dall'Agenzia europea dell'ambiente e dalla Regione Siciliana (Sistema informativo forestale); boschi vetusti, boschi da seme e alberi monumentali dagli elenchi ufficiali; specie da GBIF; sentieri e punti di interesse da OpenStreetMap; meteo da Open-Meteo e allerte dalla Protezione Civile.</p>
+      <p><b>Sapori</b>: elenco nazionale dei prodotti agroalimentari tradizionali (PAT), elenco regionale dei prodotti DOP e IGP, vini a denominazione (IRVO), elenco dei dolci siciliani di Oscar Cangelosi. Le date delle sagre vengono da siti di eventi e giornali locali, indicati in ogni scheda.</p>
+      <h2>Come li usiamo</h2>
+      <p>I racconti delle schede sono costruiti solo dai dati delle fonti: niente viene inventato. Dove una zona è indicativa lo scriviamo. Le specie rare hanno la posizione sfumata di circa 10 km per proteggerle. Non diamo mai indicazioni sulla commestibilità di funghi e piante selvatiche.</p>
+      <h2>Per chi studia e insegna</h2>
+      <p>Ogni scheda ha il tasto <b>Stampa o salva per la ricerca</b>: produce una pagina pulita con le fonti. Dalle schede delle zone si scaricano l'elenco delle specie in CSV; dalle uscite registrate le osservazioni in Darwin Core; dagli itinerari il PDF e il GPX.</p>
+      <h2>Come citare</h2><p class="cit5">Sicilia Naturale, atlante della natura e dei sapori di Sicilia, a cura di Oscar Cangelosi. ${esc(location.origin + location.pathname)}, consultato il ${new Date().toLocaleDateString('it-IT')}.</p>
+      <p class="note">Il sito è un prototipo in costruzione: alcuni dati sono di prova e sono segnalati come tali.</p></section>${COPY()}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pag]'); if (!b) return; e.preventDefault(); e.stopPropagation(); pagina(b.dataset.pag); }, true);
+// schede: glossario, stampa e citazione
+const _dopo = dopoScheda;
+dopoScheda = function () {
+  _dopo(); const sb = $('sb'); if (!sb || isApp) return; glossa(sb);
+  if (!sb.querySelector('.ric5')) { const tit = ($('sh').querySelector('h2') || {}).textContent || document.querySelector('.nh5 h2')?.textContent || 'Scheda';
+    const box = `<div class="ric5"><button class="stampa5">Stampa o salva per la ricerca</button><p><b>Come citare questa scheda</b><br>Sicilia Naturale, «${esc(tit)}», a cura di Oscar Cangelosi, consultato il ${new Date().toLocaleDateString('it-IT')}. <button class="lk" data-pag="metodo">Metodo e fonti</button></p></div>`;
+    const a = sb.querySelector('.altre5m'); a ? a.insertAdjacentHTML('beforebegin', box) : sb.insertAdjacentHTML('beforeend', box); }
+};
+document.addEventListener('click', e => { if (!e.target.closest('.stampa5')) return; document.body.classList.add('stampa'); window.print(); setTimeout(() => document.body.classList.remove('stampa'), 500); });
+
+/* ---------- navigatore: ogni pagina e ogni scheda ha il suo indirizzo (solo sito)
+   #/                     inizio            #/natura, #/natura/mappa, /percorsi, /meteo, /funghi, /piante, /calendario
+   #/sapori, #/sapori/mappa, /catalogo, /calendario, /itinerari, /vino (le quattro materie)
+   #/zona/EUAP0228        scheda di un parco, riserva, sito, bosco o albero
+   #/specie/funghi/Amanita_phalloides     #/sapori/scheda/<chiave>     #/percorso/<id>
+   #/mare, #/arte, #/storia, #/glossario, #/metodo
+   Gli indirizzi vecchi (#EUAP0228, #it=...) continuano a funzionare. */
+const ROTTA = { pronta: false, applico: false, t: 0 };
+const attesa = ms => new Promise(r => setTimeout(r, ms));
+const aspetta = async (ok, max = 6000) => { for (let n = 0; n < max / 80; n++) { try { if (ok()) return true; } catch (e) {} await attesa(80); } return false; };
+const nomeUrl = s => encodeURIComponent(String(s).replace(/ /g, '_')).replace(/%2F/g, '/');
+function rottaAttuale() {
+  const aperta = $('sheet').classList.contains('open'), c = String(cur || '');
+  if (aperta && c.startsWith('SP:')) { const [, tp, i] = c.split(':'), r = (tp === 'funghi' ? FUN : PIA).s[+i]; if (r) return `#/specie/${tp}/${nomeUrl(r[0])}`; }
+  if (aperta && c.startsWith('SAP:') && !/^SAP:(fv|v):/.test(c)) return '#/sapori/scheda/' + nomeUrl(c.slice(4));
+  if (aperta && c && S[c]) return '#/zona/' + nomeUrl(c);
+  if (PERC_SEL != null && (aperta || document.body.classList.contains('mm'))) return '#/percorso/' + PERC_SEL;
+  const v = $('cat').dataset.v || '';
+  if (v === 'pag-glossario') return '#/glossario';
+  if (v === 'pag-scuole') return '#/scuole';
+  if (v === 'pag-viaggio') return '#/viaggio';
+  if (v === 'pag-didattica') return '#/didattica';
+  if (v === 'pag-bambini') return '#/bambini';
+  if (v.startsWith('pag-')) return '#/metodo';
+  if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
+  if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
+  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari' + (SAP.itk ? '/' + SAP.itk : ''), 'sap-fil': '#/sapori/' + SAP.fk }[v]
+    || (vista === 'mappa' && !SAP.home ? '#/sapori/mappa' : null);
+  if (v === 'nat-home') return '#/natura';
+  if (v === 'cal') return '#/natura/calendario';
+  return { funghi: '#/natura/funghi', piante: '#/natura/piante', escursioni: '#/natura/percorsi', meteo: '#/natura/meteo', mappa: NAT.home ? null : '#/natura/mappa' + (MT.t ? '/' + MT.t : '') }[vista] || null;
+}
+// titolo della scheda del browser: "Tignosa verdognola · Sicilia Naturale"
+function titoloRotta(r) {
+  const T0 = 'Sicilia Naturale', p = r.slice(2).split('/');
+  const h2 = $('sheet').classList.contains('open') && $('sh').querySelector('h2:not([hidden])');
+  if (['zona', 'specie', 'percorso'].includes(p[0]) || p[1] === 'scheda') return (h2 ? h2.textContent.trim() + ' · ' : '') + T0;
+  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti', scuole: 'Scuole e studiosi', viaggio: 'Organizza il viaggio', didattica: 'Scuole e ragazzi', bambini: 'Bambini' };
+  const S2 = { mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari' };
+  return p[0] ? [S2[p[1]] || (p[1] ? p[1][0].toUpperCase() + p[1].slice(1) : ''), N[p[0]], T0].filter(Boolean).join(' · ') : T0 + ' · La natura e i sapori della Sicilia';
+}
+function segnaRotta() {
+  if (isApp || !ROTTA.pronta || ROTTA.applico) return;
+  clearTimeout(ROTTA.t);
+  ROTTA.t = setTimeout(() => {
+    if (ROTTA.applico) return;
+    const r = rottaAttuale(); if (!r) return;
+    if (r !== (location.hash || '#/')) try { history.pushState(null, '', r === '#/' ? location.pathname : r); } catch (e) {}
+    document.title = titoloRotta(r);
+  }, 250);
+}
+async function applicaRotta(h) {
+  if (isApp) return;
+  ROTTA.applico = true; clearTimeout(ROTTA.t);
+  VELO.rotta = true; document.body.classList.add('velo'); clearTimeout(VELO.t); VELO.t = setTimeout(() => { VELO.rotta = false; document.body.classList.remove('velo'); }, 4000);
+  try {
+    const [a, b, c] = h.replace(/^#\/?/, '').split('/').map(x => decodeURIComponent(x || '').replace(/_/g, ' '));
+    const natura = async () => { if (SEZ !== 'natura' || sapOn()) { entraSez('natura'); await aspetta(() => !sapOn()); } NAT.home = false; };
+    if (!a) entraSez('home');
+    else if (a === 'natura') {
+      if (!b) entraSez('natura');
+      else if (b === 'mappa') { await natura(); mappaTema(c && TEMIMAPPA[c] ? c : null); }
+      else { await natura(); const v = { mappa: 'mappa', percorsi: 'escursioni', meteo: 'meteo', funghi: 'funghi', piante: 'piante', calendario: 'piante' }[b] || 'mappa'; vai(v);
+        if (b === 'calendario') { await CAT; await attesa(200); calendario(); } }
+    } else if (a === 'sapori') {
+      if (!sapOn()) entraSez('sapori'); else if (!b) entraSez('sapori');
+      await aspetta(() => sapOn() && SAP.D);
+      if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') { vai('escursioni'); if (c) { await attesa(150); sapItinerario(c); } }
+      else if (b === 'mappa') { SAP.home = false; vai('mappa'); }
+      else if (b === 'scheda' && c) { const k = c.replace(/ /g, '_'), D2 = SAP.D; const kk = D2.voci[k] || D2.paesi[k] || D2.produttori[k] ? k : c; await attesa(300); sapApri(kk); }
+      else if (b) sapFiliera(b);
+    } else if (a === 'zona') {
+      const k = b.replace(/ /g, '_'); const kk = S[k] ? k : b;
+      if (S[kk]) { await natura(); vai('mappa'); await attesa(650); apri(kk, true); }
+    } else if (a === 'specie') {
+      await CAT; const tp = b === 'piante' ? 'piante' : 'funghi', i = (tp === 'funghi' ? FUN : PIA).s.findIndex(r => r[0] === c);
+      await natura(); vai(tp); if (i >= 0) { await attesa(300); apriSpecie(tp, i); }
+    } else if (a === 'percorso') { await natura(); vai('escursioni'); await attesa(300); await apriPercorso(b); }
+    else if (['glossario', 'metodo', 'scuole', 'viaggio', 'didattica', 'bambini'].includes(a)) { await SAPD(); pagina(a); }
+    else if (TEMA[a]) entraSez(a);
+    else entraSez('home');
+    if (!a || ((a === 'natura' || a === 'sapori') && !b) || (TEMA[a] && a !== 'natura' && a !== 'sapori')) await aspetta(() => $('cat').dataset.v, 3000).catch(() => {});
+  } catch (e) { console.warn('rotta', e); }
+  VELO.rotta = false; setTimeout(() => document.body.classList.remove('velo'), 60);
+  await attesa(700);
+  ROTTA.applico = false;
+  // se il link non porta dove dice (scheda inesistente…), l'indirizzo si corregge su ciò che si vede
+  const fine = () => { const r = rottaAttuale(); if (!r) return; if (r !== (location.hash || '#/')) try { history.replaceState(null, '', r === '#/' ? location.pathname : r); } catch (e) {} document.title = titoloRotta(r); };
+  fine(); setTimeout(fine, 900);
+}
+if (!isApp) {
+  const osserva = new MutationObserver(segnaRotta);
+  osserva.observe($('cat'), { attributes: true, attributeFilter: ['data-v'] });
+  osserva.observe($('sheet'), { attributes: true, attributeFilter: ['class'] });
+  osserva.observe($('sh'), { childList: true });
+  osserva.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('popstate', () => { if (!location.hash.startsWith('#it=')) applicaRotta(location.hash); });
+  // tasto "Condividi" in ogni scheda: sul telefono apre la condivisione (WhatsApp…), sul computer copia il link
+  new MutationObserver(() => { const h = $('sh'), x = h.querySelector('.close'); if (!x || h.querySelector('.condividi')) return;
+    x.insertAdjacentHTML('beforebegin', `<button class="condividi" aria-label="Condividi questa scheda" title="Condividi">${ico('share')}</button>`); }).observe($('sh'), { childList: true });
+  $('sh').addEventListener('click', async e => { if (!e.target.closest('.condividi')) return; e.stopPropagation();
+    const r = rottaAttuale(); const url = location.origin + location.pathname + (r && r !== '#/' ? r : ''), tit = document.title;
+    if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: tit, url }); } catch (er) {} return; }
+    try { await navigator.clipboard.writeText(url); toast('Link copiato: puoi incollarlo dove vuoi'); } catch (er) { prompt('Copia il link', url); } });
+  // all'apertura: si aspetta che la prima pagina sia pronta, poi si applica il link (se c'è)
+  aspetta(() => $('cat').dataset.v || document.body.classList.contains('mm') || $('sheet').classList.contains('open'), 10000).then(async () => {
+    if (HASH_ROTTA) await applicaRotta(location.hash);
+    ROTTA.pronta = true;
+    const r = rottaAttuale(); if (r) { if (!HASH_ROTTA && !location.hash.startsWith('#it=')) try { history.replaceState(null, '', r === '#/' ? location.pathname : r); } catch (e) {} document.title = titoloRotta(r); }
+  });
+}
+
+/* ---------- Oggi in Sicilia (home) e meteo dei comuni (pagina Meteo, per tutte le sezioni) ---------- */
+Object.assign(ICO, {
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M3 12h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7-.7.7m0 11.4.7.7m-12.1-.7-.7.7"/>',
+  'cloud-sun': '<path d="M6.5 18a4 4 0 0 1 0-8 4.5 4 0 0 1 8.7 1.5h.3a3.25 3.25 0 0 1 0 6.5z"/><path d="M13.5 6.2a4 4 0 0 1 6 4.3M16 3v1m4.6 1.4-.7.7"/>',
+  'cloud-rain': '<path d="M7 17a4.6 4.4 0 0 1 0-9 5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7"/><path d="M11 13v2m0 3v2m4-5v2m0 3v2"/>',
+  'cloud-storm': '<path d="M7 17a4.6 4.4 0 0 1 0-9 5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="m13 13-2 4h3l-2 4"/>'
+});
+const wxIco = c => c >= 95 ? 'cloud-storm' : c >= 51 ? 'cloud-rain' : c >= 3 ? 'cloud' : c >= 1 ? 'cloud-sun' : 'sun';
+const wxParola = c => c >= 95 ? 'temporali' : c >= 61 ? 'pioggia' : c >= 51 ? 'pioviggine' : c >= 45 ? 'nebbia' : c === 3 ? 'coperto' : c >= 1 ? 'poco nuvoloso' : 'sereno';
+const icoXY = (n, x, y, z, cl) => ico(n, cl).replace('<svg ', `<svg x="${(x - z / 2).toFixed(1)}" y="${(y - z / 2).toFixed(1)}" width="${z}" height="${z}" `);
+const URLD = (la, lo) => `https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,weather_code,precipitation_probability_max&forecast_days=14&timezone=Europe%2FRome`;
+const dist2 = (a, b) => ((a[0] - b[0]) * 0.79) ** 2 + (a[1] - b[1]) ** 2;
+const vaiRotta = r => { if (!isApp) try { history.pushState(null, '', r); } catch (e) {} applicaRotta(r); };
+const capoluoghi = () => SAP.D.sic.comuni.filter(c => CAPO[c[0]]);
+// meteo dei nove capoluoghi con i 61 giorni passati: serve anche la stima dei funghi
+let CAPM = null;
+const meteoCapoluoghi = () => CAPM || (CAPM = SAPD().then(async () => {
+  const C = capoluoghi(), j = await getJ(URLM(C.map(c => c[2].toFixed(3)).join(','), C.map(c => c[1].toFixed(3)).join(',')));
+  const arr = Array.isArray(j) ? j : j ? [j] : [];
+  if (arr.length !== C.length || !arr[0].daily) { CAPM = null; return null; }
+  return C.map((c, i) => ({ c, s: serieMeteo(arr[i].daily) }));
+}));
+const giornoN = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const nomeGiorno = n => n === 0 ? 'Oggi' : n === 1 ? 'Domani' : giorno(giornoN(n), { weekday: 'long' }).replace(/^./, x => x.toUpperCase());
+const OG = { n: 0 };
+// i consigli del giorno: dove camminare, i funghi, le sagre, un sapore di stagione
+function consigliGiorno(CM, n) {
+  const g = x => x.s.G[n], M = x => x.s.M, d = giornoN(n), mese = +d.slice(5, 7), out = [];
+  const meteoDi = x => { const i = g(x).i; return { c: M(x).weather_code[i], tn: Math.round(M(x).temperature_2m_min[i]), tx: Math.round(M(x).temperature_2m_max[i]), w: Math.round(M(x).wind_speed_10m_max[i] || 0), r: M(x).precipitation_sum[i] || 0 }; };
+  const vicino = xy => CM.reduce((a, b) => dist2(a.c.slice(1, 3), xy) <= dist2(b.c.slice(1, 3), xy) ? a : b);
+  const best = [...CM].sort((a, b) => g(b).e.v - g(a).e.v)[0];
+  const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn'].includes(x.t) && x.bb && dist2(centro(x), best.c.slice(1, 3)) < 0.55 ** 2).sort((a, b) => b[1].ha - a[1].ha);
+  if (parchi.length) { const [k, z] = parchi[n % Math.min(3, parchi.length)], m = meteoDi(best);
+    out.push({ t: 'natura', ic: 'mountain', tit: 'Camminare', nome: z.n, xy: centro(z), sub: `Il cielo migliore della giornata è intorno ${/^[AEIOU]/.test(best.c[0]) ? 'ad' : 'a'} ${best.c[0]}: ${wxParola(m.c)}, ${m.tn}–${m.tx}°, vento ${m.w} km/h.`, r: '#/zona/' + nomeUrl(k) }); }
+  const fb = [...CM].sort((a, b) => g(b).f.est - g(a).f.est)[0];
+  if (g(fb).f.est >= 4.5) out.push({ t: 'natura', ic: 'mushroom', tit: 'Funghi', nome: 'Boschi intorno ' + (/^[AEIOU]/.test(fb.c[0]) ? 'ad ' : 'a ') + fb.c[0], xy: fb.c.slice(1, 3), sub: `Stima per i funghi: ${g(fb).f.parola}, dopo le piogge delle ultime settimane. Ricorda: la raccolta ha regole e i funghi vanno sempre fatti controllare.`, r: '#/natura/funghi' });
+  const ev = ((OG.sg || {}).eventi || []).filter(e => e.d.includes(d) && e.xy).slice(0, 2);
+  for (const e of ev) { const m = meteoDi(vicino(e.xy)); out.push({ t: 'sapori', ic: 'calendar-event', tit: e.t === 'sagra' ? 'Sagra' : 'Festa', nome: e.n, xy: e.xy, sub: `${e.c}. ${e.desc} Cielo: ${wxParola(m.c)}, ${m.tx}°.`, cev: e.id }); }
+  const st = inEvidenza().filter(([v]) => v.paesi && SAP.D.paesi[v.paesi[0]]).slice(0, 4);
+  if (st.length) { const [v, perche] = st[n % st.length], xy = SAP.D.paesi[v.paesi[0]].c;
+    out.push({ t: 'sapori', ic: 'basket', tit: perche, nome: v.n, xy, sub: `${v.breve ? v.breve + ' ' : ''}Nasce a ${SAP.D.paesi[v.paesi[0]].n}.`, r: '#/sapori/scheda/' + nomeUrl(v.k), f: v.fo ? `foto/${v.fo.f}.webp` : '', wk: v.wk || '', vk: v.k }); }
+  return { out, meteoDi };
+}
+async function oggiSicilia() {
+  const box = $('og5'); if (!box) return;
+  OG.sg = await SAGRE(); const CM = await meteoCapoluoghi(); if (!$('og5')) return;
+  if (!CM) { box.querySelector('.note').textContent = 'Il meteo non risponde in questo momento. Riprova tra poco.'; return; }
+  const disegna = () => {
+    const n = OG.n, { out, meteoDi } = consigliGiorno(CM, n), MW = innerWidth > 860 ? 620 : Math.max(430, Math.min(620, Math.round((box.clientWidth || 430) * 0.82)));
+    const extra = (X, Y, s) => { const messi = []; return CM.map(x => { const m = meteoDi(x), cx = +X(x.c[1]), cy = +Y(x.c[2]), wd = 52 + x.c[0].length * 6.4, px = Math.min(Math.max(cx, wd / 2 + 2), MW - 2 - wd / 2);
+      const su = out.some(o => (+X(o.xy[0]) - cx) ** 2 + (+Y(o.xy[1]) - cy) ** 2 < 34 * 34), urta = y => messi.some(q => Math.abs(q[0] - px) < (q[2] + wd) / 2 + 4 && Math.abs(q[1] - y) < 27);
+      let py = su ? cy - 30 : cy + 17; if (urta(py)) py = py > cy ? cy - 30 : cy + 17; messi.push([px, py, wd]);
+      return `<g class="wxp"><circle class="pt" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.6"/><rect x="${(px - wd / 2).toFixed(1)}" y="${(py - 12).toFixed(1)}" width="${wd.toFixed(1)}" height="24" rx="12"/>${icoXY(wxIco(m.c), px - wd / 2 + 15, py, 15)}<text x="${(px - wd / 2 + 27).toFixed(1)}" y="${(py + 4.5).toFixed(1)}"><tspan class="tp">${m.tx}°</tspan> ${x.c[0]}</text></g>`; }).join('') + out.map((o, i) => `<g class="ogp t-${o.t}" data-og="${i}"><circle cx="${X(o.xy[0])}" cy="${Y(o.xy[1])}" r="11"/><text x="${X(o.xy[0])}" y="${(+Y(o.xy[1]) + 4).toFixed(1)}" text-anchor="middle">${i + 1}</text></g>`).join(''); };
+    box.innerHTML = `<div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div>
+      <div class="ogd" role="tablist">${[0, 1, 2, 3].map(i => `<button role="tab" data-ogn="${i}" class="${i === n ? 'on' : ''}" aria-selected="${i === n}"><b>${nomeGiorno(i)}</b><small>${giorno(giornoN(i), { day: 'numeric', month: 'short' })}</small></button>`).join('')}</div>
+      <div class="ogb"><div class="ogm">${mappaSicilia({ w: MW, nomi: false, punti: [], extra })}</div>
+        <div class="ogl">${out.map((o, i) => `<button class="ogc t-${o.t}" data-og="${i}" ${o.r ? `data-ogr="${o.r}"` : ''}${o.cev ? ` data-ogev="${o.cev}"` : ''} style="--tc:${TEMA[o.t][1]}"><span class="n">${i + 1}</span>${o.f ? `<span class="ph" style="background-image:url('${o.f}')"></span>` : o.wk ? `<span class="ph" data-wk="${esc(o.wk)}"></span>` : o.vk ? `<span class="ph" data-vk="${o.vk}"></span>` : `<span class="ic">${ico(o.ic)}</span>`}<span class="tx"><small>${o.tit}</small><b>${esc(o.nome)}</b><span>${esc(o.sub)}</span></span></button>`).join('')}
+          <button class="ogmet" data-ogr="#/natura/meteo">${ico('cloud')} <span><b>Il meteo di tutta la Sicilia</b><small>Comune per comune, per ogni sezione, fino a 14 giorni</small></span><span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div></div>
+      <p class="src">Meteo: Open-Meteo (CC BY 4.0), previsioni per i nove capoluoghi. Sagre: calendari pubblici, da verificare con gli organizzatori.</p>`;
+    sapFoto(box);
+  };
+  disegna();
+  if (!box.dataset.on) { box.dataset.on = 1; box.addEventListener('click', e => {
+    const d = e.target.closest('[data-ogn]'); if (d) { OG.n = +d.dataset.ogn; return disegna(); }
+    const r = e.target.closest('[data-ogr]'); if (r) { if (r.dataset.ogr === '#/natura/meteo') mt0.day = OG.n; return vaiRotta(r.dataset.ogr); }
+    const v = e.target.closest('[data-ogev]'); if (v) { const ev = (OG.sg.eventi || []).find(x => x.id === v.dataset.ogev); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: giornoN(OG.n), tipo: '', pv: '' }; SEZ = 'sapori'; versoSapori(() => vai('meteo')); } return; }
+    const p = e.target.closest('g[data-og]'); if (p) { const c = box.querySelector(`.ogc[data-og="${p.dataset.og}"]`); if (c) { c.classList.add('lampo'); c.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); setTimeout(() => c.classList.remove('lampo'), 1200); } }
+  });
+  box.addEventListener('mouseover', e => { const c = e.target.closest('.ogc, g[data-og]'); box.querySelectorAll('.hov').forEach(x => x.classList.remove('hov')); if (c) box.querySelectorAll(`[data-og="${c.dataset.og}"]`).forEach(x => x.classList.add('hov')); }); }
+}
+
+/* meteo dei comuni sulla mappa: i capoluoghi sempre, gli altri comuni compaiono avvicinandosi */
+const MC = { dati: null, p: null, mk: [], sez: 'natura', mare: null, pm: null };
+function rangoComuni() {
+  const C = SAP.D.sic.comuni, scelti = C.filter(c => CAPO[c[0]]).map(c => ({ c, z: 0 })), resto = C.filter(c => !CAPO[c[0]]);
+  for (const [z, d] of [[7.6, 0.28], [8.4, 0.16], [9.2, 0.085], [10, 0.045], [10.8, 0]]) for (const c of resto) {
+    if (scelti.some(x => x.c === c)) continue;
+    if (scelti.every(x => dist2(x.c.slice(1, 3), c.slice(1, 3)) >= d * d)) scelti.push({ c, z });
+  }
+  return scelti;
+}
+const meteoComuni = () => MC.p || (MC.p = SAPD().then(async () => {
+  const R = rangoComuni(), out = [];
+  for (let i = 0; i < R.length; i += 120) {
+    const b = R.slice(i, i + 120), j = await getJ(URLD(b.map(x => x.c[2].toFixed(3)).join(','), b.map(x => x.c[1].toFixed(3)).join(',')));
+    const arr = Array.isArray(j) ? j : j ? [j] : [];
+    b.forEach((x, k) => out.push(Object.assign({ M: arr[k] && arr[k].daily }, x)));
+  }
+  MC.dati = out.filter(x => x.M); return MC.dati;
+}));
+// comuni sul mare: il centro del paese è vicino alla costa
+const costieri = () => { const pts = SAP.D.sic.contorno.flat(); return (MC.dati || []).filter(x => pts.some(q => dist2(q, x.c.slice(1, 3)) < 0.03 ** 2)); };
+const meteoMare = () => MC.pm || (MC.pm = meteoComuni().then(async () => {
+  const L = costieri(), out = {};
+  for (let i = 0; i < L.length; i += 120) {
+    const b = L.slice(i, i + 120), j = await getJ(`https://marine-api.open-meteo.com/v1/marine?latitude=${b.map(x => x.c[2].toFixed(3)).join(',')}&longitude=${b.map(x => x.c[1].toFixed(3)).join(',')}&daily=wave_height_max&forecast_days=14&timezone=Europe%2FRome`);
+    const arr = Array.isArray(j) ? j : j ? [j] : [];
+    b.forEach((x, k) => { const w = arr[k] && arr[k].daily && arr[k].daily.wave_height_max; if (w && w.some(v => v != null)) out[x.c[0]] = w; });
+  }
+  MC.mare = out; return out;
+}));
+const statoMare = h => h == null ? '' : h < 0.1 ? 'calmo' : h < 0.5 ? 'quasi calmo' : h < 1.25 ? 'poco mosso' : h < 2.5 ? 'mosso' : 'molto mosso';
+function togliComuni() { for (const m of MC.mk) m.remove(); MC.mk = []; }
+function mostraComuni() {
+  togliComuni();
+  if (vista !== 'meteo' || modo.meteo !== 'mappa' || sapOn() || !MC.dati) return;
+  const z = map.getZoom(), b = map.getBounds(), n = mt0.day;
+  for (const x of MC.dati) {
+    if ((x.z ? x.z + (innerWidth < 700 ? 0.6 : 0) : 0) > z || !b.contains([x.c[1], x.c[2]]) || n >= x.M.time.length) continue;
+    const M = x.M, w = MC.sez === 'mare' && MC.mare && MC.mare[x.c[0]] ? MC.mare[x.c[0]][n] : null;
+    if (MC.sez === 'mare' && w == null && !CAPO[x.c[0]]) continue;
+    const el = document.createElement('div'); el.className = 'cmet' + (x.z === 0 ? ' capo' : '');
+    el.innerHTML = `<b>${ico(wxIco(M.weather_code[n]), 'xs')}${esc(x.c[0])}</b><span>${ico('temperature', 'xs')}${Math.round(M.temperature_2m_max[n])}°${ico('wind', 'xs')}${Math.round(M.wind_speed_10m_max[n] || 0)}<small>km/h</small>${ico('droplet', 'xs')}${num1(M.precipitation_sum[n] || 0)}<small>mm</small></span>${w != null ? `<span class="mare">${ico('ripple', 'xs')}${num1(w)} m · ${statoMare(w)}</span>` : ''}`;
+    el.title = `${x.c[0]}: ${wxParola(M.weather_code[n])}, ${Math.round(M.temperature_2m_min[n])}–${Math.round(M.temperature_2m_max[n])}°, vento ${Math.round(M.wind_speed_10m_max[n] || 0)} km/h, pioggia ${num1(M.precipitation_sum[n] || 0)} mm`;
+    MC.mk.push(new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([x.c[1], x.c[2]]).addTo(map));
+  }
+}
+let MCt = null; map.on('moveend', () => { clearTimeout(MCt); MCt = setTimeout(mostraComuni, 80); });
+new MutationObserver(() => { if (!document.body.classList.contains('vm-met')) togliComuni(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+// interruttori delle sezioni in cima al meteo
+const sezMeteo = () => `<div class="msez" role="tablist" aria-label="Meteo per sezione">${Object.keys(TEMA).map(k => `<button role="tab" data-msez="${k}" class="${MC.sez === k ? 'on' : ''}" aria-selected="${MC.sez === k}" style="--tc:${TEMA[k][1]}"><img src="illustrazioni/${k}-segno.svg" alt=""><span>${TEMA[k][0]}</span></button>`).join('')}</div>`;
+function meteoSezione(dove, giorni) {
+  const n = mt0.day, D2 = MC.dati || [], d = giorni[n] ? giorni[n].d : giornoN(n);
+  const daysH = `<div class="days">${giorni.map((g, i) => `<button data-day="${i}" class="${n === i ? 'on' : ''}"><small>${i === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>`;
+  const vicino = xy => D2.reduce((a, b) => !a || dist2(b.c.slice(1, 3), xy) < dist2(a.c.slice(1, 3), xy) ? b : a, null);
+  const riga = (x, extra) => { const M = x.M; return `<button data-mcom="${x.c[1]},${x.c[2]}"><span class="ring" style="--v:100;--c:${M.precipitation_sum[n] > 2 ? '#d9a066' : '#2d6a4f'}">${ico(wxIco(M.weather_code[n]))}</span><span class="mzt"><b>${esc(x.c[0])}</b><small>${wxParola(M.weather_code[n])}${extra ? ' · ' + extra : ''}</small></span>${cella(M, n)}</button>`; };
+  let h = '';
+  if (!D2.length) h = `<p class="note">${t('carico')}</p>`;
+  else if (MC.sez === 'sapori') {
+    const ev = ((OG.sg || {}).eventi || []).filter(e => e.d.includes(d) && e.xy);
+    h = `<h3>Sagre e feste del giorno</h3>${ev.length ? `<div class="mz">${ev.map(e => { const x = vicino(e.xy); return x ? riga(Object.assign({}, x, { c: [e.n, e.xy[0], e.xy[1]] }), esc(e.c)) : ''; }).join('')}</div>` : '<p class="note">Nessuna sagra in calendario per questo giorno.</p>'}
+      <h3>Mercati e giri all'aperto</h3><p class="note">I capoluoghi con il tempo più adatto per stare fuori.</p><div class="mz">${D2.filter(x => x.z === 0).sort((a, b) => (a.M.precipitation_sum[n] || 0) - (b.M.precipitation_sum[n] || 0) || (a.M.wind_speed_10m_max[n] || 0) - (b.M.wind_speed_10m_max[n] || 0)).slice(0, 5).map(x => riga(x)).join('')}</div>`;
+  } else if (MC.sez === 'mare') {
+    const L = Object.entries(MC.mare || {}).map(([nome, w]) => [D2.find(x => x.c[0] === nome), w[n]]).filter(([x, w]) => x && w != null).sort((a, b) => a[1] - b[1]);
+    h = MC.mare ? `<h3>Dove il mare è più calmo</h3><div class="mz">${L.slice(0, 6).map(([x, w]) => riga(x, `onde ${num1(w)} m, ${statoMare(w)}`)).join('')}</div><h3>Dove è più mosso</h3><div class="mz">${L.slice(-3).reverse().map(([x, w]) => riga(x, `onde ${num1(w)} m, ${statoMare(w)}`)).join('')}</div><p class="note">La sezione Mare è in preparazione. Onde: altezza massima prevista davanti al paese.</p>` : `<p class="note">${t('carico')}</p>`;
+  } else {
+    h = `<h3>Visite all'aperto</h3><p class="note">La sezione ${TEMA[MC.sez][0]} è in preparazione: per ora i capoluoghi dove il tempo aiuta di più.</p><div class="mz">${D2.filter(x => x.z === 0).sort((a, b) => ((a.M.precipitation_sum[n] || 0) * 3 + Math.abs(a.M.temperature_2m_max[n] - 22) + (a.M.wind_speed_10m_max[n] || 0) / 10) - ((b.M.precipitation_sum[n] || 0) * 3 + Math.abs(b.M.temperature_2m_max[n] - 22) + (b.M.wind_speed_10m_max[n] || 0) / 10)).map(x => riga(x)).join('')}</div>`;
+  }
+  dove.innerHTML = `<div class="ph-top"><h2>Meteo · ${TEMA[MC.sez][0]}</h2>${sw()}</div>${sezMeteo()}${daysH}<p class="pl">Avvicinati alla mappa: compaiono i comuni con temperatura, vento e pioggia.</p>${h}<p class="src">${t('fonte')}: Open-Meteo (CC BY 4.0)${MC.sez === 'mare' ? ', Open-Meteo Marine' : ''}</p>`;
+  if (!dove.classList.contains('in') && dove.id === 'cat') dove.innerHTML = `<div class="in">${dove.innerHTML}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-msez]'); if (b && vista === 'meteo') { MC.sez = b.dataset.msez; if (MC.sez === 'mare') meteoMare().then(() => { meteo(); mostraComuni(); }); meteo(); mostraComuni(); return; }
+  const c = e.target.closest('[data-mcom]'); if (c && vista === 'meteo') { const [lo, la] = c.dataset.mcom.split(',').map(Number); if (modo.meteo !== 'mappa') { modo.meteo = 'mappa'; vai('meteo'); } map.flyTo({ center: [lo, la], zoom: 10.2, padding: padMappa(), duration: 800 }); }
+});
+
+/* ---------- pagina per scuole e studiosi: gli strumenti del sito, idee di ricerca per età, uscite con la classe, dati e citazioni */
+function paginaScuole() {
+  const conta = t => Object.values(S).filter(x => x.t === t).length, D2 = SAP.D || { voci: {}, paesi: {} };
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const strumenti = [
+    ['list-details', 'Elenco delle specie di ogni zona', 'Apri un parco, una riserva o un sito Natura 2000 e scarica l\'elenco di funghi e piante segnalati, in CSV, pronto per un foglio di calcolo.', '#/natura/mappa/natura2000', 'Apri la mappa', '#2D6A4F'],
+    ['calendar', 'Calendario delle fioriture', 'Mese per mese, quali piante fioriscono e dove. Utile per scegliere quando fare un\'uscita o per una ricerca sulle stagioni.', '#/natura/calendario', 'Vedi il calendario', '#2D6A4F'],
+    ['cloud', 'Meteo e dati del cielo', 'Previsioni per ogni comune, pioggia degli ultimi due mesi, vento e temperatura. Un buon punto di partenza per leggere i dati del clima.', '#/natura/meteo', 'Apri il meteo', '#2F7EA8'],
+    ['route-2', 'Percorsi in PDF e GPX', 'Sentieri con lunghezza, dislivello e tempi. Si stampano in PDF per la classe o si caricano nel GPS in formato GPX.', '#/natura/percorsi', 'Vedi i percorsi', '#2D6A4F'],
+    ['basket', 'Atlante dei sapori con le fonti', 'Prodotti, dolci e piatti di ogni comune, con le fonti, i libri e le pagine dove trovarli.', '#/sapori/catalogo', 'Apri l\'atlante', '#E8761A'],
+    ['printer', 'Stampa e cita ogni scheda', 'Ogni scheda ha il tasto per stamparla pulita, con le fonti, e la frase pronta per citarla in una ricerca o in una tesi.', '#/metodo', 'Metodo e fonti', '#5B3A26'],
+    ['book', 'Glossario', 'Le parole difficili delle schede, spiegate in modo semplice. Nelle schede sono sottolineate.', '#/glossario', 'Apri il glossario', '#5B3A26'],
+    ['map-2', 'Mappa dei comuni', 'Tutti i comuni siciliani, con quello che producono e le feste. Per una ricerca sul proprio paese.', '#/sapori/mappa', 'Apri la mappa', '#E8761A']
+  ];
+  const percorsi = [
+    ['Scuola primaria', '#C8102E', 'natura/fico', [
+      ['Il mio paese e il suo sapore', 'Cerca il tuo comune sulla mappa dei Sapori: quali prodotti e quali dolci nascono lì? Disegnali e racconta per quale festa si preparano.', '#/sapori/mappa'],
+      ['Un albero più vecchio dei nonni', 'Trova l\'albero monumentale più vicino alla scuola: quanti anni ha, quanto è alto, che storie racconta.', '#/natura/mappa/alberi'],
+      ['Che tempo farà?', 'Ogni mattina, per una settimana, guardate il meteo del vostro comune e confrontatelo con il cielo vero.', '#/natura/meteo']]],
+    ['Scuola secondaria di primo grado', '#2F7EA8', 'natura/campagna', [
+      ['Le aree protette della mia provincia', 'Quanti parchi e riserve ci sono? Perché sono protetti? Confrontate la loro superficie e gli ambienti che custodiscono.', '#/natura/mappa/parchi'],
+      ['Dal grano al pane', 'Seguite la filiera del grano: varietà antiche, dove crescono, quali pani nascono da ogni farina.', '#/sapori/grano'],
+      ['Le stagioni dei fiori', 'Con il calendario delle fioriture, preparate un erbario fotografico di quello che fiorisce intorno alla scuola.', '#/natura/calendario']]],
+    ['Scuola secondaria di secondo grado', '#2D6A4F', 'natura/agave-montagne', [
+      ['La biodiversità di un sito Natura 2000', 'Scaricate l\'elenco delle specie di un sito, contate famiglie e generi, confrontate gli habitat e i dati di superficie.', '#/natura/mappa/natura2000'],
+      ['Pioggia, clima e boschi', 'Usate la pioggia degli ultimi due mesi e le previsioni per capire come il meteo influisce sulla vita del bosco.', '#/natura/meteo'],
+      ['Prodotti tradizionali e territorio', 'Mappate i prodotti DOP, IGP e tradizionali di una provincia e spiegate il legame con il suolo e il clima.', '#/sapori/catalogo']]],
+    ['Università e ricerca', '#5B3A26', 'natura/mulino-saline', [
+      ['Dati di distribuzione', 'Elenchi di specie per zona da GBIF, aree protette da EEA Natura 2000 e Regione Siciliana, con le fonti citate in ogni scheda.', '#/metodo'],
+      ['Osservazioni sul campo', 'Registrate un\'uscita con l\'app: le osservazioni si esportano in Darwin Core, lo standard usato dalle banche dati della biodiversità.', '#/natura/percorsi'],
+      ['Patrimonio agroalimentare', 'Elenchi PAT, DOP e IGP per comune, filiere e varietà, con i riferimenti bibliografici e le pagine dei libri.', '#/sapori/catalogo']]]
+  ];
+  $('cat').innerHTML = `<div class="sh5 pag5 scu5">
+    <section class="ap5 scuh" style="--tc:#2F7EA8"><div class="apf" style="background-image:url('foto/natura/campagna.webp')"></div>
+      <div class="apt"><p class="kick5"><i></i>Scuole e studiosi</p><h1>Una Sicilia da <i>studiare.</i></h1><p class="lead">Mappe, dati, specie, meteo e sapori di tutta l'isola, con le fonti sempre citate. Strumenti pronti per una ricerca di classe, una tesi o un'uscita sul campo.</p></div></section>
+    <section class="s5"><div class="num5">${[[conta('pn') + conta('pr'), 'parchi'], [conta('rn'), 'riserve'], [fmt(FUN.s.length + PIA.s.length), 'specie'], [fmt(Object.values(D2.voci).filter(v => v.t !== 'materia' && v.t !== 'semi').length), 'sapori'], [D2.sic ? D2.sic.comuni.length : 390, 'comuni']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Gli strumenti</h2><p>Tutto quello che il sito sa fare, raccolto in un posto. Tocca una scheda per usarlo.</p></div>
+      <div class="str8">${strumenti.map(([ic, t2, d, r, cta, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span><em>${cta} ${freccia}</em></button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Idee di ricerca, per età</h2><p>Proposte da adattare alla classe. Ogni idea porta allo strumento che serve.</p></div>
+      <div class="eta5">${percorsi.map(([t2, c, f, l]) => `<article style="--tc:${c}"><div class="eh" style="background-image:url('foto/${f}.webp')"><h3>${t2}</h3></div><ol>${l.map(([a, b, r]) => `<li><button data-rotta="${r}"><b>${a}</b><span>${b}</span></button></li>`).join('')}</ol></article>`).join('')}</div></section>
+    <section class="s5 usc5"><div class="t5"><h2>Un'uscita con la classe</h2><p>Quattro passi per prepararla con il sito.</p></div>
+      <div class="pas5">${[
+        ['Scegli il giorno', 'Con «Oggi in Sicilia» e il meteo dei comuni vedi dove il tempo è migliore nei prossimi giorni.', '#/natura/meteo'],
+        ['Scegli il luogo', 'Sulla mappa trovi parchi e riserve vicini, con gli ambienti e le specie da osservare.', '#/natura/mappa/parchi'],
+        ['Leggi le regole', 'Ogni area protetta ha le sue regole: nella scheda trovi cosa è permesso e cosa no.', '#/natura/mappa/parchi'],
+        ['Scegli il sentiero', 'Lunghezza, dislivello e tempi, da stampare in PDF per tutti.', '#/natura/percorsi']
+      ].map(([a, b, r], i) => `<button data-rotta="${r}"><span class="n">${i + 1}</span><b>${a}</b><span>${b}</span></button>`).join('')}</div>
+      <p class="note">Le specie si osservano e si fotografano: non si raccolgono. Funghi e piante selvatiche non vanno mai assaggiati.</p></section>
+    <section class="s5 txt5"><h2>Dati aperti e fonti</h2>
+      <p>Aree protette e siti Natura 2000: Agenzia europea dell'ambiente e Regione Siciliana. Specie: GBIF. Sentieri: OpenStreetMap. Meteo: Open-Meteo. Sapori: elenchi nazionali dei prodotti tradizionali, elenco regionale DOP e IGP, libri di cucina siciliana citati con titolo e pagina.</p>
+      <p>Il dettaglio è nella pagina <button class="lk" data-pag="metodo">Metodo e fonti</button>.</p>
+      <h2>Come citare</h2><p class="cit5">Sicilia Naturale, atlante della natura e dei sapori di Sicilia, a cura di Oscar Cangelosi. ${esc(location.origin + location.pathname)}, consultato il ${new Date().toLocaleDateString('it-IT')}.</p></section>
+    ${COPY()}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-rotta]'); if (!b) return; e.preventDefault(); e.stopPropagation(); vaiRotta(b.dataset.rotta); }, true);
+
+/* ---------- mappa filtrata per argomento: chi arriva da un link vede solo ciò di cui parla il link */
+const MT = { t: null };
+const TEMIMAPPA = {
+  parchi: ['Parchi e riserve', { aree: true }, 'Le aree protette: parchi regionali, riserve naturali e aree marine. Tocca un\'area per la sua scheda.'],
+  natura2000: ['Siti Natura 2000', { n2k: true }, 'I siti della rete europea per la tutela di habitat e specie. Ogni scheda ha l\'elenco delle specie da scaricare.'],
+  alberi: ['Alberi monumentali', { am: true }, 'Gli alberi monumentali censiti in Sicilia. Avvicinati e tocca un punto.'],
+  vetusti: ['Boschi vetusti', { bv: true }, 'I boschi lasciati crescere da secoli, quasi senza tagli.'],
+  seme: ['Boschi da seme', { bs: true }, 'I boschi da cui si raccolgono i semi per i vivai forestali.'],
+  sentieri: ['Sentieri', { osm: true, aree: true }, 'I sentieri segnati sulla carta di OpenStreetMap, con i parchi sullo sfondo.'],
+  boschi: ['Boschi e foreste', { cf: true }, 'La carta dei boschi della Regione Siciliana, per tipo di bosco.']
+};
+function mappaTema(t) {
+  const x = TEMIMAPPA[t]; MT.t = x ? t : null;
+  for (const k of Object.keys(ON)) ON[k] = x ? !!x[1][k] : ({ aree: true, n2k: true })[k] || false;
+  applica(); natMappa(); setTimeout(fasciaTema, 50);
+}
+function fasciaTema() {
+  let f = $('ftema'); if (!f) { document.body.insertAdjacentHTML('beforeend', '<div id="ftema" class="ftema" role="status"></div>'); f = $('ftema'); }
+  const x = MT.t && TEMIMAPPA[MT.t], vis = x && vista === 'mappa' && !NAT.home && !sapOn() && !$('cat').classList.contains('on');
+  f.classList.toggle('on', !!vis); if (!vis) return;
+  f.innerHTML = `<b>${esc(x[0])}</b><span>${esc(x[2])}</span><div>${Object.entries(TEMIMAPPA).filter(([k]) => k !== MT.t).slice(0, 4).map(([k, y]) => `<button data-mtema="${k}">${esc(y[0])}</button>`).join('')}<button data-mtema="tutto" class="tutto">Mostra tutto</button></div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-mtema]'); if (!b) return; e.stopPropagation(); if (b.dataset.mtema === 'tutto') { mappaTema(null); return; } mappaTema(b.dataset.mtema); if (!isApp) try { history.replaceState(null, '', '#/natura/mappa/' + b.dataset.mtema); } catch (er) {} }, true);
+new MutationObserver(() => setTimeout(fasciaTema, 30)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+/* ---------- Organizza il viaggio: poche domande, proposte su misura costruite dai dati */
+const PARTENZE = { palermo: ['Palermo', [13.36, 38.12]], trapani: ['Trapani', [12.51, 38.02]], agrigento: ['Agrigento', [13.58, 37.31]], caltanissetta: ['Caltanissetta o Enna', [14.1, 37.5]], catania: ['Catania', [15.09, 37.5]], messina: ['Messina', [15.55, 38.19]], siracusa: ['Siracusa o Ragusa', [15.0, 37.0]] };
+const GUSTIV = { natura: ['Camminare nella natura', 'mountain'], piante: ['Piante, fiori e funghi', 'flower'], sapori: ['Sapori e prodotti', 'basket'], feste: ['Sagre e feste', 'calendar-event'], mare: ['Mare e isole', 'ripple'], borghi: ['Borghi e paesaggi', 'building-cottage'] };
+const VG = { passo: 0, r: {} };
+const itCentro = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean); return P.reduce((a, x) => [a[0] + x.c[0] / P.length, a[1] + x.c[1] / P.length], [0, 0]); };
+const COSTA = new Set(['trapani', 'eolie', 'sicani', 'iblei', 'belice']);
+function dataViaggio(q) {
+  const d = new Date(); d.setHours(12, 0, 0, 0);
+  const alSabato = () => d.getDay() === 0 ? 0 : (6 - d.getDay() + 7) % 7; // sabato o domenica: si parte oggi
+  if (q === 'weekend') d.setDate(d.getDate() + alSabato());
+  else if (q === 'prossimo') d.setDate(d.getDate() + alSabato() + (d.getDay() === 0 ? 6 : 7));
+  else if (/^m\d+$/.test(q)) { const m = +q.slice(1); d.setMonth(m - 1, 12); if (d < new Date()) d.setFullYear(d.getFullYear() + 1); }
+  return d;
+}
+const DOMANDE = [
+  ['quando', 'Quando parti?', 'Ci serve per la stagione, le feste e il meteo.', () => [['weekend', 'Questo fine settimana'], ['prossimo', 'Il prossimo fine settimana'], ...MESIL.map((m, i) => ['m' + (i + 1), m.replace(/^./, c => c.toUpperCase())])]],
+  ['giorni', 'Quanti giorni hai?', 'Contiamo i giorni pieni sul posto.', () => [['1', 'Una giornata'], ['3', 'Due o tre giorni'], ['5', 'Quattro o cinque giorni'], ['7', 'Una settimana']]],
+  ['chi', 'Con chi viaggi?', 'Così scegliamo il ritmo e le tappe.', () => [['solo', 'Da solo'], ['coppia', 'In coppia'], ['famiglia', 'Con bambini'], ['amici', 'Con amici'], ['gruppo', 'Con una classe o un gruppo']]],
+  ['gusti', 'Cosa ti piace?', 'Puoi sceglierne più di uno.', () => Object.entries(GUSTIV).map(([k, x]) => [k, x[0], x[1]]), true],
+  ['da', 'Da dove parti?', 'La città o la zona da cui ti muovi, o l\'aeroporto dove arrivi.', () => Object.entries(PARTENZE).map(([k, x]) => [k, x[0]])]
+];
+function proposteViaggio(r) {
+  const D = SAP.D, d0 = dataViaggio(r.quando), m = d0.getMonth() + 1, g = +r.giorni, start = PARTENZE[r.da][1], gu = new Set(r.gusti || []);
+  const sg = (SAP.sagre && SAP.sagre.eventi) || [], giorniISO = [...Array(Math.max(1, g))].map((_, i) => { const x = new Date(d0); x.setDate(x.getDate() + i); return x.toISOString().slice(0, 10); });
+  const voto = it => { const c = itCentro(it), km = hav2(start, c); let v = 10 - km / (g <= 1 ? 15 : g <= 3 ? 30 : 60), perche = [];
+    if (km < 60) perche.push(`a circa ${Math.round(km * 1.3 / 10) * 10} km da ${PARTENZE[r.da][0].split(' o ')[0]}`);
+    if (it.m.includes(m)) { v += 4; perche.push(`${MESIL[m - 1]} è uno dei mesi migliori`); }
+    const nat = new Set(it.p.flatMap(p => D.paesi[p] ? natVicina(D.paesi[p].c).map(x => x[0]) : []));
+    if (gu.has('natura') || gu.has('piante')) { v += Math.min(4, nat.size); if (nat.size) perche.push(`${nat.size} parchi e riserve vicino alle tappe`); }
+    if (gu.has('sapori')) { const n = Object.values(D.voci).filter(x => (x.paesi || []).some(p => it.p.includes(p))).length; v += Math.min(4, n / 15); perche.push(`${n} sapori documentati lungo la strada`); }
+    const ev = sg.filter(e => it.p.includes(e.p) && e.d.some(x => giorniISO.includes(x))); if (ev.length) { v += gu.has('feste') ? 6 : 2; perche.push(`${ev.length === 1 ? 'una sagra' : ev.length + ' sagre'} proprio in quei giorni`); }
+    if (gu.has('mare') && COSTA.has(it.k)) { v += 4; perche.push('mare a portata di mano'); }
+    if (gu.has('piante') && [10, 11, 12].includes(m) && ['madonie', 'nebrodi', 'etna'].includes(it.k)) { v += 3; perche.push('boschi nella stagione dei funghi'); }
+    if (r.chi === 'famiglia' && it.p.length <= 5) v += 1;
+    return { it, v, perche, ev, km }; };
+  const tutti = ITIN.map(voto).sort((a, b) => b.v - a.v), out = [];
+  for (const x of tutti) { if (out.length >= 3) break; let it2 = null;
+    if (g >= 5) { const y = tutti.filter(z => z !== x && !out.some(o => o.it2 === z.it)).sort((a, b) => hav2(itCentro(a.it), itCentro(x.it)) - hav2(itCentro(b.it), itCentro(x.it)))[0]; if (y && hav2(itCentro(y.it), itCentro(x.it)) < 140) it2 = y.it; }
+    out.push(Object.assign({ it2 }, x)); }
+  return { d0, g, giorniISO, out };
+}
+function pianoGiorni(P, r) {
+  const D = SAP.D, paesi = [...P.it.p, ...(P.it2 ? P.it2.p : [])].filter(p => D.paesi[p]), g = Math.max(1, +r.giorni);
+  const perG = g === 1 ? Math.min(3, paesi.length) : Math.max(1, Math.ceil(paesi.length / g)), giorni = [];
+  for (let i = 0; i < g; i++) { const pp = g === 1 ? paesi.slice(0, perG) : paesi.slice(i * perG, (i + 1) * perG); if (!pp.length && i) break; giorni.push(pp.length ? pp : paesi.slice(-1)); }
+  return giorni;
+}
+async function paginaViaggio() {
+  $('cat').dataset.v = 'pag-viaggio'; $('cat').scrollTop = 0; await SAGRE().then(sg => SAP.sagre = sg);
+  const passo = VG.passo, freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const testa = `<section class="vgh"><div class="ph" style="background-image:url('foto/natura/arco-tramonto.webp')"></div><div class="tx"><p class="sub">Chi viaggia</p><h1>Organizza il <i>tuo viaggio.</i></h1><p class="lead">Cinque domande, poi ti proponiamo tre viaggi costruiti sui dati del sito: paesi, sapori, sagre, parchi e meteo. Le proposte sono un punto di partenza: le tappe non le abbiamo ancora visitate tutte di persona.</p></div></section>`;
+  if (passo < DOMANDE.length) {
+    const [k, tit, sub, op, multi] = DOMANDE[passo], val = VG.r[k];
+    $('cat').innerHTML = `<div class="sh5 pag5 vg6">${testa}
+      <section class="s5 vgq"><div class="prog">${DOMANDE.map((q, i) => `<span class="${i < passo ? 'ok' : i === passo ? 'on' : ''}"></span>`).join('')}</div>
+        <p class="n">Domanda ${passo + 1} di ${DOMANDE.length}</p><h2>${tit}</h2><p class="gt">${sub}</p>
+        <div class="ops ${k}">${op().map(([v, l, ic]) => `<button data-vgo="${v}" class="${(multi ? (val || []).includes(v) : val === v) ? 'on' : ''}">${ic ? ico(ic) : ''}<span>${esc(l)}</span></button>`).join('')}</div>
+        <div class="nav">${passo ? '<button class="lk" data-vgn="-1">‹ Indietro</button>' : '<span></span>'}${multi ? `<button class="vai" data-vgn="1"${(val || []).length ? '' : ' disabled'}>Avanti ${freccia}</button>` : ''}</div></section>${COPY()}</div>`;
+    return;
+  }
+  const r = VG.r, R = proposteViaggio(r), D = SAP.D, CM = await meteoCapoluoghi().catch(() => null), oggi = new Date(); oggi.setHours(12, 0, 0, 0);
+  const meteoG = (xy, iso) => { if (!CM) return ''; const n = Math.round((new Date(iso + 'T12:00:00') - oggi) / 864e5); if (n < 0 || n > 13) return '';
+    const c = CM.reduce((a, b) => dist2(a.c.slice(1, 3), xy) <= dist2(b.c.slice(1, 3), xy) ? a : b), gg = c.s.G[n]; if (!gg) return ''; const M = c.s.M, i = gg.i;
+    return `<span class="wx6">${ico(wxIco(M.weather_code[i]), 'xs')} ${wxParola(M.weather_code[i])}, ${Math.round(M.temperature_2m_min[i])}–${Math.round(M.temperature_2m_max[i])}°</span>`; };
+  const giornoTxt = iso => new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+  const famiglia = r.chi === 'famiglia', gruppo = r.chi === 'gruppo';
+  const proposta = (P, n) => { const giorni = pianoGiorni(P, r), tit = P.it.n + (P.it2 ? ' e ' + P.it2.n : '');
+    return `<article class="vgp"><header><span class="nn">${n + 1}</span><div><h3>${esc(tit)}</h3><p>${esc(P.it.s)}${P.it2 ? '; ' + esc(P.it2.s.toLowerCase()) : ''}.</p></div><button class="lk" data-itk="${P.it.k}">L'itinerario completo ›</button></header>
+      <ul class="perche">${P.perche.slice(0, 4).map(x => `<li>${ico('sparkles', 'xs')} ${esc(x)}</li>`).join('')}</ul>
+      <ol class="gg6">${giorni.map((pp, i) => { const iso = R.giorniISO[i] || R.giorniISO[R.giorniISO.length - 1], xy = D.paesi[pp[0]].c, nat = natVicina(xy)[0], ev = (SAP.sagre.eventi || []).filter(e => pp.includes(e.p) && e.d.includes(iso));
+        const sv = pp.flatMap(p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && ['piatto', 'dolce', 'prodotto'].includes(v.t)).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk)).slice(0, 2));
+        return `<li><div class="gh"><b>Giorno ${i + 1}</b><small>${giornoTxt(iso)}</small>${meteoG(xy, iso)}</div>
+          <p class="pp">${pp.map(p => `<button class="lk" data-sc2="${p}">${esc(D.paesi[p].n)}</button>`).join(' › ')}</p>
+          ${sv.length ? `<div class="mini5">${sv.slice(0, 4).map(v => `<button data-sc2="${v.k}"><span${imgAttr(v)}></span><b>${esc(v.n)}</b></button>`).join('')}</div>` : ''}
+          <div class="links">${nat ? `<button data-nat2="${nat[0]}">${ico('leaf', 'xs')} ${esc(S[nat[0]].n)}<br><small>a ${Math.round(nat[1] / 1000)} km${famiglia ? ' · scegli un sentiero breve' : ''}</small></button>` : ''}${ev.map(e => `<button data-ogev2="${e.id}">${ico('calendar-event', 'xs')} ${esc(e.n)}<br><small>sagra a ${esc(e.c)}</small></button>`).join('')}</div></li>`; }).join('')}</ol></article>`; };
+  $('cat').innerHTML = `<div class="sh5 pag5 vg6">${testa}
+    <section class="s5 vgr"><div class="riep">${[['quando', giornoTxt(R.giorniISO[0])], ['giorni', { 1: 'una giornata', 3: 'due o tre giorni', 5: 'quattro o cinque giorni', 7: 'una settimana' }[r.giorni]], ['chi', { solo: 'da solo', coppia: 'in coppia', famiglia: 'con bambini', amici: 'con amici', gruppo: 'con un gruppo' }[r.chi]], ['gusti', (r.gusti || []).map(x => GUSTIV[x][0].toLowerCase()).join(', ')], ['da', 'da ' + PARTENZE[r.da][0]]].map(([k, t2], i) => `<button data-vgp="${i}">${esc(t2)} <small>cambia</small></button>`).join('')}</div>
+      <h2>Tre proposte per te</h2>${famiglia ? '<p class="gt">Con i bambini: poche tappe al giorno, sentieri brevi e una sosta golosa. Nella pagina <button class="lk" data-rotta="#/bambini">Bambini</button> trovi giochi da fare lungo la strada.</p>' : gruppo ? '<p class="gt">Per una classe: nella pagina <button class="lk" data-rotta="#/didattica">Scuole e ragazzi</button> trovi quiz e percorsi da preparare prima della gita.</p>' : ''}
+      ${R.out.map(proposta).join('')}
+      <div class="nav"><button class="lk" data-vgn="reset">Rifai le domande</button><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa il piano</button></div>
+      <p class="avv6">${ico('alert-triangle', 'xs')} Proposte costruite dai dati: date delle sagre, orari e strade vanno verificati prima di partire. Il meteo compare solo per i prossimi 14 giorni.</p></section>${COPY()}</div>`;
+  sapFoto($('cat'));
+}
+document.addEventListener('click', e => {
+  if ($('cat').dataset.v !== 'pag-viaggio') return;
+  const o = e.target.closest('[data-vgo]'), n = e.target.closest('[data-vgn]'), pp = e.target.closest('[data-vgp]'), sc = e.target.closest('[data-sc2]'), nt = e.target.closest('[data-nat2]'), ev = e.target.closest('[data-ogev2]');
+  if (o) { e.stopPropagation(); const [k, , , , multi] = DOMANDE[VG.passo]; if (multi) { const s2 = new Set(VG.r[k] || []); s2.has(o.dataset.vgo) ? s2.delete(o.dataset.vgo) : s2.add(o.dataset.vgo); VG.r[k] = [...s2]; } else { VG.r[k] = o.dataset.vgo; VG.passo++; } return paginaViaggio(); }
+  if (n) { e.stopPropagation(); if (n.dataset.vgn === 'reset') { VG.passo = 0; VG.r = {}; } else VG.passo = Math.max(0, VG.passo + +n.dataset.vgn); return paginaViaggio(); }
+  if (pp) { e.stopPropagation(); VG.passo = +pp.dataset.vgp; return paginaViaggio(); }
+  if (sc) { e.stopPropagation(); const k = sc.dataset.sc2; return versoSapori(() => sapApri(k)); }
+  if (nt) { e.stopPropagation(); const z = nt.dataset.nat2; return vaiRotta('#/zona/' + nomeUrl(z)); }
+  if (ev) { e.stopPropagation(); const x = (SAP.sagre.eventi || []).find(y => y.id === ev.dataset.ogev2); if (x) { SAP.cal = { y: +x.d[0].slice(0, 4), m: +x.d[0].slice(5, 7), sel: x.d[0], tipo: '', pv: '' }; SEZ = 'sapori'; versoSapori(() => vai('meteo')); } }
+}, true);
+
+/* ---------- quiz: domande scritte da noi e domande costruite dai dati del sito */
+const mescola = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const QFISSE = {
+  natura: [
+    ['Qual è il vulcano attivo più alto d\'Europa?', 'L\'Etna', ['Lo Stromboli', 'Il Vesuvio', 'Vulcano'], 'L\'Etna supera i 3.300 metri ed è uno dei vulcani più attivi del mondo.'],
+    ['Da quale albero si raccoglie la manna sulle Madonie?', 'Il frassino', ['La quercia', 'Il castagno', 'Il carrubo'], 'D\'estate si incide la corteccia del frassino: la linfa esce e si indurisce al sole.'],
+    ['Dove cresce in natura l\'abete dei Nebrodi?', 'Solo sulle Madonie', ['Su tutti i Nebrodi', 'Sull\'Etna', 'In tutta Europa'], 'Nonostante il nome, ne restano poche decine di alberi in un vallone delle Madonie.'],
+    ['Quale fu la prima riserva naturale della Sicilia, nel 1981?', 'Lo Zingaro', ['Vendicari', 'Le saline di Trapani', 'Il bosco della Ficuzza'], 'Nacque dopo una grande marcia contro una strada che avrebbe tagliato la costa.'],
+    ['Che cos\'è la rete Natura 2000?', 'Siti europei che proteggono habitat e specie', ['Un elenco di sentieri', 'Un parco nazionale', 'Una legge sulla caccia'], 'È la rete dell\'Unione europea: in Sicilia conta centinaia di siti.'],
+    ['Quante sono le isole Eolie abitate?', 'Sette', ['Tre', 'Cinque', 'Dieci'], 'Lipari, Salina, Vulcano, Stromboli, Panarea, Filicudi e Alicudi.'],
+    ['Quale isola è la più grande del Mediterraneo?', 'La Sicilia', ['La Sardegna', 'Cipro', 'Creta'], 'La Sicilia supera i 25.000 chilometri quadrati.'],
+    ['Su che terreno cresce il pistacchio di Bronte?', 'Sulle colate di lava dell\'Etna', ['Nella sabbia del mare', 'Nelle paludi', 'Nei boschi di faggio'], 'Pochi alberi riescono a vivere sulla lava: il pistacchio sì.']],
+  sapori: [
+    ['Il cappero che mangiamo è…', 'Il bocciolo di un fiore', ['Un frutto maturo', 'Un seme', 'Una foglia'], 'Se non lo raccogli si apre in un fiore bianco e rosa che dura un giorno.'],
+    ['Da cosa nasce la ricotta?', 'Dal siero che resta dopo il formaggio', ['Dal latte cagliato e stagionato', 'Dalla panna', 'Dal burro'], 'Il siero si scalda di nuovo: ri-cotta, cotta due volte.'],
+    ['Con cosa si mangia la granita a colazione a Messina e Catania?', 'Con la brioche col tuppo', ['Con il pane', 'Con i biscotti secchi', 'Con la frutta'], 'La brioche ha in cima una pallina, il tuppo, come lo chignon.'],
+    ['Che cos\'è la cubbaita?', 'Un torrone di sesamo o mandorle e miele', ['Una pasta al forno', 'Un formaggio', 'Una zuppa di pesce'], 'Il nome viene dall\'arabo.'],
+    ['Con quale farina si fanno le panelle?', 'Farina di ceci', ['Farina di grano tenero', 'Farina di castagne', 'Farina di mais'], 'Si cuoce come una polenta, si taglia e si frigge.']]
+};
+const QBIMBI = [
+  ['Che cos\'è l\'Etna?', 'Un vulcano', ['Un fiume', 'Un lago', 'Un bosco'], 'È il vulcano più grande d\'Europa e ogni tanto fa uscire la lava.'],
+  ['Da quale frutto si fa l\'olio?', 'Dall\'oliva', ['Dall\'arancia', 'Dal limone', 'Dal fico'], 'Le olive si raccolgono in autunno e si portano al frantoio.'],
+  ['Chi fa il miele?', 'Le api', ['Le formiche', 'Le farfalle', 'Le vespe'], 'Le api raccolgono il nettare dei fiori.'],
+  ['Il cannolo ha dentro…', 'La ricotta', ['La marmellata', 'Il gelato', 'Il cioccolato fuso'], 'La ricotta è dolce e cremosa, il guscio è croccante.'],
+  ['Dove vive il pesce spada?', 'Nel mare', ['Nel fiume', 'Nel lago', 'Nello stagno'], 'Nuota veloce nello Stretto di Messina.'],
+  ['Di che colore diventa l\'oliva quando matura?', 'Viola e nera', ['Blu', 'Gialla', 'Bianca'], 'Prima è verde, poi cambia colore piano piano.'],
+  ['Cosa si mangia a Santa Lucia, il 13 dicembre?', 'La cuccìa', ['Il panettone', 'La colomba', 'Il gelato'], 'È grano cotto con la ricotta dolce.'],
+  ['I funghi trovati nel bosco…', 'Si guardano e non si mangiano', ['Si assaggiano subito', 'Si danno agli animali', 'Si mangiano crudi'], 'Molti funghi sono velenosi: solo un esperto può dire se sono buoni.']
+];
+function quizDati(tema) {
+  const D = SAP.D, out = [], V = Object.values(D.voci).filter(v => v.t !== 'materia' && v.t !== 'semi');
+  if (tema !== 'natura') {
+    const F = V.filter(v => (v.feste || []).length); for (const v of mescola(F).slice(0, 3)) { const f = D.feste[v.feste[0]], altre = mescola(Object.values(D.feste).filter(x => x !== f)).slice(0, 3).map(x => x.n);
+      out.push([`Per quale festa si prepara: ${v.n}?`, f.n, altre, `${v.n} è legato a ${f.n}${f.d !== 'mobile' ? ', il ' + (+f.d.slice(3)) + ' ' + MESIL[+f.d.slice(0, 2) - 1] : ''}.`]); }
+    const U = mescola(V.filter(v => (v.paesi || []).length === 1 && v.wk && !(v.feste || []).length && D.paesi[v.paesi[0]])).slice(0, 3);
+    for (const v of U) { const p = D.paesi[v.paesi[0]], altri = mescola(Object.values(D.paesi).filter(x => x.pv !== p.pv)).slice(0, 3).map(x => x.n); out.push([`A quale paese è legato: ${v.n}?`, p.n, altri, `Nel nostro atlante ${v.n} è legato a ${p.n}, in provincia di ${PROVN[p.pv] || ''}.`]); }
+    const dop = mescola(V.filter(v => (v.ric || []).includes('DOP'))), no = mescola(V.filter(v => v.pat && !(v.ric || []).some(r => r === 'DOP' || r === 'IGP')));
+    if (dop.length && no.length > 3) out.push(['Quale di questi prodotti è DOP?', dop[0].n, no.slice(0, 3).map(x => x.n), `${dop[0].n} ha la Denominazione di origine protetta: un disciplinare stabilisce zona e lavorazione.`]);
+  }
+  if (tema !== 'sapori' && typeof S !== 'undefined') {
+    const P = mescola(Object.values(S).filter(x => ['pn', 'pr', 'rn'].includes(x.t) && x.ha)).slice(0, 4); if (P.length === 4) { const g = P.reduce((a, b) => b.ha > a.ha ? b : a);
+      out.push(['Quale di queste aree protette è la più grande?', g.n, P.filter(x => x !== g).map(x => x.n), `${g.n} misura circa ${fmt(Math.round(g.ha))} ettari.`]); }
+  }
+  return out;
+}
+function quizNuovo(tema, n) { const base = tema === 'bimbi' ? QBIMBI : [...(QFISSE[tema] || [...QFISSE.natura, ...QFISSE.sapori]), ...quizDati(tema)]; return mescola(base).slice(0, n || 6).map(([q, ok, no, sp]) => ({ q, ok, op: mescola([ok, ...no]), sp })); }
+function quizIn(box, tema, titolo) {
+  const Q = { l: quizNuovo(tema, tema === 'bimbi' ? 5 : 6), i: 0, punti: 0, ris: null };
+  const disegna = () => { if (Q.i >= Q.l.length) { box.innerHTML = `<div class="qz6 fine"><p class="tq">${esc(titolo)}</p><h3>${Q.punti} su ${Q.l.length}</h3><p>${Q.punti === Q.l.length ? 'Perfetto! Sai tutto.' : Q.punti >= Q.l.length / 2 ? 'Bravo! Ancora un giro e diventi un esperto.' : 'Ogni giro si impara qualcosa: riprova!'}</p><button class="vai" data-qz="nuovo">Un altro quiz</button></div>`; return; }
+    const x = Q.l[Q.i];
+    box.innerHTML = `<div class="qz6"><div class="qh"><p class="tq">${esc(titolo)}</p><span>${Q.i + 1} / ${Q.l.length}</span></div><h3>${esc(x.q)}</h3><div class="qop">${x.op.map((o, j) => `<button data-qo="${j}" class="${Q.ris == null ? '' : o === x.ok ? 'giusta' : j === Q.ris ? 'sbagliata' : 'off'}"${Q.ris == null ? '' : ' disabled'}>${esc(o)}</button>`).join('')}</div>
+      ${Q.ris != null ? `<p class="sp">${x.op[Q.ris] === x.ok ? '<b>Giusto!</b> ' : '<b>Non proprio.</b> '}${esc(x.sp)}</p><button class="vai" data-qz="avanti">${Q.i + 1 < Q.l.length ? 'Avanti' : 'Vedi il risultato'}</button>` : ''}</div>`; };
+  box.onclick = e => { const o = e.target.closest('[data-qo]'), z = e.target.closest('[data-qz]'); if (o && Q.ris == null) { e.stopPropagation(); Q.ris = +o.dataset.qo; if (Q.l[Q.i].op[Q.ris] === Q.l[Q.i].ok) Q.punti++; disegna(); }
+    if (z) { e.stopPropagation(); if (z.dataset.qz === 'avanti') { Q.i++; Q.ris = null; } else { Object.assign(Q, { l: quizNuovo(tema, tema === 'bimbi' ? 5 : 6), i: 0, punti: 0, ris: null }); } disegna(); } };
+  disegna();
+}
+const leggiFatti = () => { try { return JSON.parse(localStorage.getItem('sn_percorsi') || '{}'); } catch (e) { return {}; } };
+/* ---------- Scuole e ragazzi: quiz, percorsi di apprendimento sulla mappa, strumenti */
+function paginaDidattica() {
+  $('cat').dataset.v = 'pag-didattica'; $('cat').scrollTop = 0;
+  const PERC = [
+    ['protetta', 'La Sicilia protetta', '#2D6A4F', 'natura/scogliere', [['Guarda tutte le aree protette sulla mappa', '#/natura/mappa/parchi'], ['Apri la scheda del Parco dell\'Etna e leggi le sue regole', '#/zona/EUAP0227'], ['Scopri la rete europea Natura 2000', '#/natura/mappa/natura2000'], ['Mettiti alla prova con il quiz sulla natura', '#qz-natura']]],
+    ['alberi', 'Alberi e boschi', '#5c7a2e', 'natura/agave-montagne', [['Trova gli alberi monumentali vicino a te', '#/natura/mappa/alberi'], ['I boschi vetusti: foreste lasciate crescere per secoli', '#/natura/mappa/vetusti'], ['Il calendario delle fioriture', '#/natura/calendario'], ['Il quiz sulla natura', '#qz-natura']]],
+    ['grano', 'Dal grano al pane', '#E8761A', 'pane-di-grano-duro', [['I grani antichi siciliani', '#/sapori/grano'], ['Il viaggio nel cuore dell\'isola, terra del grano', '#/sapori/itinerari/cuore'], ['Una ricetta povera: il pane cotto', '#/sapori/scheda/web-zuppa-di-pane-cotto'], ['Il quiz sui sapori', '#qz-sapori']]],
+    ['feste', 'Le feste e i loro dolci', '#C8102E', 'backcassatelle', [['Il calendario di sagre e feste', '#/sapori/calendario'], ['La cuccìa di Santa Lucia', '#/sapori/scheda/cuccia'], ['Le sfince di San Giuseppe', '#/sapori/scheda/sfincia'], ['Il quiz sui sapori', '#qz-sapori']]]
+  ];
+  const fatti = leggiFatti();
+  $('cat').innerHTML = `<div class="sh5 pag5 did6">
+    <section class="ap5 scuh" style="--tc:#2F7EA8"><div class="apf" style="background-image:url('foto/natura/fico.webp')"></div>
+      <div class="apt"><p class="kick5"><i></i>Scuole e ragazzi</p><h1>Impara la Sicilia <i>giocando.</i></h1><p class="lead">Quiz, percorsi da seguire sulla mappa e strumenti per le ricerche di classe. Per ragazzi delle medie e delle superiori, e per gli insegnanti che vogliono preparare una lezione o una gita.</p></div></section>
+    <section class="s5"><div class="t5"><h2>Mettiti alla prova</h2><p>Ogni quiz cambia ogni volta: alcune domande nascono dai dati del sito.</p></div>
+      <div class="qzg"><div id="qz-natura"></div><div id="qz-sapori"></div></div></section>
+    <section class="s5"><div class="t5"><h2>Percorsi di apprendimento</h2><p>Quattro passi per tema: si segue sulla mappa e nelle schede. Il sito ricorda i passi che hai già fatto.</p></div>
+      <div class="pc6">${PERC.map(([k, t2, c, f, passi]) => `<article style="--tc:${c}"><div class="eh" style="background-image:url('foto/${f}.webp')"><h3>${t2}</h3><span>${passi.filter((_, i) => fatti[k + i]).length}/${passi.length}</span></div><ol>${passi.map(([a, r], i) => `<li class="${fatti[k + i] ? 'fatto' : ''}"><button data-pcp="${k}:${i}" data-dest="${r}"><span class="ck">${fatti[k + i] ? '✓' : i + 1}</span><span>${esc(a)}</span></button></li>`).join('')}</ol></article>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Per la ricerca</h2><p>Gli strumenti per lavorare con i dati, citare le fonti e stampare.</p></div>
+      <div class="str8">${[['list-details', 'Strumenti e dati', 'Elenchi di specie, percorsi in GPX, schede da stampare.', '#/scuole', '#2F7EA8'], ['book', 'Glossario', 'Le parole difficili spiegate semplici.', '#/glossario', '#5B3A26'], ['map-2', 'Mappa per argomento', 'Parchi, alberi, boschi e sentieri, uno alla volta.', '#/natura/mappa/parchi', '#2D6A4F'], ['route', 'Organizza la gita', 'Cinque domande e un piano di viaggio per la classe.', '#/viaggio', '#E8761A']].map(([ic, t2, d, r, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  quizIn($('qz-natura'), 'natura', 'Quiz sulla natura'); quizIn($('qz-sapori'), 'sapori', 'Quiz sui sapori');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pcp]'); if (!b || $('cat').dataset.v !== 'pag-didattica') return; e.stopPropagation();
+  const [k, i] = b.dataset.pcp.split(':'), f = leggiFatti(); f[k + i] = 1; try { localStorage.setItem('sn_percorsi', JSON.stringify(f)); } catch (er) {}
+  const d = b.dataset.dest; if (d.startsWith('#qz-')) { $(d.slice(1)).scrollIntoView({ behavior: 'smooth', block: 'center' }); b.closest('li').classList.add('fatto'); b.querySelector('.ck').textContent = '✓'; return; } vaiRotta(d); }, true);
+/* ---------- Bambini: giochi e scoperte */
+function paginaBambini() {
+  $('cat').dataset.v = 'pag-bambini'; $('cat').scrollTop = 0;
+  const D = SAP.D, fot = mescola(Object.values(D.voci).filter(v => v.fo && v.t !== 'materia' && paroleN(v.n).some(w => norm(v.fo.f).includes(w.slice(0, 5))))).slice(0, 12);
+  const FATTI = [
+    ['natura', 'Sull\'Etna vive il Castagno dei Cento Cavalli: è uno degli alberi più vecchi d\'Europa, con migliaia di anni.'],
+    ['natura', 'L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine.'],
+    ['sapori', 'Il cappero è il bocciolo di un fiore: se non lo raccogli, fiorisce per un solo giorno.'],
+    ['sapori', 'La manna si raccoglie d\'estate incidendo la corteccia del frassino.'],
+    ['natura', 'Lo Stromboli è un vulcano che erutta quasi sempre: piccole esplosioni ogni pochi minuti.'],
+    ['sapori', 'Il pistacchio di Bronte cresce sulla lava dell\'Etna, dove pochi alberi riescono a vivere.'],
+    ['natura', 'Nelle saline di Trapani il vento faceva girare i mulini che macinavano il sale.'],
+    ['sapori', 'La frutta martorana è fatta di pasta di mandorle colorata a mano: sembra frutta vera!']
+  ];
+  const CACCIA = ['Una foglia di quercia', 'Una ghianda', 'Un sasso nero di lava', 'Una piuma', 'Una farfalla (solo da guardare)', 'Un albero più grande di tutti', 'Un fiore giallo (non si coglie!)', 'Le tracce di un animale', 'Un nido sui rami', 'Un ruscello', 'Una lucertola al sole', 'Una pigna'];
+  $('cat').innerHTML = `<div class="sh5 pag5 bim6">
+    <section class="bh6"><div class="dis">${['natura', 'sapori', 'mare', 'arte', 'storia'].map((k, i) => `<img src="illustrazioni/${k}-segno.svg" alt="" style="--i:${i}">`).join('')}</div>
+      <p class="sub">Per i più piccoli</p><h1>La Sicilia dei <i>bambini.</i></h1><p class="lead">Giochi, curiosità e una caccia al tesoro da fare all'aperto. Da scoprire insieme ai grandi.</p></section>
+    <section class="s5"><div class="t5"><h2>Il quiz dei piccoli esploratori</h2></div><div id="qz-bimbi"></div></section>
+    <section class="s5"><div class="t5"><h2>Indovina il sapore</h2><p>Guarda la foto e scegli il nome giusto.</p></div><div id="ind6"></div></section>
+    <section class="s5"><div class="t5"><h2>Lo sapevi?</h2><p>Tocca una carta per girarla.</p></div>
+      <div class="car6">${FATTI.map(([k, t2], i) => `<button class="cart" style="--tc:${TEMA[k][1]}"><span class="fr1"><img src="illustrazioni/${k}-segno.svg" alt=""><b>Curiosità n. ${i + 1}</b><small>Tocca per scoprirla</small></span><span class="fr2">${esc(t2)}</span></button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Caccia al tesoro nel bosco</h2><p>Stampala e portala nella prossima passeggiata. Si guarda, si fotografa, non si raccoglie nulla di vivo.</p></div>
+      <div class="cac6">${CACCIA.map(c => `<label><input type="checkbox"><span>${esc(c)}</span></label>`).join('')}</div>
+      <p><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa la caccia al tesoro</button></p></section>
+    <section class="s5"><div class="t5"><h2>Il calendario dei dolci delle feste</h2></div>
+      <div class="fes6">${Object.entries(D.feste).map(([k, f]) => { const v = Object.values(D.voci).find(x => (x.feste || []).includes(k)); return v ? `<button data-rotta="#/sapori/scheda/${nomeUrl(v.k)}"><small>${f.d === 'mobile' ? MESIL[f.m[0] - 1] : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}</small><b>${esc(f.n)}</b><span>${esc(v.n)}</span></button>` : ''; }).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Una gita in famiglia</h2></div><div class="str8">${[['sun', 'Dove andare oggi', 'Il posto con il cielo più bello di oggi e dei prossimi giorni.', '#/', '#E8761A'], ['route', 'Organizza il viaggio', 'Rispondi a cinque domande, scegli «con bambini».', '#/viaggio', '#2D6A4F'], ['tree', 'Gli alberi giganti', 'Gli alberi monumentali sulla mappa.', '#/natura/mappa/alberi', '#5c7a2e']].map(([ic, t2, d, r, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  quizIn($('qz-bimbi'), 'bimbi', 'Quiz dei piccoli esploratori');
+  const ind = { i: 0 }, giro = () => { const v = fot[ind.i % fot.length], no = mescola(fot.filter(x => x !== v)).slice(0, 2), op = mescola([v, ...no]);
+    $('ind6').innerHTML = `<div class="ind"><span class="ph" style="background-image:url('foto/${v.fo.f}.webp')"></span><div class="op">${op.map(x => `<button data-ind="${x === v ? 1 : 0}">${esc(x.n)}</button>`).join('')}<p class="esito"></p></div></div>`; };
+  $('ind6').onclick = e => { const b = e.target.closest('[data-ind]'); if (!b) return; e.stopPropagation(); const ok = b.dataset.ind === '1'; b.classList.add(ok ? 'giusta' : 'sbagliata');
+    $('ind6').querySelector('.esito').innerHTML = ok ? '<b>Bravo!</b> <button class="vai" data-indn="1">Un\'altra foto</button>' : 'Quasi! Riprova.'; const n = e.target.closest('[data-indn]'); };
+  $('ind6').addEventListener('click', e => { if (e.target.closest('[data-indn]')) { ind.i++; giro(); } });
+  if (fot.length >= 3) giro(); else $('ind6').closest('section').remove();
+  $('cat').querySelectorAll('.cart').forEach(c => c.onclick = () => c.classList.toggle('gira'));
+}
+
+/* ---------- racconto e strumenti in testa alle pagine di catalogo e ai calendari */
+const RACC_NAT = ['Gennaio è il mese più freddo, ma in Sicilia la natura non si ferma: nei boschi spuntano gli ultimi funghi e lungo le coste fioriscono le prime piante.',
+  'A febbraio fioriscono i mandorli, soprattutto nell\'Agrigentino, e nei prati compaiono le prime orchidee selvatiche.',
+  'Marzo è l\'esplosione della primavera: prati fioriti, orchidee, asfodeli. È il mese migliore per camminare nelle riserve costiere.',
+  'Ad aprile fioriscono le ginestre e i cisti, e la macchia mediterranea profuma. In montagna si sciolgono le ultime nevi.',
+  'Maggio colora le Madonie e i Nebrodi: i prati d\'altura sono pieni di fiori e le fioriture salgono di quota.',
+  'A giugno la pianura secca e il verde si ritira in montagna. È il tempo delle fioriture sull\'Etna e dei boschi freschi.',
+  'Luglio è il mese più caldo: la natura rallenta, ma in quota e nelle faggete si cammina bene al mattino presto.',
+  'Ad agosto fioriscono i capperi tra le rocce e i gigli di mare sulle dune. I boschi sono a rischio d\'incendio: massima attenzione.',
+  'Settembre porta le prime piogge: la vita riprende e, dopo i temporali, nei boschi compaiono i primi funghi.',
+  'Ottobre è il mese dei funghi e dei colori: i faggi e i castagni cominciano a cambiare foglia.',
+  'A novembre i boschi dei Nebrodi e delle Madonie sono rossi e gialli: è il mese del foliage e di tante specie di funghi.',
+  'Dicembre porta la neve sulle vette e il silenzio nei boschi. Lungo le coste fioriscono i narcisi selvatici.'];
+const RACC_SAP = ['Gennaio è il mese delle arance e dei mandarini, e dei cardi selvatici. Nelle case si preparano le conserve d\'inverno.',
+  'Febbraio è il mese di Sant\'Agata a Catania, con le minne e le olivette, e del Carnevale con i cannoli e le chiacchiere.',
+  'A marzo, per San Giuseppe, si preparano le sfince e le tavolate. Nelle campagne arrivano le prime fave.',
+  'Aprile è il mese della Pasqua: cassate, agnelli di pasta reale, cuddure con le uova. Nei campi carciofi, fave e piselli.',
+  'Maggio porta la frittedda, le fave fresche e le prime ciliegie. Sui monti è il tempo della ricotta più ricca.',
+  'Giugno è il mese della mietitura del grano e delle prime granite. Si raccolgono le albicocche e i fiori di zucca.',
+  'A luglio granite e gelsi, pesche e meloni. Nelle saline di Trapani si raccoglie il sale.',
+  'Agosto è Ferragosto con il gelo di melone; si raccolgono i fichi e i capperi, e comincia la vendemmia delle uve precoci.',
+  'Settembre è vendemmia e mosto: con il mosto cotto si preparano i mostaccioli. A Bronte si raccoglie il pistacchio.',
+  'Ottobre è il mese delle olive e dei primi oli nuovi, delle castagne e delle sagre d\'autunno.',
+  'A novembre, per i Morti, la frutta martorana e i pupi di zucchero. Nei frantoi l\'olio nuovo, nelle cantine il vino novello.',
+  'Dicembre è Santa Lucia con la cuccìa e le arancine, poi il Natale con il buccellato e i torroni.'];
+function stIntro(tit, testi, strumenti, extra) {
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  return `<section class="int7"><div class="rac">${testi.map(x => `<p>${x}</p>`).join('')}</div>
+    <div class="stx">${strumenti.map(([ic, t2, d, az, c]) => `<button ${az} style="--tc:${c || '#2D6A4F'}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span><em>${freccia}</em></button>`).join('')}</div>${extra || ''}</section>`;
+}
+function arricchisci7() {
+  const c = $('cat'), v = c.dataset.v; if (!c.classList.contains('on') || c.querySelector('.int7')) return;
+  const lead = c.querySelector('.in > .lead, .in > p.lead'), mo = new Date().getMonth();
+  if ((v === 'funghi' || v === 'piante') && lead && typeof FUN !== 'undefined') {
+    const f = v === 'funghi', st = typeof caricaStag === 'function' ? null : null;
+    const html = f ? stIntro('Funghi', [`Dai faggeti delle Madonie e dei Nebrodi ai boschi di leccio e di sughera, dalle pinete dell'Etna alle dune della costa: ogni ambiente ha i suoi funghi. Qui trovi le <b>${fmt(FUN.s.length)} specie</b> segnalate in Sicilia, con le osservazioni e i mesi in cui compaiono.`, `Questo catalogo serve a conoscere, non a raccogliere: <b>non diamo indicazioni sulla commestibilità</b>. Il bollino rosso segnala solo le specie velenose o mortali più note; se manca, non vuol dire che il fungo sia commestibile.`],
+      [['calendar', 'Il calendario dei funghi', 'Mese per mese, quali specie compaiono.', 'data-i7="cal"'], ['cloud', 'Meteo e stima per i funghi', 'Pioggia degli ultimi mesi e giorni migliori, zona per zona.', 'data-rotta="#/natura/meteo"', '#2F7EA8'], ['map-2', 'Dove sono i boschi', 'La carta dei boschi della Regione, per tipo.', 'data-rotta="#/natura/mappa/boschi"'], ['sparkles', 'Mettiti alla prova', 'Quiz e percorsi per ragazzi.', 'data-rotta="#/didattica"', '#E8761A']],
+      `<div class="per7"><b>${ico('alert-triangle', 'xs')} Da riconoscere: i funghi mortali più noti</b><div>${PERICOLO.mortale.map(n => { const i = FUN.s.findIndex(r => r[0] === n); return i >= 0 ? `<button data-sp7="funghi:${i}">${esc(n)}</button>` : ''; }).join('')}</div></div>`)
+      : stIntro('Piante', [`Dalle dune della costa ai pendii dell'Etna, la Sicilia ospita una flora tra le più ricche del Mediterraneo, con specie che vivono solo qui, come l'abete dei Nebrodi e la zelkova siciliana. In questo catalogo trovi le <b>${fmt(PIA.s.length)} specie</b> segnalate, con i mesi di fioritura e i siti in cui sono protette.`, `Le piante selvatiche si guardano e si fotografano: molte sono protette e alcune sono tossiche. Le «erbe dei campi» sono indicate per la loro storia nella cucina povera, non come invito alla raccolta.`],
+      [['calendar', 'Il calendario delle fioriture', 'Cosa fiorisce questo mese e cosa inizia a fiorire.', 'data-i7="cal"'], ['tree', 'Gli alberi monumentali', 'I giganti verdi sulla mappa.', 'data-rotta="#/natura/mappa/alberi"', '#5c7a2e'], ['leaf', 'Le specie di Natura 2000', 'Le piante tutelate dalla rete europea.', 'data-i7="n2k"'], ['sparkles', 'Mettiti alla prova', 'Quiz e percorsi per ragazzi.', 'data-rotta="#/didattica"', '#E8761A']]);
+    lead.insertAdjacentHTML('afterend', html);
+  } else if (v === 'sap-cat' && lead && SAP.D) {
+    const D = SAP.D, n = Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi').length, ev = inEvidenza().slice(0, 4);
+    lead.insertAdjacentHTML('afterend', stIntro('Catalogo', [`Il catalogo raccoglie <b>${fmt(n)} sapori</b> di ${Object.keys(D.paesi).length} comuni: dolci, pani, formaggi, salumi, conserve, vini. Vengono dagli elenchi ufficiali dei prodotti tradizionali e delle denominazioni, dall'elenco dei dolci di Oscar Cangelosi e dai libri di cucina siciliana.`, `Ogni scheda dice dove nasce un sapore, per quale festa si prepara, di cosa è fatto e chi lo produce ancora. Molte hanno le pagine dei libri dove trovarlo e una ricetta di prova.`],
+      [['wheat', 'Le quattro materie', 'Grano, ulivo, vitigno e latte: varietà e prodotti.', 'data-rotta="#/sapori/grano"', '#E8761A'], ['route-2', 'Itinerari del gusto', 'Nove viaggi tra paesi, sapori e sagre.', 'data-rotta="#/sapori/itinerari"', '#E8761A'], ['calendar-event', 'Il calendario delle sagre', 'Le feste del gusto mese per mese.', 'data-rotta="#/sapori/calendario"', '#E8761A'], ['map-2', 'La mappa dei comuni', 'Cosa nasce in ogni paese.', 'data-rotta="#/sapori/mappa"', '#E8761A']],
+      ev.length ? `<div class="evd7"><h3>In evidenza adesso</h3><div class="tess5">${ev.map(([x, perche]) => tessera(x, perche)).join('')}</div></div>` : ''));
+    sapFoto(c);
+  } else if (v === 'cal') {
+    const h = c.querySelector('.in.cal .lead'); if (!h || typeof FUN === 'undefined') return;
+    caricaStag().then(S2 => { if ($('cat').dataset.v !== 'cal' || c.querySelector('.int7')) return;
+      const m = calMese, conta = [...Array(12)].map((_, j) => { let fi = 0, fu = 0; PIA.s.forEach((r, i) => { const x = stagione('piante', i, j, S2); if (x.on === true && x.lab === T('in fioritura', 'in flower')) fi++; }); FUN.s.forEach((r, i) => { if (stagione('funghi', i, j, S2).on === true) fu++; }); return [fi, fu]; });
+      const mx = Math.max(1, ...conta.map(x => Math.max(x[0], x[1])));
+      h.insertAdjacentHTML('afterend', `<section class="int7 cal7"><div class="anno7">${MESI.map((mm, j) => `<button data-calm="${j}" class="${j === m ? 'sel' : ''}${j === mo ? ' ora' : ''}"><span class="bar"><i style="height:${Math.round(conta[j][0] / mx * 100)}%" class="fi"></i><i style="height:${Math.round(conta[j][1] / mx * 100)}%" class="fu"></i></span><small>${mm}</small></button>`).join('')}</div>
+        <p class="leg7"><span class="fi"></span> piante in fiore <span class="fu"></span> funghi · tocca un mese</p>
+        <div class="rac"><h3>${nomeMese(m).replace(/^./, x => x.toUpperCase())} in natura</h3><p>${RACC_NAT[m]}</p><p>In questo mese, secondo le osservazioni, sono in fiore circa <b>${fmt(conta[m][0])}</b> specie di piante e compaiono <b>${fmt(conta[m][1])}</b> specie di funghi.</p></div></section>`); });
+  } else if (v === 'sap-cal' && SAP.cal) {
+    const top = c.querySelector('.s5.tc') || c.querySelector('h1'); if (!top) return; const m = SAP.cal.m - 1;
+    top.insertAdjacentHTML('afterend', `<section class="s5 int7"><div class="rac"><h3>${MESIL[m].replace(/^./, x => x.toUpperCase())} a tavola</h3><p>${RACC_SAP[m]}</p></div></section>`);
+  }
+}
+new MutationObserver(() => setTimeout(arricchisci7, 30)).observe($('cat'), { attributes: true, attributeFilter: ['data-v'], childList: true });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-i7],[data-sp7],[data-calm]'); if (!b || !$('cat').contains(b)) return; e.stopPropagation();
+  if (b.dataset.sp7) { const [tp, i] = b.dataset.sp7.split(':'); return apriSpecie(tp, +i); }
+  if (b.dataset.calm) { calMese = +b.dataset.calm; return calendario(); }
+  if (b.dataset.i7 === 'cal') return calendario();
+  if (b.dataset.i7 === 'n2k') { const g = $('cg') && $('cg').querySelector('[data-g="n2k"]'); if (g) g.click(); $('gr') && $('gr').scrollIntoView({ behavior: 'smooth' }); }
+}, true);
+
+/* ---------- suggerimenti mentre si scrive nelle caselle di ricerca delle pagine d'inizio */
+function suggerimenti(q, dove) {
+  const v = norm(q.trim()); if (v.length < 2) return [];
+  const w = v.split(/\s+/), ok = n => w.every(x => contiene(n, x)), out = [];
+  const D = SAP.D, nat = dove === 'nq', sap = dove === 'hq';
+  if (nat && typeof S !== 'undefined') Object.entries(S).filter(([k, x]) => ok(norm(x.n + ' ' + (x.com || '')))).sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || (b[1].ha || 0) - (a[1].ha || 0)).slice(0, 6)
+    .forEach(([k, x]) => out.push(['#/zona/' + nomeUrl(k), x.n, t(x.t), 'leaf']));
+  if (nat && typeof FUN !== 'undefined' && v.length > 2) { const sp = []; for (const [tp, Q] of [['funghi', FUN], ['piante', PIA]]) Q.s.forEach((x, i) => { const kk = tp === 'funghi' ? x[7] : x[4], nc = nomeC(tp, i); if (ok(norm(x[0] + ' ' + (NOMI[kk] || []).join(' ')))) sp.push([tp, i, nc, x[0], tp === 'funghi' ? x[5] : x[6]]); });
+    sp.sort((a, b) => (!!b[2] - !!a[2]) || (b[4] || 0) - (a[4] || 0)).slice(0, 6).forEach(([tp, i, nc, sc]) => out.push([`#/specie/${tp}/${nomeUrl(sc)}`, nc || sc, (tp === 'funghi' ? 'Fungo' : 'Pianta') + (nc ? ' · ' + sc : ''), tp === 'funghi' ? 'mushroom' : 'plant-2'])); }
+  if (D && sap) Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi' && ok(norm(x.n + ' ' + (x.nd || '')))).sort((a, b) => (norm(a.n).startsWith(w[0]) ? 0 : 1) - (norm(b.n).startsWith(w[0]) ? 0 : 1) || (!!b.fo - !!a.fo)).slice(0, 8)
+    .forEach(x => out.push(['#/sapori/scheda/' + nomeUrl(x.k), x.n, (SAPT[x.t] || ['Sapore'])[0] + (x.paesi && D.paesi[x.paesi[0]] ? ' · ' + D.paesi[x.paesi[0]].n : ''), 'basket']));
+  if (D) Object.entries(D.paesi).filter(([, x]) => ok(norm(x.n))).sort((a, b) => (norm(a[1].n).startsWith(w[0]) ? 0 : 1) - (norm(b[1].n).startsWith(w[0]) ? 0 : 1)).slice(0, nat ? 3 : 5)
+    .forEach(([k, x]) => out.push(['#/sapori/scheda/' + nomeUrl(k), x.n, 'Paese · provincia di ' + (PROVN[x.pv] || x.pv), 'map-pin']));
+  if (D && sap) Object.values(D.produttori).filter(x => ok(norm(x.n))).slice(0, 4).forEach(x => out.push(['#/sapori/scheda/' + nomeUrl(x.k), x.n, 'Produttore · ' + (D.paesi[x.paese] || {}).n, 'building-store']));
+  return out.slice(0, 14);
+}
+const SUG = { el: null, i: -1, inp: null };
+function mostraSug(inp) {
+  const l = suggerimenti(inp.value, inp.id); let box = inp.closest('label').querySelector('.sug8');
+  if (!box) { inp.closest('label').insertAdjacentHTML('beforeend', '<div class="sug8" role="listbox"></div>'); box = inp.closest('label').querySelector('.sug8'); }
+  SUG.inp = inp; SUG.i = -1;
+  if (!l.length) { box.innerHTML = inp.value.trim().length >= 2 ? '<p class="vuoto">Nessun risultato. Prova con un\'altra parola.</p>' : ''; box.classList.toggle('on', inp.value.trim().length >= 2); return; }
+  const q = norm(inp.value.trim()).split(/\s+/)[0];
+  const evid = n => { const i = norm(n).indexOf(q); return i < 0 ? esc(n) : esc(n.slice(0, i)) + '<mark>' + esc(n.slice(i, i + q.length)) + '</mark>' + esc(n.slice(i + q.length)); };
+  box.innerHTML = l.map(([r, n, sub, ic], i) => `<button role="option" data-sugr="${esc(r)}" data-i="${i}"><span class="ic">${ico(ic, 'xs')}</span><span class="tx"><b>${evid(n)}</b><small>${esc(sub)}</small></span></button>`).join('');
+  box.classList.add('on');
+}
+document.addEventListener('input', e => { const inp = e.target; if (!inp.matches || !inp.matches('#nq,#hq')) return; mostraSug(inp); });
+document.addEventListener('keydown', e => { const inp = e.target; if (!inp.matches || !inp.matches('#nq,#hq')) return; const box = inp.closest('label').querySelector('.sug8.on'); if (!box) return;
+  const bs = [...box.querySelectorAll('[data-sugr]')];
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); SUG.i = (SUG.i + (e.key === 'ArrowDown' ? 1 : -1) + bs.length) % bs.length; bs.forEach((b, i) => b.classList.toggle('sel', i === SUG.i)); if (bs[SUG.i]) bs[SUG.i].scrollIntoView({ block: 'nearest' }); }
+  else if (e.key === 'Enter' && SUG.i >= 0 && bs[SUG.i]) { e.preventDefault(); e.stopImmediatePropagation(); bs[SUG.i].click(); }
+  else if (e.key === 'Escape') box.classList.remove('on'); }, true);
+document.addEventListener('mousedown', e => { const b = e.target.closest('[data-sugr]'); if (b) { e.preventDefault(); return; } if (!e.target.closest('.sug8, #nq, #hq')) document.querySelectorAll('.sug8.on').forEach(x => x.classList.remove('on')); }, true);
+document.addEventListener('click', e => { const b = e.target.closest('[data-sugr]'); if (!b) return; e.preventDefault(); e.stopPropagation(); b.closest('.sug8').classList.remove('on'); vaiRotta(b.dataset.sugr); }, true);
 }

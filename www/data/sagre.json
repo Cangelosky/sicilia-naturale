@@ -1,0 +1,1130 @@
+{
+"agg": "2026-11-27",
+"eventi": [
+{
+"id": "s0",
+"t": "sagra",
+"n": "Mangia e Cambia",
+"c": "Messina",
+"pv": "ME",
+"xy": [
+15.5557,
+38.194
+],
+"d": [
+"2026-11-27",
+"2026-11-28",
+"2026-11-29"
+],
+"desc": "Sagra in città con cibo di strada e prodotti tipici.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "messina"
+},
+{
+"id": "s1",
+"t": "sagra",
+"n": "Sagra d'Autunno",
+"c": "Roccafiorita",
+"pv": "ME",
+"xy": [
+15.2685,
+37.9299
+],
+"d": [
+"2026-11-28",
+"2026-11-29"
+],
+"desc": "Sapori d'autunno nel più piccolo comune della Sicilia.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": null
+},
+{
+"id": "s2",
+"t": "sagra",
+"n": "Scjalati, sagra d'autunno",
+"c": "Galati Mamertino",
+"pv": "ME",
+"xy": [
+14.771,
+38.033
+],
+"d": [
+"2026-11-28",
+"2026-11-29"
+],
+"desc": "Sagra d'autunno sui Nebrodi.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "galati-mamertino"
+},
+{
+"id": "s3",
+"t": "sagra",
+"n": "Note di Gusto",
+"c": "Misterbianco",
+"pv": "CT",
+"xy": [
+15.0064,
+37.5208
+],
+"d": [
+"2026-12-04",
+"2026-12-05",
+"2026-12-06"
+],
+"desc": "Festa gastronomica (tipo di evento da verificare).",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": null
+},
+{
+"id": "s4",
+"t": "sagra",
+"n": "Sagra del Maiale e del Cinghiale",
+"c": "Antillo",
+"pv": "ME",
+"xy": [
+15.2454,
+37.9761
+],
+"d": [
+"2026-12-05",
+"2026-12-06"
+],
+"desc": "Pasta fresca al ragù di cinghiale, salsicce e dolci tipici dei Peloritani.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s5",
+"t": "sagra",
+"n": "TartuFestival, sagra del tartufo dei Nebrodi",
+"c": "Santa Domenica Vittoria",
+"pv": "ME",
+"xy": [
+14.9619,
+37.9155
+],
+"d": [
+"2026-12-05",
+"2026-12-06"
+],
+"desc": "Piatti al tartufo e prodotti locali.",
+"f": "https://www.informacibo.it/eventi-fiere-sagre-dicembre-italia-2/",
+"p": null
+},
+{
+"id": "s6",
+"t": "sagra",
+"n": "ChocoModica Natale",
+"c": "Modica",
+"pv": "RG",
+"xy": [
+14.7614,
+36.8588
+],
+"d": [
+"2026-12-05",
+"2026-12-06",
+"2026-12-07",
+"2026-12-08"
+],
+"desc": "Il cioccolato di Modica IGP, artigianato e prodotti tipici.",
+"f": "https://www.informacibo.it/eventi-fiere-sagre-dicembre-italia-2/",
+"p": "modica"
+},
+{
+"id": "s7",
+"t": "sagra",
+"n": "Festival delle Cassatelle",
+"c": "Castellammare del Golfo",
+"pv": "TP",
+"xy": [
+12.8804,
+38.0264
+],
+"d": [
+"2026-12-05",
+"2026-12-06",
+"2026-12-07"
+],
+"desc": "Le cassatelle di ricotta, fritte e al forno.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "castellammare-del-golfo"
+},
+{
+"id": "s8",
+"t": "sagra",
+"n": "Sagra dell'olio, Mercatini dell'Etna",
+"c": "Ragalna",
+"pv": "CT",
+"xy": [
+14.9391,
+37.6301
+],
+"d": [
+"2026-12-06"
+],
+"desc": "Olio nuovo di Nocellara dell'Etna e pane cunzatu.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": "ragalna"
+},
+{
+"id": "s9",
+"t": "sagra",
+"n": "Dolcemente Castelbuono",
+"c": "Castelbuono",
+"pv": "PA",
+"xy": [
+14.0883,
+37.9338
+],
+"d": [
+"2026-12-06",
+"2026-12-07",
+"2026-12-08"
+],
+"desc": "Cannoli, panettoni artigianali e teste di turco delle Madonie.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": "castelbuono"
+},
+{
+"id": "s10",
+"t": "sagra",
+"n": "Sagra della Guasteddra",
+"c": "Mussomeli",
+"pv": "CL",
+"xy": [
+13.754,
+37.5802
+],
+"d": [
+"2026-12-07",
+"2026-12-08"
+],
+"desc": "La guasteddra, pane tipico del territorio.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": "mussomeli"
+},
+{
+"id": "s11",
+"t": "sagra",
+"n": "Sagra della Vastedda",
+"c": "Torretta",
+"pv": "PA",
+"xy": [
+13.2331,
+38.1312
+],
+"d": [
+"2026-12-08"
+],
+"desc": "Focaccia con olio nuovo, caciocavallo, ricotta e acciughe.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s12",
+"t": "sagra",
+"n": "Festa dell'olio d'oliva",
+"c": "Regalbuto",
+"pv": "EN",
+"xy": [
+14.6408,
+37.6526
+],
+"d": [
+"2026-12-11"
+],
+"desc": "Festa dedicata all'olio nuovo.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "regalbuto"
+},
+{
+"id": "s13",
+"t": "sagra",
+"n": "Festa dell'olio",
+"c": "Joppolo Giancaxio",
+"pv": "AG",
+"xy": [
+13.5541,
+37.3877
+],
+"d": [
+"2026-12-12"
+],
+"desc": "Festa dedicata all'olio nuovo.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "joppolo-giancaxio"
+},
+{
+"id": "s14",
+"t": "sagra",
+"n": "Tortorici, cibo e territorio",
+"c": "Tortorici",
+"pv": "ME",
+"xy": [
+14.8249,
+38.0305
+],
+"d": [
+"2026-12-12"
+],
+"desc": "Festa gastronomica dei Nebrodi.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "tortorici"
+},
+{
+"id": "s15",
+"t": "sagra",
+"n": "Sagra della Cuccìa",
+"c": "Casteltermini",
+"pv": "AG",
+"xy": [
+13.6434,
+37.5408
+],
+"d": [
+"2026-12-12",
+"2026-12-13"
+],
+"desc": "Cuccìa per Santa Lucia, tradizionale o con crema.",
+"f": "https://www.informacibo.it/eventi-fiere-sagre-dicembre-italia-2/",
+"p": null
+},
+{
+"id": "s16",
+"t": "sagra",
+"n": "Zabut Enofood",
+"c": "Sambuca di Sicilia",
+"pv": "AG",
+"xy": [
+13.1107,
+37.6474
+],
+"d": [
+"2026-12-12",
+"2026-12-13"
+],
+"desc": "Fiera di vino e cibo del territorio.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "sambuca"
+},
+{
+"id": "s17",
+"t": "sagra",
+"n": "Sagra della Piciòta",
+"c": "Nicosia",
+"pv": "EN",
+"xy": [
+14.3985,
+37.7481
+],
+"d": [
+"2026-12-18",
+"2026-12-19",
+"2026-12-20"
+],
+"desc": "La piciòta nicosiana, dolce delle feste.",
+"f": "https://www.enjoysicilia.it/it/events/",
+"p": "nicosia"
+},
+{
+"id": "s18",
+"t": "mercatino",
+"n": "Mercatini di Natale",
+"c": "Gallodoro",
+"pv": "ME",
+"xy": [
+15.2938,
+37.9017
+],
+"d": [
+"2026-12-11"
+],
+"desc": "Mercatino natalizio con sapori di Santa Lucia.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s19",
+"t": "mercatino",
+"n": "Mercatino di Santa Lucia",
+"c": "Casteltermini",
+"pv": "AG",
+"xy": [
+13.6434,
+37.5408
+],
+"d": [
+"2026-12-12",
+"2026-12-13"
+],
+"desc": "Artigianato e prodotti gastronomici in centro.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s20",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Sutera",
+"pv": "CL",
+"xy": [
+13.7313,
+37.5256
+],
+"d": [
+"2026-12-26",
+"2026-12-27",
+"2026-12-28"
+],
+"desc": "Nel quartiere Rabato, con i mestieri antichi.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s21",
+"t": "presepe",
+"n": "Presepe vivente di Trappitello",
+"c": "Taormina",
+"pv": "ME",
+"xy": [
+15.2831,
+37.8511
+],
+"d": [
+"2026-12-26",
+"2026-12-27",
+"2026-12-29",
+"2026-12-30"
+],
+"desc": "Rappresentazione natalizia nel territorio di Taormina.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s22",
+"t": "presepe",
+"n": "Presepe vivente di Castanea delle Furie",
+"c": "Messina",
+"pv": "ME",
+"xy": [
+15.5557,
+38.194
+],
+"d": [
+"2026-12-25",
+"2026-12-26",
+"2026-12-27",
+"2026-12-28",
+"2026-12-29",
+"2026-12-30",
+"2026-12-31"
+],
+"desc": "Più aperture durante le feste, fino al 6 gennaio.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": "messina"
+},
+{
+"id": "s23",
+"t": "presepe",
+"n": "Presepe vivente di Custonaci",
+"c": "Custonaci",
+"pv": "TP",
+"xy": [
+12.6755,
+38.078
+],
+"d": [
+"2026-12-25",
+"2026-12-26",
+"2026-12-27"
+],
+"desc": "Nella Grotta Mangiapane, tra case e botteghe antiche.",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": "custonaci"
+},
+{
+"id": "s24",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Gangi",
+"pv": "PA",
+"xy": [
+14.2052,
+37.7982
+],
+"d": [
+"2026-12-26",
+"2026-12-27",
+"2026-12-28",
+"2026-12-29"
+],
+"desc": "Oltre 250 figuranti nelle Madonie (date da verificare).",
+"f": "https://www.viaggiamo.it/sagre-eventi-dicembre-sicilia-appuntamenti-scoprire/",
+"p": null
+},
+{
+"id": "s25",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Petralia Soprana",
+"pv": "PA",
+"xy": [
+14.1083,
+37.7963
+],
+"d": [
+"2026-12-19"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "petralia-soprana"
+},
+{
+"id": "s26",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Vizzini",
+"pv": "CT",
+"xy": [
+14.7485,
+37.161
+],
+"d": [
+"2026-12-19"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "vizzini"
+},
+{
+"id": "s27",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "San Giovanni la Punta",
+"pv": "CT",
+"xy": [
+15.0943,
+37.5771
+],
+"d": [
+"2026-12-19"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "san-giovanni-la-punta"
+},
+{
+"id": "s28",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Giardinello",
+"pv": "PA",
+"xy": [
+13.1568,
+38.0886
+],
+"d": [
+"2026-12-19"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "giardinello"
+},
+{
+"id": "s29",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Santa Lucia del Mela",
+"pv": "ME",
+"xy": [
+15.2832,
+38.14
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "santa-lucia-del-mela"
+},
+{
+"id": "s30",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Canicattì",
+"pv": "AG",
+"xy": [
+13.85,
+37.3602
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "canicatti"
+},
+{
+"id": "s31",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Melilli",
+"pv": "SR",
+"xy": [
+15.1268,
+37.1785
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "melilli"
+},
+{
+"id": "s32",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Ispica",
+"pv": "RG",
+"xy": [
+14.9035,
+36.7862
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "ispica"
+},
+{
+"id": "s33",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Termini Imerese",
+"pv": "PA",
+"xy": [
+13.6959,
+37.9868
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "termini-imerese"
+},
+{
+"id": "s34",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Castelvetrano",
+"pv": "TP",
+"xy": [
+12.7916,
+37.6792
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "castelvetrano"
+},
+{
+"id": "s35",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Fiumefreddo di Sicilia",
+"pv": "CT",
+"xy": [
+15.2082,
+37.7929
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "fiumefreddo-di-sicilia"
+},
+{
+"id": "s36",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Agira",
+"pv": "EN",
+"xy": [
+14.5238,
+37.6572
+],
+"d": [
+"2026-12-20"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "agira"
+},
+{
+"id": "s37",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Cattolica Eraclea",
+"pv": "AG",
+"xy": [
+13.3954,
+37.4395
+],
+"d": [
+"2026-12-24"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s38",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Novara di Sicilia",
+"pv": "ME",
+"xy": [
+15.1319,
+38.0162
+],
+"d": [
+"2026-12-24"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "novara-di-sicilia"
+},
+{
+"id": "s39",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Barcellona Pozzo di Gotto",
+"pv": "ME",
+"xy": [
+15.2186,
+38.1469
+],
+"d": [
+"2026-12-25"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "barcellona-pozzo-di-gotto"
+},
+{
+"id": "s40",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Monterosso Almo",
+"pv": "RG",
+"xy": [
+14.7626,
+37.0889
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "monterosso-almo"
+},
+{
+"id": "s41",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Naro",
+"pv": "AG",
+"xy": [
+13.792,
+37.2961
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "naro"
+},
+{
+"id": "s42",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Mascalucia",
+"pv": "CT",
+"xy": [
+15.053,
+37.5731
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s43",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Pagliara",
+"pv": "ME",
+"xy": [
+15.3595,
+37.9866
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s44",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Pollina",
+"pv": "PA",
+"xy": [
+14.1466,
+37.9942
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "pollina"
+},
+{
+"id": "s45",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Caltabellotta",
+"pv": "AG",
+"xy": [
+13.2157,
+37.5769
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "caltabellotta"
+},
+{
+"id": "s46",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Marsala",
+"pv": "TP",
+"xy": [
+12.4349,
+37.7992
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "marsala"
+},
+{
+"id": "s47",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Nicosia",
+"pv": "EN",
+"xy": [
+14.3985,
+37.7481
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "nicosia"
+},
+{
+"id": "s48",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Calatafimi-Segesta",
+"pv": "TP",
+"xy": [
+12.8627,
+37.9142
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "calatafimi"
+},
+{
+"id": "s49",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Resuttano",
+"pv": "CL",
+"xy": [
+14.0311,
+37.6801
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "resuttano"
+},
+{
+"id": "s50",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Cammarata",
+"pv": "AG",
+"xy": [
+13.638,
+37.6327
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "cammarata"
+},
+{
+"id": "s51",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Prizzi",
+"pv": "PA",
+"xy": [
+13.431,
+37.7217
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s52",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Monforte San Giorgio",
+"pv": "ME",
+"xy": [
+15.3835,
+38.1569
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "monforte-san-giorgio"
+},
+{
+"id": "s53",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Castronovo di Sicilia",
+"pv": "PA",
+"xy": [
+13.6037,
+37.6784
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "castronovo-di-sicilia"
+},
+{
+"id": "s54",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Calascibetta",
+"pv": "EN",
+"xy": [
+14.2731,
+37.5896
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "calascibetta"
+},
+{
+"id": "s55",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Giarratana",
+"pv": "RG",
+"xy": [
+14.793,
+37.0483
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "giarratana"
+},
+{
+"id": "s56",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Chiusa Sclafani",
+"pv": "PA",
+"xy": [
+13.2699,
+37.6771
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s57",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Calamonaci",
+"pv": "AG",
+"xy": [
+13.2909,
+37.5253
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "calamonaci"
+},
+{
+"id": "s58",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Caltanissetta",
+"pv": "CL",
+"xy": [
+14.0618,
+37.4921
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "caltanissetta"
+},
+{
+"id": "s59",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Modica",
+"pv": "RG",
+"xy": [
+14.7614,
+36.8588
+],
+"d": [
+"2026-12-26"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "modica"
+},
+{
+"id": "s60",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Limina",
+"pv": "ME",
+"xy": [
+15.2726,
+37.9409
+],
+"d": [
+"2026-12-27"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+},
+{
+"id": "s61",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Santa Venerina",
+"pv": "CT",
+"xy": [
+15.1389,
+37.687
+],
+"d": [
+"2026-12-27"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "santa-venerina"
+},
+{
+"id": "s62",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Sant'Alfio",
+"pv": "CT",
+"xy": [
+15.1441,
+37.7441
+],
+"d": [
+"2026-12-27"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": "sant-alfio"
+},
+{
+"id": "s63",
+"t": "presepe",
+"n": "Presepe vivente",
+"c": "Casalvecchio Siculo",
+"pv": "ME",
+"xy": [
+15.3235,
+37.9582
+],
+"d": [
+"2026-12-27"
+],
+"desc": "Prima apertura indicata; verifica le altre date.",
+"f": "https://www.vivasicilia.com/feste-e-sagre-sicilia-dicembre/",
+"p": null
+}
+]
+}

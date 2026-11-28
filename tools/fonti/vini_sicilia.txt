@@ -1,0 +1,33 @@
+# Vini DOP e IGP della Sicilia: nome | sigla | province
+# Fonte: IRVO (Istituto Regionale del Vino e dell'Olio), "Prodotti tipici siciliani", giugno 2025
+Alcamo|DOC|TP, PA
+Cerasuolo di Vittoria|DOCG|RG, CL, CT
+Contea di Sclafani|DOC|PA, CL, AG
+Contessa Entellina|DOC|PA
+Delia Nivolelli|DOC|TP
+Eloro|DOC|SR, RG
+Erice|DOC|TP
+Etna|DOC|CT
+Faro|DOC|ME
+Malvasia delle Lipari|DOC|ME
+Mamertino di Milazzo|DOC|ME
+Marsala|DOC|TP
+Menfi|DOC|AG, TP
+Monreale|DOC|PA
+Noto|DOC|SR
+Pantelleria|DOC|TP
+Riesi|DOC|CL
+Salaparuta|DOC|TP
+Sambuca di Sicilia|DOC|AG
+Santa Margherita di Belice|DOC|AG
+Sciacca|DOC|AG
+Siracusa|DOC|SR
+Sicilia|DOC|AG, CL, CT, EN, ME, PA, RG, SR, TP
+Vittoria|DOC|RG, CL, CT
+Avola|IGT|SR
+Camarro|IGT|TP
+Fontanarossa di Cerda|IGT|PA
+Salemi|IGT|TP
+Salina|IGT|ME
+Terre Siciliane|IGT|AG, CL, CT, EN, ME, PA, RG, SR, TP
+Valle Belice|IGT|TP

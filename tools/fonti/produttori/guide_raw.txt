@@ -1,0 +1,9 @@
+# fonte | nome | tipo | comune
+tretorte|Pasticceria Palazzolo|pasticceria|Cinisi
+tretorte|Caffè Sicilia|pasticceria|Noto
+tretorte|Sciampagna|pasticceria|Palermo
+trepani|Forno Biancuccia|panificio|Catania
+trepani|Panificio Guccione|panificio|Palermo
+trepani|Panificio Martinez|panificio|Trapani
+trepani|Panificio Francesco Arena|panificio|Messina
+panedellanno|Frangipane|forno e cucina|Milazzo
