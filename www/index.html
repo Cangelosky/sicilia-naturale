@@ -1671,6 +1671,18 @@ body.sheet-on .ftema,body.cat-on .ftema{display:none}
 @media (max-width:560px){.int7 .stx{grid-template-columns:1fr}.cal7 .anno7{gap:2px;padding:10px 6px}.cal7 .anno7 .bar{height:60px}}
 
 .s5.int7{margin:12px var(--pad) 0}
+
+/* suggerimenti di ricerca */
+.cerca5{position:relative}
+.sug8{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:40;background:#fff;border-radius:16px;box-shadow:0 14px 34px rgba(0,0,0,.22);max-height:min(420px,60vh);overflow:auto;padding:6px;display:none;text-align:left}
+.sug8.on{display:block}
+.apt:has(.sug8.on),.ap5:has(.sug8.on) .apt{z-index:8!important}.ap5:has(.sug8.on){overflow:visible}
+.sug8 button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:8px 10px;border-radius:12px;cursor:pointer;font:inherit;color:#26231F;text-align:left}
+.sug8 button:hover,.sug8 button.sel{background:#F3EDE2}
+.sug8 .ic{flex:0 0 30px;height:30px;border-radius:9px;background:#EAF3EE;color:#2D6A4F;display:grid;place-items:center}
+.sug8 b{display:block;font:600 15px/1.25 'Bricolage Grotesque',sans-serif}.sug8 small{display:block;font-size:12.5px;color:#7a6e60}
+.sug8 mark{background:#FFE3B8;color:inherit;border-radius:3px;padding:0 1px}
+.sug8 .vuoto{margin:8px 10px;color:#7a6e60;font-size:14px}
 </style>
 
 </head>

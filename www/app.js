@@ -4236,4 +4236,40 @@ document.addEventListener('click', e => {
   if (b.dataset.i7 === 'cal') return calendario();
   if (b.dataset.i7 === 'n2k') { const g = $('cg') && $('cg').querySelector('[data-g="n2k"]'); if (g) g.click(); $('gr') && $('gr').scrollIntoView({ behavior: 'smooth' }); }
 }, true);
+
+/* ---------- suggerimenti mentre si scrive nelle caselle di ricerca delle pagine d'inizio */
+function suggerimenti(q, dove) {
+  const v = norm(q.trim()); if (v.length < 2) return [];
+  const w = v.split(/\s+/), ok = n => w.every(x => contiene(n, x)), out = [];
+  const D = SAP.D, nat = dove === 'nq', sap = dove === 'hq';
+  if (nat && typeof S !== 'undefined') Object.entries(S).filter(([k, x]) => ok(norm(x.n + ' ' + (x.com || '')))).sort((a, b) => (AREE.includes(b[1].t) - AREE.includes(a[1].t)) || (b[1].ha || 0) - (a[1].ha || 0)).slice(0, 6)
+    .forEach(([k, x]) => out.push(['#/zona/' + nomeUrl(k), x.n, t(x.t), 'leaf']));
+  if (nat && typeof FUN !== 'undefined' && v.length > 2) { const sp = []; for (const [tp, Q] of [['funghi', FUN], ['piante', PIA]]) Q.s.forEach((x, i) => { const kk = tp === 'funghi' ? x[7] : x[4], nc = nomeC(tp, i); if (ok(norm(x[0] + ' ' + (NOMI[kk] || []).join(' ')))) sp.push([tp, i, nc, x[0], tp === 'funghi' ? x[5] : x[6]]); });
+    sp.sort((a, b) => (!!b[2] - !!a[2]) || (b[4] || 0) - (a[4] || 0)).slice(0, 6).forEach(([tp, i, nc, sc]) => out.push([`#/specie/${tp}/${nomeUrl(sc)}`, nc || sc, (tp === 'funghi' ? 'Fungo' : 'Pianta') + (nc ? ' · ' + sc : ''), tp === 'funghi' ? 'mushroom' : 'plant-2'])); }
+  if (D && sap) Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi' && ok(norm(x.n + ' ' + (x.nd || '')))).sort((a, b) => (norm(a.n).startsWith(w[0]) ? 0 : 1) - (norm(b.n).startsWith(w[0]) ? 0 : 1) || (!!b.fo - !!a.fo)).slice(0, 8)
+    .forEach(x => out.push(['#/sapori/scheda/' + nomeUrl(x.k), x.n, (SAPT[x.t] || ['Sapore'])[0] + (x.paesi && D.paesi[x.paesi[0]] ? ' · ' + D.paesi[x.paesi[0]].n : ''), 'basket']));
+  if (D) Object.entries(D.paesi).filter(([, x]) => ok(norm(x.n))).sort((a, b) => (norm(a[1].n).startsWith(w[0]) ? 0 : 1) - (norm(b[1].n).startsWith(w[0]) ? 0 : 1)).slice(0, nat ? 3 : 5)
+    .forEach(([k, x]) => out.push(['#/sapori/scheda/' + nomeUrl(k), x.n, 'Paese · provincia di ' + (PROVN[x.pv] || x.pv), 'map-pin']));
+  if (D && sap) Object.values(D.produttori).filter(x => ok(norm(x.n))).slice(0, 4).forEach(x => out.push(['#/sapori/scheda/' + nomeUrl(x.k), x.n, 'Produttore · ' + (D.paesi[x.paese] || {}).n, 'building-store']));
+  return out.slice(0, 14);
+}
+const SUG = { el: null, i: -1, inp: null };
+function mostraSug(inp) {
+  const l = suggerimenti(inp.value, inp.id); let box = inp.closest('label').querySelector('.sug8');
+  if (!box) { inp.closest('label').insertAdjacentHTML('beforeend', '<div class="sug8" role="listbox"></div>'); box = inp.closest('label').querySelector('.sug8'); }
+  SUG.inp = inp; SUG.i = -1;
+  if (!l.length) { box.innerHTML = inp.value.trim().length >= 2 ? '<p class="vuoto">Nessun risultato. Prova con un\'altra parola.</p>' : ''; box.classList.toggle('on', inp.value.trim().length >= 2); return; }
+  const q = norm(inp.value.trim()).split(/\s+/)[0];
+  const evid = n => { const i = norm(n).indexOf(q); return i < 0 ? esc(n) : esc(n.slice(0, i)) + '<mark>' + esc(n.slice(i, i + q.length)) + '</mark>' + esc(n.slice(i + q.length)); };
+  box.innerHTML = l.map(([r, n, sub, ic], i) => `<button role="option" data-sugr="${esc(r)}" data-i="${i}"><span class="ic">${ico(ic, 'xs')}</span><span class="tx"><b>${evid(n)}</b><small>${esc(sub)}</small></span></button>`).join('');
+  box.classList.add('on');
+}
+document.addEventListener('input', e => { const inp = e.target; if (!inp.matches || !inp.matches('#nq,#hq')) return; mostraSug(inp); });
+document.addEventListener('keydown', e => { const inp = e.target; if (!inp.matches || !inp.matches('#nq,#hq')) return; const box = inp.closest('label').querySelector('.sug8.on'); if (!box) return;
+  const bs = [...box.querySelectorAll('[data-sugr]')];
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); SUG.i = (SUG.i + (e.key === 'ArrowDown' ? 1 : -1) + bs.length) % bs.length; bs.forEach((b, i) => b.classList.toggle('sel', i === SUG.i)); if (bs[SUG.i]) bs[SUG.i].scrollIntoView({ block: 'nearest' }); }
+  else if (e.key === 'Enter' && SUG.i >= 0 && bs[SUG.i]) { e.preventDefault(); e.stopImmediatePropagation(); bs[SUG.i].click(); }
+  else if (e.key === 'Escape') box.classList.remove('on'); }, true);
+document.addEventListener('mousedown', e => { const b = e.target.closest('[data-sugr]'); if (b) { e.preventDefault(); return; } if (!e.target.closest('.sug8, #nq, #hq')) document.querySelectorAll('.sug8.on').forEach(x => x.classList.remove('on')); }, true);
+document.addEventListener('click', e => { const b = e.target.closest('[data-sugr]'); if (!b) return; e.preventDefault(); e.stopPropagation(); b.closest('.sug8').classList.remove('on'); vaiRotta(b.dataset.sugr); }, true);
 }
