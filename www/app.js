@@ -65,14 +65,14 @@ const TX = {
     DIR: ['nord', 'nord-est', 'est', 'sud-est', 'sud', 'sud-ovest', 'ovest', 'nord-ovest'],
     terFonte: 'Quota: modello del terreno Copernicus 90 m (Open-Meteo). Geologia: Carta Litologica d’Italia 1:100.000 (ISPRA, CC BY 4.0).',
     piovoso: 'pioggia', ventoso: 'vento forte', caldo: 'caldo', freddo: 'freddo', fango: 'terreno bagnato', temporale: 'temporali', ok: 'buono',
-    tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia, dal database Micelio dell’Associazione Micologica G. Inzenga (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
+    tFunghi: 'Micologia siciliana', lFunghi: n => `${fmt(n)} specie di funghi segnalate in Sicilia (segnalazioni GBIF). Tocca una specie per la scheda, le foto e dove è stata trovata.`,
     tPiante: 'Botanica siciliana', lPiante: n => `${fmt(n)} piante vascolari della Sicilia: quelle dei siti Natura 2000, degli alberi monumentali e dei boschi da seme, più tutte le altre segnalate in Sicilia su GBIF. Tocca una specie per la scheda e i luoghi dove cresce.`, famiglia: 'Famiglia', tutteFam: 'Tutte le famiglie', inN2k: 'Nei siti Natura 2000', torna: 'Torna a',
     cercaSp: 'Cerca per nome comune o scientifico, genere, famiglia…', tutte: 'Tutte', conFoto: 'Con foto', alberi: 'Alberi e arbusti', nSp: n => `${fmt(n)} specie`, altri: 'Mostra altre',
     GF: { aga: 'A lamelle', bol: 'Boleti', rus: 'Russule e lattari', pol: 'Polipori e funghi del legno', can: 'Cantarelli, idni e clavarie', pez: 'Spugnole, pezize e tartufi', pal: 'Vesce, geastri e falli', gel: 'Gelatinosi', alt: 'Altri' },
     segn: n => `${fmt(n)} segnalazioni in Sicilia`, nsiti: n => n === 1 ? '1 sito Natura 2000' : `${fmt(n)} siti Natura 2000`,
     dove: 'Dove si trova', vediMappa: 'Vedi sulla mappa dove è stata segnalata', gbifChip: 'Segnalazioni GBIF:',
     nocomm: 'Sicilia Naturale non dà indicazioni sulla commestibilità. Per il consumo rivolgiti sempre a un ispettorato micologico.',
-    fotoMic: 'Foto: Micelio, Associazione Micologica G. Inzenga', gbif: 'Scheda su GBIF',
+    fotoMic: '', gbif: 'Scheda su GBIF',
     G: { P: 'Piante', B: 'Uccelli', I: 'Invertebrati', R: 'Rettili', M: 'Mammiferi', A: 'Anfibi', F: 'Pesci', L: 'Licheni' } },
   en: { cerca: 'Search a forest, park or reserve…', aree: 'Parks and reserves', n2k: 'Natura 2000', tutti: 'All forests', solo: 'Only areas with forests',
     pn: 'National park', pr: 'Regional park', rn: 'Nature reserve', amp: 'Marine protected area', ap: 'Protected area', zsc: 'SAC (Natura 2000)', zps: 'SPA (Natura 2000)', zsczps: 'SAC and SPA (Natura 2000)',
@@ -126,14 +126,14 @@ const TX = {
     DIR: ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west'],
     terFonte: 'Elevation: Copernicus 90 m terrain model (Open-Meteo). Geology: Lithological Map of Italy 1:100,000 (ISPRA, CC BY 4.0).',
     piovoso: 'rain', ventoso: 'strong wind', caldo: 'heat', freddo: 'cold', fango: 'wet ground', temporale: 'thunderstorms', ok: 'good',
-    tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily, from the Micelio database of the G. Inzenga Mycological Association (GBIF records). Tap a species for its page, photos and where it was found.`,
+    tFunghi: 'Sicilian mycology', lFunghi: n => `${fmt(n)} fungus species recorded in Sicily (GBIF records). Tap a species for its page, photos and where it was found.`,
     tPiante: 'Sicilian botany', lPiante: n => `${fmt(n)} vascular plants of Sicily: those of the Natura 2000 sites, monumental trees and seed stands, plus all others recorded in Sicily on GBIF. Tap a species for its page and the places where it grows.`, famiglia: 'Family', tutteFam: 'All families', inN2k: 'In Natura 2000 sites', torna: 'Back to',
     cercaSp: 'Search by common or scientific name, genus, family…', tutte: 'All', conFoto: 'With photos', alberi: 'Trees and shrubs', nSp: n => `${fmt(n)} species`, altri: 'Show more',
     GF: { aga: 'Gilled', bol: 'Boletes', rus: 'Russulas and milkcaps', pol: 'Polypores and wood fungi', can: 'Chanterelles, hedgehogs and corals', pez: 'Morels, cups and truffles', pal: 'Puffballs, earthstars and stinkhorns', gel: 'Jelly fungi', alt: 'Others' },
     segn: n => `${fmt(n)} records in Sicily`, nsiti: n => n === 1 ? '1 Natura 2000 site' : `${fmt(n)} Natura 2000 sites`,
     dove: 'Where it grows', vediMappa: 'Show on the map where it was recorded', gbifChip: 'GBIF records:',
     nocomm: 'Sicilia Naturale gives no information on edibility. Always ask a mycological inspectorate before eating any fungus.',
-    fotoMic: 'Photo: Micelio, G. Inzenga Mycological Association', gbif: 'Page on GBIF',
+    fotoMic: '', gbif: 'Page on GBIF',
     G: { P: 'Plants', B: 'Birds', I: 'Invertebrates', R: 'Reptiles', M: 'Mammals', A: 'Amphibians', F: 'Fish', L: 'Lichens' } }
 };
 const BOSCO_EN = { '9180': 'Lime-maple ravine forests', '91AA': 'Downy oak woods', '91B0': 'Narrow-leaved ash woods', '91E0': 'Alder woods', '91M0': 'Turkey oak woods',
@@ -152,13 +152,23 @@ function pack(name) {
     return { idx: JSON.parse(new TextDecoder().decode(new Uint8Array(b, 4, n))), b, o: 4 + n };
   }).catch(e => { delete packs[name]; throw e; }));
 }
+/* sul sito, finché una pagina copre la mappa (inizio, schede, catalogo) i pezzi di mappa non si scaricano:
+   si aspetta che la mappa diventi visibile. Così la prima pagina pesa circa 2 MB invece di 13. */
+// all'avvio la mappa resta ferma finché non si sa quale pagina si apre (1,5 s al massimo)
+let mappaAvvio = !window.Capacitor; setTimeout(() => { mappaAvvio = false; liberaMappa(); }, 1500);
+const mappaCoperta = () => !window.Capacitor && (mappaAvvio || (document.body.classList.contains('cat-on') && !document.body.classList.contains('mm')));
+let attesaMappa = [];
+const liberaMappa = () => { if (attesaMappa.length && !mappaCoperta()) attesaMappa.splice(0).forEach(f => f()); };
+new MutationObserver(liberaMappa).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+const mappaVisibile = () => mappaCoperta() ? new Promise(r => attesaMappa.push(r)) : null;
 maplibregl.addProtocol('loc', async params => {
   const k = decodeURIComponent(params.url.slice(6)); // v/z/x/y, d/z/x/y, g/font/range
   const p = k.split('/');
+  { const w = mappaVisibile(); if (w) await w; }
   let name = 'base';
   if (p[0] === 'f') { const s = +p[1] - 9; name = 'cf_' + (p[2] >> s) + '_' + (p[3] >> s); }
   else if (p[0] === 's') { const s = +p[1] - 9; name = 'st_' + (p[2] >> s) + '_' + (p[3] >> s); }
-  else if (p[0] !== 'g') { const z = +p[1]; if (z > 7) { const s = z - 7; name = 'c_' + (p[2] >> s) + '_' + (p[3] >> s); } }
+  else if (p[0] !== 'g') { const z = +p[1]; if (z === 8) name = 'm_' + (p[2] >> 1) + '_' + (p[3] >> 1); else if (z === 9) name = 'c8_' + (p[2] >> 1) + '_' + (p[3] >> 1); else if (z > 9) { const s = z - 9; name = 'c9_' + (p[2] >> s) + '_' + (p[3] >> s); } } // pacchetti piccoli per zoom: tools/ridividi_tiles.py
   let P; try { P = await pack(name); } catch (e) { if (p[0] !== 'd') return { data: new ArrayBuffer(0) }; throw e; }
   const e = P.idx[k];
   if (!e) { if (p[0] === 'd') throw new Error('no tile'); return { data: new ArrayBuffer(0) }; }
@@ -784,7 +794,7 @@ window.addEventListener('hashchange', () => { const h = location.hash.slice(1); 
 /* ---------- sezioni: Esplora, Micologia, Botanica */
 let vista = 'mappa';
 const cs = { funghi: { q: '', g: '', n: 60 }, piante: { q: '', g: '', n: 60, fam: '' } };
-const BASEF = 'https://cangelosky.github.io/Inzenga/impara/libri/foto/';
+const BASEF = 'foto/funghi/'; // foto di Oscar Cangelosi, nel sito
 const ICOC = { funghi: '<svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2.5 6.6 2.5 10.5c0 .8.6 1.3 1.4 1.3h16.2c.8 0 1.4-.5 1.4-1.3C21.5 6.6 17.5 3 12 3Zm-2.3 10.3-.6 5.9A1.7 1.7 0 0 0 10.8 21h2.4a1.7 1.7 0 0 0 1.7-1.8l-.6-5.9h-4.6Z"/></svg>',
   piante: '<svg viewBox="0 0 24 24"><path d="M20 3.5C11.5 3.5 6 7.6 6 14c0 1.4.3 2.7.8 3.8L4.3 20.3l1.4 1.4 2.4-2.4c1.2.7 2.6 1.2 4.1 1.2 6.2 0 8.3-6.9 7.8-17Z"/></svg>' };
 const isApp = !!(window.Capacitor && (!window.Capacitor.isNativePlatform || window.Capacitor.isNativePlatform()));
@@ -924,8 +934,8 @@ function apriSpecie(tipo, i) {
   const pz = pericolo(tipo, i);
   if (pz) h += `<div class="avv-per ${pz}">${ico('alert-triangle')}<div><b>${pz === 'mortale' ? T('Fungo mortale', 'Deadly mushroom') : T('Fungo velenoso', 'Poisonous mushroom')}</b><p>${pz === 'mortale' ? T('Può uccidere anche in piccole quantità. Non raccoglierlo e non toccarlo insieme ad altri funghi.', 'It can kill even in small amounts. Do not pick it or mix it with other mushrooms.') : T('Può causare intossicazioni anche gravi.', 'It can cause poisoning, even severe.')} ${T('In caso di dubbio chiama il 118 o un centro antiveleni.', 'If in doubt call 118 or a poison control centre.')}</p><small>${T('Segnaliamo solo le specie pericolose: l’assenza di questo avviso non vuol dire che un fungo sia commestibile.', 'We only flag dangerous species: the absence of this warning does not mean a mushroom is edible.')}</small></div></div>`;
   if (f) {
-    h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
-            : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in the southern Italy covered by Micelio` : ''}.</p>`;
+    h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale` : ''}.</p>`
+            : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in southern Italy` : ''}.</p>`;
   } else {
     const am = r[3].filter(k => S[k] && S[k].t === 'am'), bs = r[3].filter(k => S[k] && S[k].t === 'bs');
     if (r[5]) h += it ? `<p><i>${esc(r[0])}</i> è una pianta della famiglia ${esc(r[5])}${r[6] ? `, con ${fmt(r[6])} segnalazioni in Sicilia nel database mondiale della biodiversità GBIF` : ''}.</p>`
@@ -936,13 +946,13 @@ function apriSpecie(tipo, i) {
                                         : `<p>In Sicily it is the species of ${elencoE([am.length ? t('va')(am.length) : '', bs.length ? (bs.length === 1 ? '1 seed stand' : bs.length + ' seed stands') : ''].filter(Boolean))}.</p>`;
   }
   h += '</div>';
-  if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0 · ${t('fotoMic')}</p>`;
+  if (f && r[8].length) h += `<div class="ownph">${r[8].map(x => `<img src="${BASEF + x}" alt="${esc(r[0])}" loading="lazy">`).join('')}</div><p class="note">© Oscar Cangelosi · CC BY 4.0</p>`;
   h += `<button class="btnmap" id="btnmap"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5Z"/></svg>${t('vediMappa')}</button>`;
   h += '<div id="wk"></div>';
   if (f) h += `<div class="avviso">${t('nocomm')}</div>`;
   if (f) h += REGOLE_FUNGHI();
   if (!f && (r[2].length || r[3].length)) h += `<h3>${t('dove')}</h3><div class="links">${r[3].concat(r[2]).filter(k => S[k]).slice(0, 40).map(k => `<button data-id="${k}">${esc(S[k].n)}<br><small>${t(S[k].t)}${S[k].ha ? ' · ' + fmt(S[k].ha) + ' ha' : S[k].com ? ' · ' + esc(S[k].com) : ''}</small></button>`).join('')}</div>`;
-  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://cangelosky.github.io/Inzenga/" target="_blank" rel="noopener">Micelio · Inzenga</a> · <a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
+  h += `<p class="src">${t('fonte')}: ${f ? `<a href="https://www.gbif.org/species/${r[7]}" target="_blank" rel="noopener">${t('gbif')}</a>` : `${t('sdf')} · ${t('elenco')}${r[4] ? ` · <a href="https://www.gbif.org/species/${r[4]}" target="_blank" rel="noopener">${t('gbif')}</a>` : ''}`}</p>`;
   $('sb').innerHTML = h; mostra(); stripStagione(tipo, i);
   verificata(tipo, r[0], cur);
   $('btnmap').onclick = () => mostraGbif(r[0], f ? r[7] : (r[4] || null), !f && sensibile('piante', i));
@@ -3372,7 +3382,7 @@ function pagina(k) {
     `<section class="s5"><dl class="gl5">${Object.entries(GLOSS).sort((a, b) => a[0].localeCompare(b[0], 'it')).map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl></section>${COPY()}</div>`;
   else $('cat').innerHTML = testa('Metodo e fonti', 'Come sono raccolti e verificati i dati di Sicilia Naturale, e come citarli in una ricerca o in una tesi.') +
     `<section class="s5 txt5"><h2>Da dove vengono i dati</h2>
-      <p><b>Natura</b>: aree protette e siti Natura 2000 dall'Agenzia europea dell'ambiente e dalla Regione Siciliana (Sistema informativo forestale); boschi vetusti, boschi da seme e alberi monumentali dagli elenchi ufficiali; specie da GBIF e dal database Micelio dell'Associazione Micologica G. Inzenga; sentieri e punti di interesse da OpenStreetMap; meteo da Open-Meteo e allerte dalla Protezione Civile.</p>
+      <p><b>Natura</b>: aree protette e siti Natura 2000 dall'Agenzia europea dell'ambiente e dalla Regione Siciliana (Sistema informativo forestale); boschi vetusti, boschi da seme e alberi monumentali dagli elenchi ufficiali; specie da GBIF; sentieri e punti di interesse da OpenStreetMap; meteo da Open-Meteo e allerte dalla Protezione Civile.</p>
       <p><b>Sapori</b>: elenco nazionale dei prodotti agroalimentari tradizionali (PAT), elenco regionale dei prodotti DOP e IGP, vini a denominazione (IRVO), elenco dei dolci siciliani di Oscar Cangelosi. Le date delle sagre vengono da siti di eventi e giornali locali, indicati in ogni scheda.</p>
       <h2>Come li usiamo</h2>
       <p>I racconti delle schede sono costruiti solo dai dati delle fonti: niente viene inventato. Dove una zona è indicativa lo scriviamo. Le specie rare hanno la posizione sfumata di circa 10 km per proteggerle. Non diamo mai indicazioni sulla commestibilità di funghi e piante selvatiche.</p>
