@@ -4167,4 +4167,73 @@ function paginaBambini() {
   if (fot.length >= 3) giro(); else $('ind6').closest('section').remove();
   $('cat').querySelectorAll('.cart').forEach(c => c.onclick = () => c.classList.toggle('gira'));
 }
+
+/* ---------- racconto e strumenti in testa alle pagine di catalogo e ai calendari */
+const RACC_NAT = ['Gennaio è il mese più freddo, ma in Sicilia la natura non si ferma: nei boschi spuntano gli ultimi funghi e lungo le coste fioriscono le prime piante.',
+  'A febbraio fioriscono i mandorli, soprattutto nell\'Agrigentino, e nei prati compaiono le prime orchidee selvatiche.',
+  'Marzo è l\'esplosione della primavera: prati fioriti, orchidee, asfodeli. È il mese migliore per camminare nelle riserve costiere.',
+  'Ad aprile fioriscono le ginestre e i cisti, e la macchia mediterranea profuma. In montagna si sciolgono le ultime nevi.',
+  'Maggio colora le Madonie e i Nebrodi: i prati d\'altura sono pieni di fiori e le fioriture salgono di quota.',
+  'A giugno la pianura secca e il verde si ritira in montagna. È il tempo delle fioriture sull\'Etna e dei boschi freschi.',
+  'Luglio è il mese più caldo: la natura rallenta, ma in quota e nelle faggete si cammina bene al mattino presto.',
+  'Ad agosto fioriscono i capperi tra le rocce e i gigli di mare sulle dune. I boschi sono a rischio d\'incendio: massima attenzione.',
+  'Settembre porta le prime piogge: la vita riprende e, dopo i temporali, nei boschi compaiono i primi funghi.',
+  'Ottobre è il mese dei funghi e dei colori: i faggi e i castagni cominciano a cambiare foglia.',
+  'A novembre i boschi dei Nebrodi e delle Madonie sono rossi e gialli: è il mese del foliage e di tante specie di funghi.',
+  'Dicembre porta la neve sulle vette e il silenzio nei boschi. Lungo le coste fioriscono i narcisi selvatici.'];
+const RACC_SAP = ['Gennaio è il mese delle arance e dei mandarini, e dei cardi selvatici. Nelle case si preparano le conserve d\'inverno.',
+  'Febbraio è il mese di Sant\'Agata a Catania, con le minne e le olivette, e del Carnevale con i cannoli e le chiacchiere.',
+  'A marzo, per San Giuseppe, si preparano le sfince e le tavolate. Nelle campagne arrivano le prime fave.',
+  'Aprile è il mese della Pasqua: cassate, agnelli di pasta reale, cuddure con le uova. Nei campi carciofi, fave e piselli.',
+  'Maggio porta la frittedda, le fave fresche e le prime ciliegie. Sui monti è il tempo della ricotta più ricca.',
+  'Giugno è il mese della mietitura del grano e delle prime granite. Si raccolgono le albicocche e i fiori di zucca.',
+  'A luglio granite e gelsi, pesche e meloni. Nelle saline di Trapani si raccoglie il sale.',
+  'Agosto è Ferragosto con il gelo di melone; si raccolgono i fichi e i capperi, e comincia la vendemmia delle uve precoci.',
+  'Settembre è vendemmia e mosto: con il mosto cotto si preparano i mostaccioli. A Bronte si raccoglie il pistacchio.',
+  'Ottobre è il mese delle olive e dei primi oli nuovi, delle castagne e delle sagre d\'autunno.',
+  'A novembre, per i Morti, la frutta martorana e i pupi di zucchero. Nei frantoi l\'olio nuovo, nelle cantine il vino novello.',
+  'Dicembre è Santa Lucia con la cuccìa e le arancine, poi il Natale con il buccellato e i torroni.'];
+function stIntro(tit, testi, strumenti, extra) {
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  return `<section class="int7"><div class="rac">${testi.map(x => `<p>${x}</p>`).join('')}</div>
+    <div class="stx">${strumenti.map(([ic, t2, d, az, c]) => `<button ${az} style="--tc:${c || '#2D6A4F'}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span><em>${freccia}</em></button>`).join('')}</div>${extra || ''}</section>`;
+}
+function arricchisci7() {
+  const c = $('cat'), v = c.dataset.v; if (!c.classList.contains('on') || c.querySelector('.int7')) return;
+  const lead = c.querySelector('.in > .lead, .in > p.lead'), mo = new Date().getMonth();
+  if ((v === 'funghi' || v === 'piante') && lead && typeof FUN !== 'undefined') {
+    const f = v === 'funghi', st = typeof caricaStag === 'function' ? null : null;
+    const html = f ? stIntro('Funghi', [`Dai faggeti delle Madonie e dei Nebrodi ai boschi di leccio e di sughera, dalle pinete dell'Etna alle dune della costa: ogni ambiente ha i suoi funghi. Qui trovi le <b>${fmt(FUN.s.length)} specie</b> segnalate in Sicilia, con le osservazioni e i mesi in cui compaiono.`, `Questo catalogo serve a conoscere, non a raccogliere: <b>non diamo indicazioni sulla commestibilità</b>. Il bollino rosso segnala solo le specie velenose o mortali più note; se manca, non vuol dire che il fungo sia commestibile.`],
+      [['calendar', 'Il calendario dei funghi', 'Mese per mese, quali specie compaiono.', 'data-i7="cal"'], ['cloud', 'Meteo e stima per i funghi', 'Pioggia degli ultimi mesi e giorni migliori, zona per zona.', 'data-rotta="#/natura/meteo"', '#2F7EA8'], ['map-2', 'Dove sono i boschi', 'La carta dei boschi della Regione, per tipo.', 'data-rotta="#/natura/mappa/boschi"'], ['sparkles', 'Mettiti alla prova', 'Quiz e percorsi per ragazzi.', 'data-rotta="#/didattica"', '#E8761A']],
+      `<div class="per7"><b>${ico('alert-triangle', 'xs')} Da riconoscere: i funghi mortali più noti</b><div>${PERICOLO.mortale.map(n => { const i = FUN.s.findIndex(r => r[0] === n); return i >= 0 ? `<button data-sp7="funghi:${i}">${esc(n)}</button>` : ''; }).join('')}</div></div>`)
+      : stIntro('Piante', [`Dalle dune della costa ai pendii dell'Etna, la Sicilia ospita una flora tra le più ricche del Mediterraneo, con specie che vivono solo qui, come l'abete dei Nebrodi e la zelkova siciliana. In questo catalogo trovi le <b>${fmt(PIA.s.length)} specie</b> segnalate, con i mesi di fioritura e i siti in cui sono protette.`, `Le piante selvatiche si guardano e si fotografano: molte sono protette e alcune sono tossiche. Le «erbe dei campi» sono indicate per la loro storia nella cucina povera, non come invito alla raccolta.`],
+      [['calendar', 'Il calendario delle fioriture', 'Cosa fiorisce questo mese e cosa inizia a fiorire.', 'data-i7="cal"'], ['tree', 'Gli alberi monumentali', 'I giganti verdi sulla mappa.', 'data-rotta="#/natura/mappa/alberi"', '#5c7a2e'], ['leaf', 'Le specie di Natura 2000', 'Le piante tutelate dalla rete europea.', 'data-i7="n2k"'], ['sparkles', 'Mettiti alla prova', 'Quiz e percorsi per ragazzi.', 'data-rotta="#/didattica"', '#E8761A']]);
+    lead.insertAdjacentHTML('afterend', html);
+  } else if (v === 'sap-cat' && lead && SAP.D) {
+    const D = SAP.D, n = Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi').length, ev = inEvidenza().slice(0, 4);
+    lead.insertAdjacentHTML('afterend', stIntro('Catalogo', [`Il catalogo raccoglie <b>${fmt(n)} sapori</b> di ${Object.keys(D.paesi).length} comuni: dolci, pani, formaggi, salumi, conserve, vini. Vengono dagli elenchi ufficiali dei prodotti tradizionali e delle denominazioni, dall'elenco dei dolci di Oscar Cangelosi e dai libri di cucina siciliana.`, `Ogni scheda dice dove nasce un sapore, per quale festa si prepara, di cosa è fatto e chi lo produce ancora. Molte hanno le pagine dei libri dove trovarlo e una ricetta di prova.`],
+      [['wheat', 'Le quattro materie', 'Grano, ulivo, vitigno e latte: varietà e prodotti.', 'data-rotta="#/sapori/grano"', '#E8761A'], ['route-2', 'Itinerari del gusto', 'Nove viaggi tra paesi, sapori e sagre.', 'data-rotta="#/sapori/itinerari"', '#E8761A'], ['calendar-event', 'Il calendario delle sagre', 'Le feste del gusto mese per mese.', 'data-rotta="#/sapori/calendario"', '#E8761A'], ['map-2', 'La mappa dei comuni', 'Cosa nasce in ogni paese.', 'data-rotta="#/sapori/mappa"', '#E8761A']],
+      ev.length ? `<div class="evd7"><h3>In evidenza adesso</h3><div class="tess5">${ev.map(([x, perche]) => tessera(x, perche)).join('')}</div></div>` : ''));
+    sapFoto(c);
+  } else if (v === 'cal') {
+    const h = c.querySelector('.in.cal .lead'); if (!h || typeof FUN === 'undefined') return;
+    caricaStag().then(S2 => { if ($('cat').dataset.v !== 'cal' || c.querySelector('.int7')) return;
+      const m = calMese, conta = [...Array(12)].map((_, j) => { let fi = 0, fu = 0; PIA.s.forEach((r, i) => { const x = stagione('piante', i, j, S2); if (x.on === true && x.lab === T('in fioritura', 'in flower')) fi++; }); FUN.s.forEach((r, i) => { if (stagione('funghi', i, j, S2).on === true) fu++; }); return [fi, fu]; });
+      const mx = Math.max(1, ...conta.map(x => Math.max(x[0], x[1])));
+      h.insertAdjacentHTML('afterend', `<section class="int7 cal7"><div class="anno7">${MESI.map((mm, j) => `<button data-calm="${j}" class="${j === m ? 'sel' : ''}${j === mo ? ' ora' : ''}"><span class="bar"><i style="height:${Math.round(conta[j][0] / mx * 100)}%" class="fi"></i><i style="height:${Math.round(conta[j][1] / mx * 100)}%" class="fu"></i></span><small>${mm}</small></button>`).join('')}</div>
+        <p class="leg7"><span class="fi"></span> piante in fiore <span class="fu"></span> funghi · tocca un mese</p>
+        <div class="rac"><h3>${nomeMese(m).replace(/^./, x => x.toUpperCase())} in natura</h3><p>${RACC_NAT[m]}</p><p>In questo mese, secondo le osservazioni, sono in fiore circa <b>${fmt(conta[m][0])}</b> specie di piante e compaiono <b>${fmt(conta[m][1])}</b> specie di funghi.</p></div></section>`); });
+  } else if (v === 'sap-cal' && SAP.cal) {
+    const top = c.querySelector('.s5.tc') || c.querySelector('h1'); if (!top) return; const m = SAP.cal.m - 1;
+    top.insertAdjacentHTML('afterend', `<section class="s5 int7"><div class="rac"><h3>${MESIL[m].replace(/^./, x => x.toUpperCase())} a tavola</h3><p>${RACC_SAP[m]}</p></div></section>`);
+  }
+}
+new MutationObserver(() => setTimeout(arricchisci7, 30)).observe($('cat'), { attributes: true, attributeFilter: ['data-v'], childList: true });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-i7],[data-sp7],[data-calm]'); if (!b || !$('cat').contains(b)) return; e.stopPropagation();
+  if (b.dataset.sp7) { const [tp, i] = b.dataset.sp7.split(':'); return apriSpecie(tp, +i); }
+  if (b.dataset.calm) { calMese = +b.dataset.calm; return calendario(); }
+  if (b.dataset.i7 === 'cal') return calendario();
+  if (b.dataset.i7 === 'n2k') { const g = $('cg') && $('cg').querySelector('[data-g="n2k"]'); if (g) g.click(); $('gr') && $('gr').scrollIntoView({ behavior: 'smooth' }); }
+}, true);
 }
