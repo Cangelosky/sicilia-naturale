@@ -543,7 +543,7 @@ async function terreno(ll) {
 }
 
 /* ---------- scheda zona */
-let cur = null;
+let cur = null, PERC_SEL = null;
 const cls = tp => tp === 'amp' ? 'mare' : tp === 'zps' ? 'zps' : N2K.includes(tp) ? 'n2k' : AMB.includes(tp) ? tp : '';
 const tipoCF = c => (CFN.tipi[c] || [c])[0];
 function selez(k) {
@@ -561,7 +561,7 @@ function tastoEspandi() {
   c.insertAdjacentHTML('beforebegin', `<button class="espandi" aria-label="${big ? T('Riduci', 'Reduce') : T('Tutto schermo', 'Full screen')}">${ico(big ? 'arrows-minimize' : 'arrows-maximize')}</button>`);
 }
 $('sh').addEventListener('click', e => { if (!e.target.closest('.espandi')) return; altSheet($('sheet').classList.contains('big') ? 1 : 2); });
-function chiudi() { evidenziaPercorso(null); vediZint(null); if (!PIAN && map.getSource('pian')) disegnaIt([], []); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+function chiudi() { evidenziaPercorso(null); vediZint(null); if (!PIAN && map.getSource('pian')) disegnaIt([], []); $('sheet').classList.remove('open', 'big', 'mini'); document.body.classList.remove('side'); cur = null; selez(''); if (isApp) try { history.replaceState(null, '', location.pathname); } catch (e) {} }
 // schede e pannelli sul telefono: si trascinano dalla maniglia (o dal titolo) per abbassarli, nasconderli o allargarli
 function altezze(el, maniglia, chiudiDelTutto) {
   const stato = () => el.classList.contains('big') ? 2 : el.classList.contains('mini') ? 0 : 1;
@@ -749,7 +749,7 @@ function apri(k, vola) {
   if (k.startsWith('CF:')) return apriCF(k.slice(3));
   const s = S[k]; if (!s) return; cur = k;
   selez(k);
-  try { history.replaceState(null, '', '#' + k); } catch (e) {}
+  if (isApp) try { history.replaceState(null, '', '#' + k); } catch (e) {} // sul sito l'indirizzo lo scrive il navigatore (#/zona/...)
   const lato = innerWidth >= 900;
   if (vola) inquadra(s.bb, s.t === 'am' ? 12 : 13);
   if (AMB.includes(s.t)) {
@@ -992,6 +992,7 @@ const UFF = { si: ['Sentiero Italia CAI', 'Sentiero Italia CAI'], cai: ['Sentier
 const uffTag = p => { const u = uff(p); return u ? `<span class="uff">${ico('shield-check', 'xs')}${T(...UFF[u])}</span>` : ''; };
 const pctTag = p => [uffTag(p), `${num1(p.km)} km`, p.up ? `+${fmt(p.up)} m` : '', p.dur ? durata(p.dur) : '', p.c ? `<span class="cai c-${p.c}">${p.c}</span>` : ''].filter(Boolean).join(' · ');
 function evidenziaPercorso(p) {
+  PERC_SEL = p ? p.id : null;
   if (!map.getSource('prc')) return;
   map.getSource('prc').setData({ type: 'FeatureCollection', features: p ? [{ type: 'Feature', properties: {}, geometry: { type: 'MultiLineString', coordinates: p.g } }] : [] });
 }
@@ -2586,6 +2587,7 @@ $('sheet').addEventListener('click', e => {
 
 /* ---- catalogo */
 function sapCatalogo() {
+  if (typeof segnaRotta === 'function') setTimeout(segnaRotta, 0);
   const D = SAP.D, F = SAP.fil, w = norm(F.q.trim()).split(/\s+/).filter(Boolean);
   const tutti = Object.values(D.voci);
   const okK = v => F.k === 'tutto' || (F.k === 'ingr' ? (v.t === 'materia' || v.t === 'semi') : (catDi(v) === F.k && v.t !== 'materia' && v.t !== 'semi'));
@@ -2927,7 +2929,8 @@ $('cat').addEventListener('click', e => {
 
 
 /* ---- Natura: pagina d'inizio con foto, racconto e mappa disegnata */
-var NAT = { home: !isApp && !location.hash.slice(1), foto: null, hi: null };
+const HASH_ROTTA = location.hash.startsWith('#/'); // link nuovi (#/natura/...): li applica il navigatore in fondo al file
+var NAT = { home: !isApp && (!location.hash.slice(1) || HASH_ROTTA), foto: null, hi: null };
 setTimeout(() => { if (NAT.home && !sapOn() && vista === 'mappa') natHome(); }, 0);
 document.addEventListener('click', e => { const b = e.target.closest('#sez button[data-v="mappa"]'); if (b && !sapOn() && !isApp) NAT.home = true; }, true);
 const NATF = () => NAT.foto || (NAT.foto = fetch('foto/natura.json').then(r => r.json()).catch(() => []));
@@ -3006,7 +3009,7 @@ $('cat').addEventListener('click', e => {
 const TEMA = { natura: ['Natura', '#2D6A4F'], sapori: ['Sapori', '#E8761A'], mare: ['Mare', '#2F7EA8'], arte: ['Arte', '#8A5A3C'], storia: ['Storia', '#7B3F61'] };
 const PRONTI = ['natura', 'sapori'];
 // le cinque sezioni: si entra dal menu nella foto d'apertura; la home le presenta tutte
-var SEZ = isApp || location.hash.slice(1) ? 'natura' : 'home';
+var SEZ = isApp || (location.hash.slice(1) && !HASH_ROTTA) ? 'natura' : 'home';
 var TEMI = new Set(['natura']);
 const misto = () => false;
 const SEZT = {
@@ -3389,4 +3392,107 @@ dopoScheda = function () {
 };
 document.addEventListener('click', e => { if (!e.target.closest('.stampa5')) return; document.body.classList.add('stampa'); window.print(); setTimeout(() => document.body.classList.remove('stampa'), 500); });
 
+/* ---------- navigatore: ogni pagina e ogni scheda ha il suo indirizzo (solo sito)
+   #/                     inizio            #/natura, #/natura/mappa, /percorsi, /meteo, /funghi, /piante, /calendario
+   #/sapori, #/sapori/mappa, /catalogo, /calendario, /itinerari, /vino (le cinque materie)
+   #/zona/EUAP0228        scheda di un parco, riserva, sito, bosco o albero
+   #/specie/funghi/Amanita_phalloides     #/sapori/scheda/<chiave>     #/percorso/<id>
+   #/mare, #/arte, #/storia, #/glossario, #/metodo
+   Gli indirizzi vecchi (#EUAP0228, #it=...) continuano a funzionare. */
+const ROTTA = { pronta: false, applico: false, t: 0 };
+const attesa = ms => new Promise(r => setTimeout(r, ms));
+const aspetta = async (ok, max = 6000) => { for (let n = 0; n < max / 80; n++) { try { if (ok()) return true; } catch (e) {} await attesa(80); } return false; };
+const nomeUrl = s => encodeURIComponent(String(s).replace(/ /g, '_')).replace(/%2F/g, '/');
+function rottaAttuale() {
+  const aperta = $('sheet').classList.contains('open'), c = String(cur || '');
+  if (aperta && c.startsWith('SP:')) { const [, tp, i] = c.split(':'), r = (tp === 'funghi' ? FUN : PIA).s[+i]; if (r) return `#/specie/${tp}/${nomeUrl(r[0])}`; }
+  if (aperta && c.startsWith('SAP:') && !/^SAP:(fv|v):/.test(c)) return '#/sapori/scheda/' + nomeUrl(c.slice(4));
+  if (aperta && c && S[c]) return '#/zona/' + nomeUrl(c);
+  if (PERC_SEL != null && (aperta || document.body.classList.contains('mm'))) return '#/percorso/' + PERC_SEL;
+  const v = $('cat').dataset.v || '';
+  if (v === 'pag-glossario') return '#/glossario';
+  if (v.startsWith('pag-')) return '#/metodo';
+  if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
+  if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
+  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari', 'sap-fil': '#/sapori/' + SAP.fk }[v]
+    || (vista === 'mappa' && !SAP.home ? '#/sapori/mappa' : null);
+  if (v === 'nat-home') return '#/natura';
+  if (v === 'cal') return '#/natura/calendario';
+  return { funghi: '#/natura/funghi', piante: '#/natura/piante', escursioni: '#/natura/percorsi', meteo: '#/natura/meteo', mappa: NAT.home ? null : '#/natura/mappa' }[vista] || null;
+}
+// titolo della scheda del browser: "Tignosa verdognola · Sicilia Naturale"
+function titoloRotta(r) {
+  const T0 = 'Sicilia Naturale', p = r.slice(2).split('/');
+  const h2 = $('sheet').classList.contains('open') && $('sh').querySelector('h2:not([hidden])');
+  if (['zona', 'specie', 'percorso'].includes(p[0]) || p[1] === 'scheda') return (h2 ? h2.textContent.trim() + ' · ' : '') + T0;
+  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti' };
+  const S2 = { mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari' };
+  return p[0] ? [S2[p[1]] || (p[1] ? p[1][0].toUpperCase() + p[1].slice(1) : ''), N[p[0]], T0].filter(Boolean).join(' · ') : T0 + ' · La natura e i sapori della Sicilia';
+}
+function segnaRotta() {
+  if (isApp || !ROTTA.pronta || ROTTA.applico) return;
+  clearTimeout(ROTTA.t);
+  ROTTA.t = setTimeout(() => {
+    if (ROTTA.applico) return;
+    const r = rottaAttuale(); if (!r) return;
+    if (r !== (location.hash || '#/')) try { history.pushState(null, '', r === '#/' ? location.pathname : r); } catch (e) {}
+    document.title = titoloRotta(r);
+  }, 250);
+}
+async function applicaRotta(h) {
+  if (isApp) return;
+  ROTTA.applico = true; clearTimeout(ROTTA.t);
+  try {
+    const [a, b, c] = h.replace(/^#\/?/, '').split('/').map(x => decodeURIComponent(x || '').replace(/_/g, ' '));
+    const natura = async () => { if (SEZ !== 'natura' || sapOn()) { entraSez('natura'); await aspetta(() => !sapOn()); } NAT.home = false; };
+    if (!a) entraSez('home');
+    else if (a === 'natura') {
+      if (!b) entraSez('natura');
+      else { await natura(); const v = { mappa: 'mappa', percorsi: 'escursioni', meteo: 'meteo', funghi: 'funghi', piante: 'piante', calendario: 'piante' }[b] || 'mappa'; vai(v);
+        if (b === 'calendario') { await CAT; await attesa(200); calendario(); } }
+    } else if (a === 'sapori') {
+      if (!sapOn()) entraSez('sapori'); else if (!b) entraSez('sapori');
+      await aspetta(() => sapOn() && SAP.D);
+      if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') vai('escursioni');
+      else if (b === 'mappa') { SAP.home = false; vai('mappa'); }
+      else if (b === 'scheda' && c) { const k = c.replace(/ /g, '_'), D2 = SAP.D; const kk = D2.voci[k] || D2.paesi[k] || D2.produttori[k] ? k : c; await attesa(300); sapApri(kk); }
+      else if (b) sapFiliera(b);
+    } else if (a === 'zona') {
+      const k = b.replace(/ /g, '_'); const kk = S[k] ? k : b;
+      if (S[kk]) { await natura(); vai('mappa'); await attesa(650); apri(kk, true); }
+    } else if (a === 'specie') {
+      await CAT; const tp = b === 'piante' ? 'piante' : 'funghi', i = (tp === 'funghi' ? FUN : PIA).s.findIndex(r => r[0] === c);
+      await natura(); vai(tp); if (i >= 0) { await attesa(300); apriSpecie(tp, i); }
+    } else if (a === 'percorso') { await natura(); vai('escursioni'); await attesa(300); await apriPercorso(b); }
+    else if (a === 'glossario' || a === 'metodo') pagina(a);
+    else if (TEMA[a]) entraSez(a);
+    else entraSez('home');
+  } catch (e) { console.warn('rotta', e); }
+  await attesa(700);
+  ROTTA.applico = false;
+  // se il link non porta dove dice (scheda inesistente…), l'indirizzo si corregge su ciò che si vede
+  const fine = () => { const r = rottaAttuale(); if (!r) return; if (r !== (location.hash || '#/')) try { history.replaceState(null, '', r === '#/' ? location.pathname : r); } catch (e) {} document.title = titoloRotta(r); };
+  fine(); setTimeout(fine, 900);
+}
+if (!isApp) {
+  const osserva = new MutationObserver(segnaRotta);
+  osserva.observe($('cat'), { attributes: true, attributeFilter: ['data-v'] });
+  osserva.observe($('sheet'), { attributes: true, attributeFilter: ['class'] });
+  osserva.observe($('sh'), { childList: true });
+  osserva.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  window.addEventListener('popstate', () => { if (!location.hash.startsWith('#it=')) applicaRotta(location.hash); });
+  // tasto "Condividi" in ogni scheda: sul telefono apre la condivisione (WhatsApp…), sul computer copia il link
+  new MutationObserver(() => { const h = $('sh'), x = h.querySelector('.close'); if (!x || h.querySelector('.condividi')) return;
+    x.insertAdjacentHTML('beforebegin', `<button class="condividi" aria-label="Condividi questa scheda" title="Condividi">${ico('share')}</button>`); }).observe($('sh'), { childList: true });
+  $('sh').addEventListener('click', async e => { if (!e.target.closest('.condividi')) return; e.stopPropagation();
+    const r = rottaAttuale(); const url = location.origin + location.pathname + (r && r !== '#/' ? r : ''), tit = document.title;
+    if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: tit, url }); } catch (er) {} return; }
+    try { await navigator.clipboard.writeText(url); toast('Link copiato: puoi incollarlo dove vuoi'); } catch (er) { prompt('Copia il link', url); } });
+  // all'apertura: si aspetta che la prima pagina sia pronta, poi si applica il link (se c'è)
+  aspetta(() => $('cat').dataset.v || document.body.classList.contains('mm') || $('sheet').classList.contains('open'), 10000).then(async () => {
+    if (HASH_ROTTA) await applicaRotta(location.hash);
+    ROTTA.pronta = true;
+    const r = rottaAttuale(); if (r) { if (!HASH_ROTTA && !location.hash.startsWith('#it=')) try { history.replaceState(null, '', r === '#/' ? location.pathname : r); } catch (e) {} document.title = titoloRotta(r); }
+  });
+}
 }

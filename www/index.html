@@ -362,6 +362,8 @@ body.recon .maplibregl-ctrl-bottom-left,body.recon .maplibregl-ctrl-bottom-right
 /* schede: niente trascinamento, tasto tutto schermo */
 .sh .espandi{margin-left:auto;flex:none;width:40px;height:40px;border-radius:20px;border:0;background:#f0f3f1;color:var(--gd);display:grid;place-items:center;cursor:pointer}
 .sh .espandi .ico{width:20px;height:20px}.sh .espandi + .close{margin-left:8px}
+.sh .condividi{flex:none;width:40px;height:40px;border-radius:20px;border:0;background:#f0f3f1;color:var(--gd);display:grid;place-items:center;cursor:pointer;margin-left:8px}.sh .condividi .ico,.sh .condividi svg{width:19px;height:19px}
+.sh .condividi:first-of-type:not(.espandi + .condividi){margin-left:auto}.sh .espandi + .condividi{margin-left:8px}.sh .condividi + .close{margin-left:8px}
 #sheet .grip{display:none}
 @media(max-width:899px){ #sheet.big{top:0;max-height:none;border-radius:0;max-width:none} }
 @media(min-width:900px){ #sheet.big{width:min(920px,calc(100% - 20px))} }
