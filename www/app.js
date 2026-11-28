@@ -4023,14 +4023,15 @@ async function paginaViaggio() {
         <div class="nav">${passo ? '<button class="lk" data-vgn="-1">‹ Indietro</button>' : '<span></span>'}${multi ? `<button class="vai" data-vgn="1"${(val || []).length ? '' : ' disabled'}>Avanti ${freccia}</button>` : ''}</div></section>${COPY()}</div>`;
     return;
   }
-  const r = VG.r, R = proposteViaggio(r), D = SAP.D, CM = await meteoCapoluoghi().catch(() => null), oggi = new Date(); oggi.setHours(12, 0, 0, 0);
+  const r = VG.r, R = VG.R = proposteViaggio(r), D = SAP.D, CM = await meteoCapoluoghi().catch(() => null), oggi = new Date(); oggi.setHours(12, 0, 0, 0);
   const meteoG = (xy, iso) => { if (!CM) return ''; const n = Math.round((new Date(iso + 'T12:00:00') - oggi) / 864e5); if (n < 0 || n > 13) return '';
     const c = CM.reduce((a, b) => dist2(a.c.slice(1, 3), xy) <= dist2(b.c.slice(1, 3), xy) ? a : b), gg = c.s.G[n]; if (!gg) return ''; const M = c.s.M, i = gg.i;
     return `<span class="wx6">${ico(wxIco(M.weather_code[i]), 'xs')} ${wxParola(M.weather_code[i])}, ${Math.round(M.temperature_2m_min[i])}–${Math.round(M.temperature_2m_max[i])}°</span>`; };
   const giornoTxt = iso => new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
   const famiglia = r.chi === 'famiglia', gruppo = r.chi === 'gruppo';
   const proposta = (P, n) => { const giorni = pianoGiorni(P, r), tit = P.it.n + (P.it2 ? ' e ' + P.it2.n : '');
-    return `<article class="vgp"><header><span class="nn">${n + 1}</span><div><h3>${esc(tit)}</h3><p>${esc(P.it.s)}${P.it2 ? '; ' + esc(P.it2.s.toLowerCase()) : ''}.</p></div><button class="lk" data-itk="${P.it.k}">L'itinerario completo ›</button></header>
+    return `<article class="vgp"><header><span class="nn">${n + 1}</span><div><h3>${esc(tit)}</h3><p>${esc(P.it.s)}${P.it2 ? '; ' + esc(P.it2.s.toLowerCase()) : ''}.</p></div><button class="lk" data-vgsv="${n}">${ico('heart', 'xs')} Salva nel mio piano</button></header>
+      <div class="vgm9">${itMappa(P.it, 380)}<p>${esc(P.it.t || '')}</p></div>
       <ul class="perche">${P.perche.slice(0, 4).map(x => `<li>${ico('sparkles', 'xs')} ${esc(x)}</li>`).join('')}</ul>
       <ol class="gg6">${giorni.map((pp, i) => { const iso = R.giorniISO[i] || R.giorniISO[R.giorniISO.length - 1], xy = D.paesi[pp[0]].c, nat = natVicina(xy)[0], ev = (SAP.sagre.eventi || []).filter(e => pp.includes(e.p) && e.d.includes(iso));
         const sv = pp.flatMap(p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && ['piatto', 'dolce', 'prodotto'].includes(v.t)).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk)).slice(0, 2));
@@ -4041,7 +4042,10 @@ async function paginaViaggio() {
   $('cat').innerHTML = `<div class="sh5 pag5 vg6">${testa}
     <section class="s5 vgr"><div class="riep">${[['quando', giornoTxt(R.giorniISO[0])], ['giorni', { 1: 'una giornata', 3: 'due o tre giorni', 5: 'quattro o cinque giorni', 7: 'una settimana' }[r.giorni]], ['chi', { solo: 'da solo', coppia: 'in coppia', famiglia: 'con bambini', amici: 'con amici', gruppo: 'con un gruppo' }[r.chi]], ['gusti', (r.gusti || []).map(x => GUSTIV[x][0].toLowerCase()).join(', ')], ['da', 'da ' + PARTENZE[r.da][0]]].map(([k, t2], i) => `<button data-vgp="${i}">${esc(t2)} <small>cambia</small></button>`).join('')}</div>
       <h2>Tre proposte per te</h2>${famiglia ? '<p class="gt">Con i bambini: poche tappe al giorno, sentieri brevi e una sosta golosa. Nella pagina <button class="lk" data-rotta="#/bambini">Bambini</button> trovi giochi da fare lungo la strada.</p>' : gruppo ? '<p class="gt">Per una classe: nella pagina <button class="lk" data-rotta="#/didattica">Scuole e ragazzi</button> trovi quiz e percorsi da preparare prima della gita.</p>' : ''}
+      ${vgRacconto(R)}
       ${R.out.map(proposta).join('')}
+      ${vgVoli(R, r)}
+      <div id="vgmio">${vgMio()}</div>
       <div class="nav"><button class="lk" data-vgn="reset">Rifai le domande</button><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa il piano</button></div>
       <p class="avv6">${ico('alert-triangle', 'xs')} Proposte costruite dai dati: date delle sagre, orari e strade vanno verificati prima di partire. Il meteo compare solo per i prossimi 14 giorni.</p></section>${COPY()}</div>`;
   sapFoto($('cat'));
@@ -4052,9 +4056,15 @@ document.addEventListener('click', e => {
   if (o) { e.stopPropagation(); const [k, , , , multi] = DOMANDE[VG.passo]; if (multi) { const s2 = new Set(VG.r[k] || []); s2.has(o.dataset.vgo) ? s2.delete(o.dataset.vgo) : s2.add(o.dataset.vgo); VG.r[k] = [...s2]; } else { VG.r[k] = o.dataset.vgo; VG.passo++; } return paginaViaggio(); }
   if (n) { e.stopPropagation(); if (n.dataset.vgn === 'reset') { VG.passo = 0; VG.r = {}; } else VG.passo = Math.max(0, VG.passo + +n.dataset.vgn); return paginaViaggio(); }
   if (pp) { e.stopPropagation(); VG.passo = +pp.dataset.vgp; return paginaViaggio(); }
-  if (sc) { e.stopPropagation(); const k = sc.dataset.sc2; return versoSapori(() => sapApri(k)); }
-  if (nt) { e.stopPropagation(); const z = nt.dataset.nat2; return vaiRotta('#/zona/' + nomeUrl(z)); }
-  if (ev) { e.stopPropagation(); const x = (SAP.sagre.eventi || []).find(y => y.id === ev.dataset.ogev2); if (x) { SAP.cal = { y: +x.d[0].slice(0, 4), m: +x.d[0].slice(5, 7), sel: x.d[0], tipo: '', pv: '' }; SEZ = 'sapori'; versoSapori(() => vai('meteo')); } }
+  if (sc) { e.stopPropagation(); return vgPop('s', sc.dataset.sc2); }
+  if (nt) { e.stopPropagation(); return vgPop('n', nt.dataset.nat2); }
+  if (ev) { e.stopPropagation(); return vgPop('e', ev.dataset.ogev2); }
+  const sv = e.target.closest('[data-vgsv]'), ad = e.target.closest('[data-vgadd]'), rm = e.target.closest('[data-vgrm]'), ch = e.target.closest('[data-vgx]'), it = e.target.closest('[data-itk]');
+  if (sv) { e.stopPropagation(); const P = VG.R.out[+sv.dataset.vgsv]; vgSalva({ id: 'it:' + P.it.k, t: 'Viaggio', n: P.it.n + (P.it2 ? ' e ' + P.it2.n : ''), d: P.it.s }); sv.innerHTML = ico('heart', 'xs') + ' Salvato'; return; }
+  if (ad) { e.stopPropagation(); vgSalva(JSON.parse(ad.dataset.vgadd)); ad.textContent = 'Aggiunto al piano'; ad.disabled = true; return; }
+  if (rm) { e.stopPropagation(); VG.mio = VG.mio.filter(x => x.id !== rm.dataset.vgrm); vgScrivi(); return; }
+  if (ch) { e.stopPropagation(); const q = document.querySelector('.vgpop9'); if (q) q.remove(); return; }
+  if (it) { e.stopPropagation(); const x = ITIN.find(y => y.k === it.dataset.itk); if (x) vgPop('i', x.k); return; }
 }, true);
 
 /* ---------- quiz: domande scritte da noi e domande costruite dai dati del sito */
@@ -4448,5 +4458,43 @@ function provLayers() {
     let a = [99, 99, -99, -99]; const giro = c => { if (typeof c[0] === 'number') { a = [Math.min(a[0], c[0]), Math.min(a[1], c[1]), Math.max(a[2], c[0]), Math.max(a[3], c[1])]; } else c.forEach(giro); }; giro(g.geometry.coordinates);
     map.fitBounds([[a[0], a[1]], [a[2], a[3]]], { padding: 50, duration: 900 });
   });
+}
+
+/* ---- Chi viaggia: racconto, voli, schede in finestra (non si lascia la pagina), il mio piano */
+const STAGVG = { inv: ['L\'inverno', 'Agrumi maturi, presepi viventi, funghi nei boschi fino ai primi freddi. Le città barocche senza folla e le feste dei santi patroni con i loro dolci.'], pri: ['La primavera', 'Fioriture sulle colline, mandorli già passati e campi verdi di grano. Le Pasque di paese, la ricotta più buona dell\'anno, i sentieri a temperatura giusta.'], est: ['L\'estate', 'Il mare, le isole, le serate nei borghi e le sagre all\'aperto. In montagna si cammina nei boschi al fresco, al mattino presto.'], aut: ['L\'autunno', 'Vendemmia, olio nuovo, castagne e funghi. Il mare è ancora caldo e le strade sono più tranquille: la stagione migliore per chi ama mangiare e camminare.'] };
+const AEROPORTI = [['PMO', 'Palermo', [13.09, 38.18]], ['CTA', 'Catania', [15.07, 37.47]], ['TPS', 'Trapani', [12.49, 37.91]], ['CIY', 'Comiso', [14.61, 36.99]]];
+function vgRacconto(R) {
+  const m = R.d0.getMonth() + 1, st = STAGVG[[12, 1, 2].includes(m) ? 'inv' : m <= 5 ? 'pri' : m <= 8 ? 'est' : 'aut'];
+  const foto = ['natura/arco-tramonto', 'backcassatelle', 'backsale'].map(f => `<span style="background-image:url('foto/${f}.webp')"></span>`).join('');
+  return `<div class="vgr9"><div class="ft">${foto}</div><div class="tx"><p class="sub">${st[0]} in Sicilia</p><p>${st[1]}</p><p>Sotto trovi tre viaggi scelti per i tuoi giorni. Tocca un paese, un sapore, un parco o una sagra: si apre qui la sua scheda e puoi aggiungerlo al tuo piano.</p></div></div>`;
+}
+function vgVoli(R, r) {
+  const P = R.out[0], c = P ? itCentro(P.it) : PARTENZE[r.da][1];
+  const ord = AEROPORTI.map(a => [a, hav2(a[2], c)]).sort((a, b) => a[1] - b[1]).slice(0, 2);
+  const d1 = R.giorniISO[0], d2 = (() => { const x = new Date(R.giorniISO[R.giorniISO.length - 1] + 'T12:00:00'); x.setDate(x.getDate() + 1); return x.toISOString().slice(0, 10); })();
+  return `<div class="vgv9"><h3>${ico('navigation', 'xs')} Come arrivare</h3><p>Per ${P ? esc(P.it.n) : 'questo viaggio'} gli aeroporti più comodi sono ${ord.map(([a, km]) => `${a[1]} (a circa ${Math.round(km * 1.3 / 10) * 10} km)`).join(' e ')}. I link aprono la ricerca dei voli con le tue date già scritte: andata ${new Date(d1 + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}, ritorno ${new Date(d2 + 'T12:00:00').toLocaleDateString('it-IT', { day: 'numeric', month: 'long' })}.</p>
+    <div class="vb">${ord.map(([a]) => `<a href="https://www.google.com/travel/flights?q=${encodeURIComponent(`voli per ${a[0]} il ${d1} ritorno il ${d2}`)}" target="_blank" rel="noopener">${ico('navigation', 'xs')} Voli per ${a[1]} (${a[0]})</a>`).join('')}<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent((P ? SAP.D.paesi[P.it.p[0]].n : 'Palermo') + ', Sicilia')}" target="_blank" rel="noopener">${ico('route', 'xs')} In auto o in traghetto</a></div>
+    <p class="note">Si aprono in una nuova scheda: questa pagina e il tuo piano restano qui.</p></div>`;
+}
+function vgLeggi() { if (VG.mio) return; try { VG.mio = JSON.parse(localStorage.getItem('sn-piano') || '[]'); } catch (e) { VG.mio = []; } }
+function vgScrivi() { try { localStorage.setItem('sn-piano', JSON.stringify(VG.mio)); } catch (e) {} const b = $('vgmio'); if (b) b.innerHTML = vgMio(); }
+function vgSalva(x) { vgLeggi(); if (!VG.mio.some(y => y.id === x.id)) VG.mio.push(x); vgScrivi(); }
+function vgMio() {
+  vgLeggi(); const L = VG.mio;
+  return `<div class="vgmio9"><h3>${ico('heart', 'xs')} Il mio piano</h3>${L.length ? `<ul>${L.map(x => `<li><small>${esc(x.t)}</small><b>${esc(x.n)}</b>${x.d ? `<span>${esc(x.d)}</span>` : ''}<button data-vgrm="${esc(x.id)}" aria-label="Togli">${ico('x', 'xs')}</button></li>`).join('')}</ul><p class="note">Il piano resta salvato in questo browser. Usa «Stampa il piano» per portarlo con te.</p>` : '<p class="note">Ancora vuoto. Salva un viaggio intero o aggiungi paesi, sapori, parchi e sagre dalle loro schede.</p>'}</div>`;
+}
+function vgPop(tipo, k) {
+  const D = SAP.D; let img = '', tit = '', sot = '', txt = '', add = null, wk = '';
+  if (tipo === 's') { const v = D.voci[k], p = D.paesi[k];
+    if (p) { const vv = Object.values(D.voci).filter(x => (x.paesi || []).includes(k)); tit = p.n; sot = 'Comune · provincia di ' + (PROVN[p.pv] || ''); txt = vv.length ? `Qui sono documentati ${vv.length} sapori, tra cui ${elencoE(vv.slice(0, 4).map(x => x.n))}.` : ''; wk = p.n + ' (Italia)'; add = { id: 'p:' + k, t: 'Paese', n: p.n, d: txt }; }
+    else if (v) { tit = v.n; sot = (v.ric || []).join(', ') || (GUSTO[catDi(v)] || ['', ''])[1]; txt = v.breve || v.nd || ''; img = imgAttr(v); add = { id: 's:' + k, t: 'Sapore', n: v.n, d: nomiPaesi(v) }; } }
+  else if (tipo === 'n') { const z = S[k]; if (!z) return; tit = z.n; sot = 'Parco o riserva'; txt = (PARCHI9[k] || [])[2] || 'Area protetta vicina alla tappa: controlla regole e sentieri prima di andare.'; wk = z.n; add = { id: 'n:' + k, t: 'Natura', n: z.n, d: '' }; }
+  else if (tipo === 'e') { const e = (SAP.sagre.eventi || []).find(y => y.id === k); if (!e) return; tit = e.n; sot = `Sagra a ${e.c} · ${e.d.map(x => +x.slice(8)).join(', ')} ${MESIL[+e.d[0].slice(5, 7) - 1]}`; txt = e.desc + ' Verifica date e orari con gli organizzatori.'; add = { id: 'e:' + k, t: 'Sagra', n: e.n + ' a ' + e.c, d: sot.split(' · ')[1] }; }
+  else if (tipo === 'i') { const it = ITIN.find(y => y.k === k); tit = it.n; sot = 'Itinerario del gusto'; txt = it.t + ' Tappe: ' + it.p.filter(p => D.paesi[p]).map(p => D.paesi[p].n).join(', ') + '.'; add = { id: 'it:' + k, t: 'Viaggio', n: it.n, d: it.s }; wk = it.wk || ''; }
+  const q = document.querySelector('.vgpop9'); if (q) q.remove();
+  $('cat').insertAdjacentHTML('beforeend', `<div class="vgpop9" role="dialog" aria-label="${esc(tit)}"><div class="bx"><button class="x" data-vgx="1" aria-label="Chiudi">${ico('x')}</button><span class="img"${img || (wk ? ` data-gwk="${esc(wk)}"` : '')}></span><div class="tx"><small>${esc(sot)}</small><h3>${esc(tit)}</h3><p>${esc(txt)}</p><div class="az"><button class="vai" data-vgadd="${esc(JSON.stringify(add))}">${ico('heart', 'xs')} Aggiungi al mio piano</button><button class="lk" data-vgx="1">Torna al viaggio</button></div></div></div></div>`);
+  const box = document.querySelector('.vgpop9'); sapFoto(box);
+  const g = box.querySelector('[data-gwk]'); if (g) wikiVoce(g.dataset.gwk).then(w => { if (w && w.thumbnail) { g.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/600px-')}')`; } });
+  box.addEventListener('click', ev => { if (ev.target === box) box.remove(); });
 }
 }
