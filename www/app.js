@@ -267,6 +267,19 @@ const CAT = Promise.all(['funghi', 'piante', 'nomi'].map(n => fetch('data/' + n 
 // nome comune (italiano; in siciliano se c'è) di una specie del catalogo
 const nomeC = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? (LANG === 'it' ? n[0] : n[0]) : ''; };
 const nomeScn = (tipo, i) => { const r = (tipo === 'funghi' ? FUN : PIA).s[i], k = tipo === 'funghi' ? r[7] : r[4], n = k && NOMI[k]; return n ? n[1] : ''; };
+/* Bollino di pericolo (deciso da Oscar il 28/11/2026): si segnalano SOLO le specie velenose o mortali, mai quelle commestibili.
+   Elenco prudente, dalla letteratura micologica italiana; l'assenza del bollino non vuol dire che una specie sia commestibile. */
+const PERICOLO = {
+  mortale: ['Amanita phalloides', 'Amanita verna', 'Lepiota subincarnata', 'Lepiota castanea', 'Galerina marginata'],
+  velenoso: ['Amanita pantherina', 'Amanita muscaria', 'Amanita gemmata', 'Amanita proxima', 'Rubroboletus satanas', 'Rubroboletus legaliae', 'Rubroboletus rhodoxanthus',
+    'Entoloma sinuatum', 'Omphalotus olearius', 'Agaricus xanthodermus', 'Clitocybe rivulosa', 'Clitocybe phyllophila', 'Tricholoma equestre', 'Hypholoma fasciculare',
+    'Chlorophyllum molybdites', 'Scleroderma verrucosum', 'Mycena pura'],
+  generi: { Inocybe: 'velenoso' }
+};
+const pericolo = (tipo, i) => { if (tipo !== 'funghi' || !FUN) return ''; const n = FUN.s[i][0];
+  return PERICOLO.mortale.includes(n) ? 'mortale' : PERICOLO.velenoso.includes(n) ? 'velenoso' : PERICOLO.generi[n.split(' ')[0]] || ''; };
+const PERN = { mortale: ['Mortale', 'Deadly'], velenoso: ['Velenoso', 'Poisonous'] };
+const bollino = p => p ? `<span class="tag peric ${p}">${ico('alert-triangle', 'xs')}${T(...PERN[p])}</span>` : '';
 
 map.on('load', () => D.then(() => {
   map.addSource('z', { type: 'geojson', data: GJ, promoteId: 'id' });
@@ -443,7 +456,7 @@ $('q').oninput = () => {
   if (FUN && PIA && v.length > 2) for (const [tp, D] of [['funghi', FUN], ['piante', PIA]]) D.s.forEach((x, i) => { const k = tp === 'funghi' ? x[7] : x[4]; const n = norm(x[0] + ' ' + (NOMI[k] || []).join(' ')); if (w.every(y => contiene(n, y))) sp.push([tp, i, nomeC(tp, i), x[0], tp === 'funghi' ? x[6] : 0]); });
   sp.sort((a, b) => (!!b[2] - !!a[2]) || b[4] - a[4]);
   const rs = r.map(([k, s]) => `<button data-id="${k}">${esc(s.n)}<small>${t(s.t)}${s.vg ? ' · ' + esc(s.vg) : ''}${s.ha ? ' · ' + fmt(s.ha) + ' ha' : s.com ? ' · ' + esc(s.com) : ''}</small></button>`).join('')
-    + sp.slice(0, 8).map(([tp, i, c, sc]) => `<button data-spr="${tp}:${i}">${esc(c || sc)}<small>${tp === 'funghi' ? T('Fungo', 'Fungus') : T('Pianta', 'Plant')}${c ? ' · <i>' + esc(sc) + '</i>' : ''}</small></button>`).join('');
+    + sp.slice(0, 8).map(([tp, i, c, sc]) => `<button data-spr="${tp}:${i}">${esc(c || sc)}<small>${tp === 'funghi' ? T('Fungo', 'Fungus') : T('Pianta', 'Plant')}${c ? ' · <i>' + esc(sc) + '</i>' : ''}${(p => p ? ' · <b class="peric-t">' + T(...PERN[p]).toLowerCase() + '</b>' : '')(pericolo(tp, i))}</small></button>`).join('');
   $('res').innerHTML = rs || `<button disabled>${t('nessuno')}</button>`;
   $('res').style.display = 'block';
 };
@@ -859,7 +872,7 @@ function catalogo(soloTesti) {
     const card = i => { const r = (f ? FUN : PIA).s[i];
       const sub = f ? `${esc(r[2])} · ${t('segn')(r[5])}` : [r[5] ? esc(r[5]) : '', r[2].length ? t('nsiti')(r[2].length) : '', r[3].filter(k => S[k] && S[k].t === 'am').length ? t('va')(r[3].filter(k => S[k] && S[k].t === 'am').length) : '', !r[2].length && r[6] ? t('segn')(r[6]) : ''].filter(Boolean).join(' · ');
       const ph = f && r[8].length ? ` style="background-image:url('${BASEF + r[8][0]}')"` : '';
-      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}${ph ? '' : ` style="color:${TIPO_IC[f ? 'fun' : tipoP(r)][1]}"`}>${ph ? '' : ico(TIPO_IC[f ? 'fun' : tipoP(r)][0], 'phi')}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
+      return `<button class="card" data-sp="${i}"><span class="ph" data-n="${esc(r[0])}"${ph}${ph ? '' : ` style="color:${TIPO_IC[f ? 'fun' : tipoP(r)][1]}"`}>${ph ? '' : ico(TIPO_IC[f ? 'fun' : tipoP(r)][0], 'phi')}</span><span class="tx">${(c => c ? `<b class="nc">${esc(c)}</b>` : '')(nomeC(vista, i))}<i>${esc(r[0])}</i><small>${sub}</small>${bollino(pericolo(vista, i))}${(z => z.on === true ? `<span class="tag st">${esc(z.lab)}</span>` : '')(stg(i))}${f ? `<span class="tag">${esc(t('GF')[r[4]])}</span>` : r[1] ? `<span class="tag">${t('alberi')}</span>` : ''}</span></button>`; };
     const griglia = ids.slice(0, st.n).map(card).join('') + '';
     if (soloTesti || !$('cat').querySelector('.in') || $('cat').dataset.v !== vista) {
       $('cat').dataset.v = vista; $('cat').scrollTop = 0;
@@ -908,6 +921,8 @@ function apriSpecie(tipo, i) {
   const nc = nomeC(tipo, i), ns = nomeScn(tipo, i);
   $('sh').innerHTML = `<div>${da}${nc ? `<h2>${esc(nc)}</h2><p class="sci"><i>${esc(r[0])}</i>${ns ? ` · ${T('in siciliano', 'in Sicilian')} <b>${esc(ns)}</b>` : ''}</p>` : ''}<h2${nc ? ' hidden' : ''}><i>${esc(r[0])}</i>${f ? ` <small style="font-weight:400;color:var(--mute);font-size:14px">${esc(r[1])}</small>` : ''}</h2>${badge}</div><button class="close" aria-label="Chiudi">×</button>`;
   let h = '<div class="racconto">';
+  const pz = pericolo(tipo, i);
+  if (pz) h += `<div class="avv-per ${pz}">${ico('alert-triangle')}<div><b>${pz === 'mortale' ? T('Fungo mortale', 'Deadly mushroom') : T('Fungo velenoso', 'Poisonous mushroom')}</b><p>${pz === 'mortale' ? T('Può uccidere anche in piccole quantità. Non raccoglierlo e non toccarlo insieme ad altri funghi.', 'It can kill even in small amounts. Do not pick it or mix it with other mushrooms.') : T('Può causare intossicazioni anche gravi.', 'It can cause poisoning, even severe.')} ${T('In caso di dubbio chiama il 118 o un centro antiveleni.', 'If in doubt call 118 or a poison control centre.')}</p><small>${T('Segnaliamo solo le specie pericolose: l’assenza di questo avviso non vuol dire che un fungo sia commestibile.', 'We only flag dangerous species: the absence of this warning does not mean a mushroom is edible.')}</small></div></div>`;
   if (f) {
     h += it ? `<p><i>${esc(r[0])}</i> è un fungo della famiglia ${esc(r[2])} (ordine ${esc(r[3])}), nel gruppo «${esc(t('GF')[r[4]].toLowerCase())}».</p><p>Nel database mondiale della biodiversità GBIF ha ${fmt(r[5])} segnalazioni in Sicilia${r[6] > r[5] ? `, su ${fmt(r[6])} nell’Italia meridionale considerata da Micelio` : ''}.</p>`
             : `<p><i>${esc(r[0])}</i> is a fungus of the family ${esc(r[2])} (order ${esc(r[3])}), in the group “${esc(t('GF')[r[4]].toLowerCase())}”.</p><p>The GBIF global biodiversity database holds ${fmt(r[5])} records of it in Sicily${r[6] > r[5] ? `, out of ${fmt(r[6])} in the southern Italy covered by Micelio` : ''}.</p>`;
