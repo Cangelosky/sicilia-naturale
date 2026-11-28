@@ -2391,7 +2391,9 @@ const PAROLEF = { grano: /grano|frumento|triticum/i, olio: /oliv/i, vino: /vitig
 // foto di una varietà: da Wikipedia solo se la pagina parla davvero di quella pianta
 function fotoVarieta(fk, v) {
   const tit = [v.n.split(',')[0], v.n.split(',')[0] + (fk === 'vino' ? ' (vitigno)' : fk === 'olio' ? ' (olivo)' : ' (grano)')];
-  return (async () => { for (const t of tit) { const w = await wikiVoce(t); if (w && w.thumbnail && PAROLEF[fk].test(w.extract || '') && !NOFOTO.test(w.thumbnail.source)) return w; } return null; })();
+  const buona = w => w && w.thumbnail && PAROLEF[fk].test(w.extract || '') && !NOFOTO.test(w.thumbnail.source);
+  return (async () => { for (const t of tit) { const w = await wikiVoce(t); if (buona(w)) return w; }
+    const w = await wikiCerca(v.n.split(',')[0].replace(/’/g, "'")).catch(() => null); return buona(w) ? w : null; })();
 }
 function sapFiliera(fk) {
   Promise.all([FILD(), SAPD()]).then(([F]) => {
@@ -3726,9 +3728,9 @@ function consigliGiorno(CM, n) {
   const best = [...CM].sort((a, b) => g(b).e.v - g(a).e.v)[0];
   const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn'].includes(x.t) && x.bb && dist2(centro(x), best.c.slice(1, 3)) < 0.55 ** 2).sort((a, b) => b[1].ha - a[1].ha);
   if (parchi.length) { const [k, z] = parchi[n % Math.min(3, parchi.length)], m = meteoDi(best);
-    out.push({ t: 'natura', ic: 'mountain', tit: 'Camminare', nome: z.n, xy: centro(z), sub: `Il cielo migliore della giornata è intorno a ${best.c[0]}: ${wxParola(m.c)}, ${m.tn}–${m.tx}°, vento ${m.w} km/h.`, r: '#/zona/' + nomeUrl(k) }); }
+    out.push({ t: 'natura', ic: 'mountain', tit: 'Camminare', nome: z.n, xy: centro(z), sub: `Il cielo migliore della giornata è intorno ${/^[AEIOU]/.test(best.c[0]) ? 'ad' : 'a'} ${best.c[0]}: ${wxParola(m.c)}, ${m.tn}–${m.tx}°, vento ${m.w} km/h.`, r: '#/zona/' + nomeUrl(k) }); }
   const fb = [...CM].sort((a, b) => g(b).f.est - g(a).f.est)[0];
-  if (g(fb).f.est >= 4.5) out.push({ t: 'natura', ic: 'mushroom', tit: 'Funghi', nome: 'Boschi intorno a ' + fb.c[0], xy: fb.c.slice(1, 3), sub: `Stima per i funghi: ${g(fb).f.parola}, dopo le piogge delle ultime settimane. Ricorda: la raccolta ha regole e i funghi vanno sempre fatti controllare.`, r: '#/natura/funghi' });
+  if (g(fb).f.est >= 4.5) out.push({ t: 'natura', ic: 'mushroom', tit: 'Funghi', nome: 'Boschi intorno ' + (/^[AEIOU]/.test(fb.c[0]) ? 'ad ' : 'a ') + fb.c[0], xy: fb.c.slice(1, 3), sub: `Stima per i funghi: ${g(fb).f.parola}, dopo le piogge delle ultime settimane. Ricorda: la raccolta ha regole e i funghi vanno sempre fatti controllare.`, r: '#/natura/funghi' });
   const ev = ((OG.sg || {}).eventi || []).filter(e => e.d.includes(d) && e.xy).slice(0, 2);
   for (const e of ev) { const m = meteoDi(vicino(e.xy)); out.push({ t: 'sapori', ic: 'calendar-event', tit: e.t === 'sagra' ? 'Sagra' : 'Festa', nome: e.n, xy: e.xy, sub: `${e.c}. ${e.desc} Cielo: ${wxParola(m.c)}, ${m.tx}°.`, cev: e.id }); }
   const st = inEvidenza().filter(([v]) => v.paesi && SAP.D.paesi[v.paesi[0]]).slice(0, 4);
