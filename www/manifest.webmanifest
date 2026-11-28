@@ -1,0 +1,16 @@
+{
+  "name": "Sicilia Naturale",
+  "short_name": "Sicilia Naturale",
+  "description": "La natura e i sapori della Sicilia: parchi, sentieri, specie, dolci, prodotti e feste, paese per paese.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F6F1E8",
+  "theme_color": "#1F4E3D",
+  "icons": [
+    { "src": "icona-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icona-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icona-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
