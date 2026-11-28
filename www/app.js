@@ -2804,7 +2804,8 @@ const itFoto = it => it.f ? ` style="background-image:url('foto/${it.f}.webp')"`
 const itMesi = it => it.m.map(x => MESIL[x - 1]).join(', ');
 function itMappa(it, w, big) {
   const D = SAP.D, P = it.p.filter(p => D.paesi[p]);
-  return mappaSicilia({ w, nomi: !big ? false : true, punti: [], extra: (X, Y) => `<polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>` + P.map((p, i) => { const x = +X(D.paesi[p].c[0]), y = +Y(D.paesi[p].c[1]);
+  const st = STRADE[it.k];
+  return mappaSicilia({ w, nomi: !big ? false : true, punti: [], extra: (X, Y) => (st ? `<polyline class="itl strada" points="${st.c.map(q => (+X(q[0])).toFixed(1) + ',' + (+Y(q[1])).toFixed(1)).join(' ')}"/>` : `<polyline class="itl" points="${P.map(p => X(D.paesi[p].c[0]) + ',' + Y(D.paesi[p].c[1])).join(' ')}"/>`) + P.map((p, i) => { const x = +X(D.paesi[p].c[0]), y = +Y(D.paesi[p].c[1]);
     return `<g class="itp" data-itp="${i}"><circle cx="${x}" cy="${y}" r="${big ? 11 : 7}"/>${big ? `<text x="${x}" y="${y + 4}" text-anchor="middle">${i + 1}</text>` : ''}</g>`; }).join('') });
 }
 function itZoom(it) { // la mappa del dettaglio ritagliata intorno al percorso
@@ -2857,13 +2858,15 @@ async function sapItinerario(k) {
     <button class="lk itb" data-itall="1">‹ Tutti gli itinerari</button>
     <section class="ith itdh"><div class="ph"${itFoto(it)}></div><div class="ith-t"><p class="sub">Itinerario del gusto · proposta</p><h2>${esc(it.n)}</h2><p class="lead">${esc(it.s)}.</p><p>${esc(it.t)}</p>
       <div class="itn">${[[P.length, 'tappe'], ['~' + itKm(it), 'km'], [it.p.length > 5 ? '2–3' : '1–2', 'giorni']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div>
-      <p class="quando">${ico('calendar', 'xs')} Il periodo migliore: <b>${itMesi(it)}</b></p></div></section>
+      <p class="quando">${ico('calendar', 'xs')} Il periodo migliore: <b>${itMesi(it)}</b>${STRADE[it.k] ? ` · in auto circa ${STRADE[it.k].km} km, ${Math.floor(STRADE[it.k].h)} ore e ${Math.round(STRADE[it.k].h % 1 * 60)} minuti di guida` : ''}</p>
+      <p><a class="vai8" href="${mapsItin(it)}" target="_blank" rel="noopener">${ico('route', 'xs')} Apri il percorso in Google Maps</a></p></div></section>
     <div class="itb2"><div class="itm"><div class="cmap">${itMappa(it, 560, true)}</div><p class="note">Distanze in linea d'aria aumentate di un terzo: sono indicative.</p></div>
       <ol class="itt">${P.map(tappa).join('')}</ol></div>
     <p class="avv6">${ico('alert-triangle', 'xs')} Proposta costruita dai dati: tappe, produttori e sagre non sono ancora stati visitati. Prima di partire verifica orari e date.</p>
     <section class="filg"><h3>Altri itinerari</h3><div class="itgr">${ITIN.filter(x => x.k !== k).slice(0, 3).map(x => `<button class="it6" data-itk="${x.k}"><span class="ph"${itFoto(x)}></span><span class="tx"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></span></button>`).join('')}</div></section>
     ${COPY()}</div>`;
   itZoom(it); sapFoto($('cat'));
+  if (STRADE[it.k] === undefined) stradaItin(it).then(st => { if (st && SAP.itk === k) sapItinerario(k); });
   for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
   const L = $('cat').querySelector('.itt'), M = $('cat').querySelector('.itm');
   const acc = i => { $('cat').querySelectorAll('.itd .hl').forEach(x => x.classList.remove('hl')); if (i != null) $('cat').querySelectorAll(`.itd [data-itp="${i}"]`).forEach(x => x.classList.add('hl')); };
@@ -3713,7 +3716,9 @@ if (!isApp) {
   window.addEventListener('popstate', () => { if (!location.hash.startsWith('#it=')) applicaRotta(location.hash); });
   // tasto "Condividi" in ogni scheda: sul telefono apre la condivisione (WhatsApp…), sul computer copia il link
   new MutationObserver(() => { const h = $('sh'), x = h.querySelector('.close'); if (!x || h.querySelector('.condividi')) return;
-    x.insertAdjacentHTML('beforebegin', `<button class="condividi" aria-label="Condividi questa scheda" title="Condividi">${ico('share')}</button>`); }).observe($('sh'), { childList: true });
+    x.insertAdjacentHTML('beforebegin', `<button class="condividi" aria-label="Condividi questa scheda" title="Condividi">${ico('share')}</button>`);
+    const xy = puntoScheda(); if (xy) x.insertAdjacentHTML('beforebegin', `<a class="arriva8" href="https://www.google.com/maps/dir/?api=1&destination=${xy[1].toFixed(5)},${xy[0].toFixed(5)}" target="_blank" rel="noopener">${ico('route', 'xs')} Come arrivare</a>`);
+    if (history.length > 1) x.insertAdjacentHTML('beforebegin', `<button class="indietro8" onclick="history.back()" aria-label="Torna indietro">‹ Indietro</button>`); }).observe($('sh'), { childList: true });
   $('sh').addEventListener('click', async e => { if (!e.target.closest('.condividi')) return; e.stopPropagation();
     const r = rottaAttuale(); const url = location.origin + location.pathname + (r && r !== '#/' ? r : ''), tit = document.title;
     if (navigator.share && matchMedia('(pointer:coarse)').matches) { try { await navigator.share({ title: tit, url }); } catch (er) {} return; }
@@ -3780,7 +3785,7 @@ async function oggiSicilia() {
       let py = su ? cy - 30 : cy + 17; if (urta(py)) py = py > cy ? cy - 30 : cy + 17; messi.push([px, py, wd]);
       return `<g class="wxp"><circle class="pt" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.6"/><rect x="${(px - wd / 2).toFixed(1)}" y="${(py - 12).toFixed(1)}" width="${wd.toFixed(1)}" height="24" rx="12"/>${icoXY(wxIco(m.c), px - wd / 2 + 15, py, 15)}<text x="${(px - wd / 2 + 27).toFixed(1)}" y="${(py + 4.5).toFixed(1)}"><tspan class="tp">${m.tx}°</tspan> ${x.c[0]}</text></g>`; }).join('') + out.map((o, i) => `<g class="ogp t-${o.t}" data-og="${i}"><circle cx="${X(o.xy[0])}" cy="${Y(o.xy[1])}" r="11"/><text x="${X(o.xy[0])}" y="${(+Y(o.xy[1]) + 4).toFixed(1)}" text-anchor="middle">${i + 1}</text></g>`).join(''); };
     box.innerHTML = `<div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div>
-      <div class="ogd" role="tablist">${[0, 1, 2, 3].map(i => `<button role="tab" data-ogn="${i}" class="${i === n ? 'on' : ''}" aria-selected="${i === n}"><b>${nomeGiorno(i)}</b><small>${giorno(giornoN(i), { day: 'numeric', month: 'short' })}</small></button>`).join('')}</div>
+      <div class="ogd" role="tablist">${[0, 1, 2, 3].map(i => `<button role="tab" data-ogn="${i}" class="${i === n ? 'on' : ''}" aria-selected="${i === n}"><b>${nomeGiorno(i)}</b><small>${giorno(giornoN(i), { day: 'numeric', month: 'short' })}</small></button>`).join('')}<button class="cal" data-ogr="#/sapori/calendario">${ico('calendar', 'xs')} <b>Calendario</b><small>sagre e feste</small></button></div>
       <div class="ogb"><div class="ogm">${mappaSicilia({ w: MW, nomi: false, punti: [], extra })}</div>
         <div class="ogl">${out.map((o, i) => `<button class="ogc t-${o.t}" data-og="${i}" ${o.r ? `data-ogr="${o.r}"` : ''}${o.cev ? ` data-ogev="${o.cev}"` : ''} style="--tc:${TEMA[o.t][1]}"><span class="n">${i + 1}</span>${o.f ? `<span class="ph" style="background-image:url('${o.f}')"></span>` : o.wk ? `<span class="ph" data-wk="${esc(o.wk)}"></span>` : o.vk ? `<span class="ph" data-vk="${o.vk}"></span>` : `<span class="ic">${ico(o.ic)}</span>`}<span class="tx"><small>${o.tit}</small><b>${esc(o.nome)}</b><span>${esc(o.sub)}</span></span></button>`).join('')}
           <button class="ogmet" data-ogr="#/natura/meteo">${ico('cloud')} <span><b>Il meteo di tutta la Sicilia</b><small>Comune per comune, per ogni sezione, fino a 14 giorni</small></span><span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div></div>
@@ -4272,4 +4277,35 @@ document.addEventListener('keydown', e => { const inp = e.target; if (!inp.match
   else if (e.key === 'Escape') box.classList.remove('on'); }, true);
 document.addEventListener('mousedown', e => { const b = e.target.closest('[data-sugr]'); if (b) { e.preventDefault(); return; } if (!e.target.closest('.sug8, #nq, #hq')) document.querySelectorAll('.sug8.on').forEach(x => x.classList.remove('on')); }, true);
 document.addEventListener('click', e => { const b = e.target.closest('[data-sugr]'); if (!b) return; e.preventDefault(); e.stopPropagation(); b.closest('.sug8').classList.remove('on'); vaiRotta(b.dataset.sugr); }, true);
+
+/* ---------- dove si trova la scheda aperta (per «Come arrivare») */
+function puntoScheda() {
+  const c = String(cur || '');
+  if (typeof S !== 'undefined' && S[c]) return centro(S[c]);
+  if (c.startsWith('SAP:') && SAP.D) { const k = c.slice(4), D = SAP.D, v = D.voci[k] || D.produttori[k];
+    if (D.paesi[k]) return D.paesi[k].c; if (v && v.paese && D.paesi[v.paese]) return v.xy || D.paesi[v.paese].c; if (v && v.paesi && D.paesi[v.paesi[0]]) return D.paesi[v.paesi[0]].c; }
+  return null;
+}
+/* ---------- briciole di pane: dove sono e come torno indietro */
+const BCN = { natura: 'Natura', sapori: 'Sapori', mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari', scuole: 'Scuole e studiosi', didattica: 'Scuole e ragazzi', bambini: 'Bambini', viaggio: 'Organizza il viaggio', glossario: 'Glossario', metodo: 'Metodo e fonti', grano: 'Grano', olio: 'Ulivo', vino: 'Vitigno', formaggio: 'Latte', mare: 'Mare', arte: 'Arte', storia: 'Storia' };
+function briciole() {
+  if (isApp) return; const c = $('cat'); if (!c.classList.contains('on') || c.querySelector('.bc8')) return;
+  const h = location.hash.replace(/^#\/?/, ''); if (!h) return; const pz = h.split('/').filter(Boolean); if (!pz.length) return;
+  let acc = '#', parti = [`<a href="#/">Home</a>`];
+  pz.forEach((x, i) => { acc += '/' + x; const it = pz[i - 1] === 'itinerari' && ITIN.find(y => y.k === x), nome = (it && it.n) || (i && pz[i - 1] === 'scheda' ? null : BCN[x]) || (i === pz.length - 1 ? (document.title.split(' · ')[0] || decodeURIComponent(x)) : null); if (!nome || x === 'scheda') return; parti.push(i === pz.length - 1 ? `<b>${esc(nome)}</b>` : `<a href="${acc}">${esc(nome)}</a>`); });
+  const dove = c.querySelector('.in, .sh5') || c.firstElementChild; if (!dove) return;
+  dove.insertAdjacentHTML('afterbegin', `<nav class="bc8" aria-label="Sei qui">${history.length > 1 ? '<button onclick="history.back()">‹ Indietro</button>' : ''}<span>${parti.join('<i>›</i>')}</span></nav>`);
+}
+new MutationObserver(() => setTimeout(briciole, 60)).observe($('cat'), { attributes: true, attributeFilter: ['data-v'], childList: true });
+document.addEventListener('click', e => { const a = e.target.closest('.bc8 a'); if (!a) return; e.preventDefault(); e.stopPropagation(); vaiRotta(a.getAttribute('href')); }, true);
+/* ---------- percorsi degli itinerari sulle strade vere (OSRM, OpenStreetMap) */
+const STRADE = {};
+async function stradaItin(it) {
+  if (STRADE[it.k] !== undefined) return STRADE[it.k]; STRADE[it.k] = null;
+  const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean).map(x => x.c[0].toFixed(4) + ',' + x.c[1].toFixed(4)).join(';');
+  try { const j = await fetch(`https://router.project-osrm.org/route/v1/driving/${P}?overview=simplified&geometries=geojson`).then(r => r.json());
+    if (j.routes && j.routes[0]) STRADE[it.k] = { c: j.routes[0].geometry.coordinates, km: Math.round(j.routes[0].distance / 1000), h: j.routes[0].duration / 3600 }; } catch (e) {}
+  return STRADE[it.k];
+}
+const mapsItin = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean).map(x => x.c[1].toFixed(5) + ',' + x.c[0].toFixed(5)); return `https://www.google.com/maps/dir/?api=1&origin=${P[0]}&destination=${P[P.length - 1]}${P.length > 2 ? '&waypoints=' + P.slice(1, -1).join('%7C') : ''}&travelmode=driving`; };
 }
