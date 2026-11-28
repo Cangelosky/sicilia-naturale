@@ -938,17 +938,18 @@ body .sh5 h1,body .sh5 h2,body .sh5 .firma5{font-family:'Newsreader',Georgia,ser
 .tes5g{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
 /* a piramide: Natura e Sapori sopra, al centro; Mare, Arte e Storia sotto */
 .tes5g .sz{grid-column:span 4}.tes5g .sz:nth-child(1){grid-column:3/7}.tes5g .sz:nth-child(2){grid-column:7/11}
-.sz{position:relative;height:72px;border:2px solid rgba(255,255,255,.28);border-radius:14px;overflow:hidden;padding:0;background:#2b241d;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding-bottom:9px;transition:transform .25s,border-color .25s,box-shadow .25s;font:inherit}
-.sz .szf{position:absolute;inset:0;background:var(--tc) center/cover;opacity:.75;transition:opacity .25s}
-.sz::before{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,10,5,.85),rgba(15,10,5,.15) 70%)}
+.sz{position:relative;height:76px;border:2px solid rgba(255,255,255,.5);border-radius:14px;overflow:hidden;padding:0;background:#FBF5E8;color:#26231F;cursor:pointer;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;transition:transform .25s,border-color .25s,box-shadow .25s;font:inherit}
+.sz .szf{position:relative;flex:1;width:100%;background:#FBF5E8 center/cover;transition:transform .35s}
+.sz:hover .szf{transform:scale(1.05)}
+.sz::before{content:none}
 .sz svg,.sz .ico{position:relative;width:20px;height:20px;stroke:#fff}
-.sz .szn{position:relative;font:600 13px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em}
+.sz .szn{position:relative;z-index:1;width:100%;font:600 12.5px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em;background:#fff;color:#26231F;padding:5px 2px 6px;text-align:center}
 .sz em{position:absolute;top:5px;right:5px;font:600 8.5px/1 'Bricolage Grotesque',sans-serif;font-style:normal;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.85);color:#26231F;border-radius:6px;padding:2px 4px}
-.sz.presto .szf{filter:saturate(.55)}
-.sz .szb{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.18)}
+.sz.presto .szf{filter:saturate(.6) brightness(.97)}
+.sz .szb{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:1;background:rgba(255,255,255,.18)}
 .sz .szb i{display:block;height:100%;width:0;background:var(--tc)}
 .sz.on{border-color:#fff;transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 2px var(--tc)}
-.sz.on .szf{opacity:1}
+.sz.on .szn{background:var(--tc);color:#fff}
 .sz.on .szb i{animation:szp 6.5s linear forwards}
 @keyframes szp{from{width:0}to{width:100%}}
 @media (prefers-reduced-motion:reduce){.sz.on .szb i{animation:none;width:100%}}
@@ -1278,13 +1279,14 @@ abbr.gl:focus-visible{outline:2px solid #E8761A;border-radius:3px}
   .sl5 .entra{align-self:flex-end;gap:8px;padding:4px 4px 4px 16px;font-size:15px}.sl5 .entra .fr{width:32px;height:32px}
   .sl5 .tes5{display:block;position:absolute;z-index:4;left:clamp(22px,4vw,48px);bottom:var(--m,48px);width:min(600px,50vw);padding:0}
   .tes5t{text-align:center;margin:0 0 12px;font:500 15px/1.3 'Bricolage Grotesque',sans-serif;color:rgba(255,255,255,.85)}.tes5t b{color:#fff;font-weight:600}
-  .tes5g{gap:9px}.sz{height:66px}.sz .szn{font-size:13.5px}.sz svg,.sz .ico{width:20px;height:20px}
+  .tes5g{gap:9px;grid-template-columns:repeat(5,1fr)}.tes5g .sz{grid-column:auto!important}.sz{height:auto}.sz .szf{flex:none;aspect-ratio:20/9}.sz .szn{font-size:13px}.sz svg,.sz .ico{width:20px;height:20px}
   .sl5 h1,.ap5:not(.sl5) h1{font-size:clamp(40px,4.3vw,64px)!important;margin-bottom:12px}
   .sl5 .apt .lead,.ap5:not(.sl5) .lead{font-size:17px;margin-bottom:14px}
   .ap5:not(.sl5) .apc{margin-top:10px}
   /* due metà: testo al centro della metà sinistra, mappa al centro della destra; stesso spazio ai bordi e in mezzo */
-  .sh5 .ap5:not(.sl5){padding:48px 0!important;align-items:center;justify-content:space-evenly;gap:0}
-  .ap5:not(.sl5) .apt{flex:none;width:min(544px,38vw);max-width:none}
+  .sh5 .ap5:not(.sl5){--g:clamp(40px,3.5vw,64px);padding:48px var(--g)!important;align-items:center;justify-content:center;gap:var(--g)}
+  .ap5:not(.sl5) .apt{flex:1 1 auto;width:auto;max-width:none}
+  .ap5:not(.sl5) .lead{max-width:60ch}
   .ap5:not(.sl5) .apm{width:min(544px,38vw);align-self:center;margin:0;flex:none;right:auto;top:auto}
   .tes5.fl{display:block;position:static;margin-top:30px;padding:0}
   .tes5.fl .sz.on .szb i{animation:none;width:100%}

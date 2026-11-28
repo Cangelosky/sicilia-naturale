@@ -3092,7 +3092,7 @@ async function genHome(fo) {
           ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
       <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
       <div class="tes5"><p class="tes5t">Cinque sezioni, un solo patrimonio. <b>Tocca per scoprirle.</b></p>
-        <div class="tes5g" role="tablist" aria-label="Le cinque sezioni">${sl.map(([k, x], i) => `<button class="sz${i === 0 ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-go="${i}" data-k="${k}" role="tab" aria-selected="${i === 0}" style="--tc:${TEMA[k][1]}"><span class="szf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : `data-gwk="${esc(x.wk)}"`}></span>${ico(SEZI[k])}<span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>
+        <div class="tes5g" role="tablist" aria-label="Le cinque sezioni">${sl.map(([k, x], i) => `<button class="sz${i === 0 ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-go="${i}" data-k="${k}" role="tab" aria-selected="${i === 0}" style="--tc:${TEMA[k][1]}"><span class="szf" style="background-image:url('illustrazioni/${k}.svg')"></span><span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>
     </section>
     <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
       <div class="vie5">
@@ -3130,7 +3130,7 @@ let SLT = null;
 /* telefono: le pagine d'inizio delle sezioni composte come la home. La foto è una scheda con lo stesso margine sopra e sotto,
    in fondo al testo le cinque sezioni a piramide (quella in cui sei è accesa); la mappa ridotta scende sotto la foto. */
 function tessereSez(att) {
-  return `<div class="tes5 fl"><p class="tes5t">Cinque sezioni, un solo patrimonio.</p><div class="tes5g">${Object.entries(SEZT).map(([k, x]) => `<button class="sz${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><span class="szf" ${x.f ? `style="background-image:url('foto/${x.f}.webp')"` : ''}></span>${ico(SEZI[k])}<span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>`;
+  return `<div class="tes5 fl"><p class="tes5t">Cinque sezioni, un solo patrimonio.</p><div class="tes5g">${Object.entries(SEZT).map(([k, x]) => `<button class="sz${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><span class="szf" style="background-image:url('illustrazioni/${k}.svg')"></span><span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>`;
 }
 function componiAp5() {
   if (isApp) return; const sec = $('cat').querySelector('.ap5:not(.sl5)'), apt = sec && sec.querySelector('.apt'); if (!apt) return;
