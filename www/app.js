@@ -2226,7 +2226,13 @@ function sapNav() {
     const v = b.dataset.v, [n, ic] = L ? L[v] : [t({ mappa: 'vMappa', specie: 'vSpecie', escursioni: 'vEsc', meteo: 'vMeteo', registra: 'vReg' }[v]), b.dataset.ic];
     b.querySelector('span').textContent = n; const s = b.querySelector('svg'); if (s) s.remove(); b.insertAdjacentHTML('afterbegin', ico(ic));
   }
+  // nel sito, in Sapori, il posto di «Registra» diventa «Meteo» (meteo dei comuni per la sezione Sapori)
+  const r = document.querySelector('#sez [data-v="registra"]'); if (r && !isApp) { r.classList.toggle('met9', !!SAP.on); if (SAP.on) { r.querySelector('span').textContent = 'Meteo'; const s2 = r.querySelector('svg'); if (s2) s2.remove(); r.insertAdjacentHTML('afterbegin', ico('cloud')); } }
 }
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('#sez .met9'); if (!b || !SAP.on || isApp) return;
+  e.preventDefault(); e.stopPropagation(); MC.sez = 'sapori'; vaiRotta('#/natura/meteo');
+}, true);
 if (!isApp) {
   // il cambio di tema ora è nel filtro dentro la foto d'apertura (temi)
   $('wrap').querySelector('.top').insertAdjacentHTML('beforeend', '<div class="sapf" id="sapf"></div>');
