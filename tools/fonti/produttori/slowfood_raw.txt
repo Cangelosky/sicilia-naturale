@@ -1,0 +1,230 @@
+# presidio | azienda | titolare | luogo | sito
+suino-nero-dei-nebrodi|Due Fiumare|Tindaro Giacomo Agostino Ninone|Mirto (ME)|
+suino-nero-dei-nebrodi|Uliana Borrello||Sinagra (ME)|
+suino-nero-dei-nebrodi|Fattoria Borrello|Anna Laura Borrello|Sinagra (ME)|www.fattoriaborello.it
+suino-nero-dei-nebrodi|Fattoria San Pio|Armando Virzì|Naso (ME)|
+suino-nero-dei-nebrodi|Il Lochetto|Sebastiano Vanadia Bartolo|Galati Mamertino (ME)|www.illochetto.it
+suino-nero-dei-nebrodi|Oro Nero dei Nebrodi|Leo Salvatore Corrao|Longi (ME)|
+suino-nero-dei-nebrodi|Testalonganero|Mario Luciano Carcione|Galati Mamertino (ME)|
+lenticchia-nera-delle-colline-ennesi|Turco Silvia Maria||Enna (EN)|
+lenticchia-nera-delle-colline-ennesi|Contrada Risicata|Sergio Giuseppe Ioppolo|Agira (EN)|www.risicata.it
+lenticchia-nera-delle-colline-ennesi|Rossi|Angelo Calì|Leonforte (EN)|www.leonforteagricola.it
+lenticchia-nera-delle-colline-ennesi|Sangiovannello|Carla Maria Loredana La Placa|Villarosa (EN)|www.sangiovannello.com
+lenticchia-nera-delle-colline-ennesi|Luigi Rampello||Enna (EN)|
+grani-gentili-di-sicilia|Contrada Risicata|Sergio Ioppolo|Agira (EN)|
+grani-gentili-di-sicilia|Feudo Chibò e Barbarigo|Alessandra Gioia|Petralia Sottana (PA)|
+grani-gentili-di-sicilia|Cooperativa Bioviva|Enzo Lo Presti|Catania (CT)|
+grani-gentili-di-sicilia|Terra di Santo Stefano|Antonino Crupi|Messina (ME)|
+grani-gentili-di-sicilia|Gaetano Siragusa||Alia (PA)|
+grani-gentili-di-sicilia|Francesca Simonte||Paceco (TP)|
+oliva-zaituna|Agricola Oliva|Francesca Oliva|Solarino (SR)|
+oliva-zaituna|Frantoio Mozzicato||Canicattini Bagni (SR)|
+oliva-zaituna|Tenuta Cavasecca|Dario Ficara|Noto (SR)|
+oliva-zaituna|Azienda agricola La Pira||Canicattini Bagni (SR)|
+limone-della-piana-di-bagheria|Angela Coletta||Bagheria (PA)|
+limone-della-piana-di-bagheria|Nicolò Fricano||Bagheria (PA)|
+limone-della-piana-di-bagheria|Giuseppe Fricano||Bagheria (PA)|
+limone-della-piana-di-bagheria|Paola Tedesco||Santa Flavia (PA)|
+limone-della-piana-di-bagheria|Antonio Francesco Fricano||Bagheria (PA)|
+limone-della-piana-di-bagheria|Vincenzo Lo Meo||Bagheria (PA)|
+limone-della-piana-di-bagheria|Coop Siciliana Agrumi Lavorati||Bagheria (PA)|
+limone-della-piana-di-bagheria|Vincenzo Mineo||Bagheria (PA)|
+limone-della-piana-di-bagheria|Domenico Rotino||Bagheria (PA)|
+limone-della-piana-di-bagheria|Marco Gagliano||Bagheria (PA)|
+ape-nera-sicula|Apicoltura Carlo Amodeo||Termini Imerese (PA)|
+ape-nera-sicula|Apicoltura Colline del Fitalia|Giuseppe Scurria|San Salvatore di Fitalia (ME)|
+ape-nera-sicula|Bergi|Anna Sottile|Castelbuono (PA)|
+ape-nera-sicula|Salvatore Colicchia||Furnari (ME)|
+ape-nera-sicula|Emanumiele|Giacomo Emanuele|Galati Mamertino (ME)|
+ape-nera-sicula|Apicoltura La Mantia|Alexia Zucchetto|Palermo (PA)|
+ape-nera-sicula|Nettare di Sicilia|Mario Cirrito|Caltavuturo (PA)|
+ape-nera-sicula|Sergio Sapienza||Altofonte (PA)|
+ape-nera-sicula|Susanna Spisso||Termini Imerese (PA)|
+ape-nera-sicula|Giulio Vitale||Mazara del Vallo (TP)|
+maiorchino|Agricola Liarosa Salvatore|Carmela Implà|Santa Lucia del Mela (ME)|
+maiorchino|Il Maiorchino|Domenico Isgrò|Furnari (ME)|
+maiorchino|Mario Mirabile||Santa Lucia del Mela (ME)|
+maiorchino|La Quercia|Giuseppe Bella|Santa Lucia del Mela (ME)|
+maiorchino|U Murgarellu||Novara di Sicilia (ME)|
+patate-di-montagna-dei-nebrodi|Antonio Bongiovanni||Raccuja (ME)|
+patate-di-montagna-dei-nebrodi|Fattoria Borrello|Annalaura Borrello|Raccuja (ME)|
+patate-di-montagna-dei-nebrodi|Salvatore Cugno||Ucria (ME)|
+patate-di-montagna-dei-nebrodi|Domenica Faranda||Ucria (ME)|
+patate-di-montagna-dei-nebrodi|Fratelli Gullotti||Floresta (ME)|
+patate-di-montagna-dei-nebrodi|Donatella La Mancusa||Raccuja (ME)|
+patate-di-montagna-dei-nebrodi|Stefano Lembo||Ucria (ME)|
+patate-di-montagna-dei-nebrodi|Giuseppe Liuzzo||Floresta (ME)|
+patate-di-montagna-dei-nebrodi|Giuseppe Marzullo||Floresta (ME)|
+patate-di-montagna-dei-nebrodi|Maria Merendino||Raccuja (ME)|
+patate-di-montagna-dei-nebrodi|Tiziana Trovato||Ucria (ME)|
+pasta-reale-di-tortorici|Pasticceria Dolce Incontro|Lidia Calà Scarcione|Tortorici (ME)|
+pasta-reale-di-tortorici|Pasticceria La Bottega reale Ciancio|Giuseppe Ciancio|Tortorici (ME)|
+torrone-di-caltanissetta|Pasticceria Hollywood|Salvatore Miraglia|Caltanissetta (CL)|
+torrone-di-caltanissetta|Tentazioni e Sapori|Davide Scancarello|Caltanissetta (CL)|
+torrone-di-caltanissetta|Torronificio Gianfranco Nitro||Caltanissetta (CL)|
+miele-di-timo-ibleo|Almo miele|Paola Noto|Monterosso Almo (RG)|
+miele-di-timo-ibleo|Apicoltura M. Oliva|Francesca Calafiore|Solarino (SR)|
+miele-di-timo-ibleo|Apicoltura Giuseppina Mosca||Sortino (SR)|
+miele-di-timo-ibleo|Az. Agr. Adele Leone||Noto (SR)|
+miele-di-timo-ibleo|Az. Agr. Sebastiano Milluzzo||Canicattini Bagni (SR)|
+miele-di-timo-ibleo|Bio Bio|Antonino Coco|San Giovanni la Punta (CT)|mielibiobio.it
+miele-di-timo-ibleo|Davide Samperi||Acireale (CT)|
+miele-di-timo-ibleo|Andrea Scrofani||Ragusa (RG)|
+miele-di-timo-ibleo|Xiridia Miele|Rosa Sutera|Floridia (SR)|
+cappero-di-salina|Salvatore D'Amico||Leni (ME)|www.cantinedamico.it
+cappero-di-salina|Sapori Eoliani|Roberto Rossello e Maurizia De Lorenzo|Malfa (ME)|
+cappero-di-salina|Daniela Virgona||Malfa (ME)|
+melone-cartucciaru-di-paceco|Gaspare Fazio||Paceco (TP)|
+melone-cartucciaru-di-paceco|Salvatore Fazio||Paceco (TP)|
+melone-cartucciaru-di-paceco|Francesca Simonte||Paceco (TP)|
+razza-modicana|Giovanni Floridia (c.da Scorsone Zucchero)||Ispica (RG)|
+razza-modicana|Liborio Mangiapane (c.da Casalicchio)||Cammarata (AG)|
+pesca-tradizionale-dello-stretto-di-messina|Cooperativa I Mancuso||Messina (ME)|
+pesca-tradizionale-dello-stretto-di-messina|Cooperativa Pesca Mare Vivo||Messina (ME)|
+pesca-tradizionale-dello-stretto-di-messina|Cooperativa A Fulua||Messina (ME)|
+pesca-tradizionale-dello-stretto-di-messina|Impresa Pesca Fortunato Polistena||Messina (ME)|
+carciofo-di-niscemi|Az. Agr. Profeta||Niscemi (CL)|
+carciofo-di-niscemi|Francesco Perticone||Niscemi (CL)|
+fagioli-di-carrazzo-dei-nebrodi|Calogero Franchina||Galati Mamertino (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Fattoria Borrello|Anna Laura Borrello|Raccuja (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Fattoria Fabio|Francesco Fabio|Galati Mamertino (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Forte|Fabio Borrello|Sinagra (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Il Lochetto|Bartolo Sebastiano Vanadia|San Salvatore di Fitalia (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Masseria Casaccia|Stefano Lembo|Ucria (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Nunziata Angelina Maria Messina||Ficarra (ME)|
+fagioli-di-carrazzo-dei-nebrodi|La Paisanella|Sebastiano Agostino Ninone|Mirto (ME)|
+fagioli-di-carrazzo-dei-nebrodi|Oro Nero dei Nebrodi|Leo Salvatore Corrao|Longi (ME)|
+pomodoro-buttiglieddru-di-licata|Domenico Cavaleri||Licata (AG)|
+pomodoro-buttiglieddru-di-licata|Tommaso Di Teresa||Licata (AG)|
+pomodoro-buttiglieddru-di-licata|Vincenzo Graci||Licata (AG)|
+pomodoro-buttiglieddru-di-licata|Rosita Gumina||Palma di Montechiaro (AG)|
+pomodoro-buttiglieddru-di-licata|Felice Russotto||Licata (AG)|
+pomodoro-buttiglieddru-di-licata|Angela Zito||Campobello di Licata (AG)|
+pomodoro-pizzutello-delle-valli-ericine|Salvatore Fazio||Paceco (TP)|
+pomodoro-pizzutello-delle-valli-ericine|Agriturismo Antico Baglio|Rosa Maria Ingardia|Paceco (TP)|www.agriturismoanticobaglio.it
+pomodoro-pizzutello-delle-valli-ericine|Francesca Simonte||Paceco (TP)|
+pomodoro-pizzutello-delle-valli-ericine|Orto di Mimì|Girolamo Sugamele|Erice (TP)|
+salsiccia-di-palazzolo-acreide|Salvatore Corsino||Palazzolo Acreide (SR)|
+salsiccia-di-palazzolo-acreide|Domus Hiblaea|Paolo Pirruccio|Palazzolo Acreide (SR)|
+salsiccia-di-palazzolo-acreide|Fattoria Giannavì|Amedeo e Calogero Maltese|Palazzolo Acreide (SR)|
+salsiccia-di-palazzolo-acreide|Macelleria Garfì|Paolo Garfì|Palazzolo Acreide (SR)|
+fava-di-ustica|Azienda Bioagrituristica Pagliuzzo|Giuseppe Mancuso|Ustica (PA)|www.agriturismopagliuzzo.it
+fava-di-ustica|Rosaria Lombino||Ustica (PA)|
+fava-di-ustica|U Scarpuni|Giovanni Palmisano|Ustica (PA)|
+peperone-di-polizzi-generosa|Agriturismo Cuca|Maria Concetta Muratore|Polizzi Generosa (PA)|
+peperone-di-polizzi-generosa|Roberta Billitteri||Castellana Sicula (PA)|
+peperone-di-polizzi-generosa|Francesco Mangialino||Polizzi Generosa (PA)|
+peperone-di-polizzi-generosa|Vincenzo Pagano||Polizzi Generosa (PA)|
+peperone-di-polizzi-generosa|Antonino Sausa||Polizzi Generosa (PA)|
+sesamo-di-ispica|Loredana Agosta||Ispica (RG)|
+sesamo-di-ispica|Azienda Agricola Vitivinicola Agliastro|Carmelo Peligra|Ispica (RG)|
+sesamo-di-ispica|Carmelo Calabrese||Ispica (RG)|www.fonteverde.com
+sesamo-di-ispica|Corrado Cassar Scalia||Ispica (RG)|
+sesamo-di-ispica|Antonino Gambuzza||Ispica (RG)|
+sesamo-di-ispica|Salvatore Gambuzza||Ispica (RG)|
+sesamo-di-ispica|Aruci|Giovanni Puglisi|Rosolini (SR)|www.aruci.it
+sesamo-di-ispica|Biscotteria Asta dal 1967|Vincenzo Asta|Ispica (RG)|www.panificioasta.com
+pesca-nel-sacchetto|Isabella Barbera||Leonforte (EN)|
+pesca-nel-sacchetto|Giuseppe Cipolla||Leonforte (EN)|
+pesca-nel-sacchetto|Francesco Ferragosto||Enna (EN)|
+pesca-nel-sacchetto|Samperi|Giovanni Trovati|Leonforte (EN)|www.aziendasamperi.com
+fava-larga-di-leonforte|Isabella Barbera||Leonforte (EN)|
+fava-larga-di-leonforte|Rossi|Angelo Calì|Leonforte (EN)|www.leonforteagricola.it
+cavolo-vecchio-di-rosolini|Concetta Cavallo||Rosolini (SR)|
+fava-cottoia-di-modica|Confraternita della Fava Cottoia di Modica||Modica (RG)|
+piacentinu-ennese|Casearia Di Venti|Pietro Di Venti|Calascibetta (EN)|
+piacentinu-ennese|Caseificio Valvo|Giuseppe Savarese|Enna (EN)|www.caseificiovalvo.it
+piacentinu-ennese|Il Cavalcatore|Gaetano Nicoletti|Assoro (EN)|
+piacentinu-ennese|Centroform|Giuseppe Caruso|Aidone (EN)|www.centroform.it
+piacentinu-ennese|Tenuta Bubudello|Luigi Faraci|Enna (EN)|
+razza-bovina-cinisara|Giuseppe Ingraffia||Mezzojuso (PA)|
+razza-bovina-cinisara|Salvatore Brusca||San Giuseppe Jato (PA)|
+razza-bovina-cinisara|Giovanni Scalora||Piana degli Albanesi (PA)|
+razza-bovina-cinisara|Benedetta Pizzo||Cinisi (PA)|
+razza-bovina-cinisara|Ferdinando Lo Piccolo||Carini (PA)|
+razza-bovina-cinisara|Vincenzo Mastropaolo||Marineo (PA)|
+razza-bovina-cinisara|Manuela Badalamenti||Torretta (PA)|
+razza-bovina-cinisara|Salvatore Savona||Corleone (PA)|
+razza-bovina-cinisara|Domenico Musacchia||Contessa Entellina (PA)|
+razza-bovina-cinisara|Salvatore Marceca||Monreale (PA)|
+lenticchia-di-villalba|Filippo Calafato||Villalba (CL)|
+lenticchia-di-villalba|Angelo Catalano||Villalba (CL)|
+lenticchia-di-villalba|Fattoria Di Gesu|Francesco Di Gesu|Villalba (CL)|
+lenticchia-di-villalba|Dario Ferrara||Villalba (CL)|
+lenticchia-di-villalba|Fratelli Iucolino||Villalba (CL)|
+lenticchia-di-villalba|Giuseppe Ricottone||Villalba (CL)|
+lenticchia-di-villalba|Rovittello|Ettore Cipolla|Villalba (CL)|
+lenticchia-di-villalba|Giuseppe Tatano||Villalba (CL)|
+pomodoro-siccagno-della-valle-del-bilici|Fattoria Di Gesu|Francesco Di Gesu|Villalba (CL)|
+pomodoro-siccagno-della-valle-del-bilici|Vincenzo e Rosa Pisa||Valledolmo (PA)|
+fagiolo-cosaruciaru-di-scicli|Progresso Soc. Coop. Agricola|Guglielmo Piccione|Scicli (RG)|
+cavolo-trunzo-di-aci|Alberolungo|Vincenzo Pennisi|Acireale (CT)|
+cavolo-trunzo-di-aci|Batia dell'Arcangelo Gabriele|Giovanni D'Avola|Acireale (CT)|
+cavolo-trunzo-di-aci|Monaci delle Terre Nere|Guido Alessandro Coffa|Zafferana Etnea (CT)|
+carciofo-spinoso-di-menfi|Az. Agr. Montalbano||Menfi (AG)|www.agricolamontalbano.it
+vastedda-della-valle-del-belice|Cangemi|Giovanna Ragolia|Partanna (TP)|
+vastedda-della-valle-del-belice|Liborio Cucchiara||Salemi (TP)|
+vastedda-della-valle-del-belice|Salvatore Interrante||Menfi (AG)|
+vastedda-della-valle-del-belice|Fratelli Manfrè||Gibellina (TP)|www.caseificiomanfre.it
+vastedda-della-valle-del-belice|Le Prelibatezze del Feudo Pollichino|Giuseppe Lala|Contessa Entellina (PA)|
+vastedda-della-valle-del-belice|Sapori Antichi|Lorenzo Pagliaroli|Poggioreale (TP)|www.saporiantichi.eu
+manna-delle-madonie|Giulio Gelardi||Pollina (PA)|
+fagiolo-badda-di-polizzi|Agriturismo Cuca|Maria Concetta Muratore|Polizzi Generosa (PA)|
+fagiolo-badda-di-polizzi|Roberta Billitteri||Castellana Sicula (PA)|
+fagiolo-badda-di-polizzi|Grazia Sandra Invidiata||Polizzi Generosa (PA)|www.azagricolainvidiata.com
+fagiolo-badda-di-polizzi|Francesco Mangialino||Polizzi Generosa (PA)|
+fagiolo-badda-di-polizzi|Antonino Sausa||Polizzi Generosa (PA)|
+antiche-mele-delletna-2|Cooperativa Zaufanah||Zafferana Etnea (CT)|www.zaufanah.com
+provola-dei-nebrodi|La Paisanella|Sebastiano Agostino Ninone|Mirto (ME)|www.lapaisanella.com
+lenticchia-di-ustica|Azienda Bioagrituristica Pagliuzzo|Giuseppe Mancuso|Ustica (PA)|www.agriturismopagliuzzo.it
+lenticchia-di-ustica|Hibiscus|Margherita Longo|Ustica (PA)|www.agriturismohibiscus.com
+lenticchia-di-ustica|U Scarpuni|Giovanni Palmisano|Ustica (PA)|
+pistacchio-verde-di-bronte|Pietro Bonaccorso||Bronte (CT)|
+pistacchio-verde-di-bronte|Antonino Nunzio Caudullo||Bronte (CT)|www.antoninocaudullo.com
+pistacchio-verde-di-bronte|I Lochi|Biagio Schilirò|Bronte (CT)|
+mandorla-di-noto|Corrado Bonfanti||Noto (SR)|
+mandorla-di-noto|Giuseppe Carbone||Noto (SR)|
+mandorla-di-noto|Concetto Scardaci||Noto (SR)|
+mandorla-di-noto|Salvatore Stracquadanio||Noto (SR)|
+asino-ragusano|Azienda Agr. Arena Giuseppe|Giuseppe Arena|Ramacca (CT)|www.lattebontadasina.it
+asino-ragusano|Asilat|Ketty Torrisi|Giarre (CT)|www.asilat.it
+asino-ragusano|Kalat Scibet|Stefania Greco|Calascibetta (EN)|kalatscibet.weebly.com
+asino-ragusano|Rosario Leggio||Ragusa (RG)|
+capra-girgentana|Az. Agr. Biologica Luca Cammarata|Luca Cammarata|San Cataldo (CL)|
+capra-girgentana|Az. Agr. Casearia delle Scale|Rosa Calascibetta|Monreale (PA)|
+capra-girgentana|La Mannirata|Stefano e Vincenzo Vinti|San Biagio Platani (AG)|
+capra-girgentana|Gaetano Gelo||Sciacca (AG)|
+capra-girgentana|Giovanni Fazio||Canicattì (AG)|
+capra-girgentana|Giacomo Gatì||Campobello di Licata (AG)|
+capra-girgentana|Illuminato La Greca||Cammarata (AG)|
+capra-girgentana|Salvatore Vassallo||Licata (AG)|
+provola-delle-madonie|Angelo Barca||San Mauro Castelverde (PA)|
+provola-delle-madonie|Azienda Barreca|Marilina Barreca|Geraci Siculo (PA)|www.aziendabarreca.com
+provola-delle-madonie|Grazia Sandra Invidiata||Collesano (PA)|www.azagricolainvidiata.com
+sale-marino-di-trapani|Oro di Sicilia - Saline Culcasi|Alberto Culcasi|Paceco (TP)|www.salineculcasi.it
+masculina-da-magghia|Cooperativa del Golfo||Gravina di Catania (CT)|
+cuddrireddra-di-delia|La Cuddrireddra di Delia|Filomena Alaimo|Delia (CL)|
+oliva-minuta|Calogera Milio||Ficarra (ME)|www.sannoto.it
+oliva-minuta|Giulietta Milio||Ficarra (ME)|
+oliva-minuta|Vittoria Piccolo||Ficarra (ME)|
+oliva-minuta|Queen Rose|Carmelo Messina|Ficarra (ME)|
+aglio-rosso-di-nubia|Cgservice|Giuseppe Culcasi|Paceco (TP)|
+aglio-rosso-di-nubia|Francesca Simonte||Paceco (TP)|
+cipolla-di-giarratana|Agrobiologica Calaforno|Salvatore Angelica|Giarratana (RG)|
+cipolla-di-giarratana|Fagone|Salvatore Noto|Giarratana (RG)|
+cipolla-di-giarratana|La Collina degli Iblei|Enzo Caruso e Rosanna Di Pietro|Giarratana (RG)|www.lacollinadegliblei.it
+cipolla-di-giarratana|Damiano Pignato||Giarratana (RG)|
+cipolla-di-giarratana|Green Art|Emanuele Di Pasquale|Giarratana (RG)|
+albicocca-di-scillato|Terre di Carusi|Alberto Battaglia|Scillato (PA)|
+pesca-tradizionale-del-golfo-di-selinunte|Pescatori del Presidio del Golfo di Selinunte (7 barche)||Castelvetrano (TP)|
+mandarino-tardivo-di-ciaculli|Consorzio Il Tardivo di Ciaculli||Palermo (PA)|www.tardivodiciaculli.it
+salsiccia-al-ceppo-di-linguaglossa|Pennisi|Luciano Pennisi|Linguaglossa (CT)|
+salsiccia-al-ceppo-di-linguaglossa|Bottega della carne|Gianluca Arcidiacono|Linguaglossa (CT)|
+scattata-di-alia|Panificio e Biscottificio Minnuto e Randazzo|G. Minnuto e G. Randazzo|Alia (PA)|
+scattata-di-alia|Bar Centrale|Ezio Mancuso e Maria Antonietta Ognibene|Alia (PA)|
+scattata-di-alia|Ma Pane ne Abbiamo|Damiano Genovese|Alia (PA)|
+scattata-di-alia|Bar Perrone|Santina Tecla Perrone|Alia (PA)|
+scattata-di-alia|Bar Belvedere|Emanuela Scaccia|Alia (PA)|
+cipolla-paglina-di-castrofilippo|Chedduci|Gerlando Sanfilippo|Castrofilippo (AG)|
+cipolla-paglina-di-castrofilippo|Golden Grapes|Dario Brucculeri|Castrofilippo (AG)|www.goldengrapes.it
+cipolla-paglina-di-castrofilippo|Salvatore Lo Brutto||Castrofilippo (AG)|

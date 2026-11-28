@@ -2153,7 +2153,7 @@ const SAPT = {
   materia: ['Materia prima', 'Materie prime', 'wheat', '#5c940d'], semi: ['Semilavorato', 'Semilavorati', 'stack-2', '#c77700'],
   prodotto: ['Prodotto', 'Prodotti', 'basket', '#1d6fa5'], dolce: ['Dolce', 'Dolci', 'cake', '#b85e3d'], piatto: ['Piatto', 'Piatti', 'bowl', '#7a5ea8']
 };
-const RUOLO = { coltiva: ['Coltiva o alleva', 'tractor', '#2b8a3e'], trasforma: ['Trasforma', 'building-factory-2', '#c77700'], vende: ['Vende o cucina', 'building-store', '#b85e3d'] };
+const RUOLO = { coltiva: ['Coltiva, alleva o pesca', 'tractor', '#2b8a3e'], trasforma: ['Trasforma', 'building-factory-2', '#c77700'], vende: ['Vende o cucina', 'building-store', '#b85e3d'] };
 const LRC = { vivo: '#2b8a3e', raro: '#c77700', 'a rischio': '#c2185b', perduto: '#495057', 'da valutare': '#868e96' };
 const SAPL = ['sap-c', 'sap-cl', 'sap-p', 'sap-pl', 'sap-pr', 'sap-v'];
 const MESI = ['gen', 'feb', 'mar', 'apr', 'mag', 'giu', 'lug', 'ago', 'set', 'ott', 'nov', 'dic'];
@@ -2336,6 +2336,7 @@ function sapVoce(k) {
   if (stesso.length) h += `<section class="ns5"><h3>Nello stesso posto</h3><div class="mini5">${stesso.map(x => `<button data-s="${x.k}"><span${imgAttr(x)}></span><b>${esc(x.n)}</b></button>`).join('')}</div></section>`;
   if (nat.length) h += `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>`;
   const fonti = [...new Set((v.ver || []).map(x => x.f).concat(v.pat ? ['pat'] : [], v.zind ? ['dopigp'] : [], v.elenco ? ['listaoscar'] : [], v.fw || []))].map(f => D.fonti[f]).filter(Boolean);
+  if (v.sfu && !fonti.some(f => f.u && f.u[0] === v.sfu)) fonti.push({ a: 'scheda del presidio Slow Food', web: true, u: [v.sfu] });
   h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => f.web ? `<a href="${esc(f.u[0])}" target="_blank" rel="noopener">${esc(f.a)}</a>` : esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
   if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
@@ -2345,14 +2346,18 @@ function sapVoce(k) {
   if (v.paesi && vista === 'mappa' && !SAP.home) sapVola(D.paesi[v.paesi[0]].c, 9);
 }
 function sapProduttore(k) {
-  const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r]; cur = 'SAP:' + k; selez('');
-  testata(p.n, `${r[0]} · ${esc(D.paesi[p.paese].n)}`, `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
-  let h = `<div class="racconto"><p>Scheda di prova: qui andranno la storia dell'azienda, le persone, le foto e la filiera dichiarata o verificata.</p></div>`;
+  const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r], seg = p.liv === 'Segnalato'; cur = 'SAP:' + k; selez('');
+  testata(p.n, `${r[0]} · ${esc(D.paesi[p.paese].n)}`, seg ? `<span class="badge liv">Segnalato · da visitare</span>` : `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
+  let h = seg ? `<div class="racconto"><p>È tra i produttori ${p.pres.length > 1 ? 'dei presìdi Slow Food' : 'del presidio Slow Food'} ${p.pres.map((x, i) => `<a href="${esc(p.fu[i])}" target="_blank" rel="noopener">${esc(x)}</a>`).join(', ')}.</p><p>Non lo abbiamo ancora visitato. Dopo la visita qui troverai la sua storia, le persone, le foto e la filiera.</p></div>`
+    : `<div class="racconto"><p>Scheda di prova: qui andranno la storia dell'azienda, le persone, le foto e la filiera dichiarata o verificata.</p></div>`;
   h += `<h3>Cosa fa</h3><div class="links">${p.fa.map(x => lnk(x)).join('')}</div>`;
   if (p.da) h += `<h3>Da chi compra</h3><div class="links">${p.da.map(x => lnk(x)).join('')}</div>`;
   if (p.a) h += `<h3>A chi vende</h3><div class="links">${p.a.map(x => lnk(x)).join('')}</div>`;
   if (p.esp) h += `<h3>Esperienze</h3><p class="racconto">${esc(p.esp)}</p>`;
-  h += `<h3>Livelli di verifica</h3><p class="note"><b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali.</p><p class="src">${esc(D.nota)}</p>`;
+  if (p.sito) h += `<h3>Contatti</h3><div class="links"><a class="btnl" href="${esc(p.sito)}" target="_blank" rel="noopener">${ico('link', 'sm')} Sito dell'azienda</a></div>`;
+  const vic = Object.values(D.produttori).filter(x => x.k !== k && x.paese === p.paese).slice(0, 6);
+  if (vic.length) h += `<h3>Nello stesso paese</h3><div class="links">${vic.map(x => lnk(x.k)).join('')}</div>`;
+  h += `<h3>Livelli di verifica</h3><p class="note"><b>Segnalato</b>: lo indica una fonte pubblica affidabile, ma non lo abbiamo ancora visitato. <b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali. Nessuno entra pagando.</p><p class="src">${seg ? 'Fonte: Fondazione Slow Food, schede dei presìdi, consultate il 28/11/2026.' : esc(D.nota)}</p>`;
   $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(D.paesi[p.paese].c, 10);
 }
 function sapPaese(k) {
@@ -2529,7 +2534,8 @@ $('cat').addEventListener('click', e => {
 function sapItinerari() {
   const D = SAP.D;
   $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
-  $('cat').innerHTML = `<div class="in"><h2>Itinerari del gusto</h2><p class="lead">Il viaggio delle materie prime lungo la filiera: dal campo al laboratorio, fino alla bottega o alla tavola. ${PROVA}</p>
+  $('cat').innerHTML = `<div class="in"><h2>Itinerari del gusto</h2><p class="lead">Il viaggio delle materie prime lungo la filiera: dal campo al laboratorio, fino alla bottega o alla tavola.</p>
+    ${Object.keys(D.viaggi).length ? '' : `<div class="racconto"><p>I primi itinerari nasceranno dalle visite ai produttori: un viaggio si pubblica solo quando ogni tappa è stata vista di persona.</p><p>Intanto puoi scoprire chi custodisce i prodotti dei presìdi Slow Food.</p></div><div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi i produttori segnalati</button></div>`}
     ${Object.entries(D.viaggi).map(([i, x]) => `<button class="viaggio" data-vg="${i}"><b>${esc(x.n)}</b><span>${x.tappe.map(([p, v]) => `${esc(D.voci[v].n)} <small>${esc(D.paesi[D.produttori[p].paese].n)}</small>`).join(' <em>›</em> ')}</span></button>`).join('')}${COPY()}</div>`;
 }
 $('cat').addEventListener('click', e => {
@@ -2722,7 +2728,7 @@ function sapHome() {
     </section>
     <section class="s5"><button class="pross5" data-tema="natura" style="--tc:#2D6A4F"><span class="img" style="background-image:url('foto/natura/campagna.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Da dove viene quello che mangi</b><span>Il pistacchio sull'Etna, la manna sulle Madonie, la provola sui Nebrodi. Cammina nei luoghi dove nascono i sapori.</span><em>Entra in Natura</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
-    <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori e viaggi sono esempi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
+    <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: quelli segnalati dalle schede dei presìdi Slow Food, non ancora visitati da noi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
   sapFoto($('cat'));
   const tip = $('ctip'), cmap = $('cat').querySelector('.com5 svg');
   if (cmap) cmap.onmouseover = e => { const t = e.target.closest('circle'), ti = t && t.querySelector('title'); if (ti) tip.textContent = ti.textContent; };
