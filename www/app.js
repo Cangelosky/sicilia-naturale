@@ -2373,26 +2373,80 @@ var FIL = null; const FILD = () => FIL || (FIL = fetch('data/filiere.json').then
 const FILK = ['grano', 'olio', 'vino', 'formaggio']; // le quattro materie (28/11): Grano, Ulivo, Vitigno, Latte. Il pane resta nei dati (#/sapori/pane)
 const FILFO = { vino: ['vigna-con-uva-1', 'Una vigna con l’uva matura'], olio: ['olive-nel-palmo-passulunara', 'Olive nel palmo della mano'], grano: ['pane-di-grano-duro', 'Pane di grano duro'], formaggio: ['tuma-nel-suo-siero', 'Tuma nel suo siero'], pane: ['pane-a-pasta-dura', 'Pane a pasta dura'] };
 const filVar = (F, fk, vk) => { for (const g of F.filiere[fk].gruppi) for (const v of (g.v || [])) if (v.k === vk) return [v, g]; return [null, null]; };
+// l'anno di ogni materia e il cammino dal campo alla tavola (testi generali, scritti da noi)
+const ANNO6 = {
+  grano: [['Semina', [11, 12], 'Il grano si semina in autunno, dopo le prime piogge.'], ['Crescita', [1, 2, 3], 'D\'inverno il grano cresce verde e fitto nei campi.'], ['Spighe', [4, 5], 'In primavera spuntano le spighe e i chicchi si riempiono.'], ['Mietitura', [6, 7], 'A inizio estate i campi diventano oro: si miete e si trebbia.'], ['Riposo', [8, 9, 10], 'I campi riposano o si alternano con fave e altri legumi.']],
+  olio: [['Potatura', [1, 2, 3], 'Si alleggeriscono le chiome perché entri la luce.'], ['Fioritura', [4, 5], 'Fiori piccoli e bianchi: da qui nasceranno le olive.'], ['Crescita', [6, 7, 8, 9], 'Le olive crescono verdi e poi cominciano a cambiare colore.'], ['Raccolta e frantoio', [10, 11, 12], 'Si raccoglie e si porta subito al frantoio: nasce l\'olio nuovo.']],
+  vino: [['Potatura', [12, 1, 2], 'D\'inverno si potano i tralci, la vite riposa.'], ['Germogli', [3, 4], 'In primavera la vite si risveglia e mette le foglie.'], ['Fioritura', [5, 6], 'Fioriscono i grappoli, piccoli e verdi.'], ['Invaiatura', [7], 'Gli acini cambiano colore e si addolciscono.'], ['Vendemmia', [8, 9, 10], 'In Sicilia si comincia ad agosto con le uve precoci e si finisce a ottobre sull\'Etna.'], ['In cantina', [11], 'Il mosto fermenta e diventa vino.']],
+  formaggio: [['Pascoli verdi', [11, 12, 1, 2, 3, 4, 5], 'Con le piogge l\'erba torna: il latte è abbondante e profumato.'], ['Estate', [6, 7, 8], 'L\'erba secca e il latte cala; molte greggi salgono in montagna.'], ['Nuovi nati', [9, 10], 'In autunno nascono gli agnelli e riprende la mungitura.']]
+};
+const CAMMINO6 = {
+  grano: [['wheat', 'Il campo', 'Grani antichi seminati nelle colline dell\'interno.'], ['tractor', 'La trebbiatura', 'Il chicco si separa dalla paglia.'], ['windmill', 'Il mulino', 'Dal grano duro la semola, dal tenero la farina.'], ['bread', 'Pane e pasta', 'Pani di semola, pasta, dolci delle feste.']],
+  olio: [['tree', 'L\'oliveto', 'Alberi anche secolari, dalla costa alla collina.'], ['basket', 'La raccolta', 'A mano o con le reti, tra ottobre e dicembre.'], ['building-factory-2', 'Il frantoio', 'Le olive si frangono entro poche ore.'], ['bottle', 'Olio e olive', 'Olio extravergine e olive da tavola.']],
+  vino: [['leaf', 'La vigna', 'Dalla costa ai mille metri dell\'Etna.'], ['basket', 'La vendemmia', 'Grappoli raccolti a mano nelle cassette.'], ['building-store', 'La cantina', 'Pigiatura, fermentazione, affinamento.'], ['glass-full', 'Il vino', 'Bianchi, rossi e vini dolci delle isole.']],
+  formaggio: [['paw', 'Il pascolo', 'Pecore, capre e vacche all\'aperto.'], ['milk', 'La mungitura', 'Latte spesso crudo, lavorato subito.'], ['cheese', 'Il caseificio', 'Cagliata nella tina; dal siero nasce la ricotta.'], ['calendar', 'La stagionatura', 'Da pochi giorni a più di un anno.']]
+};
+const ICOF = { grano: 'wheat', olio: 'tree', vino: 'glass-full', formaggio: 'cheese' };
+const PAROLEF = { grano: /grano|frumento|triticum/i, olio: /oliv/i, vino: /vitign|uva |vite|vino/i, formaggio: /formagg|latte|ricott/i };
+// foto di una varietà: da Wikipedia solo se la pagina parla davvero di quella pianta
+function fotoVarieta(fk, v) {
+  const tit = [v.n.split(',')[0], v.n.split(',')[0] + (fk === 'vino' ? ' (vitigno)' : fk === 'olio' ? ' (olivo)' : ' (grano)')];
+  return (async () => { for (const t of tit) { const w = await wikiVoce(t); if (w && w.thumbnail && PAROLEF[fk].test(w.extract || '') && !NOFOTO.test(w.thumbnail.source)) return w; } return null; })();
+}
 function sapFiliera(fk) {
   Promise.all([FILD(), SAPD()]).then(([F]) => {
     const D = SAP.D, f = F.filiere[fk]; if (!f) return; SAP.fk = fk; SAP.filC = F;
     $('cat').dataset.v = 'sap-fil'; $('cat').scrollTop = 0; SAP.home = false; if (String(cur).startsWith('SAP:fv:')) chiudi();
-    const punti = []; for (const g of f.gruppi) for (const v of (g.v || [])) for (const p of v.paesi.slice(0, 2)) if (D.paesi[p]) punti.push({ a: 'fv', id: fk + ':' + v.k, xy: D.paesi[p].c, t: v.lr ? 'riserva' : 'sagra', on: !v.lr, tit: v.n });
+    const conV = f.gruppi.some(g => g.v), punti = [], paesi = new Set();
+    f.gruppi.forEach((g, gi) => { for (const v of (g.v || [])) for (const p of v.paesi) { paesi.add(p); if (D.paesi[p] && v.paesi.indexOf(p) < 2) punti.push({ a: 'fv', id: fk + ':' + v.k, xy: D.paesi[p].c, t: v.lr ? 'riserva' : 'sagra', on: !v.lr, tit: v.n }); }
+      for (const k of (g.voci || [])) { const v = D.voci[k]; if (!v) continue; for (const p of (v.paesi || []).slice(0, 2)) { paesi.add(p); if (D.paesi[p]) punti.push({ a: 'fs', id: k, xy: D.paesi[p].c, t: 'sagra', on: true, tit: v.n }); } } });
     const vociF = new Set(); for (const g of f.gruppi) { for (const v of (g.v || [])) v.dop.forEach(x => vociF.add(x)); (g.voci || []).forEach(x => vociF.add(x)); }
     const chi = Object.values(D.produttori).filter(p => (p.fa || []).some(x => vociF.has(x))).slice(0, 16);
     const fonti = [...new Set([...(f.fonti || []), ...f.gruppi.flatMap(g => (g.v || []).flatMap(v => v.f))])].map(x => F.fonti[x]).filter(Boolean);
-    const fo = FILFO[fk];
-    const carta = v => `<button class="var5${v.lr ? ' lr' : ''}" data-fv="${fk}:${v.k}"><b>${esc(v.n)}</b>${v.sin ? `<small>${esc(v.sin)}</small>` : ''}<span>${esc(v.t.split('. ')[0].replace(/\.$/, ''))}.</span>${v.paesi.length ? `<em>${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : ''}${v.lr ? '<i>Da salvare</i>' : ''}</button>`;
-    const voce = k => { const v = D.voci[k]; if (!v) return ''; return `<button class="vo5" data-fs="${k}">${icoV(v)} <b>${esc(v.n)}</b>${(v.ric || []).length ? `<small>${esc(v.ric.join(' · '))}</small>` : ''}</button>`; };
-    $('cat').innerHTML = `<div class="in fil5">
-      <nav class="filtab" aria-label="Le filiere">${FILK.map(k => `<button data-fil="${k}" class="${k === fk ? 'on' : ''}" aria-current="${k === fk}">${esc(F.filiere[k].n)}</button>`).join('')}</nav>
-      <div class="filh"><div><p class="sub">${esc(f.sub)}</p><h2>${esc(f.n)}</h2>${f.intro.map(p => `<p>${esc(p)}</p>`).join('')}</div>${fo ? `<figure><span style="background-image:url('foto/${fo[0]}.webp')"></span><figcaption>${esc(fo[1])}, foto di Oscar Cangelosi</figcaption></figure>` : ''}</div>
-      ${punti.length ? `<section class="filmap"><h3>Dove crescono</h3><p class="note">Passa sui punti per vedere la varietà, toccali per saperne di più. I punti chiari sono le varietà da salvare.</p><div class="cmap">${mappaSicilia({ w: 840, nomi: true, punti })}</div></section>` : ''}
-      ${f.gruppi.map(g => `<section class="filg"><h3>${esc(g.n)}</h3>${g.testo ? `<p class="gt">${esc(g.testo)}</p>` : ''}<div class="${g.v ? 'vargrid' : 'vogrid'}">${g.v ? g.v.map(carta).join('') : g.voci.map(voce).join('')}</div></section>`).join('')}
-      ${chi.length ? `<section class="filg"><h3>Chi li custodisce</h3><p class="gt">Produttori e laboratori segnalati che lavorano questi prodotti. Non li abbiamo ancora visitati.</p><div class="vogrid">${chi.map(p => `<button class="vo5" data-fpr="${p.k}"><b>${esc(p.n)}</b><small>${esc(p.tipo || RUOLO[p.r][0])} · ${esc(D.paesi[p.paese].n)}</small></button>`).join('')}</div></section>` : ''}
-      <p class="src">Testi scritti da noi a partire da queste fonti, da verificare sui libri: ${fonti.map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}.</p>
+    const fo = FILFO[fk], m = new Date().getMonth() + 1, anno = ANNO6[fk] || [], ora = anno.find(a => a[1].includes(m));
+    const nV = f.gruppi.reduce((a, g) => a + (g.v || g.voci || []).length, 0);
+    const prodotti = conV ? [...vociF].map(k => D.voci[k]).filter(Boolean) : [];
+    const carta = (v, g, gi) => `<button class="vc6${v.lr ? ' lr' : ''}" data-fv="${fk}:${v.k}" data-g="${gi}"><span class="ph" data-fvi="${gi}:${v.k}">${ico(ICOF[fk])}</span><span class="tx"><small>${esc(g.n)}</small><b>${esc(v.n)}</b>${v.sin ? `<i>${esc(v.sin)}</i>` : ''}<span>${esc(v.t.split('. ')[0].replace(/\.$/, ''))}.</span>${v.paesi.length ? `<em>${ico('map-pin', 'xs')} ${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : ''}</span>${v.lr ? '<span class="salva">Da salvare</span>' : ''}</button>`;
+    const cartaV = (k, g, gi) => { const v = D.voci[k]; if (!v) return ''; return `<button class="vc6" data-fs="${k}" data-g="${gi}"><span${imgAttr(v).replace('class="img', 'class="ph img')}>${ico(ICOF[fk])}</span><span class="tx"><small>${esc(g.n)}</small><b>${esc(v.n)}</b>${v.nd && norm(v.nd) !== norm(v.n) ? `<i>${esc(v.nd)}</i>` : ''}<span>${esc((v.breve || '').split('. ')[0] || (v.ric || []).join(' · '))}</span>${v.paesi ? `<em>${ico('map-pin', 'xs')} ${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : v.prov ? `<em>${ico('map-pin', 'xs')} ${v.prov.length === 9 ? 'Tutta la Sicilia' : v.prov.map(x => PROVN[x]).join(', ')}</em>` : ''}</span>${(v.ric || []).filter(r => r !== 'PAT')[0] ? `<span class="salva dop">${esc(v.ric.filter(r => r !== 'PAT')[0])}</span>` : ''}</button>`; };
+    const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+    $('cat').innerHTML = `<div class="in fil5 fil6">
+      <section class="mh6" style="background-image:url('foto/${fo[0]}.webp')"><div class="mh6t">
+        <nav class="filtab6" aria-label="Le quattro materie">${FILK.map(k => `<button data-fil="${k}" class="${k === fk ? 'on' : ''}" aria-current="${k === fk}"><span style="background-image:url('foto/${FILFO[k][0]}.webp')"></span>${esc(F.filiere[k].n)}</button>`).join('')}</nav>
+        <p class="sub">${esc(f.sub)}</p><h2>${esc(f.n)}</h2><p class="lead">${esc(f.intro[0])}</p>
+        <div class="num6">${[[nV, conV ? 'varietà' : 'formaggi e ricotte'], [prodotti.length || vociF.size, conV ? 'prodotti DOP e IGP' : 'prodotti'], [paesi.size, 'comuni'], [chi.length, 'produttori segnalati']].filter(x => x[0]).map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
+        <p class="cr">${esc(fo[1])}, foto di Oscar Cangelosi</p></section>
+      ${f.intro.length > 1 ? `<section class="int6">${f.intro.slice(1).map(p => `<p>${esc(p)}</p>`).join('')}</section>` : ''}
+      ${anno.length ? `<section class="filg"><h3>L'anno ${fk === 'formaggio' ? 'del latte' : fk === 'vino' ? 'della vigna' : fk === 'olio' ? 'dell\'olivo' : 'del grano'}</h3>${ora ? `<p class="gt">Adesso, a ${MESIL[m - 1]}: <b>${esc(ora[0].toLowerCase())}</b>. ${esc(ora[2])}</p>` : ''}
+        <div class="anno6">${MESI.map((mm, i) => { const a = anno.find(x => x[1].includes(i + 1)), ai = anno.indexOf(a); return `<button class="${i + 1 === m ? 'ora' : ''} f${ai % 6}" data-fase="${ai}" title="${esc(a ? a[0] : '')}"><small>${mm}</small><span>${i === 0 || !anno.find(x => x[1].includes(i)) || anno.find(x => x[1].includes(i)) !== a ? esc(a ? a[0] : '') : ''}</span></button>`; }).join('')}</div>
+        <div class="fasi6">${anno.map((a, i) => `<div class="f${i % 6}${a === ora ? ' on' : ''}" data-fase="${i}"><b>${esc(a[0])}</b><span>${esc(a[2])}</span></div>`).join('')}</div></section>` : ''}
+      <section class="filg"><h3>Dal campo alla tavola</h3><div class="cam6">${(CAMMINO6[fk] || []).map(([ic, t2, d], i) => `<div><span class="ic">${ico(ic)}</span><small>${i + 1}</small><b>${esc(t2)}</b><span>${esc(d)}</span></div>`).join('')}</div></section>
+      <section class="filg esp6"><h3>${conV ? 'Le varietà e dove crescono' : 'I formaggi e dove nascono'}</h3><p class="gt">Passa su una scheda per vederla sulla mappa, o tocca un punto della mappa. ${conV ? 'I punti chiari sono le varietà da salvare.' : ''}</p>
+        <div class="chips6">${['Tutte', ...f.gruppi.map(g => g.n)].map((n, i) => `<button data-gr="${i - 1}" class="${i === 0 ? 'on' : ''}">${esc(n)}</button>`).join('')}</div>
+        <div class="espb"><div class="espm"><div class="cmap">${mappaSicilia({ w: 560, nomi: true, punti })}</div><p class="gtx" id="gtx"></p></div>
+        <div class="espl">${f.gruppi.map((g, gi) => (g.v || []).map(v => carta(v, g, gi)).join('') + (g.voci || []).map(k => cartaV(k, g, gi)).join('')).join('')}</div></div></section>
+      ${prodotti.length ? `<section class="filg"><h3>${fk === 'vino' ? 'Nei vini' : fk === 'olio' ? 'Negli oli e nelle olive' : 'Nei prodotti'}</h3><p class="gt">I prodotti a denominazione che nascono da queste varietà.</p><div class="prod6">${prodotti.map(v => `<button data-fs="${v.k}"><span${imgAttr(v)}>${ico(ICOF[fk])}</span><b>${esc(v.n)}</b><small>${esc((v.ric || []).filter(r => r !== 'PAT').join(' · ') || 'Prodotto tradizionale')}</small></button>`).join('')}</div></section>` : ''}
+      ${chi.length ? `<section class="filg"><h3>Chi li custodisce</h3><p class="gt">Produttori e laboratori segnalati che lavorano questi prodotti. Non li abbiamo ancora visitati.</p><div class="chi6">${chi.map(p => `<button data-fpr="${p.k}"><span class="ic">${ico(p.tipo === 'frantoio' ? 'building-factory-2' : p.tipo === 'cantina' ? 'glass-full' : p.tipo === 'caseificio' ? 'cheese' : 'tractor')}</span><b>${esc(p.n)}</b><small>${esc(p.tipo || RUOLO[p.r][0])} · ${esc(D.paesi[p.paese].n)}</small></button>`).join('')}</div></section>` : ''}
+      <section class="filg"><h3>Le altre materie</h3><div class="alt6">${FILK.filter(k => k !== fk).map(k => `<button data-fil="${k}"><span class="bg" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${esc(F.filiere[k].n)}</b><small>${esc(F.filiere[k].sub)}</small>${freccia}</button>`).join('')}</div></section>
+      <p class="src">Testi scritti da noi a partire da queste fonti, da verificare sui libri: ${fonti.map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}. L'anno e il cammino sono una descrizione generale.</p>
       ${COPY()}</div>`;
     sapFoto($('cat'));
+    // foto delle varietà
+    for (const el of $('cat').querySelectorAll('[data-fvi]')) { const [gi, vk] = el.dataset.fvi.split(':'), v = (f.gruppi[+gi].v || []).find(x => x.k === vk);
+      if (v) fotoVarieta(fk, v).then(w => { if (w) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/330px-')}')`; el.classList.add('ok'); el.title = 'Foto da Wikipedia: ' + w.title; } }); }
+    const box = $('cat').querySelector('.esp6'), mapp = box.querySelector('.smap'), lst = box.querySelector('.espl');
+    const accendi = id => { mapp.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')); lst.querySelectorAll('.hl').forEach(x => x.classList.remove('hl')); if (!id) return;
+      mapp.querySelectorAll(`[data-fv="${id}"],[data-fs="${id}"]`).forEach(x => { x.classList.add('hl'); x.parentNode.appendChild(x); }); const c = lst.querySelector(`[data-fv="${id}"],[data-fs="${id}"]`); if (c) c.classList.add('hl'); return c; };
+    lst.addEventListener('mouseover', e => { const c = e.target.closest('.vc6'); accendi(c ? (c.dataset.fv || c.dataset.fs) : null); });
+    lst.addEventListener('mouseleave', () => accendi(null));
+    mapp.addEventListener('mouseover', e => { const c = e.target.closest('[data-fv],[data-fs]'); const el = accendi(c ? (c.dataset.fv || c.dataset.fs) : null); if (el && innerWidth > 860) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+    box.querySelector('.chips6').addEventListener('click', e => { const b = e.target.closest('[data-gr]'); if (!b) return; e.stopPropagation();
+      box.querySelectorAll('.chips6 button').forEach(x => x.classList.toggle('on', x === b)); const gi = +b.dataset.gr, g = f.gruppi[gi];
+      lst.querySelectorAll('.vc6').forEach(c => c.hidden = gi >= 0 && +c.dataset.g !== gi);
+      const ids = new Set([...lst.querySelectorAll('.vc6:not([hidden])')].map(c => c.dataset.fv || c.dataset.fs));
+      mapp.querySelectorAll('[data-fv],[data-fs]').forEach(x => x.classList.toggle('spento', !ids.has(x.dataset.fv || x.dataset.fs)));
+      $('gtx').textContent = g && g.testo ? g.testo : ''; });
+    $('cat').querySelectorAll('[data-fase]').forEach(x => x.addEventListener('mouseenter', () => $('cat').querySelectorAll('[data-fase]').forEach(y => y.classList.toggle('acc', y.dataset.fase === x.dataset.fase))));
+    $('cat').querySelector('.anno6') && $('cat').querySelector('.anno6').parentNode.addEventListener('mouseleave', () => $('cat').querySelectorAll('.acc').forEach(y => y.classList.remove('acc')));
   });
 }
 function sapVarieta(fk, vk) {
