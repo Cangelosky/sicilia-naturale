@@ -3146,11 +3146,12 @@ function scorri5() {
   clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
   // sul telefono il riquadro è alto quanto la slide più lunga: niente fascia vuota sopra il titolo
   // sul telefono la scheda copre tutto lo schermo tra la testata e la barra in basso (mai meno del testo più lungo)
-  const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; }
+  // sul computer la stessa composizione: altezza fissa (78% dello schermo, massimo 680), testo e sezioni centrati
+  const alto = () => { const desk = innerWidth > 860;
     let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
-    const tm = box.querySelector('.tes5'), th = tm ? tm.offsetHeight : 0, gap = 18, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+    const tm = box.querySelector('.tes5'), th = tm ? tm.offsetHeight : 0, gap = desk ? 26 : 18, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
     const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
-    const min = h + gap + th + 48, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
+    const min = h + gap + th + (desk ? 96 : 48), H = Math.round(desk ? Math.max(min, Math.min(innerHeight * 0.78, 680)) : min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
     // testo e sezioni centrati nella scheda: stesso margine sopra e sotto
     box.style.setProperty('--m', m + 'px'); box.style.setProperty('--giu', (m + th + gap) + 'px'); box.style.height = H + 'px'; };
   alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
