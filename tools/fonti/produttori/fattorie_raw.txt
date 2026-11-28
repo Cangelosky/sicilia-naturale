@@ -1,0 +1,55 @@
+# nome | comune  (Regione Siciliana, elenco aziende e fattorie didattiche accreditate al 31/12/2025)
+Giambrone Fattoria|Cammarata
+Sicilia è ...gusto|Licata
+Le Vacche Rosse|Cammarata
+Azienda Nola Salvatore|Mussomeli
+Azienda Strano Salvatore e C.|Riposto
+San Leonardello|Giarre
+La Conca dell'Etna|Castiglione di Sicilia
+Tenuta Giarretta|Belpasso
+Colle San Mauro|Caltagirone
+Jannarella|Paternò
+Serravalle|Mineo
+Fattoria Arena|Ramacca
+Casagricola|Grammichele
+Masseria Santa Lucia|Motta Sant'Anastasia
+Viola nel Parco|Mascali
+Villa Santo Spirito|Castiglione di Sicilia
+Dolcetna|Sant'Alfio
+Tenuta la Martina|Biancavilla
+Mulinello|Assoro
+Le Querce di Cota|Troina
+Gaita Maria Paola|Nicosia
+Rocca dei Saraceni|Regalbuto
+Masseria Nuriddo|Nicosia
+Il Daino|San Piero Patti
+Santa Margherita|Gioiosa Marea
+Il Vignale|Longi
+Scammari|Mistretta
+Fattoria Borrello|Raccuja
+San Basilio|Milazzo
+Bergi|Castelbuono
+Augustali|Partinico
+F.lli Marsolo|Bisacquino
+Casale Amato|Misilmeri
+Al Poggetto|Santa Cristina Gela
+Ruralia|Alia
+Il Melograno|Modica
+Magazzè|Ragusa
+Rifugio Pernamazzoni|Modica
+Masseria Cianciò|Modica
+Cheestai|Ragusa
+Badiula|Carlentini
+Tenuta Roccadia|Carlentini
+Il Giardino del Sole|Carlentini
+Stallaini|Noto
+Tenuta Carbonara|Rosolini
+Case Don Ignazio|Noto
+Agrimilo|Noto
+Fattoria del Grano|Rosolini
+Pietre di Gelo|Carlentini
+Azienda dei Salari|Floridia
+Carbona|Castelvetrano
+Spezia|Buseto Palizzolo
+L'Olivo|Calatafimi-Segesta
+Baglio Donna Franca|Marsala

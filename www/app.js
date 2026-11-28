@@ -2271,7 +2271,7 @@ function sapVola(c, z) { map.flyTo({ center: c, zoom: z || 10, padding: padMappa
 /* ---- schede */
 function sapApri(k) { const v = SAP.D.voci[k]; if (v) sapVoce(k); else if (SAP.D.produttori[k]) sapProduttore(k); else if (SAP.D.paesi[k]) sapPaese(k); }
 const lnk = (k, sub) => { const D = SAP.D, v = D.voci[k], p = D.produttori[k], pa = D.paesi[k];
-  const n = v ? v.n : p ? p.n : pa ? pa.n : k, s = sub != null ? sub : v ? SAPT[v.t][0] + (v.paesi ? ' · ' + nomiPaesi(v) : '') : p ? RUOLO[p.r][0] + ' · ' + D.paesi[p.paese].n : 'Paese';
+  const n = v ? v.n : p ? p.n : pa ? pa.n : k, s = sub != null ? sub : v ? SAPT[v.t][0] + (v.paesi ? ' · ' + nomiPaesi(v) : '') : p ? (p.tipo ? p.tipo[0].toUpperCase() + p.tipo.slice(1) : RUOLO[p.r][0]) + ' · ' + D.paesi[p.paese].n : 'Paese';
   return `<button data-s="${k}">${v ? icoV(v) + ' ' : ''}${esc(n)}<br><small>${esc(s)}</small></button>`; };
 function testata(tit, sub, badge) { $('sh').innerHTML = `<div><h2>${esc(tit)}</h2>${sub ? `<p class="sci">${sub}</p>` : ''}${badge || ''}</div><button class="close" aria-label="Chiudi">×</button>`; }
 function natVicina(c) {
@@ -2347,17 +2347,17 @@ function sapVoce(k) {
 }
 function sapProduttore(k) {
   const D = SAP.D, p = D.produttori[k], r = RUOLO[p.r], seg = p.liv === 'Segnalato'; cur = 'SAP:' + k; selez('');
-  testata(p.n, `${r[0]} · ${esc(D.paesi[p.paese].n)}`, seg ? `<span class="badge liv">Segnalato · da visitare</span>` : `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
-  let h = seg ? `<div class="racconto"><p>È tra i produttori ${p.pres.length > 1 ? 'dei presìdi Slow Food' : 'del presidio Slow Food'} ${p.pres.map((x, i) => `<a href="${esc(p.fu[i])}" target="_blank" rel="noopener">${esc(x)}</a>`).join(', ')}.</p><p>Non lo abbiamo ancora visitato. Dopo la visita qui troverai la sua storia, le persone, le foto e la filiera.</p></div>`
+  testata(p.n, `${p.tipo ? esc(p.tipo[0].toUpperCase() + p.tipo.slice(1)) : r[0]} · ${esc(D.paesi[p.paese].n)}`, seg ? `<span class="badge liv">Segnalato · da visitare</span>` : `<span class="badge liv ${p.liv === 'Verificato' ? 'ok' : ''}">${esc(p.liv)}${p.data ? ' il ' + p.data.split('-').reverse().join('/') : ''}</span><span class="badge prova">Esempio inventato</span>`);
+  let h = seg ? `<div class="racconto"><p>Lo segnalano: ${(p.seg || []).map(([a, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(a)}</a>`).join('; ')}.</p><p>Non lo abbiamo ancora visitato. Dopo la visita qui troverai la sua storia, le persone, le foto e la filiera.</p></div>`
     : `<div class="racconto"><p>Scheda di prova: qui andranno la storia dell'azienda, le persone, le foto e la filiera dichiarata o verificata.</p></div>`;
-  h += `<h3>Cosa fa</h3><div class="links">${p.fa.map(x => lnk(x)).join('')}</div>`;
+  if (p.fa.length) h += `<h3>Cosa fa</h3><div class="links">${p.fa.map(x => lnk(x)).join('')}</div>`;
   if (p.da) h += `<h3>Da chi compra</h3><div class="links">${p.da.map(x => lnk(x)).join('')}</div>`;
   if (p.a) h += `<h3>A chi vende</h3><div class="links">${p.a.map(x => lnk(x)).join('')}</div>`;
   if (p.esp) h += `<h3>Esperienze</h3><p class="racconto">${esc(p.esp)}</p>`;
   if (p.sito) h += `<h3>Contatti</h3><div class="links"><a class="btnl" href="${esc(p.sito)}" target="_blank" rel="noopener">${ico('link', 'sm')} Sito dell'azienda</a></div>`;
   const vic = Object.values(D.produttori).filter(x => x.k !== k && x.paese === p.paese).slice(0, 6);
   if (vic.length) h += `<h3>Nello stesso paese</h3><div class="links">${vic.map(x => lnk(x.k)).join('')}</div>`;
-  h += `<h3>Livelli di verifica</h3><p class="note"><b>Segnalato</b>: lo indica una fonte pubblica affidabile, ma non lo abbiamo ancora visitato. <b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali. Nessuno entra pagando.</p><p class="src">${seg ? 'Fonte: Fondazione Slow Food, schede dei presìdi, consultate il 28/11/2026.' : esc(D.nota)}</p>`;
+  h += `<h3>Livelli di verifica</h3><p class="note"><b>Segnalato</b>: lo indica una fonte pubblica affidabile, ma non lo abbiamo ancora visitato. <b>Dichiarato</b>: informazioni date dall'azienda. <b>Verificato</b>: visita fatta e filiera controllata, con la data. <b>Certificato</b>: marchi ufficiali. Nessuno entra pagando.</p><p class="src">${seg ? 'Fonti consultate il 28/11/2026. Se trovi un errore, scrivici.' : esc(D.nota)}</p>`;
   $('sb').innerHTML = h; mostra(); if (vista === 'mappa') sapVola(D.paesi[p.paese].c, 10);
 }
 function sapPaese(k) {
@@ -2391,7 +2391,7 @@ function sapPaese(k) {
     ${nat.length ? `<section class="ns5"><h3>La natura intorno</h3><div class="links">${nat.map(([z, d]) => `<button data-nat="${z}">${ico('leaf', 'xs')} ${esc(S[z].n)}<br><small>a ${Math.round(d / 1000)} km</small></button>`).join('')}</div></section>` : ''}
     ${vicini.length ? `<section class="ns5"><h3>Qui vicino</h3><div class="chips5">${vicini.map(([q, d]) => `<button data-s="${q}">${esc(D.paesi[q].n)}<em>${Math.round(d / 1000)} km</em></button>`).join('')}</div></section>` : ''}
     ${prov.length ? `<details class="prov"><summary>In provincia di ${esc(PROVN[p.pv])}: altri ${prov.length} prodotti tradizionali</summary><div class="links">${prov.map(v => lnk(v.k)).join('')}</div></details>` : ''}
-    ${prod.length ? `<section class="ns5"><h3>Produttori (esempi)</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div></section>` : ''}
+    ${prod.length ? `<section class="ns5"><h3>Chi lo fa qui</h3><div class="links">${prod.map(x => lnk(x.k)).join('')}</div></section>` : ''}
     <p class="src">Il racconto è costruito dai dati: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapFoto($('sb'));
   wikiVoce(p.n + (['Licata', 'Ribera'].includes(p.n) ? '' : '')).then(w => { if (!w || cur !== 'SAP:' + k || !$('spe') || !w.thumbnail || NOFOTO.test(w.thumbnail.source)) return;
@@ -2535,7 +2535,7 @@ function sapItinerari() {
   const D = SAP.D;
   $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
   $('cat').innerHTML = `<div class="in"><h2>Itinerari del gusto</h2><p class="lead">Il viaggio delle materie prime lungo la filiera: dal campo al laboratorio, fino alla bottega o alla tavola.</p>
-    ${Object.keys(D.viaggi).length ? '' : `<div class="racconto"><p>I primi itinerari nasceranno dalle visite ai produttori: un viaggio si pubblica solo quando ogni tappa è stata vista di persona.</p><p>Intanto puoi scoprire chi custodisce i prodotti dei presìdi Slow Food.</p></div><div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi i produttori segnalati</button></div>`}
+    ${Object.keys(D.viaggi).length ? '' : `<div class="racconto"><p>I primi itinerari nasceranno dalle visite ai produttori: un viaggio si pubblica solo quando ogni tappa è stata vista di persona.</p><p>Intanto puoi scoprire i produttori, le osterie, le fattorie e i forni che ti segnaliamo, in attesa della visita.</p></div><div class="links"><button data-sk="prod">${ico('building-store', 'sm')} Vedi i produttori segnalati</button></div>`}
     ${Object.entries(D.viaggi).map(([i, x]) => `<button class="viaggio" data-vg="${i}"><b>${esc(x.n)}</b><span>${x.tappe.map(([p, v]) => `${esc(D.voci[v].n)} <small>${esc(D.paesi[D.produttori[p].paese].n)}</small>`).join(' <em>›</em> ')}</span></button>`).join('')}${COPY()}</div>`;
 }
 $('cat').addEventListener('click', e => {
@@ -2728,7 +2728,7 @@ function sapHome() {
     </section>
     <section class="s5"><button class="pross5" data-tema="natura" style="--tc:#2D6A4F"><span class="img" style="background-image:url('foto/natura/campagna.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Da dove viene quello che mangi</b><span>Il pistacchio sull'Etna, la manna sulle Madonie, la provola sui Nebrodi. Cammina nei luoghi dove nascono i sapori.</span><em>Entra in Natura</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
-    <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: quelli segnalati dalle schede dei presìdi Slow Food, non ancora visitati da noi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
+    <p class="note n5">${PROVA} Fonti: elenco nazionale dei prodotti tradizionali, elenco regionale DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia. Produttori: segnalati da presìdi e Alleanza Slow Food, Chiocciole, fattorie didattiche della Regione e guide del Gambero Rosso; non ancora visitati da noi.</p>${COPY()}<div class="flut" id="flut" aria-hidden="true"></div></div>`;
   sapFoto($('cat'));
   const tip = $('ctip'), cmap = $('cat').querySelector('.com5 svg');
   if (cmap) cmap.onmouseover = e => { const t = e.target.closest('circle'), ti = t && t.querySelector('title'); if (ti) tip.textContent = ti.textContent; };
