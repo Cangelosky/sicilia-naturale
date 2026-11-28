@@ -1103,8 +1103,13 @@ header h1.marchio .mt{font-family:'Caprasimo',Georgia,serif;font-weight:400;font
 .sdot.on{width:28px;border-radius:6px;background:var(--tc)!important;box-shadow:0 0 0 2px #fff}
 /* telefono, home: la scheda copre lo schermo; foto in alto, testo in basso, sotto il testo le sezioni con una frase */
 @media (max-width:860px){.sl5{min-height:0!important}.sl5 .sld{padding:56px 20px var(--giu,110px);align-items:flex-end}.sl5 .apt{width:100%}
-  .sl5 .sln{top:14px;bottom:auto}
-  .sl5 .temi{top:auto;bottom:0;left:0;right:0;display:block;padding:14px 0 16px 20px;background:linear-gradient(0deg,rgba(20,12,6,.72),rgba(20,12,6,0))}
+  .sl5 .sln{display:none}.sl5 .sld{padding-top:24px}
+  .sl5 .temi{top:auto;bottom:0;left:0;right:0;display:block;padding:14px 16px 16px 20px;background:linear-gradient(0deg,rgba(20,12,6,.72),rgba(20,12,6,0))}
+  .sl5 .temib{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;overflow:visible;padding-right:0}
+  .sl5 .temi .ini{display:none}
+  .sl5 .temi button{justify-content:center;gap:4px;padding:6px 2px;font-size:11.5px;min-width:0;letter-spacing:-.01em}
+  .sl5 .temi button.presto::after{display:none}
+  .sl5 .temi button i{width:7px;height:7px;flex:none}
   .sl5 .temil{display:block;margin:0 20px 10px 0;font:500 15px/1.35 'Bricolage Grotesque',sans-serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.45)}}
 /* telefono: le sezioni su una sola riga che scorre col dito, e il testo subito sotto */
 @media (max-width:860px){.temi{right:0}.temib{flex-wrap:nowrap;overflow-x:auto;padding-right:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.temib::-webkit-scrollbar{display:none}.temi button{flex:none;white-space:nowrap}

@@ -3034,9 +3034,20 @@ function filtroTemi() {
   // nella home, sul telefono, le sezioni stanno in fondo alla foto con una frase che invita a scegliere
   return `<nav class="temi" aria-label="Sezioni del sito">${SEZ === 'home' ? '<p class="temil">Cinque sezioni, un solo patrimonio. Da dove vuoi partire?</p>' : ''}<div class="temib"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</div></nav>`;
 }
+// scheda della sezione, come sulla mappa: col mouse si apre passandoci sopra; sul telefono, nella home, il primo tocco la apre e il secondo entra
+const tipSez = (b, x, y) => { const k = b.dataset.tema, z = SEZT[k]; if (!z) return false;
+  const tocco = !fineP;
+  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d)}</span>${tipHint(PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
+  if (tocco) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
+  TIP.dataset.k = 'sez:' + k; return true; };
+document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema]'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi')) tipNascondi(); });
 document.addEventListener('click', e => {
-  const b = e.target.closest('[data-tema],header h1.marchio'); if (!b || isApp) return; e.preventDefault(); e.stopPropagation();
-  entraSez(b.dataset.tema || 'home');
+  const b = e.target.closest('[data-tema],header h1.marchio');
+  if (!b) { if (String(TIP.dataset.k).startsWith('sez:')) tipNascondi(); return; }
+  if (isApp) return; e.preventDefault(); e.stopPropagation();
+  const k = b.dataset.tema || 'home';
+  if (!fineP && k !== 'home' && b.closest('.sl5 .temi') && TIP.dataset.k !== 'sez:' + k) { tipSez(b, 0, 0); return; }
+  tipNascondi(); entraSez(k);
 }, true);
 // testata coerente: colore, menu ed etichetta seguono la sezione in cui sei
 const SEZI = { natura: 'tree', sapori: 'tools-kitchen-2', mare: 'ripple', arte: 'building-church', storia: 'book-2' };
