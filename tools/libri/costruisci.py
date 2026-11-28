@@ -34,6 +34,20 @@ for i,r in enumerate(rows):
     r['i']=i; f(('r',i))
     for k in (r['sic'],r['ita']):
         if k and norm(k): u(('r',i),('k',norm(k)))
+import unicodedata as _u
+def low(x): return _u.normalize('NFC',x).strip().lower()
+nomi=defaultdict(list)
+for r in rows:
+    for x in (r['sic'],r['ita'],(r['sic']+' ('+r['ita']+')') if r['sic'] and r['ita'] else ''):
+        if x: nomi[low(x)].append(r['i'])
+    if r['note']: nomi[low(r['sic']+' ('+r['note']+')')].append(r['i'])
+ALIAS=[l.rstrip('\n').split('\t') for l in open(D+'alias.tsv') if l.strip()]
+miss=[]
+for a,b in ALIAS:
+    ia,ib=nomi.get(low(a)),nomi.get(low(b))
+    if not ia or not ib: miss.append((a,b,bool(ia),bool(ib))); continue
+    for i in ia+ib: u(('r',ia[0]),('r',i))
+if miss: print('ALIAS NON TROVATI',miss)
 grp=defaultdict(list)
 for r in rows: grp[f(('r',r['i']))].append(r)
 piatti=[]
