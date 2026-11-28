@@ -645,7 +645,7 @@ async function wikiCerca(nome) {
   const parole = norm(nome).split(/[^a-z0-9]+/).filter(w => w.length > 3);
   for (const r of (j && j.query && j.query.search) || []) {
     const tt = norm(r.title), ok = parole.filter(w => tt.includes(w)).length;
-    if (parole.length && ok / parole.length >= 0.6) return wikiVoce(r.title);
+    if (parole.length && ok / parole.length >= 0.75) { const w = await wikiVoce(r.title); if (w && /sicil|sicily|palerm|catan|messin|siracus|syracus|trapan|agrigent|ragus|caltaniss|enna|etna|egad|eolie|aeolian|pantelleria|lampedusa|ustica|madonie|nebrodi|iblei|peloritani|sicani/i.test(w.extract || '')) return w; }
   }
   return null;
 }
@@ -2565,10 +2565,16 @@ function sapImg(t) { const ok = w => w && w.thumbnail && !NOFOTO.test(w.thumbnai
 // foto per le voci senza foto propria: Wikipedia poi Wikimedia Commons, solo se il titolo contiene tutte le parole del nome
 const STOPW = new Set('di del della dello dei degli delle da dal dalla e ed o od a al alla allo ai agli alle in con per tra fra il lo la i gli le un uno una sotto sott sicilia siciliano siciliana siciliani siciliane tipico tipica dop igp pat igt doc docg ct pa me ag tp sr rg cl en'.split(' '));
 const paroleN = n => norm(n.split('/')[0].split(':')[0].replace(/\(.*?\)/g, ' ')).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !STOPW.has(w));
-const titoloOk = (n, t) => { const p = paroleN(n), tt = norm(t).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/);
-  return p.length && p.every(w => tt.includes(w) || (w.length > 4 && tt.some(x => x.startsWith(w.slice(0, -1)) && Math.abs(x.length - w.length) <= 2))); };
-const IMGC = (() => { try { return JSON.parse(localStorage.getItem('sn_img2') || '{}'); } catch (e) { return {}; } })();
-const salvaImg = () => { try { localStorage.setItem('sn_img2', JSON.stringify(IMGC)); } catch (e) {} };
+const FUORI = /\b(cines|giappon|indian|american|frances|tedesc|spagnol|portoghes|grec[oaie]|turc[oaih]|arab[oaie]|marocchin|tunisin|ingles|pugli|salent|lecc[ei]|calabr|napol|campan|sard[oaie]|sardegna|tosc|roman[oaie]|lazial|emilia|piemont|lombard|venet|friul|ligur|abruzz|molis|lucan|basilicat|umbr|march[ei]giano|trentin|valdostan|maltes|chines|japan|china|indian)\w*/;
+const titoloOk = (n, t, largo) => { const p = paroleN(n), tt = norm(t).replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+  const simile = (w, x) => x === w || (w.length > 4 && x.startsWith(w.slice(0, -1)) && Math.abs(x.length - w.length) <= 2);
+  if (!p.length || !p.every(w => tt.some(x => simile(w, x)))) return false;
+  if (FUORI.test(norm(t))) return false;
+  const paesi = SAP.D ? SAP.D._np || (SAP.D._np = new Set(Object.values(SAP.D.paesi).flatMap(q => norm(q.n).split(/[^a-z]+/)))) : new Set();
+  const extra = tt.filter(x => x.length > 2 && !STOPW.has(x) && !/\d/.test(x) && !/^(jpg|jpeg|png|tif|tiff|webp|file|foto|img|dsc|photo)$/.test(x) && !/^(palermitan|catanes|messines|trapanes|siracusan|ragusan|nissen|ennes|agrigentin|eolian|pantesc|modican|mazares|marsales|netin|acesi|madonit|nebroide|iblei|etne)/.test(x) && !paesi.has(x) && !p.some(w => simile(w, x)));
+  return extra.length <= (largo ? 2 : 0); };
+const IMGC = (() => { try { return JSON.parse(localStorage.getItem('sn_img3') || '{}'); } catch (e) { return {}; } })();
+const salvaImg = () => { try { localStorage.setItem('sn_img3', JSON.stringify(IMGC)); } catch (e) {} };
 const IMGP = {};
 const BRUTTE = /stemma|coat of arms|logo|\bmaps?\b|mappa|flag|bandiera|\.svg|\.pdf|\.tif/i;
 function sapImgV(k) {
@@ -2579,14 +2585,14 @@ function sapImgV(k) {
     let r = null;
     const nomi = [...new Set([v.n, ...v.n.split('/').map(x => x.trim()), v.nd || ''].filter(x => x && paroleN(x).length))].slice(0, 3);
     for (const n of nomi) {
-      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=640`);
+      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages|extracts&exintro=1&explaintext=1&exchars=700&piprop=thumbnail&pithumbsize=640`);
       const pg = Object.values((j && j.query && j.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
-      for (const x of pg) if (x.thumbnail && titoloOk(n, x.title) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
+      for (const x of pg) if (x.thumbnail && titoloOk(n, x.title) && (v.t === 'materia' || /sicil|palerm|catan|messin|siracus|trapan|agrigent|ragus|nissen|enna|etna|egadi|eolie|pantelleria/.test(norm(x.extract || ''))) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
       if (r) break;
       const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640`);
       const cp = Object.values((c && c.query && c.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
       for (const x of cp) { const t = x.title.slice(5), ii = (x.imageinfo || [])[0] || {}, m = ii.extmetadata || {}, lic = (m.LicenseShortName || {}).value || '';
-        if (!titoloOk(n, t) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
+        if (!titoloOk(n, t, true) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
         r = { u: ii.thumburl, p: ii.descriptionurl, t, a: pulito((m.Artist || {}).value || '').slice(0, 80), l: lic, src: 'Wikimedia Commons' }; break; }
       if (r) break;
     }
@@ -3079,10 +3085,12 @@ if (!isApp) { document.querySelector('#wrap .top').insertAdjacentHTML('beforeend
 
 /* ---- leggere bene: testo più grande e contrasto alto, per tutti (anziani, bambini, chi legge dal telefono al sole) */
 const LET = (() => { try { return JSON.parse(localStorage.getItem('sn_let') || '{}'); } catch (e) { return {}; } })();
-function applicaLet() { document.body.classList.toggle('tx-l', LET.t === 1); document.body.classList.toggle('tx-xl', LET.t === 2); document.body.classList.toggle('hc', !!LET.c); try { localStorage.setItem('sn_let', JSON.stringify(LET)); } catch (e) {} }
+function applicaLet() { document.body.classList.toggle('tx-l', LET.t === 1); document.body.classList.toggle('tx-xl', LET.t === 2); document.body.classList.toggle('hc', !!LET.c); for (const x of document.querySelectorAll('.let5 [data-let]')) { const k = x.dataset.let; x.disabled = (k === 'm' && !LET.t) || (k === 'p' && LET.t === 2); if (k === 'c') x.setAttribute('aria-pressed', !!LET.c); } try { localStorage.setItem('sn_let', JSON.stringify(LET)); } catch (e) {} }
 if (!isApp) {
-  document.querySelector('header .lang').insertAdjacentHTML('beforebegin', `<div class="let5" role="group" aria-label="Leggi meglio"><button data-let="t" aria-label="Testo più grande" title="Testo più grande">A<sup>+</sup></button><button data-let="c" aria-label="Contrasto alto" title="Contrasto alto">◐</button></div>`);
-  document.querySelector('.let5').onclick = e => { const b = e.target.closest('[data-let]'); if (!b) return; if (b.dataset.let === 't') LET.t = ((LET.t || 0) + 1) % 3; else LET.c = !LET.c; applicaLet(); };
+  document.querySelector('header .lang').insertAdjacentHTML('beforebegin', `<div class="let5" role="group" aria-label="Leggi meglio"><button data-let="m" aria-label="Testo più piccolo" title="Testo più piccolo">A<sup>−</sup></button><button data-let="p" aria-label="Testo più grande" title="Testo più grande">A<sup>+</sup></button><button data-let="c" aria-label="Contrasto alto: testo più scuro e colori più netti, per leggere meglio" title="Contrasto alto: testo più scuro e colori più netti" aria-pressed="false">◐</button></div>`);
+  document.querySelector('.let5').onclick = e => { const b = e.target.closest('[data-let]'); if (!b) return; const k = b.dataset.let;
+    if (k === 'p') LET.t = Math.min(2, (LET.t || 0) + 1); else if (k === 'm') LET.t = Math.max(0, (LET.t || 0) - 1); else LET.c = !LET.c;
+    applicaLet(); };
   applicaLet();
 }
 
