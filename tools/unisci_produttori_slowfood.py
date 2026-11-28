@@ -53,6 +53,7 @@ for ps, x in mp.items():
     v['sfu'] = URL + ps + '/'
     voce_di[ps] = (vk, ruolo, nome)
 
+TIPO = json.loads((RAW.parent / 'tipo_presidi.json').read_text())
 prod, manca = {}, set()
 for riga in RAW.read_text().splitlines():
     if not riga.strip() or riga.startswith('#'):
@@ -77,6 +78,7 @@ for riga in RAW.read_text().splitlines():
         p['seg'].append(['presidio Slow Food ' + pnome, URL + ps + '/'])
     if ruolo == 'trasforma':
         p['r'] = 'trasforma'
+    p.setdefault('tipo', 'bar' if (ps == 'scattata-di-alia' and n.startswith('Bar')) else TIPO[ps])
     if sito and not p.get('sito'):
         p['sito'] = 'https://' + sito.removeprefix('https://').removeprefix('http://')
     # la voce vale anche per il paese del produttore
