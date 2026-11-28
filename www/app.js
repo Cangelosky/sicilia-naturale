@@ -3171,8 +3171,7 @@ $('cat').addEventListener('click', e => {
   if (k) { e.stopPropagation(); natMappa(); return setTimeout(() => apri(k.dataset.nk, true), 650); }
   if (sp) { e.stopPropagation(); const [tp, i] = sp.dataset.sp.split(':'); NAT.home = false; vai(tp); return setTimeout(() => apriSpecie(tp, +i), 300); }
   if (!p) return; e.stopPropagation(); const w = p.dataset.np;
-  if (w === 'parchi') { ON.aree = true; applica(); return natMappa(); }
-  if (w === 'vetusti' || w === 'alberi') { ON[w === 'vetusti' ? 'bv' : 'am'] = true; applica(); return natMappa(); }
+  if (w === 'parchi' || w === 'vetusti' || w === 'alberi') return mappaTema(w);
   NAT.home = false;
   if (w === 'sentieri') return vai('escursioni');
   if (w === 'funghi' || w === 'piante') return vai(w);
@@ -3426,7 +3425,7 @@ $('cat').addEventListener('click', e => {
   if (!mg) return; e.stopPropagation(); const [a, b] = mg.dataset.mg.split(':');
   if (a === 'mcal') return versoSapori(() => { SAP.cal = null; vai('meteo'); });
   if (a === 'ms') return versoSapori(() => { Object.assign(SAP.fil, { k: b, q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }); $('cat').dataset.v = ''; vai('specie'); });
-  if (b === 'parchi') { ON.aree = true; applica(); return natMappa(); }
+  if (b === 'parchi') return mappaTema('parchi');
   NAT.home = false; if (b === 'sentieri') return vai('escursioni'); vai(b);
 }, true);
 
@@ -3637,7 +3636,7 @@ function rottaAttuale() {
     || (vista === 'mappa' && !SAP.home ? '#/sapori/mappa' : null);
   if (v === 'nat-home') return '#/natura';
   if (v === 'cal') return '#/natura/calendario';
-  return { funghi: '#/natura/funghi', piante: '#/natura/piante', escursioni: '#/natura/percorsi', meteo: '#/natura/meteo', mappa: NAT.home ? null : '#/natura/mappa' }[vista] || null;
+  return { funghi: '#/natura/funghi', piante: '#/natura/piante', escursioni: '#/natura/percorsi', meteo: '#/natura/meteo', mappa: NAT.home ? null : '#/natura/mappa' + (MT.t ? '/' + MT.t : '') }[vista] || null;
 }
 // titolo della scheda del browser: "Tignosa verdognola · Sicilia Naturale"
 function titoloRotta(r) {
@@ -3668,6 +3667,7 @@ async function applicaRotta(h) {
     if (!a) entraSez('home');
     else if (a === 'natura') {
       if (!b) entraSez('natura');
+      else if (b === 'mappa') { await natura(); mappaTema(c && TEMIMAPPA[c] ? c : null); }
       else { await natura(); const v = { mappa: 'mappa', percorsi: 'escursioni', meteo: 'meteo', funghi: 'funghi', piante: 'piante', calendario: 'piante' }[b] || 'mappa'; vai(v);
         if (b === 'calendario') { await CAT; await attesa(200); calendario(); } }
     } else if (a === 'sapori') {
@@ -3869,7 +3869,7 @@ function paginaScuole() {
   const conta = t => Object.values(S).filter(x => x.t === t).length, D2 = SAP.D || { voci: {}, paesi: {} };
   const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
   const strumenti = [
-    ['list-details', 'Elenco delle specie di ogni zona', 'Apri un parco, una riserva o un sito Natura 2000 e scarica l\'elenco di funghi e piante segnalati, in CSV, pronto per un foglio di calcolo.', '#/natura/mappa', 'Apri la mappa', '#2D6A4F'],
+    ['list-details', 'Elenco delle specie di ogni zona', 'Apri un parco, una riserva o un sito Natura 2000 e scarica l\'elenco di funghi e piante segnalati, in CSV, pronto per un foglio di calcolo.', '#/natura/mappa/natura2000', 'Apri la mappa', '#2D6A4F'],
     ['calendar', 'Calendario delle fioriture', 'Mese per mese, quali piante fioriscono e dove. Utile per scegliere quando fare un\'uscita o per una ricerca sulle stagioni.', '#/natura/calendario', 'Vedi il calendario', '#2D6A4F'],
     ['cloud', 'Meteo e dati del cielo', 'Previsioni per ogni comune, pioggia degli ultimi due mesi, vento e temperatura. Un buon punto di partenza per leggere i dati del clima.', '#/natura/meteo', 'Apri il meteo', '#2F7EA8'],
     ['route-2', 'Percorsi in PDF e GPX', 'Sentieri con lunghezza, dislivello e tempi. Si stampano in PDF per la classe o si caricano nel GPS in formato GPX.', '#/natura/percorsi', 'Vedi i percorsi', '#2D6A4F'],
@@ -3881,14 +3881,14 @@ function paginaScuole() {
   const percorsi = [
     ['Scuola primaria', '#C8102E', 'natura/fico', [
       ['Il mio paese e il suo sapore', 'Cerca il tuo comune sulla mappa dei Sapori: quali prodotti e quali dolci nascono lì? Disegnali e racconta per quale festa si preparano.', '#/sapori/mappa'],
-      ['Un albero più vecchio dei nonni', 'Trova l\'albero monumentale più vicino alla scuola: quanti anni ha, quanto è alto, che storie racconta.', '#/natura/mappa'],
+      ['Un albero più vecchio dei nonni', 'Trova l\'albero monumentale più vicino alla scuola: quanti anni ha, quanto è alto, che storie racconta.', '#/natura/mappa/alberi'],
       ['Che tempo farà?', 'Ogni mattina, per una settimana, guardate il meteo del vostro comune e confrontatelo con il cielo vero.', '#/natura/meteo']]],
     ['Scuola secondaria di primo grado', '#2F7EA8', 'natura/campagna', [
-      ['Le aree protette della mia provincia', 'Quanti parchi e riserve ci sono? Perché sono protetti? Confrontate la loro superficie e gli ambienti che custodiscono.', '#/natura/mappa'],
+      ['Le aree protette della mia provincia', 'Quanti parchi e riserve ci sono? Perché sono protetti? Confrontate la loro superficie e gli ambienti che custodiscono.', '#/natura/mappa/parchi'],
       ['Dal grano al pane', 'Seguite la filiera del grano: varietà antiche, dove crescono, quali pani nascono da ogni farina.', '#/sapori/grano'],
       ['Le stagioni dei fiori', 'Con il calendario delle fioriture, preparate un erbario fotografico di quello che fiorisce intorno alla scuola.', '#/natura/calendario']]],
     ['Scuola secondaria di secondo grado', '#2D6A4F', 'natura/agave-montagne', [
-      ['La biodiversità di un sito Natura 2000', 'Scaricate l\'elenco delle specie di un sito, contate famiglie e generi, confrontate gli habitat e i dati di superficie.', '#/natura/mappa'],
+      ['La biodiversità di un sito Natura 2000', 'Scaricate l\'elenco delle specie di un sito, contate famiglie e generi, confrontate gli habitat e i dati di superficie.', '#/natura/mappa/natura2000'],
       ['Pioggia, clima e boschi', 'Usate la pioggia degli ultimi due mesi e le previsioni per capire come il meteo influisce sulla vita del bosco.', '#/natura/meteo'],
       ['Prodotti tradizionali e territorio', 'Mappate i prodotti DOP, IGP e tradizionali di una provincia e spiegate il legame con il suolo e il clima.', '#/sapori/catalogo']]],
     ['Università e ricerca', '#5B3A26', 'natura/mulino-saline', [
@@ -3907,8 +3907,8 @@ function paginaScuole() {
     <section class="s5 usc5"><div class="t5"><h2>Un'uscita con la classe</h2><p>Quattro passi per prepararla con il sito.</p></div>
       <div class="pas5">${[
         ['Scegli il giorno', 'Con «Oggi in Sicilia» e il meteo dei comuni vedi dove il tempo è migliore nei prossimi giorni.', '#/natura/meteo'],
-        ['Scegli il luogo', 'Sulla mappa trovi parchi e riserve vicini, con gli ambienti e le specie da osservare.', '#/natura/mappa'],
-        ['Leggi le regole', 'Ogni area protetta ha le sue regole: nella scheda trovi cosa è permesso e cosa no.', '#/natura/mappa'],
+        ['Scegli il luogo', 'Sulla mappa trovi parchi e riserve vicini, con gli ambienti e le specie da osservare.', '#/natura/mappa/parchi'],
+        ['Leggi le regole', 'Ogni area protetta ha le sue regole: nella scheda trovi cosa è permesso e cosa no.', '#/natura/mappa/parchi'],
         ['Scegli il sentiero', 'Lunghezza, dislivello e tempi, da stampare in PDF per tutti.', '#/natura/percorsi']
       ].map(([a, b, r], i) => `<button data-rotta="${r}"><span class="n">${i + 1}</span><b>${a}</b><span>${b}</span></button>`).join('')}</div>
       <p class="note">Le specie si osservano e si fotografano: non si raccolgono. Funghi e piante selvatiche non vanno mai assaggiati.</p></section>
@@ -3919,4 +3919,29 @@ function paginaScuole() {
     ${COPY()}</div>`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-rotta]'); if (!b) return; e.preventDefault(); e.stopPropagation(); vaiRotta(b.dataset.rotta); }, true);
+
+/* ---------- mappa filtrata per argomento: chi arriva da un link vede solo ciò di cui parla il link */
+const MT = { t: null };
+const TEMIMAPPA = {
+  parchi: ['Parchi e riserve', { aree: true }, 'Le aree protette: parchi regionali, riserve naturali e aree marine. Tocca un\'area per la sua scheda.'],
+  natura2000: ['Siti Natura 2000', { n2k: true }, 'I siti della rete europea per la tutela di habitat e specie. Ogni scheda ha l\'elenco delle specie da scaricare.'],
+  alberi: ['Alberi monumentali', { am: true }, 'Gli alberi monumentali censiti in Sicilia. Avvicinati e tocca un punto.'],
+  vetusti: ['Boschi vetusti', { bv: true }, 'I boschi lasciati crescere da secoli, quasi senza tagli.'],
+  seme: ['Boschi da seme', { bs: true }, 'I boschi da cui si raccolgono i semi per i vivai forestali.'],
+  sentieri: ['Sentieri', { osm: true, aree: true }, 'I sentieri segnati sulla carta di OpenStreetMap, con i parchi sullo sfondo.'],
+  boschi: ['Boschi e foreste', { cf: true }, 'La carta dei boschi della Regione Siciliana, per tipo di bosco.']
+};
+function mappaTema(t) {
+  const x = TEMIMAPPA[t]; MT.t = x ? t : null;
+  for (const k of Object.keys(ON)) ON[k] = x ? !!x[1][k] : ({ aree: true, n2k: true })[k] || false;
+  applica(); natMappa(); setTimeout(fasciaTema, 50);
+}
+function fasciaTema() {
+  let f = $('ftema'); if (!f) { document.body.insertAdjacentHTML('beforeend', '<div id="ftema" class="ftema" role="status"></div>'); f = $('ftema'); }
+  const x = MT.t && TEMIMAPPA[MT.t], vis = x && vista === 'mappa' && !NAT.home && !sapOn() && !$('cat').classList.contains('on');
+  f.classList.toggle('on', !!vis); if (!vis) return;
+  f.innerHTML = `<b>${esc(x[0])}</b><span>${esc(x[2])}</span><div>${Object.entries(TEMIMAPPA).filter(([k]) => k !== MT.t).slice(0, 4).map(([k, y]) => `<button data-mtema="${k}">${esc(y[0])}</button>`).join('')}<button data-mtema="tutto" class="tutto">Mostra tutto</button></div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-mtema]'); if (!b) return; e.stopPropagation(); if (b.dataset.mtema === 'tutto') { mappaTema(null); return; } mappaTema(b.dataset.mtema); if (!isApp) try { history.replaceState(null, '', '#/natura/mappa/' + b.dataset.mtema); } catch (er) {} }, true);
+new MutationObserver(() => setTimeout(fasciaTema, 30)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }
