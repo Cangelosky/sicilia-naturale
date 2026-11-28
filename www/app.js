@@ -3031,7 +3031,8 @@ const SEZT = {
 };
 function filtroTemi() {
   if (isApp) return '';
-  return `<nav class="temi" aria-label="Sezioni del sito"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</nav>`;
+  // nella home, sul telefono, le sezioni stanno in fondo alla foto con una frase che invita a scegliere
+  return `<nav class="temi" aria-label="Sezioni del sito">${SEZ === 'home' ? '<p class="temil">Cinque sezioni, un solo patrimonio. Da dove vuoi partire?</p>' : ''}<div class="temib"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</div></nav>`;
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-tema],header h1.marchio'); if (!b || isApp) return; e.preventDefault(); e.stopPropagation();
@@ -3116,7 +3117,13 @@ let SLT = null;
 function scorri5() {
   clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
   // sul telefono il riquadro è alto quanto la slide più lunga: niente fascia vuota sopra il titolo
-  const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; } let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight); box.style.height = (h + 64 + 62) + 'px'; };
+  // sul telefono la scheda copre tutto lo schermo tra la testata e la barra in basso (mai meno del testo più lungo)
+  const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; }
+    let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
+    const tm = box.querySelector('.temi'), giu = (tm ? tm.offsetHeight : 0) + 16, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+    box.style.setProperty('--giu', giu + 'px');
+    const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
+    box.style.height = Math.max(h + 56 + giu, schermo) + 'px'; };
   alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
   const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')]; let i = 0, ferma = false;
   const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i)); };
