@@ -2238,7 +2238,8 @@ function sapClick(e) {
 // la carta che racconta, in basso sulla mappa
 function sapCarta(html) {
   let c = $('sapcard'); if (!c) { c = document.createElement('div'); c.id = 'sapcard'; c.className = 'sapcard'; $('wrap').appendChild(c);
-    c.addEventListener('click', e => { const b = e.target.closest('[data-cp],[data-cv],[data-cz],[data-cx],[data-cpr],[data-cn],[data-cperc],[data-ccf],[data-cevc]'); if (!b) return;
+    c.addEventListener('click', e => { const b = e.target.closest('[data-cp],[data-cv],[data-cz],[data-cx],[data-cpr],[data-cn],[data-cperc],[data-ccf],[data-cevc],[data-cfv]'); if (!b) return;
+      if (b.dataset.cfv) { sapCarta(); const [fk, vk] = b.dataset.cfv.split(':'); return sapVarieta(fk, vk); }
       if (b.dataset.cpr) { sapCarta(); return sapProduttore(b.dataset.cpr); }
       if (b.dataset.cperc) { sapCarta(); return apriPercorso(b.dataset.cperc); }
       if (b.dataset.ccf) { sapCarta(); return apriCF(b.dataset.ccf); }
@@ -2326,6 +2327,61 @@ function cartaBosco(cf) {
   const [n, v] = (CFN.tipi[cf] || [cf, []]);
   sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>Carta forestale della Regione</small><h3>${esc(n)}</h3>
     <p>${esc(CFN.macro[cf.slice(0, 2)] || '')}</p><div class="ca"><button class="pri" data-ccf="${esc(cf)}">Apri la scheda completa</button></div></div></div>`);
+}
+/* ---- le filiere: vino, olio, grano, formaggio, pane */
+var FIL = null; const FILD = () => FIL || (FIL = fetch('data/filiere.json').then(r => r.json()));
+const FILK = ['vino', 'olio', 'grano', 'formaggio', 'pane'];
+const FILFO = { vino: ['vigna-con-uva-1', 'Una vigna con l’uva matura'], olio: ['olive-nel-palmo-passulunara', 'Olive nel palmo della mano'], grano: ['pane-di-grano-duro', 'Pane di grano duro'], formaggio: ['tuma-nel-suo-siero', 'Tuma nel suo siero'], pane: ['pane-a-pasta-dura', 'Pane a pasta dura'] };
+const filVar = (F, fk, vk) => { for (const g of F.filiere[fk].gruppi) for (const v of (g.v || [])) if (v.k === vk) return [v, g]; return [null, null]; };
+function sapFiliera(fk) {
+  Promise.all([FILD(), SAPD()]).then(([F]) => {
+    const D = SAP.D, f = F.filiere[fk]; if (!f) return; SAP.fk = fk; SAP.filC = F;
+    $('cat').dataset.v = 'sap-fil'; $('cat').scrollTop = 0; SAP.home = false; if (String(cur).startsWith('SAP:fv:')) chiudi();
+    const punti = []; for (const g of f.gruppi) for (const v of (g.v || [])) for (const p of v.paesi.slice(0, 2)) if (D.paesi[p]) punti.push({ a: 'fv', id: fk + ':' + v.k, xy: D.paesi[p].c, t: v.lr ? 'riserva' : 'sagra', on: !v.lr, tit: v.n });
+    const vociF = new Set(); for (const g of f.gruppi) { for (const v of (g.v || [])) v.dop.forEach(x => vociF.add(x)); (g.voci || []).forEach(x => vociF.add(x)); }
+    const chi = Object.values(D.produttori).filter(p => (p.fa || []).some(x => vociF.has(x))).slice(0, 16);
+    const fonti = [...new Set([...(f.fonti || []), ...f.gruppi.flatMap(g => (g.v || []).flatMap(v => v.f))])].map(x => F.fonti[x]).filter(Boolean);
+    const fo = FILFO[fk];
+    const carta = v => `<button class="var5${v.lr ? ' lr' : ''}" data-fv="${fk}:${v.k}"><b>${esc(v.n)}</b>${v.sin ? `<small>${esc(v.sin)}</small>` : ''}<span>${esc(v.t.split('. ')[0].replace(/\.$/, ''))}.</span>${v.paesi.length ? `<em>${v.paesi.slice(0, 3).map(p => esc(D.paesi[p].n)).join(' · ')}</em>` : ''}${v.lr ? '<i>Da salvare</i>' : ''}</button>`;
+    const voce = k => { const v = D.voci[k]; if (!v) return ''; return `<button class="vo5" data-fs="${k}">${icoV(v)} <b>${esc(v.n)}</b>${(v.ric || []).length ? `<small>${esc(v.ric.join(' · '))}</small>` : ''}</button>`; };
+    $('cat').innerHTML = `<div class="in fil5">
+      <nav class="filtab" aria-label="Le filiere">${FILK.map(k => `<button data-fil="${k}" class="${k === fk ? 'on' : ''}" aria-current="${k === fk}">${esc(F.filiere[k].n)}</button>`).join('')}</nav>
+      <div class="filh"><div><p class="sub">${esc(f.sub)}</p><h2>${esc(f.n)}</h2>${f.intro.map(p => `<p>${esc(p)}</p>`).join('')}</div>${fo ? `<figure><span style="background-image:url('foto/${fo[0]}.webp')"></span><figcaption>${esc(fo[1])}, foto di Oscar Cangelosi</figcaption></figure>` : ''}</div>
+      ${punti.length ? `<section class="filmap"><h3>Dove crescono</h3><p class="note">Passa sui punti per vedere la varietà, toccali per saperne di più. I punti chiari sono le varietà da salvare.</p><div class="cmap">${mappaSicilia({ w: 840, nomi: true, punti })}</div></section>` : ''}
+      ${f.gruppi.map(g => `<section class="filg"><h3>${esc(g.n)}</h3>${g.testo ? `<p class="gt">${esc(g.testo)}</p>` : ''}<div class="${g.v ? 'vargrid' : 'vogrid'}">${g.v ? g.v.map(carta).join('') : g.voci.map(voce).join('')}</div></section>`).join('')}
+      ${chi.length ? `<section class="filg"><h3>Chi li custodisce</h3><p class="gt">Produttori e laboratori segnalati che lavorano questi prodotti. Non li abbiamo ancora visitati.</p><div class="vogrid">${chi.map(p => `<button class="vo5" data-fpr="${p.k}"><b>${esc(p.n)}</b><small>${esc(p.tipo || RUOLO[p.r][0])} · ${esc(D.paesi[p.paese].n)}</small></button>`).join('')}</div></section>` : ''}
+      <p class="src">Testi scritti da noi a partire da queste fonti, da verificare sui libri: ${fonti.map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}.</p>
+      ${COPY()}</div>`;
+    sapFoto($('cat'));
+  });
+}
+function sapVarieta(fk, vk) {
+  FILD().then(F => {
+    const D = SAP.D, [v, g] = filVar(F, fk, vk); if (!v) return; cur = 'SAP:fv:' + fk + ':' + vk; selez('');
+    testata(v.n, `${esc(F.filiere[fk].sub)} · ${esc(g.n)}`, v.lr ? '<span class="badge prova">Da salvare</span>' : '');
+    const chi = Object.values(D.produttori).filter(p => (p.fa || []).some(x => v.dop.includes(x))).slice(0, 8);
+    let h = `<div class="racconto"><p>${esc(v.t)}</p>${v.sin ? `<p>Altri nomi: <b>${esc(v.sin)}</b>.</p>` : ''}</div>`;
+    if (v.paesi.length) h += `<section class="ns5"><h3>Dove cresce</h3><div class="mm5">${mappaSicilia({ w: 400, nomi: true, evid: v.paesi })}</div><div class="chips5">${v.paesi.map(p => `<button data-s="${p}">${esc(D.paesi[p].n)}</button>`).join('')}</div></section>`;
+    if (v.dop.length) h += `<section class="ns5"><h3>${fk === 'vino' ? 'Nei vini' : fk === 'olio' ? 'Negli oli e nelle olive' : 'Nei prodotti'}</h3><div class="links">${v.dop.filter(x => D.voci[x]).map(x => lnk(x)).join('')}</div></section>`;
+    if (chi.length) h += `<section class="ns5"><h3>Chi la lavora</h3><div class="links">${chi.map(p => lnk(p.k)).join('')}</div></section>`;
+    h += `<section class="ns5"><h3>Le altre varietà</h3><div class="chips5">${g.v.filter(x => x.k !== vk).map(x => `<button data-fv="${fk}:${x.k}">${esc(x.n)}</button>`).join('')}</div><p><button class="lk" data-fil="${fk}">Tutta la sezione «${esc(F.filiere[fk].n)}»</button></p></section>`;
+    h += `<p class="src">Fonti: ${v.f.map(x => F.fonti[x]).filter(Boolean).map(x => `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>`).join(' · ')}. Testo scritto da noi, da verificare sui libri.</p>`;
+    $('sb').innerHTML = h; mostra();
+  });
+}
+function tipVarieta(id) {
+  if (!SAP.filC) { FILD().then(F => { SAP.filC = F; TIP.dataset.k = ''; }); return ''; }
+  const [fk, vk] = id.split(':'), [v, g] = filVar(SAP.filC, fk, vk); if (!v) return '';
+  return `<span class="tt">${esc(g.n)}</span><b>${esc(v.n)}</b><small>${esc(v.paesi.slice(0, 3).map(p => SAP.D.paesi[p].n).join(' · '))}</small><span class="tl">${esc(v.t.split('. ')[0])}.</span>${tipHint('Clic per saperne di più')}`;
+}
+function cartaVarieta(id) {
+  FILD().then(F => {
+    SAP.filC = F; const [fk, vk] = id.split(':'), [v, g] = filVar(F, fk, vk); if (!v) return;
+    const frase = v.t.length > 260 ? v.t.slice(0, 250).replace(/\s\S*$/, '') + '…' : v.t;
+    sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc"><div><small>${esc(F.filiere[fk].sub)} · ${esc(g.n)}</small><h3>${esc(v.n)}</h3>${v.sin ? `<p class="cmeta">Detto anche ${esc(v.sin)}</p>` : ''}<p>${esc(frase)}</p>
+      ${v.dop.length ? `<p class="cmeta">${v.dop.filter(x => SAP.D.voci[x]).slice(0, 4).map(x => `<button class="cl5" data-cv="${x}">${esc(SAP.D.voci[x].n)}</button>`).join(', ')}</p>` : ''}
+      <div class="ca"><button class="pri" data-cfv="${esc(id)}">Apri la scheda completa</button></div></div></div>`);
+  });
 }
 function sapGruppo(g) {
   const src = map.getSource('sapp'), id = g.properties.cluster_id;
@@ -2603,6 +2659,13 @@ $('cat').addEventListener('click', e => {
   if (hf) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'tutto', festa: hf.dataset.hfesta, q: '', paese: '', lr: '', fam: '', ric: '', n: 60 }); $('cat').dataset.v = ''; vai('specie'); }
 }, true);
 
+document.addEventListener('click', e => {
+  const t = e.target.closest && e.target.closest('[data-fil],[data-fv],[data-fs],[data-fpr]'); if (!t || t.closest('#sapcard')) return;
+  if (t.dataset.fil) { e.stopPropagation(); if (!SAP.on) return versoSapori(() => sapFiliera(t.dataset.fil)); if ($('cat').classList.contains('on')) return sapFiliera(t.dataset.fil); vai('specie'); return setTimeout(() => sapFiliera(t.dataset.fil), 60); }
+  if (t.dataset.fv) { e.stopPropagation(); const [fk, vk] = t.dataset.fv.split(':'); return sapVarieta(fk, vk); }
+  if (t.dataset.fs) { e.stopPropagation(); return sapApri(t.dataset.fs); }
+  if (t.dataset.fpr) { e.stopPropagation(); return sapProduttore(t.dataset.fpr); }
+}, true);
 /* ---- itinerari */
 function sapItinerari() {
   const D = SAP.D;
@@ -2774,6 +2837,10 @@ function sapHome() {
         <button class="apc" data-sc="${hf.v || ''}" ${hf.v ? '' : 'disabled'}>${esc(hf.t || '')}, foto di Oscar Cangelosi</button>
       </div>
       <div class="apm">${mappaSicilia({ w: 420, nomi: true })}<button id="hmap">Esplora la mappa ${freccia}</button></div>
+    </section>
+    <section class="s5 fil5h">
+      <div class="t5"><h2>Le cinque materie della tavola siciliana</h2><p>Vino, olio, grano, formaggio e pane: le varietà, i territori e chi le custodisce.</p></div>
+      <div class="filcards">${FILK.map(k => `<button data-fil="${k}"><span class="img conf" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${{ vino: 'Il vino', olio: "L'olio", grano: 'Il grano', formaggio: 'Il formaggio', pane: 'Il pane' }[k]}</b><small>${{ vino: 'I vitigni', olio: 'Le cultivar', grano: 'I grani antichi', formaggio: 'Latte, caci e ricotte', pane: 'Pani di semola e di festa' }[k]}</small></button>`).join('')}</div>
     </section>
     <section class="s5">
       <div class="t5"><h2>Cosa ti va di scoprire?</h2><p>${sel ? `Stai guardando ${esc(nomeSel)}. ` : ''}Tocca una famiglia di sapori per entrare ed esplorarla.${sel ? ' <button id="hreset" class="lk">Mostra tutto</button>' : ''}</p></div>
@@ -3131,6 +3198,7 @@ function tipSvg(c) {
   if ((d.sc || d.mp) && SAP.D && SAP.D.paesi[d.sc || d.mp]) return tipPaese(d.sc || d.mp);
   if (d.nk) return tipZona(d.nk);
   if (d.cev) return tipEvento(d.cev);
+  if (d.fv) return tipVarieta(d.fv);
   return '';
 }
 function tipEvento(id) {
@@ -3149,11 +3217,12 @@ const tipBosco = cf => `<span class="tt">Carta forestale</span><b>${esc(tipoCF(c
 // clic sui punti delle mappe disegnate: sempre la stessa scheda breve
 document.addEventListener('click', e => {
   const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const d = c.dataset;
-  if (!(d.sc || d.mp || d.nk || d.cev)) return;
+  if (!(d.sc || d.mp || d.nk || d.cev || d.fv)) return;
   e.stopPropagation(); e.preventDefault(); SAP.ancora = [e.clientX, e.clientY];
   if (d.sc || d.mp) return sapCartaPaese(d.sc || d.mp, true);
   if (d.nk) return natCarta(d.nk);
   if (d.cev) return cartaEvento(d.cev);
+  if (d.fv) return cartaVarieta(d.fv);
 }, true);
 function tipGruppo(p) { return `<span class="tt">Più comuni vicini</span><b>${p.point_count} comuni</b><small>${p.tot} sapori documentati</small>${tipHint('Clic per l’elenco, dal più ricco')}`; }
 function tipPaese(k, p) {
