@@ -3362,7 +3362,9 @@ if (fineP) {
 function altreSez() {
   if (isApp || typeof SEZT === 'undefined' || ($('cat').dataset.v === 'gen-home')) return '';
   const qui = SEZ === 'home' ? '' : SEZ, freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
-  return `<aside class="altre5" aria-label="Le altre sezioni"><p class="t">${qui ? 'Continua a scoprire la Sicilia' : 'Le sezioni di Sicilia Naturale'}</p><div>${Object.entries(SEZT).filter(([k]) => k !== qui).map(([k, x]) => `<button data-tema="${k}" style="--tc:${TEMA[k][1]}"><i></i><b>${x.t}</b><small>${PRONTI.includes(k) ? x.s : 'In preparazione'}</small>${freccia}</button>`).join('')}</div></aside>`;
+  const foto = x => x.f ? ` style="background-image:url('foto/${x.f}.webp')"` : ` data-gwk="${esc(x.wk)}"`;
+  setTimeout(() => { for (const el of document.querySelectorAll('.altre5 [data-gwk]:not(.fok)')) { el.classList.add('fok'); wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; }); } }, 50);
+  return `<aside class="altre5" aria-label="Le altre sezioni"><p class="t">${qui ? 'Continua a scoprire la Sicilia' : 'Le sezioni di Sicilia Naturale'}</p><div>${Object.entries(SEZT).filter(([k]) => k !== qui).map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="bg"${foto(x)}></span><img class="sg" src="illustrazioni/${k}-segno.svg" alt=""><b>${x.t}</b><small>${PRONTI.includes(k) ? x.s : 'In preparazione'}</small>${PRONTI.includes(k) ? '' : '<em>presto</em>'}</button>`).join('')}</div></aside>`;
 }
 function dopoScheda() {
   if (isApp) return; const sb = $('sb'); if (!sb || sb.querySelector('.altre5m')) return;
