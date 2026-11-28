@@ -452,9 +452,10 @@ map.on('click', e => {
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
     const po = map.queryRenderedFeatures(bx, { layers: ['osm-p'] });
+    if (po.length && !isApp) { SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaPunto(po[0].properties, po[0].geometry.coordinates); }
     if (po.length) { const q = po[0].properties; new maplibregl.Popup({ offset: 12 }).setLngLat(po[0].geometry.coordinates).setHTML(`<div class="wpp"><b>${esc(q.n || T(...POIN[q.t]))}</b><small>${esc(T(...POIN[q.t]))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small>${gmapsLink(po[0].geometry.coordinates)}<div class="poiph"></div></div>`).addTo(map); fotoPunto(po[0].geometry.coordinates); return; }
     const pr = map.queryRenderedFeatures(bx, { layers: ['osm-r', ...(map.getLayer('prv') && vista === 'escursioni' ? ['prv'] : [])] });
-    if (pr.length) { apriPercorso(pr[0].properties.id); return; }
+    if (pr.length) { if (!isApp) { SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaPercorso(pr[0].properties.id); } apriPercorso(pr[0].properties.id); return; }
   }
   if (document.body.classList.contains('mm')) {
     const f = map.queryRenderedFeatures(e.point, { layers: ['hl-f'] });
@@ -469,6 +470,7 @@ map.on('click', e => {
   $('res').style.display = 'none'; if (!isApp && typeof sapCarta === 'function') sapCarta();
   punto = e.lngLat;
   if (!ids.length) { cur = null; selez(''); $('sh').innerHTML = `<div><h2>${t('questo')}</h2><small class="note">${e.lngLat.lat.toFixed(5)}, ${e.lngLat.lng.toFixed(5)}</small></div><button class="close" aria-label="Chiudi">×</button>`; $('sb').innerHTML = '<div id="ter"></div>'; mostra(); return terreno(e.lngLat); }
+  if (ids.length === 1 && ids[0].startsWith('CF:') && !isApp) { if (e.originalEvent) SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return cartaBosco(ids[0].slice(3)); }
   if (ids.length === 1) { if (!ids[0].startsWith('CF:') && !isApp) { if (e.originalEvent) SAP.ancora = [e.originalEvent.clientX, e.originalEvent.clientY]; return natCarta(ids[0]); } apri(ids[0], false); $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); return terreno(e.lngLat); }
   const rank = k => k.startsWith('CF:') ? 9 : AMB.includes(S[k].t) ? 0 : AREE.includes(S[k].t) ? 1 : 2;
   ids.sort((a, b) => rank(a) - rank(b) || (S[a] && S[b] ? S[a].ha - S[b].ha : 0));
@@ -2236,8 +2238,12 @@ function sapClick(e) {
 // la carta che racconta, in basso sulla mappa
 function sapCarta(html) {
   let c = $('sapcard'); if (!c) { c = document.createElement('div'); c.id = 'sapcard'; c.className = 'sapcard'; $('wrap').appendChild(c);
-    c.addEventListener('click', e => { const b = e.target.closest('[data-cp],[data-cv],[data-cz],[data-cx],[data-cpr],[data-cn]'); if (!b) return;
+    c.addEventListener('click', e => { const b = e.target.closest('[data-cp],[data-cv],[data-cz],[data-cx],[data-cpr],[data-cn],[data-cperc],[data-ccf],[data-cevc]'); if (!b) return;
       if (b.dataset.cpr) { sapCarta(); return sapProduttore(b.dataset.cpr); }
+      if (b.dataset.cperc) { sapCarta(); return apriPercorso(b.dataset.cperc); }
+      if (b.dataset.ccf) { sapCarta(); return apriCF(b.dataset.ccf); }
+      if (b.dataset.cevc) { const ev = SAP.sagre.eventi.find(x => x.id === b.dataset.cevc); sapCarta(); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d.find(x => x >= iso(new Date())) || ev.d[0], tipo: '', pv: '' }; versoSapori(() => vai('meteo')); } return; }
+      if (b.dataset.cn && $('cat').classList.contains('on')) { const k = b.dataset.cn; sapCarta(); if (sapOn()) sapModo(false); natMappa(); return setTimeout(() => apri(k, true), 650); }
       if (b.dataset.cn) { sapCarta(); apri(b.dataset.cn, false); if (punto) { $('sb').insertAdjacentHTML('beforeend', '<div id="ter"></div>'); terreno(punto); } return; }
       if (b.dataset.cx != null) return sapCarta();
       if (b.dataset.cp) { sapCarta(); return sapPaese(b.dataset.cp); }
@@ -2278,7 +2284,7 @@ function sapCartaProd(k) {
     <div class="ca"><button class="pri" data-cpr="${k}">Apri la scheda completa</button><button data-cz="${p.paese}">Cosa si mangia a ${esc(pa.n)}</button>${p.sito ? `<a class="cab" href="${esc(p.sito)}" target="_blank" rel="noopener">Sito</a>` : ''}</div></div></div>`);
   sapFoto($('sapcard'));
 }
-const TIPZ = { pn: 'Parco nazionale', pr: 'Parco regionale', rn: 'Riserva naturale', amp: 'Area marina protetta', ap: 'Area protetta', am: 'Albero monumentale', bv: 'Bosco vetusto', bs: 'Bosco da seme', zsc: 'Zona speciale di conservazione', zps: 'Zona di protezione speciale', sic: 'Sito di importanza comunitaria' };
+var TIPZ = { pn: 'Parco nazionale', pr: 'Parco regionale', rn: 'Riserva naturale', amp: 'Area marina protetta', ap: 'Area protetta', am: 'Albero monumentale', bv: 'Bosco vetusto', bs: 'Bosco da seme', zsc: 'Zona speciale di conservazione', zps: 'Zona di protezione speciale', zsczps: 'Zona speciale di conservazione e di protezione', sic: 'Sito di importanza comunitaria' };
 const testoBreve = html => { const d = document.createElement('div'); d.innerHTML = html; const p = d.querySelector('p'); return (p ? p.textContent : d.textContent).trim(); };
 function natCarta(k) {
   const z = S[k]; if (!z) return apri(k, false); let sp = []; try { sp = specieDi(k); } catch (e) {}
@@ -2293,6 +2299,33 @@ function natCarta(k) {
     <div class="ca"><button class="pri" data-cn="${k}">Apri la scheda completa</button></div></div></div>`);
   if (typeof wikiVoce === 'function') wikiVoce(z.n).then(w => { const el = $('ncf'); if (!el) return; if (w && w.thumbnail && !(typeof NOFOTO !== 'undefined' && NOFOTO.test(w.thumbnail.source))) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/600px-')}')`; else el.remove(); }).catch(() => { const el = $('ncf'); if (el) el.remove(); });
   else $('ncf').remove();
+}
+var PRCA = null; // elenco dei percorsi, per i suggerimenti
+function cartaEvento(id) {
+  const ev = ((SAP.sagre || {}).eventi || []).find(x => x.id === id); if (!ev) return;
+  const oggi = iso(new Date()), pr = ev.d.find(x => x >= oggi) || ev.d[0], dd = pr.split('-');
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc"><div><small>${esc(ev.t === 'sagra' ? 'Sagra' : ev.t === 'festa' ? 'Festa' : 'Appuntamento')} · ${esc(ev.c)} (${esc(ev.pv)})</small><h3>${esc(ev.n)}</h3>
+    <div class="cstat"><div><b>${+dd[2]} ${MESIL[+dd[1] - 1]}</b><span>${ev.d.length > 1 ? `per ${ev.d.length} giorni` : 'un giorno'}</span></div></div>
+    ${ev.desc ? `<p>${esc(ev.desc)}</p>` : ''}
+    <div class="ca"><button class="pri" data-cevc="${esc(id)}">Vedi nel calendario</button>${ev.p && SAP.D && SAP.D.paesi[ev.p] ? `<button data-cp="${ev.p}">Cosa si mangia a ${esc(SAP.D.paesi[ev.p].n)}</button>` : ''}${ev.f ? `<a class="cab" href="${esc(ev.f)}" target="_blank" rel="noopener">Fonte</a>` : ''}</div></div></div>`);
+}
+function cartaPercorso(id) {
+  if (!PRCA) return caricaPercorsi().then(a => { PRCA = a; cartaPercorso(id); });
+  const p = PRCA.find(x => x.id === +id); if (!p) return;
+  const c = CAI[p.c];
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>${T('Percorso segnato', 'Marked trail')}${p.r ? ' ' + esc(p.r) : ''}${c ? ' · ' + esc(T(...c)) : ''}</small><h3>${esc(p.n || p.r || 'Percorso')}</h3>
+    <div class="cstat"><div><b>${num1(p.km)} km</b><span>lunghezza</span></div>${p.up ? `<div><b>+${fmt(p.up)} m</b><span>salita</span></div>` : ''}${p.dur ? `<div><b>${esc(durata(p.dur))}</b><span>tempo</span></div>` : ''}</div>
+    ${p.da || p.a ? `<p>Da <b>${esc(p.da || '–')}</b> a <b>${esc(p.a || '–')}</b>${p.giro ? ', ad anello' : ''}.</p>` : ''}${p.desc ? `<p>${esc(p.desc.length > 220 ? p.desc.slice(0, 210).replace(/\s\S*$/, '') + '…' : p.desc)}</p>` : ''}
+    <div class="ca"><button class="pri" data-cperc="${p.id}">Apri la scheda completa</button></div></div></div>`);
+}
+function cartaPunto(q, c) {
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>${esc(T(...(POIN[q.t] || ['Punto', 'Point'])))}${q.e ? ' · ' + fmt(q.e) + ' m' : ''}</small><h3>${esc(q.n || T(...(POIN[q.t] || ['Punto', 'Point'])))}</h3>
+    <p>Un punto utile lungo i sentieri, dai dati di OpenStreetMap.</p><div class="ca">${gmapsLink(c, 'cab')}</div></div></div>`);
+}
+function cartaBosco(cf) {
+  const [n, v] = (CFN.tipi[cf] || [cf, []]);
+  sapCarta(`<button class="cx" data-cx aria-label="Chiudi">×</button><div class="cc nat"><div><small>Carta forestale della Regione</small><h3>${esc(n)}</h3>
+    <p>${esc(CFN.macro[cf.slice(0, 2)] || '')}</p><div class="ca"><button class="pri" data-ccf="${esc(cf)}">Apri la scheda completa</button></div></div></div>`);
 }
 function sapGruppo(g) {
   const src = map.getSource('sapp'), id = g.properties.cluster_id;
@@ -3092,6 +3125,36 @@ const fineP = matchMedia('(hover:hover) and (pointer:fine)').matches;
 function tipMostra(html, x, y) { TIP.innerHTML = html; TIP.classList.add('on'); const w = TIP.offsetWidth, h = TIP.offsetHeight; let l = x + 18, t = y + 14; if (l + w > innerWidth - 8) l = x - w - 14; if (t + h > innerHeight - 8) t = y - h - 10; TIP.style.transform = `translate(${l}px,${t}px)`; }
 const tipNascondi = () => { TIP.classList.remove('on'); TIP.dataset.k = ''; };
 const tipHint = t => `<em class="tk">${t}</em>`;
+// un solo modo di leggere i punti di tutte le mappe disegnate
+function tipSvg(c) {
+  const d = c.dataset;
+  if ((d.sc || d.mp) && SAP.D && SAP.D.paesi[d.sc || d.mp]) return tipPaese(d.sc || d.mp);
+  if (d.nk) return tipZona(d.nk);
+  if (d.cev) return tipEvento(d.cev);
+  return '';
+}
+function tipEvento(id) {
+  const ev = ((SAP.sagre || {}).eventi || []).find(x => x.id === id); if (!ev) return '';
+  const oggi = iso(new Date()), pr = ev.d.find(x => x >= oggi) || ev.d[0], dd = pr.split('-');
+  return `<span class="tt">${esc(ev.t === 'sagra' ? 'Sagra' : ev.t === 'festa' ? 'Festa' : 'Appuntamento')} · ${esc(ev.c)}</span><b>${esc(ev.n)}</b><small>${+dd[2]} ${MESIL[+dd[1] - 1]}${ev.d.length > 1 ? `, per ${ev.d.length} giorni` : ''}</small>${tipHint('Clic per saperne di più')}`;
+}
+function tipPercorso(id) {
+  if (!PRCA) { caricaPercorsi().then(a => { PRCA = a; TIP.dataset.k = ''; }); return `<span class="tt">Percorso segnato</span><b>Sentiero</b>${tipHint('Clic per saperne di più')}`; }
+  const p = PRCA.find(x => x.id === +id); if (!p) return '';
+  const c = CAI[p.c];
+  return `<span class="tt">Percorso segnato${c ? ' · ' + esc(T(...c)) : ''}</span><b>${esc(p.n || p.r || 'Sentiero')}</b><small>${num1(p.km)} km${p.up ? ` · +${fmt(p.up)} m` : ''}${p.dur ? ' · ' + esc(durata(p.dur)) : ''}</small>${tipHint('Clic per saperne di più')}`;
+}
+const tipPunto = q => `<span class="tt">${esc(T(...(POIN[q.t] || ['Punto', 'Point'])))}</span><b>${esc(q.n || T(...(POIN[q.t] || ['Punto', 'Point'])))}</b>${q.e ? `<small>${fmt(q.e)} m di quota</small>` : ''}${tipHint('Clic per saperne di più')}`;
+const tipBosco = cf => `<span class="tt">Carta forestale</span><b>${esc(tipoCF(cf))}</b><small>${esc(CFN.macro[cf.slice(0, 2)] || '')}</small>${tipHint('Clic per saperne di più')}`;
+// clic sui punti delle mappe disegnate: sempre la stessa scheda breve
+document.addEventListener('click', e => {
+  const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const d = c.dataset;
+  if (!(d.sc || d.mp || d.nk || d.cev)) return;
+  e.stopPropagation(); e.preventDefault(); SAP.ancora = [e.clientX, e.clientY];
+  if (d.sc || d.mp) return sapCartaPaese(d.sc || d.mp, true);
+  if (d.nk) return natCarta(d.nk);
+  if (d.cev) return cartaEvento(d.cev);
+}, true);
 function tipGruppo(p) { return `<span class="tt">Più comuni vicini</span><b>${p.point_count} comuni</b><small>${p.tot} sapori documentati</small>${tipHint('Clic per l’elenco, dal più ricco')}`; }
 function tipPaese(k, p) {
   const D = SAP.D; if (!D || !D.paesi[k]) return ''; const pa = D.paesi[k];
@@ -3108,26 +3171,30 @@ function tipProd(k) {
 }
 function tipZona(k) {
   const z = S[k]; if (!z) return ''; let n = 0; try { n = specieDi(k).length; } catch (e) {}
-  const tipo = { pn: 'Parco nazionale', pr: 'Parco regionale', rn: 'Riserva naturale', amp: 'Area marina protetta', ap: 'Area protetta', am: 'Albero monumentale', bv: 'Bosco vetusto', bs: 'Bosco da seme' }[z.t] || '';
+  const tipo = TIPZ[z.t] || '';
   const dati = z.t === 'am' ? [z.sp ? `<i>${esc(z.sp)}</i>` : '', z.com ? esc(z.com) : '', z.circ ? fmt(z.circ) + ' cm di tronco' : ''] : [z.ha ? fmt(z.ha) + ' ha' : '', z.bha ? fmt(z.bha) + ' ha di bosco' : '', n ? fmt(n) + ' specie' : ''];
   return `<span class="tt">${esc(tipo)}</span><b>${esc(z.n)}</b><small>${dati.filter(Boolean).join(' · ')}</small>${tipHint('Clic per saperne di più')}`;
 }
 if (fineP) {
   // mappe disegnate (SVG): il nome al posto del suggerimento del browser
-  document.addEventListener('mouseover', e => { const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const ti = c.querySelector('title'); if (ti) { c.dataset.tip = ti.textContent; ti.remove(); } if (c.dataset.sc && SAP.D && SAP.D.paesi[c.dataset.sc]) return tipMostra(tipPaese(c.dataset.sc), e.clientX, e.clientY); if (c.dataset.tip) tipMostra(`<b>${esc(c.dataset.tip.split(':')[0])}</b>${c.dataset.tip.includes(':') ? `<small>${esc(c.dataset.tip.split(':').slice(1).join(':').trim())}</small>` : ''}`, e.clientX, e.clientY); });
+  document.addEventListener('mouseover', e => { const c = e.target.closest && e.target.closest('svg.smap circle'); if (!c) return; const ti = c.querySelector('title'); if (ti) { c.dataset.tip = ti.textContent; ti.remove(); } { const h = tipSvg(c); if (h) return tipMostra(h, e.clientX, e.clientY); } if (c.dataset.tip) tipMostra(`<b>${esc(c.dataset.tip.split(':')[0])}</b>${c.dataset.tip.includes(':') ? `<small>${esc(c.dataset.tip.split(':').slice(1).join(':').trim())}</small>` : ''}`, e.clientX, e.clientY); });
   document.addEventListener('mousemove', e => { if (!TIP.classList.contains('on')) return; const c = e.target.closest && e.target.closest('svg.smap circle'); if (c) tipMostra(TIP.innerHTML, e.clientX, e.clientY); });
   document.addEventListener('mouseout', e => { if (e.target.closest && e.target.closest('svg.smap circle')) tipNascondi(); });
   // mappa vera (MapLibre): comuni dei sapori, aree protette, alberi, boschi
   map.on('mousemove', e => {
-    const L = ['sap-c', 'sap-p', 'sap-pr', 'am-c', 'bv-p', 'aree-f'].filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
-    const f = L.length ? map.queryRenderedFeatures([[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]], { layers: L }) : [];
+    const ORD = ['sap-c', 'sap-pr', 'sap-p', 'osm-p', 'am-c', 'bv-p', 'osm-r', 'prv', 'bv-f', 'bs-f', 'aree-f', 'n2k-f', 'zps-f', 'cf-f'];
+    const L = ORD.filter(l => map.getLayer(l) && map.getLayoutProperty(l, 'visibility') !== 'none');
+    const f = L.length ? map.queryRenderedFeatures([[e.point.x - 5, e.point.y - 5], [e.point.x + 5, e.point.y + 5]], { layers: L }).sort((a, b) => ORD.indexOf(a.layer.id) - ORD.indexOf(b.layer.id)) : [];
     if (!f.length) { map.getCanvas().style.cursor = ''; return tipNascondi(); }
     const x = f[0], p = x.properties, id = x.layer.id, oe = e.originalEvent; map.getCanvas().style.cursor = 'pointer';
     let h = '';
-    const chiave = id + ':' + (p.k || p.id || p.cluster_id); if (TIP.dataset.k === chiave && TIP.classList.contains('on')) return tipMostra(TIP.innerHTML, oe.clientX, oe.clientY);
+    const chiave = id + ':' + (p.k || p.id || p.cluster_id || p.c || p.n); if (TIP.dataset.k === chiave && TIP.classList.contains('on')) return tipMostra(TIP.innerHTML, oe.clientX, oe.clientY);
     if (id === 'sap-c') h = tipGruppo(p);
     else if (id === 'sap-p') h = tipPaese(p.k, p);
     else if (id === 'sap-pr') h = tipProd(p.k);
+    else if (id === 'osm-p') h = tipPunto(p);
+    else if (id === 'osm-r' || id === 'prv') h = tipPercorso(p.id);
+    else if (id === 'cf-f') h = tipBosco(p.c);
     else h = tipZona(p.id);
     if (!h) return tipNascondi();
     TIP.dataset.k = chiave; tipMostra(h, oe.clientX, oe.clientY);
