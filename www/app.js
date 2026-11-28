@@ -3106,12 +3106,12 @@ async function genHome(fo) {
     <section class="s5 og5" id="og5"><div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div><p class="note">Carico il meteo…</p></section>
     <section class="s5"><div class="t5"><h2>Per chi è Sicilia Naturale</h2><p>Per chi viaggia, per chi studia, per chi insegna e per chi ricorda. Scegli da dove partire.</p></div>
       <div class="chi5">
-        <button data-via="sentiero" style="--tc:#2D6A4F"><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Percorsi e sagre</em></button>
-        <button data-via="scuola" style="--tc:#2F7EA8"><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Le specie e i parchi</em></button>
-        <button data-via="bambini" style="--tc:#C8102E"><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Lo sapevi?</em></button>
-        <button data-via="studiosi" style="--tc:#5B3A26"><b>Studiosi e guide</b><span>Elenchi di specie per zona, dati Natura 2000 e GBIF, fonti citate, itinerari in PDF e GPX, osservazioni in Darwin Core.</span><em>Dati e fonti</em></button>
-        <button data-via="dolce" style="--tc:#E8761A"><b>Chi ama il cibo</b><span>Dolci, formaggi, pani e vini: dove nascono, di cosa sono fatti, le versioni documentate e chi li fa ancora.</span><em>Il catalogo dei sapori</em></button>
-        <button data-via="lontano" style="--tc:#7B3F61"><b>Chi è lontano</b><span>Il tuo paese, i suoi dolci, le sue feste. Per ritrovare la Sicilia anche da lontano.</span><em>Cerca il tuo paese</em></button>
+        <button data-via="sentiero" style="--tc:#2D6A4F"><span class="bg" style="background-image:url('foto/natura/arco-tramonto.webp')"></span><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Percorsi e sagre</em></button>
+        <button data-via="scuola" style="--tc:#2F7EA8"><span class="bg" style="background-image:url('foto/natura/campagna.webp')"></span><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Le specie e i parchi</em></button>
+        <button data-via="bambini" style="--tc:#C8102E"><span class="bg" style="background-image:url('foto/natura/more-rovo.webp')"></span><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Lo sapevi?</em></button>
+        <button data-via="studiosi" style="--tc:#5B3A26"><span class="bg" style="background-image:url('foto/natura/acetosella.webp')"></span><b>Studiosi e guide</b><span>Elenchi di specie per zona, dati Natura 2000 e GBIF, fonti citate, itinerari in PDF e GPX, osservazioni in Darwin Core.</span><em>Dati e fonti</em></button>
+        <button data-via="dolce" style="--tc:#E8761A"><span class="bg" style="background-image:url('foto/granita-e-brioche-con-tuppo.webp')"></span><b>Chi ama il cibo</b><span>Dolci, formaggi, pani e vini: dove nascono, di cosa sono fatti, le versioni documentate e chi li fa ancora.</span><em>Il catalogo dei sapori</em></button>
+        <button data-via="lontano" style="--tc:#7B3F61"><span class="bg" style="background-image:url('foto/natura/tramonto-baia.webp')"></span><b>Chi è lontano</b><span>Il tuo paese, i suoi dolci, le sue feste. Per ritrovare la Sicilia anche da lontano.</span><em>Cerca il tuo paese</em></button>
       </div></section>
     <section class="s5" id="sapevi"><div class="t5"><h2>Lo sapevi?</h2><p>Piccole scoperte da leggere insieme, grandi e piccoli.</p></div>
       <div class="sap5">${[
@@ -3173,12 +3173,13 @@ function scorri5() {
 $('cat').addEventListener('click', e => {
   if ($('cat').dataset.v !== 'gen-home') return;
   const v = e.target.closest('[data-via]'); if (!v) return; e.stopPropagation(); const w = v.dataset.via;
+  if (w === 'sentiero' && $('og5')) return $('og5').scrollIntoView({ behavior: 'smooth' });
   if (w === 'sentiero') { SEZ = 'natura'; NAT.home = false; return vai('escursioni'); }
   if (w === 'dolce') return entraSez('sapori');
   if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
   if (w === 'scuola') { SEZ = 'natura'; NAT.home = false; return vai('piante'); }
   if (w === 'bambini') return $('sapevi').scrollIntoView({ behavior: 'smooth' });
-  if (w === 'studiosi') return pagina('metodo');
+  if (w === 'studiosi' || w === 'scuola') return pagina('scuole');
   if (w === 'lontano') { entraSez('sapori'); return setTimeout(() => { const q = $('hq'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 900); }
 }, true);
 // le sezioni in preparazione: cosa ci sarà
@@ -3427,6 +3428,7 @@ document.addEventListener('click', e => { const g = e.target.closest && e.target
 function pagina(k) {
   chiudi(); $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'pag-' + k; $('cat').scrollTop = 0;
   const testa = (t, d) => `<div class="sh5 pag5"><section class="s5"><h1>${t}</h1><p class="lead">${d}</p></section>`;
+  if (k === 'scuole') return paginaScuole();
   if (k === 'glossario') $('cat').innerHTML = testa('Glossario', 'Le parole un po\' difficili che trovi nelle schede, spiegate in modo semplice. Nelle schede sono sottolineate: passaci sopra o toccale per leggere la spiegazione.') +
     `<section class="s5"><dl class="gl5">${Object.entries(GLOSS).sort((a, b) => a[0].localeCompare(b[0], 'it')).map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl></section>${COPY()}</div>`;
   else $('cat').innerHTML = testa('Metodo e fonti', 'Come sono raccolti e verificati i dati di Sicilia Naturale, e come citarli in una ricerca o in una tesi.') +
@@ -3470,6 +3472,7 @@ function rottaAttuale() {
   if (PERC_SEL != null && (aperta || document.body.classList.contains('mm'))) return '#/percorso/' + PERC_SEL;
   const v = $('cat').dataset.v || '';
   if (v === 'pag-glossario') return '#/glossario';
+  if (v === 'pag-scuole') return '#/scuole';
   if (v.startsWith('pag-')) return '#/metodo';
   if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
   if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
@@ -3484,7 +3487,7 @@ function titoloRotta(r) {
   const T0 = 'Sicilia Naturale', p = r.slice(2).split('/');
   const h2 = $('sheet').classList.contains('open') && $('sh').querySelector('h2:not([hidden])');
   if (['zona', 'specie', 'percorso'].includes(p[0]) || p[1] === 'scheda') return (h2 ? h2.textContent.trim() + ' · ' : '') + T0;
-  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti' };
+  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti', scuole: 'Scuole e studiosi' };
   const S2 = { mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari' };
   return p[0] ? [S2[p[1]] || (p[1] ? p[1][0].toUpperCase() + p[1].slice(1) : ''), N[p[0]], T0].filter(Boolean).join(' · ') : T0 + ' · La natura e i sapori della Sicilia';
 }
@@ -3523,7 +3526,7 @@ async function applicaRotta(h) {
       await CAT; const tp = b === 'piante' ? 'piante' : 'funghi', i = (tp === 'funghi' ? FUN : PIA).s.findIndex(r => r[0] === c);
       await natura(); vai(tp); if (i >= 0) { await attesa(300); apriSpecie(tp, i); }
     } else if (a === 'percorso') { await natura(); vai('escursioni'); await attesa(300); await apriPercorso(b); }
-    else if (a === 'glossario' || a === 'metodo') pagina(a);
+    else if (a === 'glossario' || a === 'metodo' || a === 'scuole') pagina(a);
     else if (TEMA[a]) entraSez(a);
     else entraSez('home');
   } catch (e) { console.warn('rotta', e); }
@@ -3700,4 +3703,60 @@ document.addEventListener('click', e => {
   const b = e.target.closest('[data-msez]'); if (b && vista === 'meteo') { MC.sez = b.dataset.msez; if (MC.sez === 'mare') meteoMare().then(() => { meteo(); mostraComuni(); }); meteo(); mostraComuni(); return; }
   const c = e.target.closest('[data-mcom]'); if (c && vista === 'meteo') { const [lo, la] = c.dataset.mcom.split(',').map(Number); if (modo.meteo !== 'mappa') { modo.meteo = 'mappa'; vai('meteo'); } map.flyTo({ center: [lo, la], zoom: 10.2, padding: padMappa(), duration: 800 }); }
 });
+
+/* ---------- pagina per scuole e studiosi: gli strumenti del sito, idee di ricerca per età, uscite con la classe, dati e citazioni */
+function paginaScuole() {
+  const conta = t => Object.values(S).filter(x => x.t === t).length, D2 = SAP.D || { voci: {}, paesi: {} };
+  const freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const strumenti = [
+    ['list-details', 'Elenco delle specie di ogni zona', 'Apri un parco, una riserva o un sito Natura 2000 e scarica l\'elenco di funghi e piante segnalati, in CSV, pronto per un foglio di calcolo.', '#/natura/mappa', 'Apri la mappa', '#2D6A4F'],
+    ['calendar', 'Calendario delle fioriture', 'Mese per mese, quali piante fioriscono e dove. Utile per scegliere quando fare un\'uscita o per una ricerca sulle stagioni.', '#/natura/calendario', 'Vedi il calendario', '#2D6A4F'],
+    ['cloud', 'Meteo e dati del cielo', 'Previsioni per ogni comune, pioggia degli ultimi due mesi, vento e temperatura. Un buon punto di partenza per leggere i dati del clima.', '#/natura/meteo', 'Apri il meteo', '#2F7EA8'],
+    ['route-2', 'Percorsi in PDF e GPX', 'Sentieri con lunghezza, dislivello e tempi. Si stampano in PDF per la classe o si caricano nel GPS in formato GPX.', '#/natura/percorsi', 'Vedi i percorsi', '#2D6A4F'],
+    ['basket', 'Atlante dei sapori con le fonti', 'Prodotti, dolci e piatti di ogni comune, con le fonti, i libri e le pagine dove trovarli.', '#/sapori/catalogo', 'Apri l\'atlante', '#E8761A'],
+    ['printer', 'Stampa e cita ogni scheda', 'Ogni scheda ha il tasto per stamparla pulita, con le fonti, e la frase pronta per citarla in una ricerca o in una tesi.', '#/metodo', 'Metodo e fonti', '#5B3A26'],
+    ['book', 'Glossario', 'Le parole difficili delle schede, spiegate in modo semplice. Nelle schede sono sottolineate.', '#/glossario', 'Apri il glossario', '#5B3A26'],
+    ['map-2', 'Mappa dei comuni', 'Tutti i comuni siciliani, con quello che producono e le feste. Per una ricerca sul proprio paese.', '#/sapori/mappa', 'Apri la mappa', '#E8761A']
+  ];
+  const percorsi = [
+    ['Scuola primaria', '#C8102E', 'natura/fico', [
+      ['Il mio paese e il suo sapore', 'Cerca il tuo comune sulla mappa dei Sapori: quali prodotti e quali dolci nascono lì? Disegnali e racconta per quale festa si preparano.', '#/sapori/mappa'],
+      ['Un albero più vecchio dei nonni', 'Trova l\'albero monumentale più vicino alla scuola: quanti anni ha, quanto è alto, che storie racconta.', '#/natura/mappa'],
+      ['Che tempo farà?', 'Ogni mattina, per una settimana, guardate il meteo del vostro comune e confrontatelo con il cielo vero.', '#/natura/meteo']]],
+    ['Scuola secondaria di primo grado', '#2F7EA8', 'natura/campagna', [
+      ['Le aree protette della mia provincia', 'Quanti parchi e riserve ci sono? Perché sono protetti? Confrontate la loro superficie e gli ambienti che custodiscono.', '#/natura/mappa'],
+      ['Dal grano al pane', 'Seguite la filiera del grano: varietà antiche, dove crescono, quali pani nascono da ogni farina.', '#/sapori/grano'],
+      ['Le stagioni dei fiori', 'Con il calendario delle fioriture, preparate un erbario fotografico di quello che fiorisce intorno alla scuola.', '#/natura/calendario']]],
+    ['Scuola secondaria di secondo grado', '#2D6A4F', 'natura/agave-montagne', [
+      ['La biodiversità di un sito Natura 2000', 'Scaricate l\'elenco delle specie di un sito, contate famiglie e generi, confrontate gli habitat e i dati di superficie.', '#/natura/mappa'],
+      ['Pioggia, clima e boschi', 'Usate la pioggia degli ultimi due mesi e le previsioni per capire come il meteo influisce sulla vita del bosco.', '#/natura/meteo'],
+      ['Prodotti tradizionali e territorio', 'Mappate i prodotti DOP, IGP e tradizionali di una provincia e spiegate il legame con il suolo e il clima.', '#/sapori/catalogo']]],
+    ['Università e ricerca', '#5B3A26', 'natura/mulino-saline', [
+      ['Dati di distribuzione', 'Elenchi di specie per zona da GBIF, aree protette da EEA Natura 2000 e Regione Siciliana, con le fonti citate in ogni scheda.', '#/metodo'],
+      ['Osservazioni sul campo', 'Registrate un\'uscita con l\'app: le osservazioni si esportano in Darwin Core, lo standard usato dalle banche dati della biodiversità.', '#/natura/percorsi'],
+      ['Patrimonio agroalimentare', 'Elenchi PAT, DOP e IGP per comune, filiere e varietà, con i riferimenti bibliografici e le pagine dei libri.', '#/sapori/catalogo']]]
+  ];
+  $('cat').innerHTML = `<div class="sh5 pag5 scu5">
+    <section class="ap5 scuh" style="--tc:#2F7EA8"><div class="apf" style="background-image:url('foto/natura/campagna.webp')"></div>
+      <div class="apt"><p class="kick5"><i></i>Scuole e studiosi</p><h1>Una Sicilia da <i>studiare.</i></h1><p class="lead">Mappe, dati, specie, meteo e sapori di tutta l'isola, con le fonti sempre citate. Strumenti pronti per una ricerca di classe, una tesi o un'uscita sul campo.</p></div></section>
+    <section class="s5"><div class="num5">${[[conta('pn') + conta('pr'), 'parchi'], [conta('rn'), 'riserve'], [fmt(FUN.s.length + PIA.s.length), 'specie'], [fmt(Object.values(D2.voci).filter(v => v.t !== 'materia' && v.t !== 'semi').length), 'sapori'], [D2.sic ? D2.sic.comuni.length : 390, 'comuni']].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Gli strumenti</h2><p>Tutto quello che il sito sa fare, raccolto in un posto. Tocca una scheda per usarlo.</p></div>
+      <div class="str8">${strumenti.map(([ic, t2, d, r, cta, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span><em>${cta} ${freccia}</em></button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Idee di ricerca, per età</h2><p>Proposte da adattare alla classe. Ogni idea porta allo strumento che serve.</p></div>
+      <div class="eta5">${percorsi.map(([t2, c, f, l]) => `<article style="--tc:${c}"><div class="eh" style="background-image:url('foto/${f}.webp')"><h3>${t2}</h3></div><ol>${l.map(([a, b, r]) => `<li><button data-rotta="${r}"><b>${a}</b><span>${b}</span></button></li>`).join('')}</ol></article>`).join('')}</div></section>
+    <section class="s5 usc5"><div class="t5"><h2>Un'uscita con la classe</h2><p>Quattro passi per prepararla con il sito.</p></div>
+      <div class="pas5">${[
+        ['Scegli il giorno', 'Con «Oggi in Sicilia» e il meteo dei comuni vedi dove il tempo è migliore nei prossimi giorni.', '#/natura/meteo'],
+        ['Scegli il luogo', 'Sulla mappa trovi parchi e riserve vicini, con gli ambienti e le specie da osservare.', '#/natura/mappa'],
+        ['Leggi le regole', 'Ogni area protetta ha le sue regole: nella scheda trovi cosa è permesso e cosa no.', '#/natura/mappa'],
+        ['Scegli il sentiero', 'Lunghezza, dislivello e tempi, da stampare in PDF per tutti.', '#/natura/percorsi']
+      ].map(([a, b, r], i) => `<button data-rotta="${r}"><span class="n">${i + 1}</span><b>${a}</b><span>${b}</span></button>`).join('')}</div>
+      <p class="note">Le specie si osservano e si fotografano: non si raccolgono. Funghi e piante selvatiche non vanno mai assaggiati.</p></section>
+    <section class="s5 txt5"><h2>Dati aperti e fonti</h2>
+      <p>Aree protette e siti Natura 2000: Agenzia europea dell'ambiente e Regione Siciliana. Specie: GBIF. Sentieri: OpenStreetMap. Meteo: Open-Meteo. Sapori: elenchi nazionali dei prodotti tradizionali, elenco regionale DOP e IGP, libri di cucina siciliana citati con titolo e pagina.</p>
+      <p>Il dettaglio è nella pagina <button class="lk" data-pag="metodo">Metodo e fonti</button>.</p>
+      <h2>Come citare</h2><p class="cit5">Sicilia Naturale, atlante della natura e dei sapori di Sicilia, a cura di Oscar Cangelosi. ${esc(location.origin + location.pathname)}, consultato il ${new Date().toLocaleDateString('it-IT')}.</p></section>
+    ${COPY()}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-rotta]'); if (!b) return; e.preventDefault(); e.stopPropagation(); vaiRotta(b.dataset.rotta); }, true);
 }
