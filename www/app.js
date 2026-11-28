@@ -2187,7 +2187,7 @@ async function pdfIt(x) {
 { const h = location.hash.slice(1); if (h.startsWith('it=')) D.then(() => setTimeout(() => apriLinkIt(h.slice(3)), 600)); }
 
 /* ---------- Sapori: atlante agroalimentare ed enogastronomico (per ora solo sul sito, dati di prova) */
-var SAP = { home: true, on: false, d: null, fil: { k: 'tutto', q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }, mese: new Date().getMonth() + 1, liv: { paesi: true, prod: true } };
+var SAP = { home: true, on: false, d: null, fil: { k: 'tutto', q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }, mese: new Date().getMonth() + 1, liv: { paesi: true, prod: true, prov: true } };
 const SAPD = () => SAP.d || (SAP.d = Promise.all([fetch('data/sapori.json').then(r => r.json()), fetch('foto/foto.json').then(r => r.json()).catch(() => []), fetch('data/sicilia.json').then(r => r.json()).catch(() => null)]).then(([d, fo, si]) => {
   d.foto = fo; d.sic = si; for (const x of fo) if (x.v && d.voci[x.v] && !d.voci[x.v].fo) d.voci[x.v].fo = x;
   // dove si usa: legame inverso della distinta
@@ -2265,9 +2265,10 @@ function sapLayers() {
   map.addLayer({ id: 'sap-pr', type: 'circle', source: 'sap', minzoom: 8, paint: { 'circle-color': ['match', ['get', 'r'], 'coltiva', RUOLO.coltiva[2], 'trasforma', RUOLO.trasforma[2], RUOLO.vende[2]], 'circle-radius': 7, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
 }
 function sapMappa() {
-  sapLayers(); map.getSource('sap').setData(sapGeo('prod')); map.getSource('sapp').setData(sapGeo('paese'));
+  sapLayers(); provLayers(); map.getSource('sap').setData(sapGeo('prod')); map.getSource('sapp').setData(sapGeo('paese'));
   for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'visible');
-  $('sapf').innerHTML = `<button class="on" data-home="1">${ico('sparkles', 'xs')}Scopri</button><button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#E8761A"></i>Comuni e loro sapori</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button>`;
+  $('sapf').innerHTML = `<button class="on" data-home="1">${ico('sparkles', 'xs')}Scopri</button><button data-l="paesi" class="${SAP.liv.paesi ? 'on' : ''}"><i style="background:#E8761A"></i>Comuni e loro sapori</button><button data-l="prod" class="${SAP.liv.prod ? 'on' : ''}"><i style="background:${RUOLO.coltiva[2]}"></i>Produttori</button><button data-l="prov" class="${SAP.liv.prov !== false ? 'on' : ''}"><i style="background:none;border:2px solid #7b4b9e"></i>Province</button>`;
+  for (const l of ['prov-f', 'prov-l', 'prov-t']) if (map.getLayer(l)) map.setLayoutProperty(l, 'visibility', SAP.liv.prov !== false ? 'visible' : 'none');
 }
 document.addEventListener('click', e => { if (e.target.closest('#sapf [data-home]')) { SAP.home = true; chiudi(); return vai('mappa'); } const b = e.target.closest('#sapf [data-l]'); if (!b) return; SAP.liv[b.dataset.l] = !SAP.liv[b.dataset.l]; sapMappa(); });
 function sapClick(e) {
@@ -4414,4 +4415,30 @@ const PARCHI9 = {
 
 /* chiave della prima voce Sapori che corrisponde, per i link di «Lo sapevi?» */
 function vk9(re) { const D = SAP.D; if (!D) return '#/sapori/catalogo'; const v = Object.values(D.voci).find(x => re.test(x.n)); return v ? '#/sapori/scheda/' + v.k : '#/sapori/catalogo'; }
+
+/* ---- province sulla mappa dei comuni: confini colorati, capoluogo e numero di comuni (confini ISTAT via openpolis) */
+const COLPROV = { AG: '#c2185b', CL: '#7b4b9e', CT: '#d9480f', EN: '#5c7a2e', ME: '#1971c2', PA: '#e67700', RG: '#0b7285', SR: '#a61e4d', TP: '#2b8a3e' };
+let PROVGEO = null;
+function provLayers() {
+  if (map.getSource('prov')) return;
+  map.addSource('prov', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  const col = ['match', ['get', 'pv'], ...Object.entries(COLPROV).flat(), '#888'], prima = map.getLayer('sap-v') ? 'sap-v' : undefined;
+  map.addLayer({ id: 'prov-f', type: 'fill', source: 'prov', paint: { 'fill-color': col, 'fill-opacity': .07 } }, prima);
+  map.addLayer({ id: 'prov-l', type: 'line', source: 'prov', layout: { 'line-join': 'round' }, paint: { 'line-color': col, 'line-width': ['interpolate', ['linear'], ['zoom'], 6, 1.6, 10, 3], 'line-opacity': .85 } }, prima);
+  map.addSource('provc', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'prov-t', type: 'symbol', source: 'provc', maxzoom: 9.5, layout: { 'text-field': ['format', ['get', 'cap'], { 'font-scale': 1 }, '\n', {}, ['concat', ['to-string', ['get', 'nc']], ' comuni'], { 'font-scale': .8 }], 'text-font': ['Noto Sans Bold'], 'text-size': 13, 'text-offset': [0, 1.4], 'text-anchor': 'top', 'icon-allow-overlap': true }, paint: { 'text-color': col, 'text-halo-color': '#fff', 'text-halo-width': 2 } });
+  for (const l of ['prov-f', 'prov-l', 'prov-t']) if (!SAPL.includes(l)) SAPL.push(l);
+  (PROVGEO || (PROVGEO = fetch('data/province.json').then(r => r.json()))).then(g => {
+    PROVGEO = g; map.getSource('prov').setData(g);
+    map.getSource('provc').setData({ type: 'FeatureCollection', features: g.features.map(f => ({ type: 'Feature', properties: f.properties, geometry: { type: 'Point', coordinates: [f.properties.cx, f.properties.cy] } })) });
+  }).catch(() => {});
+  map.on('click', 'prov-f', e => {
+    if (!sapOn() || SAP.liv.prov === false) return;
+    const altri = ['sap-c', 'sap-p', 'sap-pr'].filter(l => map.getLayer(l)); if (map.queryRenderedFeatures(e.point, { layers: altri }).length) return;
+    const f = e.features && e.features[0]; if (!f || map.getZoom() > 8.6) return;
+    const pv = f.properties.pv, g = (PROVGEO.features || []).find(x => x.properties.pv === pv); if (!g) return;
+    let a = [99, 99, -99, -99]; const giro = c => { if (typeof c[0] === 'number') { a = [Math.min(a[0], c[0]), Math.min(a[1], c[1]), Math.max(a[2], c[0]), Math.max(a[3], c[1])]; } else c.forEach(giro); }; giro(g.geometry.coordinates);
+    map.fitBounds([[a[0], a[1]], [a[2], a[3]]], { padding: 50, duration: 900 });
+  });
+}
 }
