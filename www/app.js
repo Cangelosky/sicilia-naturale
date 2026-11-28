@@ -2843,6 +2843,8 @@ function sapHome() {
   const D = SAP.D;
   const conta = Object.fromEntries(GUSTI.map(g => [g[0], 0])), esempio = {};
   for (const v of Object.values(D.voci)) if (['dolce', 'prodotto', 'piatto'].includes(v.t) && conta[catDi(v)] != null) { conta[catDi(v)]++; if (v.wk && !esempio[catDi(v)]) esempio[catDi(v)] = v.wk; }
+  // famiglie senza una voce con foto: una pagina di Wikipedia che la rappresenti, così nessun riquadro resta vuoto
+  for (const [k, w] of Object.entries({ bevande: 'Rosolio', miele: 'Miele', salumi: 'Salame Sant\'Angelo', pesce: 'Sarde a beccafico', 'pane e pasta': 'Pane nero di Castelvetrano', formaggi: 'Pecorino siciliano', vini: 'Nero d\'Avola', 'conserve e condimenti': 'Cappero' })) if (!esempio[k]) esempio[k] = w;
   const ev = inEvidenza(), [fk, f, gg] = prossimaFesta(), sel = SAP.gusti.size;
   const nomeSel = sel ? [...SAP.gusti].map(k => GUSTO[k][1].toLowerCase()).join(', ') : '';
   const cm = comuniTop(400).filter(([, n]) => n >= 2), mx = cm.length ? cm[0][1] : 1;
