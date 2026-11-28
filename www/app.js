@@ -2367,7 +2367,7 @@ function cartaBosco(cf) {
 }
 /* ---- le filiere: vino, olio, grano, formaggio, pane */
 var FIL = null; const FILD = () => FIL || (FIL = fetch('data/filiere.json').then(r => r.json()));
-const FILK = ['vino', 'olio', 'grano', 'formaggio', 'pane'];
+const FILK = ['grano', 'olio', 'vino', 'formaggio']; // le quattro materie (28/11): Grano, Ulivo, Vitigno, Latte. Il pane resta nei dati (#/sapori/pane)
 const FILFO = { vino: ['vigna-con-uva-1', 'Una vigna con l’uva matura'], olio: ['olive-nel-palmo-passulunara', 'Olive nel palmo della mano'], grano: ['pane-di-grano-duro', 'Pane di grano duro'], formaggio: ['tuma-nel-suo-siero', 'Tuma nel suo siero'], pane: ['pane-a-pasta-dura', 'Pane a pasta dura'] };
 const filVar = (F, fk, vk) => { for (const g of F.filiere[fk].gruppi) for (const v of (g.v || [])) if (v.k === vk) return [v, g]; return [null, null]; };
 function sapFiliera(fk) {
@@ -2879,8 +2879,8 @@ function sapHome() {
       <div class="apm">${mappaSicilia({ w: 420, nomi: true })}<button id="hmap">Esplora la mappa ${freccia}</button></div>
     </section>
     <section class="s5 fil5h">
-      <div class="t5"><h2>Le cinque materie della tavola siciliana</h2><p>Vino, olio, grano, formaggio e pane: le varietà, i territori e chi le custodisce.</p></div>
-      <div class="filcards">${FILK.map(k => `<button data-fil="${k}"><span class="img conf" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${{ vino: 'Il vino', olio: "L'olio", grano: 'Il grano', formaggio: 'Il formaggio', pane: 'Il pane' }[k]}</b><small>${{ vino: 'I vitigni', olio: 'Le cultivar', grano: 'I grani antichi', formaggio: 'Latte, caci e ricotte', pane: 'Pani di semola e di festa' }[k]}</small></button>`).join('')}</div>
+      <div class="t5"><h2>Le quattro materie della tavola siciliana</h2><p>Grano, ulivo, vitigno e latte: le varietà, i territori e chi le custodisce.</p></div>
+      <div class="filcards">${FILK.map(k => `<button data-fil="${k}"><span class="img conf" style="background-image:url('foto/${FILFO[k][0]}.webp')"></span><b>${{ vino: 'Vitigno', olio: 'Ulivo', grano: 'Grano', formaggio: 'Latte', pane: 'Il pane' }[k]}</b><small>${{ vino: 'I vitigni di Sicilia', olio: 'Le cultivar dell’olivo', grano: 'I grani antichi', formaggio: 'Formaggi, caci e ricotte', pane: 'Pani di semola e di festa' }[k]}</small></button>`).join('')}</div>
     </section>
     <section class="s5">
       <div class="t5"><h2>Cosa ti va di scoprire?</h2><p>${sel ? `Stai guardando ${esc(nomeSel)}. ` : ''}Tocca una famiglia di sapori per entrare ed esplorarla.${sel ? ' <button id="hreset" class="lk">Mostra tutto</button>' : ''}</p></div>
@@ -3037,18 +3037,18 @@ function filtroTemi() {
   return `<nav class="temi" aria-label="Sezioni del sito">${SEZ === 'home' ? '<p class="temil">Cinque sezioni, un solo patrimonio. Da dove vuoi partire?</p>' : ''}<div class="temib"><button data-tema="home" class="ini${SEZ === 'home' ? ' on' : ''}" aria-current="${SEZ === 'home'}">Inizio</button>${Object.entries(TEMA).map(([k, [n, c]]) => `<button data-tema="${k}" class="${SEZ === k ? 'on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" style="--tc:${c}" aria-current="${SEZ === k}"><i></i>${n}</button>`).join('')}</div></nav>`;
 }
 // scheda della sezione, come sulla mappa: col mouse si apre passandoci sopra; sul telefono, nella home, il primo tocco la apre e il secondo entra
-const tipSez = (b, x, y) => { const k = b.dataset.tema || b.dataset.k, z = SEZT[k]; if (!z) return false;
-  const tocco = !fineP, anteprima = b.dataset.go != null && !b.classList.contains('on'); // tessera della home non accesa: il clic la mostra nella foto
-  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d)}</span>${tipHint(anteprima ? 'Clicca per vederla nella foto, poi clicca ancora per entrare' : PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
-  if (tocco || b.classList.contains('sz')) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
+const tipSez = (b, x, y) => { const k = b.dataset.tema, z = SEZT[k]; if (!z) return false;
+  const tocco = !fineP;
+  tipMostra(`${z.f ? `<span class="ti" style="background-image:url('foto/${z.f}.webp')"></span>` : ''}<span class="tt">${PRONTI.includes(k) ? 'Sezione' : 'In preparazione'}</span><b>${z.t}</b><span class="tl">${esc(z.s)}. ${esc(z.d.split(/(?<=\.)\s/)[0])}</span>${tipHint(PRONTI.includes(k) ? (tocco ? 'Tocca di nuovo per entrare' : 'Clicca per entrare') : (tocco ? 'Tocca di nuovo per vedere cosa arriverà' : 'Clicca per vedere cosa arriverà'))}`, x, y);
+  if (tocco || b.classList.contains('st')) { const r = b.getBoundingClientRect(), w = TIP.offsetWidth, h = TIP.offsetHeight; TIP.style.transform = `translate(${Math.min(Math.max(8, r.left + r.width / 2 - w / 2), innerWidth - w - 8)}px,${Math.max(8, r.top - h - 10)}px)`; }
   TIP.dataset.k = 'sez:' + k; return true; };
-document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema], .sz'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi, .sz')) tipNascondi(); });
+document.addEventListener('mouseover', e => { if (!fineP || isApp) return; const b = e.target.closest('.temi [data-tema], .str5 .st'); if (b && b.dataset.tema !== 'home') { const r = b.getBoundingClientRect(); tipSez(b, r.left, r.bottom); } else if (String(TIP.dataset.k).startsWith('sez:') && !e.target.closest('.temi, .str5')) tipNascondi(); });
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-tema],header h1.marchio');
   if (!b) { if (String(TIP.dataset.k).startsWith('sez:')) tipNascondi(); return; }
   if (isApp) return; e.preventDefault(); e.stopPropagation();
   const k = b.dataset.tema || 'home';
-  if (!fineP && k !== 'home' && b.closest('.sl5 .temi') && TIP.dataset.k !== 'sez:' + k) { tipSez(b, 0, 0); return; }
+  if (!fineP && k !== 'home' && b.closest('.str5') && TIP.dataset.k !== 'sez:' + k) { tipSez(b, 0, 0); return; }
   tipNascondi(); entraSez(k);
 }, true);
 // testata coerente: colore, menu ed etichetta seguono la sezione in cui sei
@@ -3093,8 +3093,7 @@ async function genHome(fo) {
         <div class="apt"><p class="kick5"><i></i>${x.t}${PRONTI.includes(k) ? '' : ' · in preparazione'}</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p>
           ${PRONTI.includes(k) ? `<button class="entra" data-tema="${k}">${x.cta} ${freccia}</button>` : `<button class="entra ghost" data-tema="${k}">Scopri cosa arriverà ${freccia}</button>`}</div></div>`).join('')}
       <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
-      <div class="tes5"><p class="tes5t">Cinque sezioni, un solo patrimonio. <b>${fineP ? 'Clicca' : 'Tocca'} per scoprirle.</b></p>
-        <div class="tes5g" role="tablist" aria-label="Le cinque sezioni">${sl.map(([k, x], i) => `<button class="sz${i === 0 ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-go="${i}" data-k="${k}" role="tab" aria-selected="${i === 0}" style="--tc:${TEMA[k][1]}"><span class="szf" style="background-image:url('illustrazioni/${k}.svg')"></span><span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>
+      ${strisciaSez('natura')}
     </section>
     <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
       <div class="vie5">
@@ -3131,18 +3130,17 @@ async function genHome(fo) {
 let SLT = null;
 /* telefono: le pagine d'inizio delle sezioni composte come la home. La foto è una scheda con lo stesso margine sopra e sotto,
    in fondo al testo le cinque sezioni a piramide (quella in cui sei è accesa); la mappa ridotta scende sotto la foto. */
-function tessereSez(att) {
-  return `<div class="tes5 fl"><p class="tes5t">Cinque sezioni, un solo patrimonio.</p><div class="tes5g">${Object.entries(SEZT).map(([k, x]) => `<button class="sz${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><span class="szf" style="background-image:url('illustrazioni/${k}.svg')"></span><span class="szn">${x.t}</span>${PRONTI.includes(k) ? '' : '<em>presto</em>'}<span class="szb"><i></i></span></button>`).join('')}</div></div>`;
+// la striscia delle cinque sezioni: cinque pezzi ritagliati dal lato basso della foto, con simbolo e nome
+function strisciaSez(att) {
+  return `<nav class="str5" aria-label="Le cinque sezioni">${Object.entries(SEZT).map(([k, x], i) => `<button class="st${k === att ? ' on' : ''}${PRONTI.includes(k) ? '' : ' presto'}" data-tema="${k}" data-i="${i}" style="--tc:${TEMA[k][1]}"${k === att ? ' aria-current="true"' : ''}><img class="sg" src="illustrazioni/${k}-segno.svg" alt=""><b>${x.t}</b>${PRONTI.includes(k) ? '' : '<em>presto</em>'}</button>`).join('')}</nav>`;
 }
 function componiAp5() {
   if (isApp) return; const sec = $('cat').querySelector('.ap5:not(.sl5)'), apt = sec && sec.querySelector('.apt'); if (!apt) return;
-  let ts = sec.querySelector('.tes5'); if (!ts) { apt.insertAdjacentHTML('beforeend', tessereSez(SEZ)); ts = apt.querySelector('.tes5'); }
-  // sul computer le tessere stanno in una riga sotto le due colonne, sul telefono dentro la foto sotto il testo
-  if (innerWidth > 860) { if (ts.parentNode !== sec) sec.appendChild(ts); sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
-  if (ts.parentNode !== apt) apt.appendChild(ts);
+  if (!sec.querySelector('.str5')) sec.insertAdjacentHTML('beforeend', strisciaSez(SEZ));
+  if (innerWidth > 860) { sec.style.removeProperty('--m'); sec.style.removeProperty('--hp'); return; }
   const nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
-  const schermo = innerHeight - (sec.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10, h = apt.offsetHeight;
-  const min = h + 48, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h) / 2);
+  const schermo = innerHeight - (sec.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10, h = apt.offsetHeight, st = sec.querySelector('.str5').offsetHeight;
+  const min = h + 48 + st, H = Math.round(min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - st) / 2);
   sec.style.setProperty('--m', m + 'px'); sec.style.setProperty('--hp', H + 'px');
 }
 if (!isApp) { new MutationObserver(() => requestAnimationFrame(componiAp5)).observe($('cat'), { childList: true }); addEventListener('resize', componiAp5); }
@@ -3153,17 +3151,15 @@ function scorri5() {
   // sul computer la stessa composizione: altezza fissa (78% dello schermo, massimo 680), testo e sezioni centrati
   const alto = () => { const desk = innerWidth > 860;
     let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight);
-    const tm = box.querySelector('.tes5'), th = tm ? tm.offsetHeight : 0, gap = desk ? 26 : 18, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
+    const tm = box.querySelector('.str5'), th = tm ? tm.offsetHeight : 0, gap = 0, nav = [...document.querySelectorAll('#sezh, #sez')].find(n => n.offsetHeight && getComputedStyle(n).position === 'fixed');
     const schermo = innerHeight - (box.getBoundingClientRect().top + scrollY) - (nav ? nav.offsetHeight : 0) - 10;
-    const min = h + gap + th + (desk ? 96 : 48), H = Math.round(desk ? Math.max(min, Math.min(innerHeight * 0.78, 680)) : min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
+    const min = h + th + (desk ? 96 : 48), H = Math.round(desk ? Math.max(min, Math.min(innerHeight * 0.78, 680)) : min + Math.max(0, schermo - min) / 2), m = Math.round((H - h - gap - th) / 2);
     // testo e sezioni centrati nella scheda: stesso margine sopra e sotto
     box.style.setProperty('--m', m + 'px'); box.style.setProperty('--giu', (m + th + gap) + 'px'); box.style.height = H + 'px'; };
   alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
-  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')], tes = [...box.querySelectorAll('.sz')]; let i = 0, ferma = false;
+  const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')], tes = [...box.querySelectorAll('.str5 .st')]; let i = 0, ferma = false;
   const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i));
-    tes.forEach((x, n) => { x.classList.remove('on'); x.setAttribute('aria-selected', n === i); }); if (tes[i]) { void tes[i].offsetWidth; tes[i].classList.add('on'); } };
-  // le tessere delle sezioni: un tocco mostra la sezione nella foto, un secondo tocco sulla stessa entra
-  tes.forEach(t => t.onclick = e => { e.stopPropagation(); const n = +t.dataset.go; if (n === i) return entraSez(t.dataset.k); va(n); });
+    tes.forEach((x, n) => x.classList.toggle('on', n === i)); }; // la sezione della foto è accesa anche nella striscia
   box.querySelector('.slp').onclick = () => va(i - 1); box.querySelector('.sls').onclick = () => va(i + 1);
   dots.forEach(d => d.onclick = () => va(+d.dataset.go));
   box.onmouseenter = box.onfocusin = () => { ferma = true; }; box.onmouseleave = () => { ferma = false; };
@@ -3451,7 +3447,7 @@ document.addEventListener('click', e => { if (!e.target.closest('.stampa5')) ret
 
 /* ---------- navigatore: ogni pagina e ogni scheda ha il suo indirizzo (solo sito)
    #/                     inizio            #/natura, #/natura/mappa, /percorsi, /meteo, /funghi, /piante, /calendario
-   #/sapori, #/sapori/mappa, /catalogo, /calendario, /itinerari, /vino (le cinque materie)
+   #/sapori, #/sapori/mappa, /catalogo, /calendario, /itinerari, /vino (le quattro materie)
    #/zona/EUAP0228        scheda di un parco, riserva, sito, bosco o albero
    #/specie/funghi/Amanita_phalloides     #/sapori/scheda/<chiave>     #/percorso/<id>
    #/mare, #/arte, #/storia, #/glossario, #/metodo

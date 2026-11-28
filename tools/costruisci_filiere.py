@@ -44,7 +44,7 @@ def vv(k, n, sin, paesi, testo, dop=(), fonti=(), extra=None):
 
 
 VINO = {
-    'n': 'Il vino', 'sub': 'I vitigni di Sicilia',
+    'n': 'Vitigno', 'sub': 'I vitigni di Sicilia',
     'intro': [
         'La Sicilia è una delle regioni d’Italia con più vigne. Su un’isola così varia, tra mare, colline argillose, altopiani calcarei e il vulcano, ogni vitigno ha trovato il suo posto.',
         'Il consorzio della DOC Sicilia conta oltre settanta vitigni autoctoni, ma solo una piccola parte entra oggi nei vini a denominazione. Quattro varietà, Catarratto, Grillo, Nero d’Avola e Zibibbo, coprono da sole più della metà dei vigneti.',
@@ -107,7 +107,7 @@ VINO = {
 }
 
 OLIO = {
-    'n': "L'olio", 'sub': 'Le cultivar dell’olivo',
+    'n': 'Ulivo', 'sub': 'Le cultivar dell’olivo',
     'intro': [
         'In Sicilia l’olivo cresce dalla costa fino a circa mille metri e vive a lungo: nella Valle del Belice ci sono alberi di oltre cinquecento anni.',
         'Ogni zona ha le sue varietà, dette cultivar. Danno oli molto diversi tra loro: dolci e delicati, oppure amari e piccanti, con profumi di pomodoro, carciofo, mandorla o erba tagliata. Alcune danno anche olive da tavola.',
@@ -154,7 +154,7 @@ OLIO = {
 }
 
 GRANO = {
-    'n': 'Il grano', 'sub': 'I grani antichi siciliani',
+    'n': 'Grano', 'sub': 'I grani antichi siciliani',
     'intro': [
         'Per secoli la Sicilia è stata il granaio del Mediterraneo. Fino alla metà del Novecento nei campi crescevano decine di varietà locali, scelte dai contadini anno dopo anno. Poi le varietà moderne, più produttive, le hanno quasi cancellate.',
         'Oggi una collezione regionale conserva circa cinquanta varietà storiche di frumento siciliano. Diverse sono iscritte al registro nazionale delle varietà da conservazione: quattordici popolazioni di grano duro, tre di grano tenero e due varietà storiche. In Sicilia ci sono una sessantina di "agricoltori custodi" che ne mantengono puro il seme.',
@@ -206,7 +206,7 @@ def gruppo(n, testo, chiavi):
 
 
 FORMAGGIO = {
-    'n': 'Il formaggio', 'sub': 'Latte, caci e ricotte di Sicilia',
+    'n': 'Latte', 'sub': 'Latte, caci e ricotte di Sicilia',
     'intro': [
         'Il formaggio siciliano nasce dai pascoli: pecore e capre nell’entroterra e sulle montagne, vacche sugli altopiani iblei e sui Nebrodi. Molti si fanno ancora con latte crudo e attrezzi di legno, nelle masserie.',
         'Cinque formaggi sono DOP, decine sono prodotti tradizionali riconosciuti e diversi sono presìdi Slow Food. Qui li trovi divisi per famiglia, con le parole per capirli.',

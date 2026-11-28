@@ -932,27 +932,9 @@ body .sh5 h1,body .sh5 h2,body .sh5 .firma5{font-family:'Newsreader',Georgia,ser
 .temi{position:absolute;z-index:4;top:clamp(14px,2.4vw,22px);left:clamp(16px,3vw,32px);right:clamp(16px,3vw,32px);display:flex;flex-wrap:wrap;align-items:center;gap:6px;pointer-events:none}
 .temi>*{pointer-events:auto}
 .temib{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
-.temil{display:none}
 /* home, telefono: le cinque sezioni come tessere con foto; la tessera accesa segue la foto grande e si riempie col tempo */
-.tes5{display:none}
-.tes5g{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
 /* a piramide: Natura e Sapori sopra, al centro; Mare, Arte e Storia sotto */
-.tes5g .sz{grid-column:span 4}.tes5g .sz:nth-child(1){grid-column:3/7}.tes5g .sz:nth-child(2){grid-column:7/11}
-.sz{position:relative;height:76px;border:2px solid rgba(255,255,255,.5);border-radius:14px;overflow:hidden;padding:0;background:#FBF5E8;color:#26231F;cursor:pointer;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:0;transition:transform .25s,border-color .25s,box-shadow .25s;font:inherit}
-.sz .szf{position:relative;flex:1;width:100%;background:#FBF5E8 center/cover;transition:transform .35s}
-.sz:hover .szf{transform:scale(1.05)}
-.sz::before{content:none}
-.sz svg,.sz .ico{position:relative;width:20px;height:20px;stroke:#fff}
-.sz .szn{position:relative;z-index:1;width:100%;font:600 12.5px/1 'Bricolage Grotesque',sans-serif;letter-spacing:-.01em;background:#fff;color:#26231F;padding:5px 2px 6px;text-align:center}
-.sz em{position:absolute;top:5px;right:5px;font:600 8.5px/1 'Bricolage Grotesque',sans-serif;font-style:normal;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,.85);color:#26231F;border-radius:6px;padding:2px 4px}
-.sz.presto .szf{filter:saturate(.6) brightness(.97)}
-.sz .szb{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:1;background:rgba(255,255,255,.18)}
-.sz .szb i{display:block;height:100%;width:0;background:var(--tc)}
-.sz.on{border-color:#fff;transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.45),0 0 0 2px var(--tc)}
-.sz.on .szn{background:var(--tc);color:#fff}
-.sz.on .szb i{animation:szp 6.5s linear forwards}
-@keyframes szp{from{width:0}to{width:100%}}
-@media (prefers-reduced-motion:reduce){.sz.on .szb i{animation:none;width:100%}}
+
 .temi .ql{font:500 13px 'Bricolage Grotesque',sans-serif;color:rgba(255,255,255,.85);margin-right:4px;text-shadow:0 1px 6px rgba(0,0,0,.4)}
 .temi button{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.45);background:rgba(20,14,8,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff;border-radius:999px;padding:7px 14px 7px 11px;font:500 14px 'Bricolage Grotesque',sans-serif;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
 .temi button i{width:9px;height:9px;border-radius:50%;background:var(--tc);box-shadow:0 0 0 2px rgba(255,255,255,.7)}
@@ -1039,7 +1021,7 @@ body.natura-on .tipm .tt{color:#2D6A4F}
 .fil5 .vo5{border-radius:12px!important}.vo5{display:flex;flex-direction:column;align-items:flex-start;gap:2px;border:1px solid #e5d6c8;background:#fff;border-radius:12px;padding:9px 12px;cursor:pointer;font:500 15px 'Bricolage Grotesque',sans-serif;color:#26231F;text-align:left}
 .vo5 b{font-weight:600}.vo5 small{font-size:12px;color:#8a5a2a}
 .vo5:hover{border-color:#26231F}
-.filcards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.filcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .filcards button{border:0;background:#fff;border-radius:16px;overflow:hidden;cursor:pointer;text-align:left;padding:0 0 12px;display:flex;flex-direction:column;gap:2px;box-shadow:0 2px 10px rgba(40,25,10,.08);font:inherit;color:#26231F}
 .filcards .img{display:block;aspect-ratio:4/3;background:#EFE6DA center/cover;margin-bottom:8px}
 .filcards b{font:500 22px/1.1 'Newsreader',Georgia,serif;padding:0 14px}
@@ -1130,15 +1112,11 @@ header h1.marchio .mt{font-family:'Caprasimo',Georgia,serif;font-weight:400;font
   .ap5:not(.sl5) .apf{animation:none;transform:none}
   .ap5:not(.sl5)::after{background:linear-gradient(0deg,rgba(20,12,6,.8),rgba(20,12,6,.4) 55%,rgba(20,12,6,.2))}
   .ap5:not(.sl5) .apm{margin:calc(var(--m,28px) - 10px) -20px 0}
-  .tes5.fl{position:static;padding:0;margin-top:22px}
-  .tes5.fl .sz.on .szb i{animation:none;width:100%}.sl5 .sld{padding-top:var(--m,28px)}
   .sl5 .sld::after{background:linear-gradient(0deg,rgba(20,12,6,.82),rgba(20,12,6,.4) 55%,rgba(20,12,6,.2))}
   .sl5 .apt{display:flex;flex-direction:column}
   .sl5 .apt .lead{margin-bottom:10px}
   .sl5 .kick5{align-self:flex-start}.sl5 .entra{align-self:flex-end;gap:7px;padding:3px 3px 3px 13px;font-size:13.5px}.sl5 .entra .fr{width:28px;height:28px}
-  .tes5{display:block!important;position:absolute;z-index:4;left:0;right:0;bottom:var(--m,24px);padding:0 20px}
-  .tes5t{text-align:center;margin:0 0 10px;font:500 14px/1.3 'Bricolage Grotesque',sans-serif;color:rgba(255,255,255,.85)}.tes5t b{color:#fff;font-weight:600}
-  .sl5 .temil{display:block;margin:0 20px 10px 0;font:500 15px/1.35 'Bricolage Grotesque',sans-serif;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.45)}}
+  .sl5 .sld{padding-top:var(--m,28px)}}
 /* telefono: le sezioni su una sola riga che scorre col dito, e il testo subito sotto */
 @media (max-width:860px){.temi{right:0}.temib{flex-wrap:nowrap;overflow-x:auto;padding-right:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}.temib::-webkit-scrollbar{display:none}.temi button{flex:none;white-space:nowrap}
   .ap5{padding-top:68px!important}}
@@ -1277,22 +1255,41 @@ abbr.gl:focus-visible{outline:2px solid #E8761A;border-radius:3px}
   .sl5 .kick5{align-self:flex-start}
   .sl5 .apt .lead{margin-bottom:12px;max-width:none}
   .sl5 .entra{align-self:flex-end;gap:8px;padding:4px 4px 4px 16px;font-size:15px}.sl5 .entra .fr{width:32px;height:32px}
-  .sl5 .tes5{display:block;position:absolute;z-index:4;left:clamp(22px,4vw,48px);bottom:var(--m,48px);width:min(600px,50vw);padding:0}
-  .tes5t{text-align:center;margin:0 0 12px;font:500 15px/1.3 'Bricolage Grotesque',sans-serif;color:rgba(255,255,255,.85)}.tes5t b{color:#fff;font-weight:600}
-  .tes5g{gap:9px;grid-template-columns:repeat(5,1fr)}.tes5g .sz{grid-column:auto!important}.sz{height:auto}.sz .szf{flex:none;aspect-ratio:20/9}.sz .szn{font-size:13px}.sz svg,.sz .ico{width:20px;height:20px}
   .sl5 h1,.ap5:not(.sl5) h1{font-size:clamp(40px,4.3vw,64px)!important;margin-bottom:12px}
   .sl5 .apt .lead,.ap5:not(.sl5) .lead{font-size:17px;margin-bottom:14px}
   .ap5:not(.sl5) .apc{margin-top:10px}
   /* due metà: testo al centro della metà sinistra, mappa al centro della destra; stesso spazio ai bordi e in mezzo */
-  .sh5 .ap5:not(.sl5){--g:clamp(40px,3.5vw,64px);padding:48px var(--g)!important;align-items:center;justify-content:center;gap:var(--g)}
+  .sh5 .ap5:not(.sl5){--gm:clamp(40px,3.5vw,64px);padding:48px var(--gm)!important;align-items:center;justify-content:center;gap:var(--gm)}
   .ap5:not(.sl5) .apt{flex:1 1 0;min-width:0;width:auto;max-width:none}
   .ap5:not(.sl5) .lead{max-width:60ch}
   .ap5:not(.sl5) .apm{width:min(544px,38vw);align-self:center;margin:0;flex:none;right:auto;top:auto}
-  .sh5 .ap5:not(.sl5){flex-wrap:wrap;row-gap:30px}
-  .tes5.fl{display:block;position:relative;z-index:3;margin:0;padding:0;flex:0 0 100%}
-  .tes5.fl .tes5g{grid-template-columns:repeat(5,minmax(0,128px));justify-content:center}
-  .sl5 .tes5g{grid-template-columns:repeat(5,minmax(0,112px));justify-content:center}
-  .tes5.fl .sz.on .szb i{animation:none;width:100%}
+}
+/* le cinque sezioni: una striscia lungo il lato basso della foto, divisa in cinque pezzi come ritagliati;
+   ogni pezzo lascia vedere la foto, con simbolo e nome. Passando sopra si accende e appare la descrizione */
+.ap5{--st:92px}
+.str5{position:absolute;z-index:4;left:0;right:0;bottom:0;height:var(--st);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:4px solid var(--av,#F6F1E7)}
+.str5 .st{position:relative;min-width:0;border:0;border-left:4px solid var(--av,#F6F1E7);background:rgba(18,12,6,.5);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;font:600 15px/1 'Bricolage Grotesque',sans-serif;padding:0 4px;transition:background .25s}
+.str5 .st:first-child{border-left:0}
+.str5 .st b{font:600 15px/1 'Bricolage Grotesque',sans-serif!important;letter-spacing:.01em;color:#fff;text-decoration:none!important;margin:0;white-space:nowrap}
+.str5 .st .sg{width:44px;height:44px;transition:transform .25s;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))}
+.str5 .st::after{content:'';position:absolute;left:0;right:0;bottom:0;height:5px;background:var(--tc);transform:scaleX(0);transition:transform .25s}
+.str5 .st:hover{background:rgba(18,12,6,.18)}
+.str5 .st:hover .sg{transform:translateY(-3px) scale(1.08)}
+.str5 .st:hover::after,.str5 .st.on::after{transform:scaleX(1)}
+.str5 .st.on{background:rgba(18,12,6,.25)}
+.str5 .st em{position:absolute;top:9px;right:10px;font:600 9.5px/1 'Bricolage Grotesque',sans-serif;font-style:normal;text-transform:uppercase;letter-spacing:.06em;opacity:.75}
+.str5 .st.presto b,.str5 .st.presto .sg{opacity:.8}
+.str5 .st:focus-visible{outline:3px solid #fff;outline-offset:-6px}
+.sh5 .ap5:not(.sl5){padding-bottom:calc(48px + var(--st))!important}
+@media (max-width:860px){
+  .ap5{--st:66px}
+  .str5 .st{font-size:11.5px;gap:5px;border-left-width:3px}.str5{border-top-width:3px}
+  .str5 .st .sg{width:28px;height:28px}
+  .str5 .st b{font-size:11px!important;letter-spacing:0}
+  .str5 .st em{display:none}
+  .sh5 .ap5:not(.sl5){padding-bottom:0!important}
+  .ap5:not(.sl5) .str5{top:calc(var(--hp,400px) - var(--st));bottom:auto;border-radius:0 0 24px 24px;overflow:hidden}
+  .ap5:not(.sl5) .apm{margin:calc(var(--m,28px) + var(--st) - 10px) -20px 0!important}
 }
 </style>
 
