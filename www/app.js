@@ -479,7 +479,7 @@ map.on('click', e => {
   chiudiLiv();
   if (document.body.classList.contains('recon')) return;
   if (sapOn()) return sapClick(e);
-  if (misto() && TEMI.has('sapori') && map.getLayer('sap-p') && map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ['sap-c', 'sap-p'] }).length) return sapClick(e);
+  if (((misto() && TEMI.has('sapori')) || MT.sap) && !sapOn() && map.getLayer('sap-p') && map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ['sap-c', 'sap-p'] }).length) return sapClick(e);
   if (PIAN) return pianClick(e);
   if (ON.osm && map.getLayer('osm-r')) {
     const pad = 7, bx = [[e.point.x - pad, e.point.y - pad], [e.point.x + pad, e.point.y + pad]];
@@ -3364,7 +3364,7 @@ async function prestoHome(k, fo) {
 }
 // comuni dei sapori sulla mappa di Natura quando i temi sono uniti
 function mixLivelli(v) {
-  const on = v === 'mappa' && misto() && TEMI.has('sapori');
+  const on = v === 'mappa' && ((misto() && TEMI.has('sapori')) || MT.sap);
   if (!on) { if (map.getLayer('sap-p')) for (const l of SAPL) map.setLayoutProperty(l, 'visibility', 'none'); return; }
   SAPD().then(() => { if (sapOn() || vista !== 'mappa') return; sapLayers(); map.getSource('sapp').setData(sapGeo('paese'));
     for (const l of ['sap-c', 'sap-cl', 'sap-p', 'sap-pl']) map.setLayoutProperty(l, 'visibility', 'visible'); });
@@ -3939,7 +3939,7 @@ function paginaScuole() {
 document.addEventListener('click', e => { const b = e.target.closest('[data-rotta]'); if (!b) return; e.preventDefault(); e.stopPropagation(); vaiRotta(b.dataset.rotta); }, true);
 
 /* ---------- mappa filtrata per argomento: chi arriva da un link vede solo ciò di cui parla il link */
-const MT = { t: null };
+const MT = { t: null, sap: false };
 const TEMIMAPPA = {
   parchi: ['Parchi e riserve', { aree: true }, 'Le aree protette: parchi regionali, riserve naturali e aree marine. Tocca un\'area per la sua scheda.'],
   natura2000: ['Siti Natura 2000', { n2k: true }, 'I siti della rete europea per la tutela di habitat e specie. Ogni scheda ha l\'elenco delle specie da scaricare.'],
@@ -3956,9 +3956,9 @@ function mappaTema(t) {
 }
 function fasciaTema() {
   let f = $('ftema'); if (!f) { document.body.insertAdjacentHTML('beforeend', '<div id="ftema" class="ftema" role="status"></div>'); f = $('ftema'); }
-  const x = MT.t && TEMIMAPPA[MT.t], vis = x && vista === 'mappa' && !NAT.home && !sapOn() && !$('cat').classList.contains('on');
+  const x = MT.t ? TEMIMAPPA[MT.t] : ['La mappa della natura', {}, 'Scegli cosa vedere, oppure incrocia con i comuni e i loro sapori.'], vis = vista === 'mappa' && !NAT.home && !sapOn() && !$('cat').classList.contains('on') && !document.body.classList.contains('pianon');
   f.classList.toggle('on', !!vis); if (!vis) return;
-  f.innerHTML = `<b>${esc(x[0])}</b><span>${esc(x[2])}</span><div>${Object.entries(TEMIMAPPA).filter(([k]) => k !== MT.t).slice(0, 4).map(([k, y]) => `<button data-mtema="${k}">${esc(y[0])}</button>`).join('')}<button data-mtema="tutto" class="tutto">Mostra tutto</button></div>`;
+  f.innerHTML = `<b>${esc(x[0])}</b><span>${esc(x[2])}</span><div>${Object.entries(TEMIMAPPA).filter(([k]) => k !== MT.t).slice(0, MT.t ? 4 : 5).map(([k, y]) => `<button data-mtema="${k}">${esc(y[0])}</button>`).join('')}<button data-msap="1" class="inc${MT.sap ? ' on' : ''}">${ico('tools-kitchen-2', 'xs')} ${MT.sap ? 'Togli i sapori' : 'Incrocia con i sapori dei comuni'}</button>${MT.t ? '<button data-mtema="tutto" class="tutto">Mostra tutto</button>' : ''}</div>`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-mtema]'); if (!b) return; e.stopPropagation(); if (b.dataset.mtema === 'tutto') { mappaTema(null); return; } mappaTema(b.dataset.mtema); if (!isApp) try { history.replaceState(null, '', '#/natura/mappa/' + b.dataset.mtema); } catch (er) {} }, true);
 new MutationObserver(() => setTimeout(fasciaTema, 30)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
@@ -4532,4 +4532,6 @@ document.addEventListener('click', e => {
   if (c) { e.stopPropagation(); if (c.dataset.cca === 'nuovo') return giocoCase(true); if (CG.sel == null) return;
     const i = +c.dataset.cca; if (i === CG.sel) { CG.fatti.add(i); CG.sel = null; giocoCase(); } else { CG.err++; c.classList.add('no'); setTimeout(() => c.classList.remove('no'), 500); } }
 }, true);
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-msap]'); if (!b) return; e.stopPropagation(); MT.sap = !MT.sap; mixLivelli('mappa'); fasciaTema(); }, true);
 }
