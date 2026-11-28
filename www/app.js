@@ -3606,7 +3606,7 @@ async function oggiSicilia() {
   OG.sg = await SAGRE(); const CM = await meteoCapoluoghi(); if (!$('og5')) return;
   if (!CM) { box.querySelector('.note').textContent = 'Il meteo non risponde in questo momento. Riprova tra poco.'; return; }
   const disegna = () => {
-    const n = OG.n, { out, meteoDi } = consigliGiorno(CM, n), MW = innerWidth > 860 ? 620 : 430;
+    const n = OG.n, { out, meteoDi } = consigliGiorno(CM, n), MW = innerWidth > 860 ? 620 : Math.max(430, Math.min(620, Math.round((box.clientWidth || 430) * 0.82)));
     const extra = (X, Y, s) => { const messi = []; return CM.map(x => { const m = meteoDi(x), cx = +X(x.c[1]), cy = +Y(x.c[2]), wd = 52 + x.c[0].length * 6.4, px = Math.min(Math.max(cx, wd / 2 + 2), MW - 2 - wd / 2);
       const su = out.some(o => (+X(o.xy[0]) - cx) ** 2 + (+Y(o.xy[1]) - cy) ** 2 < 34 * 34), urta = y => messi.some(q => Math.abs(q[0] - px) < (q[2] + wd) / 2 + 4 && Math.abs(q[1] - y) < 27);
       let py = su ? cy - 30 : cy + 17; if (urta(py)) py = py > cy ? cy - 30 : cy + 17; messi.push([px, py, wd]);
