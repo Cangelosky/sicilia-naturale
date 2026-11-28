@@ -2684,8 +2684,8 @@ function sapCatalogo() {
   const tutti = Object.values(D.voci);
   const okK = v => F.k === 'tutto' || (F.k === 'ingr' ? (v.t === 'materia' || v.t === 'semi') : (catDi(v) === F.k && v.t !== 'materia' && v.t !== 'semi'));
   const okR = v => !F.ric || (F.ric === 'tut' ? (v.ric || []).some(r => r === 'DOP' || r === 'IGP') : (v.ric || []).includes('PAT'));
-  const lista = F.k === 'prod' ? [] : tutti.filter(v => okK(v) && okR(v) && (!F.paese || (v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && (!F.fam || v.fam === F.fam) && w.every(x => contiene(norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + nomiPaesi(v)), x)));
-  const prod = (F.k === 'prod' || F.k === 'tutto') ? Object.values(D.produttori).filter(p => (!F.paese || p.paese === F.paese) && w.every(x => norm(p.n + ' ' + D.paesi[p.paese].n).includes(x))) : [];
+  const lista = F.k === 'prod' ? [] : tutti.filter(v => okK(v) && okR(v) && (!F.paese || (v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv)) && (!F.festa || (v.feste || []).includes(F.festa)) && (!F.lr || v.lr === F.lr) && (!F.fam || v.fam === F.fam) && w.every(x => contiene(norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + (v.breve || '') + ' ' + nomiPaesi(v)), x)) && passa9(v, ''));
+  const prod = (F.k === 'prod' || F.k === 'tutto') ? Object.values(D.produttori).filter(p => !F.ing && !F.festa && !F.ric && !F.lr && !F.fam && (!F.pv || (D.paesi[p.paese] || {}).pv === F.pv) && (!F.paese || p.paese === F.paese) && w.every(x => norm(p.n + ' ' + D.paesi[p.paese].n).includes(x))) : [];
   const conta = k => k === 'tutto' ? tutti.length : k === 'prod' ? Object.keys(D.produttori).length : tutti.filter(v => (F.k = k, okK(v))).length;
   const kk = F.k, cat = [['tutto', 'Tutto'], ...GUSTI.map(g => [g[0], g[1]]), ['ingr', 'Ingredienti'], ['prod', 'Produttori']];
   const sel = (id, val, opts, vuoto) => `<select class="tendina" id="${id}"><option value="">${vuoto}</option>${opts.map(([k, n]) => `<option value="${k}"${val === k ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
@@ -2697,22 +2697,17 @@ function sapCatalogo() {
     $('cat').innerHTML = `<div class="in"><h2 id="sgt">${GUSTO[F.k] ? esc(GUSTO[F.k][1]) : 'Catalogo dei sapori'}</h2><p class="lead" id="sgl">${GUSTO[F.k] && DESCG[F.k] ? DESCG[F.k] + '. Filtra per paese, festa o riconoscimento, oppure cambia famiglia qui sotto.' : 'Dolci, prodotti tradizionali, DOP e IGP, piatti, ingredienti e chi li fa.'}</p>
       <div class="cerca"><input id="sq" type="search" placeholder="Cerca un dolce, un ingrediente, un paese" value="${esc(F.q)}" autocomplete="off"></div>
       <div class="grp" id="sg"></div>
-      <div class="sfil">${sel('sfp', F.paese, Object.entries(D.paesi).sort((a, b) => a[1].n.localeCompare(b[1].n)).map(([k, p]) => [k, p.n]), 'Tutti i paesi')}${sel('sff', F.festa, Object.entries(D.feste).map(([k, f]) => [k, f.n]), 'Tutte le feste')}${sel('sfa', F.fam, [...new Set(tutti.map(v => v.fam).filter(Boolean))].sort().map(x => [x, x]), 'Tutte le famiglie')}${sel('sfr', F.ric || '', [['tut', 'DOP e IGP'], ['pat', 'Prodotti tradizionali (PAT)']], 'Tutti i riconoscimenti')}${sel('sfl', F.lr, Object.keys(LRC).map(k => [k, k]), 'Lista rossa: tutti')}</div>
+      <div id="sfx"></div>
       <p class="cnt" id="sn"></p><div class="griglia" id="sgr"></div><button class="altri" id="sz" style="display:none"></button>${COPY()}</div>`;
     $('sq').oninput = e => { SAP.fil.q = e.target.value; sapCatalogo(); };
-    $('sfp').onchange = e => { SAP.fil.paese = e.target.value; sapCatalogo(); };
-    $('sff').onchange = e => { SAP.fil.festa = e.target.value; sapCatalogo(); };
-    $('sfl').onchange = e => { SAP.fil.lr = e.target.value; sapCatalogo(); };
-    $('sfr').onchange = e => { SAP.fil.ric = e.target.value; SAP.fil.n = 60; sapCatalogo(); };
-    $('sfa').onchange = e => { SAP.fil.fam = e.target.value; SAP.fil.n = 60; sapCatalogo(); };
     $('sz').onclick = () => { SAP.fil.n += 60; sapCatalogo(); };
   }
   const cnt = Object.fromEntries(cat.map(([k]) => [k, conta(k)])); F.k = kk;
   $('sg').innerHTML = cat.map(([k, n]) => `<button data-sk="${k}" class="${F.k === k ? 'on' : ''}">${GUSTO[k] ? `<span class="tpi" style="color:${GUSTO[k][3]}">${ico(GUSTO[k][2], 'xs')}</span>` : ''}${n}<em>${cnt[k]}</em></button>`).join('');
-  const nf = (F.paese ? 1 : 0) + (F.festa ? 1 : 0) + (F.lr ? 1 : 0) + (F.fam ? 1 : 0) + (F.ric ? 1 : 0);
+  const nf = filtri9(tutti, okK);
   $('sn').innerHTML = `${lista.length + prod.length} risultati${nf ? ` · <button class="azzera" id="saz">Azzera filtri</button>` : ''}`;
   const tot = lista.map(card).concat(prod.map(cardP)); $('sgr').innerHTML = tot.slice(0, F.n).join(''); $('sz').textContent = 'Mostra altri'; $('sz').style.display = tot.length > F.n ? 'block' : 'none'; sapFoto($('sgr'));
-  if ($('saz')) $('saz').onclick = () => { Object.assign(SAP.fil, { paese: '', festa: '', lr: '', fam: '', ric: '' }); $('cat').dataset.v = ''; sapCatalogo(); };
+  if ($('saz')) $('saz').onclick = () => { Object.assign(SAP.fil, { paese: '', festa: '', lr: '', fam: '', ric: '', pv: '', ing: '' }); sapCatalogo(); };
 }
 
 /* ---- calendario */
@@ -4216,10 +4211,10 @@ function arricchisci7() {
       [['calendar', 'Il calendario delle fioriture', 'Cosa fiorisce questo mese e cosa inizia a fiorire.', 'data-i7="cal"'], ['tree', 'Gli alberi monumentali', 'I giganti verdi sulla mappa.', 'data-rotta="#/natura/mappa/alberi"', '#5c7a2e'], ['leaf', 'Le specie di Natura 2000', 'Le piante tutelate dalla rete europea.', 'data-i7="n2k"'], ['sparkles', 'Mettiti alla prova', 'Quiz e percorsi per ragazzi.', 'data-rotta="#/didattica"', '#E8761A']]);
     lead.insertAdjacentHTML('afterend', html);
   } else if (v === 'sap-cat' && lead && SAP.D) {
-    const D = SAP.D, n = Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi').length, ev = inEvidenza().slice(0, 4);
+    const D = SAP.D, n = Object.values(D.voci).filter(x => x.t !== 'materia' && x.t !== 'semi').length, ev0 = inEvidenza(), ev = ev0.slice(0, ev0.length >= 6 ? 6 : ev0.length >= 4 ? 4 : 2);
     lead.insertAdjacentHTML('afterend', stIntro('Catalogo', [`Il catalogo raccoglie <b>${fmt(n)} sapori</b> di ${Object.keys(D.paesi).length} comuni: dolci, pani, formaggi, salumi, conserve, vini. Vengono dagli elenchi ufficiali dei prodotti tradizionali e delle denominazioni, dall'elenco dei dolci di Oscar Cangelosi e dai libri di cucina siciliana.`, `Ogni scheda dice dove nasce un sapore, per quale festa si prepara, di cosa è fatto e chi lo produce ancora. Molte hanno le pagine dei libri dove trovarlo e una ricetta di prova.`],
       [['wheat', 'Le quattro materie', 'Grano, ulivo, vitigno e latte: varietà e prodotti.', 'data-rotta="#/sapori/grano"', '#E8761A'], ['route-2', 'Itinerari del gusto', 'Nove viaggi tra paesi, sapori e sagre.', 'data-rotta="#/sapori/itinerari"', '#E8761A'], ['calendar-event', 'Il calendario delle sagre', 'Le feste del gusto mese per mese.', 'data-rotta="#/sapori/calendario"', '#E8761A'], ['map-2', 'La mappa dei comuni', 'Cosa nasce in ogni paese.', 'data-rotta="#/sapori/mappa"', '#E8761A']],
-      ev.length ? `<div class="evd7"><h3>In evidenza adesso</h3><div class="tess5">${ev.map(([x, perche]) => tessera(x, perche)).join('')}</div></div>` : ''));
+      ev.length ? `<div class="evd7"><h3>In evidenza adesso</h3><div class="tess5 ev9 n${ev.length}">${ev.map(([x, perche]) => tessera(x, perche)).join('')}</div></div>` : ''));
     sapFoto(c);
   } else if (v === 'cal') {
     const h = c.querySelector('.in.cal .lead'); if (!h || typeof FUN === 'undefined') return;
@@ -4365,4 +4360,45 @@ function sapFamiglia(k) {
 document.addEventListener('click', e => { const b = e.target.closest('[data-ff]'); if (!b || $('cat').dataset.v !== 'sap-fam') return; e.stopPropagation();
   const [t2, v] = b.dataset.ff.split(':'); if (t2 === 'reset') FAMS.f = { gr: '', ing: '', pv: '' }; else if (t2 === 'piu') FAMS.n += 24; else { FAMS.f[t2] = FAMS.f[t2] === v ? '' : v; FAMS.n = 24; }
   const y = t2 === 'piu' ? $('cat').scrollTop : null; sapFamiglia(FAMS.k); if (y != null) $('cat').scrollTop = y; }, true);
+
+/* ---- catalogo Sapori: filtro a icone espandibile (niente tendine) */
+const ICOING = { ricotta: 'milk', mandorle: 'cookie', pistacchio: 'leaf', miele: 'droplet', fichi: 'plant', cioccolato: 'cake', nocciole: 'trees', zucca: 'plant-2', 'mosto e vino cotto': 'glass-full', sesamo: 'grain', agrumi: 'lemon-2', carrube: 'tree' };
+const testo9 = v => norm(v.n + ' ' + (v.nd || '') + ' ' + (v.breve || '') + ' ' + (v.fam || ''));
+function passa9(v, salta) {
+  const F = SAP.fil, D = SAP.D;
+  if (salta !== 'pv' && F.pv && !((v.prov || []).includes(F.pv) || (v.paesi || []).some(p => (D.paesi[p] || {}).pv === F.pv))) return false;
+  if (salta !== 'ing' && F.ing) { const re = (INGR.find(x => x[0] === F.ing) || [])[1]; if (re && !re.test(testo9(v))) return false; }
+  if (salta !== 'festa' && F.festa && !(v.feste || []).includes(F.festa)) return false;
+  if (salta !== 'ric' && F.ric && !(F.ric === 'tut' ? (v.ric || []).some(r => r === 'DOP' || r === 'IGP') : (v.ric || []).includes('PAT'))) return false;
+  if (salta !== 'lr' && F.lr && v.lr !== F.lr) return false;
+  if (salta !== 'fam' && F.fam && v.fam !== F.fam) return false;
+  if (salta !== 'paese' && F.paese && !((v.paesi || []).includes(F.paese) || (v.prov || []).includes((D.paesi[F.paese] || {}).pv))) return false;
+  return true;
+}
+function filtri9(tutti, okK) {
+  const F = SAP.fil, D = SAP.D, box = $('sfx'); if (!box) return 0;
+  const base = tutti.filter(okK), w = norm((F.q || '').trim()).split(/\s+/).filter(Boolean);
+  const okQ = v => w.every(x => contiene(norm(v.n + ' ' + (v.nd || '') + ' ' + (v.fam || '') + ' ' + (v.breve || '') + ' ' + nomiPaesi(v)), x));
+  const conta = (dim, prova) => base.filter(v => okQ(v) && passa9(v, dim) && prova(v)).length;
+  const chip = (dim, val, nome, n, icona, col) => n || F[dim] === val ? `<button data-fx="${dim}|${esc(val)}" class="${F[dim] === val ? 'on' : ''}">${icona ? `<span class="fi9"${col ? ` style="color:${col}"` : ''}>${ico(icona, 'xs')}</span>` : col ? `<i class="pt9" style="background:${col}"></i>` : ''}${esc(nome)}<em>${n}</em></button>` : '';
+  const gruppi = [];
+  const g = (dim, icona, tit, chips) => { const h = chips.join(''); if (h) gruppi.push(`<div class="fg9"><p class="ft9">${ico(icona, 'xs')}${tit}</p><div class="fc9">${h}</div></div>`); };
+  g('pv', 'map-pin', 'Provincia', Object.entries(PROVN).map(([k, n]) => chip('pv', k, n, conta('pv', v => (v.prov || []).includes(k) || (v.paesi || []).some(p => (D.paesi[p] || {}).pv === k)))));
+  g('ing', 'basket', 'Ingrediente', INGR.map(([n, re]) => chip('ing', n, n[0].toUpperCase() + n.slice(1), conta('ing', v => re.test(testo9(v))), ICOING[n] || 'plant')));
+  if (GUSTO[F.k]) { const fams = [...new Set(base.map(v => v.fam).filter(Boolean))].sort(); if (fams.length > 1 && fams.length < 30) g('fam', 'category', 'Tipo', fams.map(x => chip('fam', x, x, conta('fam', v => v.fam === x)))); }
+  g('festa', 'calendar-event', 'Festa', Object.entries(D.feste).map(([k, f]) => chip('festa', k, f.n, conta('festa', v => (v.feste || []).includes(k)))));
+  g('ric', 'award', 'Riconoscimento', [chip('ric', 'tut', 'DOP e IGP', conta('ric', v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')), 'award', '#b8860b'), chip('ric', 'pat', 'Prodotto tradizionale (PAT)', conta('ric', v => (v.ric || []).includes('PAT')), 'shield-check', '#2b8a3e')]);
+  g('lr', 'alert-triangle', 'Quanto è ancora vivo', Object.entries(LRC).map(([k, c]) => chip('lr', k, k[0].toUpperCase() + k.slice(1), conta('lr', v => v.lr === k), '', c)));
+  const att = [['pv', F.pv && PROVN[F.pv]], ['ing', F.ing], ['fam', F.fam], ['festa', F.festa && (D.feste[F.festa] || {}).n], ['ric', F.ric && (F.ric === 'tut' ? 'DOP e IGP' : 'PAT')], ['lr', F.lr], ['paese', F.paese && (D.paesi[F.paese] || {}).n]].filter(x => x[1]);
+  box.className = 'ff9' + (F.ap ? ' ap' : '');
+  box.innerHTML = `<div class="fb9"><button class="fo9" data-fx="ap|" aria-expanded="${!!F.ap}">${ico('adjustments-horizontal', 'xs')}Filtra${att.length ? `<b>${att.length}</b>` : ''}${ico('chevron-down', 'xs fv9')}</button>${att.map(([d, n]) => `<button class="fa9" data-fx="${d}|" aria-label="Togli ${esc(n)}">${esc(n)}${ico('x', 'xs')}</button>`).join('')}</div>
+    <div class="fp9"${F.ap ? '' : ' hidden'}>${gruppi.join('')}<p class="fn9">Gli ingredienti si cercano nel nome e nella descrizione: per ora l'elenco non è completo. Puoi anche scrivere un ingrediente nella ricerca.</p></div>`;
+  return att.length;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest && e.target.closest('#sfx [data-fx]'); if (!b) return;
+  e.stopPropagation(); const [d, val] = b.dataset.fx.split('|'), F = SAP.fil;
+  if (d === 'ap') F.ap = !F.ap; else { F[d] = F[d] === val ? '' : val; F.n = 60; }
+  const y = $('cat').scrollTop; sapCatalogo(); $('cat').scrollTop = y;
+}, true);
 }
