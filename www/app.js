@@ -3357,6 +3357,7 @@ async function prestoHome(k, fo) {
       <div class="apt"><p class="kick5"><i></i>${x.t} · in preparazione</p><h1>${x.s.replace(/ (\S+)$/, ' <i>$1.</i>')}</h1><p class="lead">${x.d}</p></div></section>
     <section class="s5"><div class="t5"><h2>Cosa troverai</h2><p>Stiamo raccogliendo luoghi, fonti e foto. Ecco cosa arriverà in questa sezione.</p></div>
       <ol class="fut5">${x.fut.map(f => `<li>${f}</li>`).join('')}</ol></section>
+    ${k === 'storia' ? storiaLinea() : ''}
     <section class="s5"><div class="t5"><h2>Intanto puoi entrare qui</h2></div>
       <div class="sez5">${PRONTI.map(q => `<button data-tema="${q}" style="--tc:${TEMA[q][1]}"><span class="img" style="background-image:url('foto/${SEZT[q].f}.webp')"></span><span class="tx"><b><i></i>${SEZT[q].t}</b><small>${SEZT[q].s}.</small></span>${freccia}</button>`).join('')}</div></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>${COPY()}</div>`;
@@ -4534,4 +4535,34 @@ document.addEventListener('click', e => {
 }, true);
 
 document.addEventListener('click', e => { const b = e.target.closest('[data-msap]'); if (!b) return; e.stopPropagation(); MT.sap = !MT.sap; mixLivelli('mappa'); fasciaTema(); }, true);
+
+/* ---- Storia: linea del tempo interattiva (testi nostri, foto da Wikipedia) */
+const EPOCHE = [
+  ['Preistoria', 'fino al 1200 a.C.', 'Necropoli di Pantalica', 'I primi abitanti incidono figure nelle grotte del Monte Pellegrino e scavano migliaia di tombe nella roccia di Pantalica. Sono i secoli più lunghi e meno raccontati dell\'isola.'],
+  ['Sicani, Elimi e Siculi', '1200 – 750 a.C.', 'Segesta', 'Tre popoli si dividono l\'isola: i Sicani all\'interno, gli Elimi a ovest, i Siculi a est. Da loro viene il nome stesso di Sicilia.'],
+  ['Greci e Fenici', '750 – 241 a.C.', 'Valle dei Templi', 'I Greci fondano Siracusa, Agrigento, Selinunte; i Fenici e i Cartaginesi tengono Mozia e Palermo. Arrivano la vite e l\'olivo coltivati come li conosciamo.'],
+  ['Romani', '241 a.C. – 440 d.C.', 'Villa romana del Casale', 'La Sicilia diventa il granaio di Roma. Le grandi ville di campagna, come quella di Piazza Armerina, raccontano con i mosaici la vita dei proprietari.'],
+  ['Bizantini', '535 – 827', 'Cattedrale di Siracusa', 'L\'isola torna all\'Oriente greco. I templi diventano chiese: a Siracusa le colonne dorici sono ancora dentro i muri del duomo.'],
+  ['Arabi', '827 – 1091', 'Bagni di Cefalà Diana', 'Arrivano agrumi, canna da zucchero, gelsi e nuove tecniche per portare l\'acqua nei campi. Palermo diventa una delle città più grandi del Mediterraneo.', '#/sapori/catalogo/frutta_e_ortaggi', 'Gli agrumi e la frutta di Sicilia'],
+  ['Normanni e Svevi', '1091 – 1266', 'Duomo di Monreale', 'Re normanni e artisti arabi e bizantini lavorano insieme: nascono Monreale, la Cappella Palatina, Cefalù. Con Federico II la corte di Palermo è un centro di poesia e scienza.'],
+  ['Angioini e Aragonesi', '1266 – 1516', 'Vespri siciliani', 'La rivolta dei Vespri caccia gli Angioini; la corona passa agli Aragonesi. Le famiglie baronali costruiscono castelli e governano le campagne.'],
+  ['Spagnoli e Barocco', '1516 – 1734', 'Noto', 'Dopo il terremoto del 1693 il Val di Noto viene ricostruito in pietra chiara e forme barocche. Nei monasteri si perfezionano i dolci di mandorla.', '#/sapori/itinerari/iblei', 'L\'itinerario dei Monti Iblei'],
+  ['Borboni e Unità', '1734 – 1861', 'Spedizione dei Mille', 'Napoli governa l\'isola fino allo sbarco di Garibaldi a Marsala nel 1860. Poi l\'Italia unita, le grandi proprietà e la questione meridionale.'],
+  ['Il Novecento', '1861 – oggi', 'Sbarco in Sicilia', 'Milioni di siciliani emigrano. Nel 1943 lo sbarco degli Alleati, nel 1946 lo Statuto speciale. Oggi la memoria di tutte queste epoche è nelle pietre, nei piatti e nei nomi dei paesi.']
+];
+const ST9 = { i: 2 };
+function storiaLinea() {
+  const e = EPOCHE[ST9.i];
+  return `<section class="s5 lin9" id="lin9"><div class="t5"><h2>La linea del tempo</h2><p>Tremila anni in undici tappe. Tocca un'epoca per leggerla.</p></div>
+    <div class="bar9" role="tablist">${EPOCHE.map((x, i) => `<button role="tab" data-ep="${i}" class="${i === ST9.i ? 'on' : ''}" aria-selected="${i === ST9.i}"><i></i><b>${x[0]}</b><small>${x[1]}</small></button>`).join('')}</div>
+    <article class="ep9"><span class="img" data-gwk="${esc(e[2])}"></span><div class="tx"><small>${e[1]}</small><h3>${e[0]}</h3><p>${e[3]}</p>${e[4] ? `<button class="lk" data-rotta="${e[4]}">${e[5]} →</button>` : ''}
+      <div class="nv"><button data-ep="${Math.max(0, ST9.i - 1)}"${ST9.i ? '' : ' disabled'}>‹ Prima</button><button data-ep="${Math.min(EPOCHE.length - 1, ST9.i + 1)}"${ST9.i < EPOCHE.length - 1 ? '' : ' disabled'}>Dopo ›</button></div></div></article>
+    <p class="note">Foto da Wikipedia. Testi scritti da noi in forma breve: la sezione Storia completa è in preparazione.</p></section>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('#lin9 [data-ep]'); if (!b) return; e.stopPropagation();
+  ST9.i = +b.dataset.ep; const box = $('lin9'); box.outerHTML = storiaLinea();
+  const n = $('lin9'); const g = n.querySelector('[data-gwk]'); wikiVoce(g.dataset.gwk).then(w => { if (w && w.thumbnail) g.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/800px-')}')`; });
+  const on = n.querySelector('.bar9 .on'); if (on) on.scrollIntoView({ block: 'nearest', inline: 'center' });
+}, true);
 }
