@@ -2848,7 +2848,7 @@ async function sapItinerario(k) {
   const D = SAP.D, it = ITIN.find(x => x.k === k); if (!it) return sapItinerari();
   SAP.itk = k; $('cat').dataset.v = 'sap-it'; $('cat').scrollTop = 0;
   const sg = await SAGRE(), oi = new Date().toISOString().slice(0, 10), P = it.p.filter(p => D.paesi[p]);
-  const sapori = p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && v.t !== 'materia' && v.t !== 'semi').sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).filter(r => r !== 'PAT').length - (a.ric || []).filter(r => r !== 'PAT').length) || (!!b.wk - !!a.wk)).slice(0, 6);
+  const sapori = p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && ['piatto', 'dolce', 'prodotto'].includes(v.t)).sort((a, b) => (!!b.fo - !!a.fo) || ((b.ric || []).filter(r => r !== 'PAT').length - (a.ric || []).filter(r => r !== 'PAT').length) || (!!b.wk - !!a.wk)).slice(0, 6);
   const tappa = (p, i) => { const x = D.paesi[p], sv = sapori(p), chi = Object.values(D.produttori).filter(q => q.paese === p).slice(0, 4), ev = (sg.eventi || []).filter(e => e.p === p && e.d[e.d.length - 1] >= oi).slice(0, 2), nat = natVicina(x.c).slice(0, 2);
     return `<li data-itp="${i}"><span class="nt">${i + 1}</span><div class="tc"><div class="th"><h4>${esc(x.n)}</h4><small>${esc(PROVN[x.pv] || '')}${i ? ` · ${Math.round(hav2(D.paesi[P[i - 1]].c, x.c) * 1.35)} km dalla tappa ${i}` : ''}</small><button class="lk" data-sc="${p}">Tutto su ${esc(x.n)}</button></div>
       ${sv.length ? `<div class="mini5">${sv.map(v => `<button data-sc="${v.k}"><span${imgAttr(v)}></span><b>${esc(v.n)}</b></button>`).join('')}</div>` : '<p class="note">Nessun sapore ancora documentato.</p>'}
@@ -2872,6 +2872,7 @@ async function sapItinerario(k) {
   M.addEventListener('click', e => { const g = e.target.closest('[data-itp]'); if (g) { const li = L.querySelector(`li[data-itp="${g.dataset.itp}"]`); if (li) li.scrollIntoView({ behavior: 'smooth', block: 'center' }); } });
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-itk],[data-itall],.itd [data-nat],.itd [data-scal]'); if (!b || !$('cat').contains(b)) return; e.stopPropagation();
+  if (!SAP.on && b.dataset.itk) return vaiRotta('#/sapori/itinerari/' + b.dataset.itk);
   if (b.dataset.nat) { sapModo(false); return setTimeout(() => { vai('mappa'); setTimeout(() => apri(b.dataset.nat, true), 300); }, 300); }
   if (b.dataset.scal) { const ev = (SAP.sagre.eventi || []).find(x => x.id === b.dataset.scal); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: ev.d[0], tipo: '', pv: '' }; vai('meteo'); } return; }
   if (b.dataset.itall) return sapItinerari(); sapItinerario(b.dataset.itk); }, true);
@@ -3262,9 +3263,9 @@ async function genHome(fo) {
     <section class="s5 og5" id="og5"><div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div><p class="note">Carico il meteo…</p></section>
     <section class="s5"><div class="t5"><h2>Per chi è Sicilia Naturale</h2><p>Per chi viaggia, per chi studia, per chi insegna e per chi ricorda. Scegli da dove partire.</p></div>
       <div class="chi5">
-        <button data-via="sentiero" style="--tc:#2D6A4F"><span class="bg" style="background-image:url('foto/natura/arco-tramonto.webp')"></span><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Percorsi e sagre</em></button>
-        <button data-via="scuola" style="--tc:#2F7EA8"><span class="bg" style="background-image:url('foto/natura/campagna.webp')"></span><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Le specie e i parchi</em></button>
-        <button data-via="bambini" style="--tc:#C8102E"><span class="bg" style="background-image:url('foto/natura/more-rovo.webp')"></span><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Lo sapevi?</em></button>
+        <button data-via="viaggio" style="--tc:#2D6A4F"><span class="bg" style="background-image:url('foto/natura/arco-tramonto.webp')"></span><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Organizza il viaggio</em></button>
+        <button data-via="scuola" style="--tc:#2F7EA8"><span class="bg" style="background-image:url('foto/natura/campagna.webp')"></span><b>Scuole e ragazzi</b><span>Parchi, piante, funghi e prodotti spiegati con parole semplici, mappe e foto, utili per una ricerca o una gita.</span><em>Quiz e percorsi</em></button>
+        <button data-via="bambini" style="--tc:#C8102E"><span class="bg" style="background-image:url('foto/natura/more-rovo.webp')"></span><b>Bambini</b><span>Curiosità da scoprire con i grandi: l'albero più vecchio, il fiore che dura un giorno, il dolce di ogni festa.</span><em>Giochi e scoperte</em></button>
         <button data-via="studiosi" style="--tc:#5B3A26"><span class="bg" style="background-image:url('foto/natura/acetosella.webp')"></span><b>Studiosi e guide</b><span>Elenchi di specie per zona, dati Natura 2000 e GBIF, fonti citate, itinerari in PDF e GPX, osservazioni in Darwin Core.</span><em>Dati e fonti</em></button>
         <button data-via="dolce" style="--tc:#E8761A"><span class="bg" style="background-image:url('foto/granita-e-brioche-con-tuppo.webp')"></span><b>Chi ama il cibo</b><span>Dolci, formaggi, pani e vini: dove nascono, di cosa sono fatti, le versioni documentate e chi li fa ancora.</span><em>Il catalogo dei sapori</em></button>
         <button data-via="lontano" style="--tc:#7B3F61"><span class="bg" style="background-image:url('foto/natura/tramonto-baia.webp')"></span><b>Chi è lontano</b><span>Il tuo paese, i suoi dolci, le sue feste. Per ritrovare la Sicilia anche da lontano.</span><em>Cerca il tuo paese</em></button>
@@ -3329,13 +3330,14 @@ function scorri5() {
 $('cat').addEventListener('click', e => {
   if ($('cat').dataset.v !== 'gen-home') return;
   const v = e.target.closest('[data-via]'); if (!v) return; e.stopPropagation(); const w = v.dataset.via;
-  if (w === 'sentiero' && $('og5')) return $('og5').scrollIntoView({ behavior: 'smooth' });
   if (w === 'sentiero') { SEZ = 'natura'; NAT.home = false; return vai('escursioni'); }
   if (w === 'dolce') return entraSez('sapori');
   if (w === 'mese') { SEZ = 'sapori'; SAP.cal = null; return versoSapori(() => vai('meteo')); }
   if (w === 'scuola') { SEZ = 'natura'; NAT.home = false; return vai('piante'); }
-  if (w === 'bambini') return $('sapevi').scrollIntoView({ behavior: 'smooth' });
-  if (w === 'studiosi' || w === 'scuola') return pagina('scuole');
+  if (w === 'bambini') return vaiRotta('#/bambini');
+  if (w === 'studiosi') return vaiRotta('#/scuole');
+  if (w === 'scuola') return vaiRotta('#/didattica');
+  if (w === 'viaggio') return vaiRotta('#/viaggio');
   if (w === 'lontano') { entraSez('sapori'); return setTimeout(() => { const q = $('hq'); if (q) { q.focus(); q.scrollIntoView({ block: 'center' }); } }, 900); }
 }, true);
 // le sezioni in preparazione: cosa ci sarà
@@ -3585,6 +3587,9 @@ function pagina(k) {
   chiudi(); $('cat').classList.add('on'); document.body.classList.add('cat-on'); $('cat').dataset.v = 'pag-' + k; $('cat').scrollTop = 0;
   const testa = (t, d) => `<div class="sh5 pag5"><section class="s5"><h1>${t}</h1><p class="lead">${d}</p></section>`;
   if (k === 'scuole') return paginaScuole();
+  if (k === 'viaggio') return paginaViaggio();
+  if (k === 'didattica') return paginaDidattica();
+  if (k === 'bambini') return paginaBambini();
   if (k === 'glossario') $('cat').innerHTML = testa('Glossario', 'Le parole un po\' difficili che trovi nelle schede, spiegate in modo semplice. Nelle schede sono sottolineate: passaci sopra o toccale per leggere la spiegazione.') +
     `<section class="s5"><dl class="gl5">${Object.entries(GLOSS).sort((a, b) => a[0].localeCompare(b[0], 'it')).map(([t, d]) => `<div><dt>${t}</dt><dd>${d}</dd></div>`).join('')}</dl></section>${COPY()}</div>`;
   else $('cat').innerHTML = testa('Metodo e fonti', 'Come sono raccolti e verificati i dati di Sicilia Naturale, e come citarli in una ricerca o in una tesi.') +
@@ -3629,6 +3634,9 @@ function rottaAttuale() {
   const v = $('cat').dataset.v || '';
   if (v === 'pag-glossario') return '#/glossario';
   if (v === 'pag-scuole') return '#/scuole';
+  if (v === 'pag-viaggio') return '#/viaggio';
+  if (v === 'pag-didattica') return '#/didattica';
+  if (v === 'pag-bambini') return '#/bambini';
   if (v.startsWith('pag-')) return '#/metodo';
   if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
   if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
@@ -3643,7 +3651,7 @@ function titoloRotta(r) {
   const T0 = 'Sicilia Naturale', p = r.slice(2).split('/');
   const h2 = $('sheet').classList.contains('open') && $('sh').querySelector('h2:not([hidden])');
   if (['zona', 'specie', 'percorso'].includes(p[0]) || p[1] === 'scheda') return (h2 ? h2.textContent.trim() + ' · ' : '') + T0;
-  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti', scuole: 'Scuole e studiosi' };
+  const N = { natura: 'Natura', sapori: 'Sapori', mare: 'Mare', arte: 'Arte', storia: 'Storia', glossario: 'Glossario', metodo: 'Metodo e fonti', scuole: 'Scuole e studiosi', viaggio: 'Organizza il viaggio', didattica: 'Scuole e ragazzi', bambini: 'Bambini' };
   const S2 = { mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari' };
   return p[0] ? [S2[p[1]] || (p[1] ? p[1][0].toUpperCase() + p[1].slice(1) : ''), N[p[0]], T0].filter(Boolean).join(' · ') : T0 + ' · La natura e i sapori della Sicilia';
 }
@@ -3684,7 +3692,7 @@ async function applicaRotta(h) {
       await CAT; const tp = b === 'piante' ? 'piante' : 'funghi', i = (tp === 'funghi' ? FUN : PIA).s.findIndex(r => r[0] === c);
       await natura(); vai(tp); if (i >= 0) { await attesa(300); apriSpecie(tp, i); }
     } else if (a === 'percorso') { await natura(); vai('escursioni'); await attesa(300); await apriPercorso(b); }
-    else if (a === 'glossario' || a === 'metodo' || a === 'scuole') pagina(a);
+    else if (['glossario', 'metodo', 'scuole', 'viaggio', 'didattica', 'bambini'].includes(a)) { await SAPD(); pagina(a); }
     else if (TEMA[a]) entraSez(a);
     else entraSez('home');
     if (!a || ((a === 'natura' || a === 'sapori') && !b) || (TEMA[a] && a !== 'natura' && a !== 'sapori')) await aspetta(() => $('cat').dataset.v, 3000).catch(() => {});
@@ -3944,4 +3952,219 @@ function fasciaTema() {
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-mtema]'); if (!b) return; e.stopPropagation(); if (b.dataset.mtema === 'tutto') { mappaTema(null); return; } mappaTema(b.dataset.mtema); if (!isApp) try { history.replaceState(null, '', '#/natura/mappa/' + b.dataset.mtema); } catch (er) {} }, true);
 new MutationObserver(() => setTimeout(fasciaTema, 30)).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+/* ---------- Organizza il viaggio: poche domande, proposte su misura costruite dai dati */
+const PARTENZE = { palermo: ['Palermo', [13.36, 38.12]], trapani: ['Trapani', [12.51, 38.02]], agrigento: ['Agrigento', [13.58, 37.31]], caltanissetta: ['Caltanissetta o Enna', [14.1, 37.5]], catania: ['Catania', [15.09, 37.5]], messina: ['Messina', [15.55, 38.19]], siracusa: ['Siracusa o Ragusa', [15.0, 37.0]] };
+const GUSTIV = { natura: ['Camminare nella natura', 'mountain'], piante: ['Piante, fiori e funghi', 'flower'], sapori: ['Sapori e prodotti', 'basket'], feste: ['Sagre e feste', 'calendar-event'], mare: ['Mare e isole', 'ripple'], borghi: ['Borghi e paesaggi', 'building-cottage'] };
+const VG = { passo: 0, r: {} };
+const itCentro = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean); return P.reduce((a, x) => [a[0] + x.c[0] / P.length, a[1] + x.c[1] / P.length], [0, 0]); };
+const COSTA = new Set(['trapani', 'eolie', 'sicani', 'iblei', 'belice']);
+function dataViaggio(q) {
+  const d = new Date(); d.setHours(12, 0, 0, 0);
+  const alSabato = () => d.getDay() === 0 ? 0 : (6 - d.getDay() + 7) % 7; // sabato o domenica: si parte oggi
+  if (q === 'weekend') d.setDate(d.getDate() + alSabato());
+  else if (q === 'prossimo') d.setDate(d.getDate() + alSabato() + (d.getDay() === 0 ? 6 : 7));
+  else if (/^m\d+$/.test(q)) { const m = +q.slice(1); d.setMonth(m - 1, 12); if (d < new Date()) d.setFullYear(d.getFullYear() + 1); }
+  return d;
+}
+const DOMANDE = [
+  ['quando', 'Quando parti?', 'Ci serve per la stagione, le feste e il meteo.', () => [['weekend', 'Questo fine settimana'], ['prossimo', 'Il prossimo fine settimana'], ...MESIL.map((m, i) => ['m' + (i + 1), m.replace(/^./, c => c.toUpperCase())])]],
+  ['giorni', 'Quanti giorni hai?', 'Contiamo i giorni pieni sul posto.', () => [['1', 'Una giornata'], ['3', 'Due o tre giorni'], ['5', 'Quattro o cinque giorni'], ['7', 'Una settimana']]],
+  ['chi', 'Con chi viaggi?', 'Così scegliamo il ritmo e le tappe.', () => [['solo', 'Da solo'], ['coppia', 'In coppia'], ['famiglia', 'Con bambini'], ['amici', 'Con amici'], ['gruppo', 'Con una classe o un gruppo']]],
+  ['gusti', 'Cosa ti piace?', 'Puoi sceglierne più di uno.', () => Object.entries(GUSTIV).map(([k, x]) => [k, x[0], x[1]]), true],
+  ['da', 'Da dove parti?', 'La città o la zona da cui ti muovi, o l\'aeroporto dove arrivi.', () => Object.entries(PARTENZE).map(([k, x]) => [k, x[0]])]
+];
+function proposteViaggio(r) {
+  const D = SAP.D, d0 = dataViaggio(r.quando), m = d0.getMonth() + 1, g = +r.giorni, start = PARTENZE[r.da][1], gu = new Set(r.gusti || []);
+  const sg = (SAP.sagre && SAP.sagre.eventi) || [], giorniISO = [...Array(Math.max(1, g))].map((_, i) => { const x = new Date(d0); x.setDate(x.getDate() + i); return x.toISOString().slice(0, 10); });
+  const voto = it => { const c = itCentro(it), km = hav2(start, c); let v = 10 - km / (g <= 1 ? 15 : g <= 3 ? 30 : 60), perche = [];
+    if (km < 60) perche.push(`a circa ${Math.round(km * 1.3 / 10) * 10} km da ${PARTENZE[r.da][0].split(' o ')[0]}`);
+    if (it.m.includes(m)) { v += 4; perche.push(`${MESIL[m - 1]} è uno dei mesi migliori`); }
+    const nat = new Set(it.p.flatMap(p => D.paesi[p] ? natVicina(D.paesi[p].c).map(x => x[0]) : []));
+    if (gu.has('natura') || gu.has('piante')) { v += Math.min(4, nat.size); if (nat.size) perche.push(`${nat.size} parchi e riserve vicino alle tappe`); }
+    if (gu.has('sapori')) { const n = Object.values(D.voci).filter(x => (x.paesi || []).some(p => it.p.includes(p))).length; v += Math.min(4, n / 15); perche.push(`${n} sapori documentati lungo la strada`); }
+    const ev = sg.filter(e => it.p.includes(e.p) && e.d.some(x => giorniISO.includes(x))); if (ev.length) { v += gu.has('feste') ? 6 : 2; perche.push(`${ev.length === 1 ? 'una sagra' : ev.length + ' sagre'} proprio in quei giorni`); }
+    if (gu.has('mare') && COSTA.has(it.k)) { v += 4; perche.push('mare a portata di mano'); }
+    if (gu.has('piante') && [10, 11, 12].includes(m) && ['madonie', 'nebrodi', 'etna'].includes(it.k)) { v += 3; perche.push('boschi nella stagione dei funghi'); }
+    if (r.chi === 'famiglia' && it.p.length <= 5) v += 1;
+    return { it, v, perche, ev, km }; };
+  const tutti = ITIN.map(voto).sort((a, b) => b.v - a.v), out = [];
+  for (const x of tutti) { if (out.length >= 3) break; let it2 = null;
+    if (g >= 5) { const y = tutti.filter(z => z !== x && !out.some(o => o.it2 === z.it)).sort((a, b) => hav2(itCentro(a.it), itCentro(x.it)) - hav2(itCentro(b.it), itCentro(x.it)))[0]; if (y && hav2(itCentro(y.it), itCentro(x.it)) < 140) it2 = y.it; }
+    out.push(Object.assign({ it2 }, x)); }
+  return { d0, g, giorniISO, out };
+}
+function pianoGiorni(P, r) {
+  const D = SAP.D, paesi = [...P.it.p, ...(P.it2 ? P.it2.p : [])].filter(p => D.paesi[p]), g = Math.max(1, +r.giorni);
+  const perG = g === 1 ? Math.min(3, paesi.length) : Math.max(1, Math.ceil(paesi.length / g)), giorni = [];
+  for (let i = 0; i < g; i++) { const pp = g === 1 ? paesi.slice(0, perG) : paesi.slice(i * perG, (i + 1) * perG); if (!pp.length && i) break; giorni.push(pp.length ? pp : paesi.slice(-1)); }
+  return giorni;
+}
+async function paginaViaggio() {
+  $('cat').dataset.v = 'pag-viaggio'; $('cat').scrollTop = 0; await SAGRE().then(sg => SAP.sagre = sg);
+  const passo = VG.passo, freccia = '<span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>';
+  const testa = `<section class="vgh"><div class="ph" style="background-image:url('foto/natura/arco-tramonto.webp')"></div><div class="tx"><p class="sub">Chi viaggia</p><h1>Organizza il <i>tuo viaggio.</i></h1><p class="lead">Cinque domande, poi ti proponiamo tre viaggi costruiti sui dati del sito: paesi, sapori, sagre, parchi e meteo. Le proposte sono un punto di partenza: le tappe non le abbiamo ancora visitate tutte di persona.</p></div></section>`;
+  if (passo < DOMANDE.length) {
+    const [k, tit, sub, op, multi] = DOMANDE[passo], val = VG.r[k];
+    $('cat').innerHTML = `<div class="sh5 pag5 vg6">${testa}
+      <section class="s5 vgq"><div class="prog">${DOMANDE.map((q, i) => `<span class="${i < passo ? 'ok' : i === passo ? 'on' : ''}"></span>`).join('')}</div>
+        <p class="n">Domanda ${passo + 1} di ${DOMANDE.length}</p><h2>${tit}</h2><p class="gt">${sub}</p>
+        <div class="ops ${k}">${op().map(([v, l, ic]) => `<button data-vgo="${v}" class="${(multi ? (val || []).includes(v) : val === v) ? 'on' : ''}">${ic ? ico(ic) : ''}<span>${esc(l)}</span></button>`).join('')}</div>
+        <div class="nav">${passo ? '<button class="lk" data-vgn="-1">‹ Indietro</button>' : '<span></span>'}${multi ? `<button class="vai" data-vgn="1"${(val || []).length ? '' : ' disabled'}>Avanti ${freccia}</button>` : ''}</div></section>${COPY()}</div>`;
+    return;
+  }
+  const r = VG.r, R = proposteViaggio(r), D = SAP.D, CM = await meteoCapoluoghi().catch(() => null), oggi = new Date(); oggi.setHours(12, 0, 0, 0);
+  const meteoG = (xy, iso) => { if (!CM) return ''; const n = Math.round((new Date(iso + 'T12:00:00') - oggi) / 864e5); if (n < 0 || n > 13) return '';
+    const c = CM.reduce((a, b) => dist2(a.c.slice(1, 3), xy) <= dist2(b.c.slice(1, 3), xy) ? a : b), gg = c.s.G[n]; if (!gg) return ''; const M = c.s.M, i = gg.i;
+    return `<span class="wx6">${ico(wxIco(M.weather_code[i]), 'xs')} ${wxParola(M.weather_code[i])}, ${Math.round(M.temperature_2m_min[i])}–${Math.round(M.temperature_2m_max[i])}°</span>`; };
+  const giornoTxt = iso => new Date(iso + 'T12:00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long' });
+  const famiglia = r.chi === 'famiglia', gruppo = r.chi === 'gruppo';
+  const proposta = (P, n) => { const giorni = pianoGiorni(P, r), tit = P.it.n + (P.it2 ? ' e ' + P.it2.n : '');
+    return `<article class="vgp"><header><span class="nn">${n + 1}</span><div><h3>${esc(tit)}</h3><p>${esc(P.it.s)}${P.it2 ? '; ' + esc(P.it2.s.toLowerCase()) : ''}.</p></div><button class="lk" data-itk="${P.it.k}">L'itinerario completo ›</button></header>
+      <ul class="perche">${P.perche.slice(0, 4).map(x => `<li>${ico('sparkles', 'xs')} ${esc(x)}</li>`).join('')}</ul>
+      <ol class="gg6">${giorni.map((pp, i) => { const iso = R.giorniISO[i] || R.giorniISO[R.giorniISO.length - 1], xy = D.paesi[pp[0]].c, nat = natVicina(xy)[0], ev = (SAP.sagre.eventi || []).filter(e => pp.includes(e.p) && e.d.includes(iso));
+        const sv = pp.flatMap(p => Object.values(D.voci).filter(v => (v.paesi || []).includes(p) && ['piatto', 'dolce', 'prodotto'].includes(v.t)).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk)).slice(0, 2));
+        return `<li><div class="gh"><b>Giorno ${i + 1}</b><small>${giornoTxt(iso)}</small>${meteoG(xy, iso)}</div>
+          <p class="pp">${pp.map(p => `<button class="lk" data-sc2="${p}">${esc(D.paesi[p].n)}</button>`).join(' › ')}</p>
+          ${sv.length ? `<div class="mini5">${sv.slice(0, 4).map(v => `<button data-sc2="${v.k}"><span${imgAttr(v)}></span><b>${esc(v.n)}</b></button>`).join('')}</div>` : ''}
+          <div class="links">${nat ? `<button data-nat2="${nat[0]}">${ico('leaf', 'xs')} ${esc(S[nat[0]].n)}<br><small>a ${Math.round(nat[1] / 1000)} km${famiglia ? ' · scegli un sentiero breve' : ''}</small></button>` : ''}${ev.map(e => `<button data-ogev2="${e.id}">${ico('calendar-event', 'xs')} ${esc(e.n)}<br><small>sagra a ${esc(e.c)}</small></button>`).join('')}</div></li>`; }).join('')}</ol></article>`; };
+  $('cat').innerHTML = `<div class="sh5 pag5 vg6">${testa}
+    <section class="s5 vgr"><div class="riep">${[['quando', giornoTxt(R.giorniISO[0])], ['giorni', { 1: 'una giornata', 3: 'due o tre giorni', 5: 'quattro o cinque giorni', 7: 'una settimana' }[r.giorni]], ['chi', { solo: 'da solo', coppia: 'in coppia', famiglia: 'con bambini', amici: 'con amici', gruppo: 'con un gruppo' }[r.chi]], ['gusti', (r.gusti || []).map(x => GUSTIV[x][0].toLowerCase()).join(', ')], ['da', 'da ' + PARTENZE[r.da][0]]].map(([k, t2], i) => `<button data-vgp="${i}">${esc(t2)} <small>cambia</small></button>`).join('')}</div>
+      <h2>Tre proposte per te</h2>${famiglia ? '<p class="gt">Con i bambini: poche tappe al giorno, sentieri brevi e una sosta golosa. Nella pagina <button class="lk" data-rotta="#/bambini">Bambini</button> trovi giochi da fare lungo la strada.</p>' : gruppo ? '<p class="gt">Per una classe: nella pagina <button class="lk" data-rotta="#/didattica">Scuole e ragazzi</button> trovi quiz e percorsi da preparare prima della gita.</p>' : ''}
+      ${R.out.map(proposta).join('')}
+      <div class="nav"><button class="lk" data-vgn="reset">Rifai le domande</button><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa il piano</button></div>
+      <p class="avv6">${ico('alert-triangle', 'xs')} Proposte costruite dai dati: date delle sagre, orari e strade vanno verificati prima di partire. Il meteo compare solo per i prossimi 14 giorni.</p></section>${COPY()}</div>`;
+  sapFoto($('cat'));
+}
+document.addEventListener('click', e => {
+  if ($('cat').dataset.v !== 'pag-viaggio') return;
+  const o = e.target.closest('[data-vgo]'), n = e.target.closest('[data-vgn]'), pp = e.target.closest('[data-vgp]'), sc = e.target.closest('[data-sc2]'), nt = e.target.closest('[data-nat2]'), ev = e.target.closest('[data-ogev2]');
+  if (o) { e.stopPropagation(); const [k, , , , multi] = DOMANDE[VG.passo]; if (multi) { const s2 = new Set(VG.r[k] || []); s2.has(o.dataset.vgo) ? s2.delete(o.dataset.vgo) : s2.add(o.dataset.vgo); VG.r[k] = [...s2]; } else { VG.r[k] = o.dataset.vgo; VG.passo++; } return paginaViaggio(); }
+  if (n) { e.stopPropagation(); if (n.dataset.vgn === 'reset') { VG.passo = 0; VG.r = {}; } else VG.passo = Math.max(0, VG.passo + +n.dataset.vgn); return paginaViaggio(); }
+  if (pp) { e.stopPropagation(); VG.passo = +pp.dataset.vgp; return paginaViaggio(); }
+  if (sc) { e.stopPropagation(); const k = sc.dataset.sc2; return versoSapori(() => sapApri(k)); }
+  if (nt) { e.stopPropagation(); const z = nt.dataset.nat2; return vaiRotta('#/zona/' + nomeUrl(z)); }
+  if (ev) { e.stopPropagation(); const x = (SAP.sagre.eventi || []).find(y => y.id === ev.dataset.ogev2); if (x) { SAP.cal = { y: +x.d[0].slice(0, 4), m: +x.d[0].slice(5, 7), sel: x.d[0], tipo: '', pv: '' }; SEZ = 'sapori'; versoSapori(() => vai('meteo')); } }
+}, true);
+
+/* ---------- quiz: domande scritte da noi e domande costruite dai dati del sito */
+const mescola = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const QFISSE = {
+  natura: [
+    ['Qual è il vulcano attivo più alto d\'Europa?', 'L\'Etna', ['Lo Stromboli', 'Il Vesuvio', 'Vulcano'], 'L\'Etna supera i 3.300 metri ed è uno dei vulcani più attivi del mondo.'],
+    ['Da quale albero si raccoglie la manna sulle Madonie?', 'Il frassino', ['La quercia', 'Il castagno', 'Il carrubo'], 'D\'estate si incide la corteccia del frassino: la linfa esce e si indurisce al sole.'],
+    ['Dove cresce in natura l\'abete dei Nebrodi?', 'Solo sulle Madonie', ['Su tutti i Nebrodi', 'Sull\'Etna', 'In tutta Europa'], 'Nonostante il nome, ne restano poche decine di alberi in un vallone delle Madonie.'],
+    ['Quale fu la prima riserva naturale della Sicilia, nel 1981?', 'Lo Zingaro', ['Vendicari', 'Le saline di Trapani', 'Il bosco della Ficuzza'], 'Nacque dopo una grande marcia contro una strada che avrebbe tagliato la costa.'],
+    ['Che cos\'è la rete Natura 2000?', 'Siti europei che proteggono habitat e specie', ['Un elenco di sentieri', 'Un parco nazionale', 'Una legge sulla caccia'], 'È la rete dell\'Unione europea: in Sicilia conta centinaia di siti.'],
+    ['Quante sono le isole Eolie abitate?', 'Sette', ['Tre', 'Cinque', 'Dieci'], 'Lipari, Salina, Vulcano, Stromboli, Panarea, Filicudi e Alicudi.'],
+    ['Quale isola è la più grande del Mediterraneo?', 'La Sicilia', ['La Sardegna', 'Cipro', 'Creta'], 'La Sicilia supera i 25.000 chilometri quadrati.'],
+    ['Su che terreno cresce il pistacchio di Bronte?', 'Sulle colate di lava dell\'Etna', ['Nella sabbia del mare', 'Nelle paludi', 'Nei boschi di faggio'], 'Pochi alberi riescono a vivere sulla lava: il pistacchio sì.']],
+  sapori: [
+    ['Il cappero che mangiamo è…', 'Il bocciolo di un fiore', ['Un frutto maturo', 'Un seme', 'Una foglia'], 'Se non lo raccogli si apre in un fiore bianco e rosa che dura un giorno.'],
+    ['Da cosa nasce la ricotta?', 'Dal siero che resta dopo il formaggio', ['Dal latte cagliato e stagionato', 'Dalla panna', 'Dal burro'], 'Il siero si scalda di nuovo: ri-cotta, cotta due volte.'],
+    ['Con cosa si mangia la granita a colazione a Messina e Catania?', 'Con la brioche col tuppo', ['Con il pane', 'Con i biscotti secchi', 'Con la frutta'], 'La brioche ha in cima una pallina, il tuppo, come lo chignon.'],
+    ['Che cos\'è la cubbaita?', 'Un torrone di sesamo o mandorle e miele', ['Una pasta al forno', 'Un formaggio', 'Una zuppa di pesce'], 'Il nome viene dall\'arabo.'],
+    ['Con quale farina si fanno le panelle?', 'Farina di ceci', ['Farina di grano tenero', 'Farina di castagne', 'Farina di mais'], 'Si cuoce come una polenta, si taglia e si frigge.']]
+};
+const QBIMBI = [
+  ['Che cos\'è l\'Etna?', 'Un vulcano', ['Un fiume', 'Un lago', 'Un bosco'], 'È il vulcano più grande d\'Europa e ogni tanto fa uscire la lava.'],
+  ['Da quale frutto si fa l\'olio?', 'Dall\'oliva', ['Dall\'arancia', 'Dal limone', 'Dal fico'], 'Le olive si raccolgono in autunno e si portano al frantoio.'],
+  ['Chi fa il miele?', 'Le api', ['Le formiche', 'Le farfalle', 'Le vespe'], 'Le api raccolgono il nettare dei fiori.'],
+  ['Il cannolo ha dentro…', 'La ricotta', ['La marmellata', 'Il gelato', 'Il cioccolato fuso'], 'La ricotta è dolce e cremosa, il guscio è croccante.'],
+  ['Dove vive il pesce spada?', 'Nel mare', ['Nel fiume', 'Nel lago', 'Nello stagno'], 'Nuota veloce nello Stretto di Messina.'],
+  ['Di che colore diventa l\'oliva quando matura?', 'Viola e nera', ['Blu', 'Gialla', 'Bianca'], 'Prima è verde, poi cambia colore piano piano.'],
+  ['Cosa si mangia a Santa Lucia, il 13 dicembre?', 'La cuccìa', ['Il panettone', 'La colomba', 'Il gelato'], 'È grano cotto con la ricotta dolce.'],
+  ['I funghi trovati nel bosco…', 'Si guardano e non si mangiano', ['Si assaggiano subito', 'Si danno agli animali', 'Si mangiano crudi'], 'Molti funghi sono velenosi: solo un esperto può dire se sono buoni.']
+];
+function quizDati(tema) {
+  const D = SAP.D, out = [], V = Object.values(D.voci).filter(v => v.t !== 'materia' && v.t !== 'semi');
+  if (tema !== 'natura') {
+    const F = V.filter(v => (v.feste || []).length); for (const v of mescola(F).slice(0, 3)) { const f = D.feste[v.feste[0]], altre = mescola(Object.values(D.feste).filter(x => x !== f)).slice(0, 3).map(x => x.n);
+      out.push([`Per quale festa si prepara: ${v.n}?`, f.n, altre, `${v.n} è legato a ${f.n}${f.d !== 'mobile' ? ', il ' + (+f.d.slice(3)) + ' ' + MESIL[+f.d.slice(0, 2) - 1] : ''}.`]); }
+    const U = mescola(V.filter(v => (v.paesi || []).length === 1 && v.wk && !(v.feste || []).length && D.paesi[v.paesi[0]])).slice(0, 3);
+    for (const v of U) { const p = D.paesi[v.paesi[0]], altri = mescola(Object.values(D.paesi).filter(x => x.pv !== p.pv)).slice(0, 3).map(x => x.n); out.push([`A quale paese è legato: ${v.n}?`, p.n, altri, `Nel nostro atlante ${v.n} è legato a ${p.n}, in provincia di ${PROVN[p.pv] || ''}.`]); }
+    const dop = mescola(V.filter(v => (v.ric || []).includes('DOP'))), no = mescola(V.filter(v => v.pat && !(v.ric || []).some(r => r === 'DOP' || r === 'IGP')));
+    if (dop.length && no.length > 3) out.push(['Quale di questi prodotti è DOP?', dop[0].n, no.slice(0, 3).map(x => x.n), `${dop[0].n} ha la Denominazione di origine protetta: un disciplinare stabilisce zona e lavorazione.`]);
+  }
+  if (tema !== 'sapori' && typeof S !== 'undefined') {
+    const P = mescola(Object.values(S).filter(x => ['pn', 'pr', 'rn'].includes(x.t) && x.ha)).slice(0, 4); if (P.length === 4) { const g = P.reduce((a, b) => b.ha > a.ha ? b : a);
+      out.push(['Quale di queste aree protette è la più grande?', g.n, P.filter(x => x !== g).map(x => x.n), `${g.n} misura circa ${fmt(Math.round(g.ha))} ettari.`]); }
+  }
+  return out;
+}
+function quizNuovo(tema, n) { const base = tema === 'bimbi' ? QBIMBI : [...(QFISSE[tema] || [...QFISSE.natura, ...QFISSE.sapori]), ...quizDati(tema)]; return mescola(base).slice(0, n || 6).map(([q, ok, no, sp]) => ({ q, ok, op: mescola([ok, ...no]), sp })); }
+function quizIn(box, tema, titolo) {
+  const Q = { l: quizNuovo(tema, tema === 'bimbi' ? 5 : 6), i: 0, punti: 0, ris: null };
+  const disegna = () => { if (Q.i >= Q.l.length) { box.innerHTML = `<div class="qz6 fine"><p class="tq">${esc(titolo)}</p><h3>${Q.punti} su ${Q.l.length}</h3><p>${Q.punti === Q.l.length ? 'Perfetto! Sai tutto.' : Q.punti >= Q.l.length / 2 ? 'Bravo! Ancora un giro e diventi un esperto.' : 'Ogni giro si impara qualcosa: riprova!'}</p><button class="vai" data-qz="nuovo">Un altro quiz</button></div>`; return; }
+    const x = Q.l[Q.i];
+    box.innerHTML = `<div class="qz6"><div class="qh"><p class="tq">${esc(titolo)}</p><span>${Q.i + 1} / ${Q.l.length}</span></div><h3>${esc(x.q)}</h3><div class="qop">${x.op.map((o, j) => `<button data-qo="${j}" class="${Q.ris == null ? '' : o === x.ok ? 'giusta' : j === Q.ris ? 'sbagliata' : 'off'}"${Q.ris == null ? '' : ' disabled'}>${esc(o)}</button>`).join('')}</div>
+      ${Q.ris != null ? `<p class="sp">${x.op[Q.ris] === x.ok ? '<b>Giusto!</b> ' : '<b>Non proprio.</b> '}${esc(x.sp)}</p><button class="vai" data-qz="avanti">${Q.i + 1 < Q.l.length ? 'Avanti' : 'Vedi il risultato'}</button>` : ''}</div>`; };
+  box.onclick = e => { const o = e.target.closest('[data-qo]'), z = e.target.closest('[data-qz]'); if (o && Q.ris == null) { e.stopPropagation(); Q.ris = +o.dataset.qo; if (Q.l[Q.i].op[Q.ris] === Q.l[Q.i].ok) Q.punti++; disegna(); }
+    if (z) { e.stopPropagation(); if (z.dataset.qz === 'avanti') { Q.i++; Q.ris = null; } else { Object.assign(Q, { l: quizNuovo(tema, tema === 'bimbi' ? 5 : 6), i: 0, punti: 0, ris: null }); } disegna(); } };
+  disegna();
+}
+const leggiFatti = () => { try { return JSON.parse(localStorage.getItem('sn_percorsi') || '{}'); } catch (e) { return {}; } };
+/* ---------- Scuole e ragazzi: quiz, percorsi di apprendimento sulla mappa, strumenti */
+function paginaDidattica() {
+  $('cat').dataset.v = 'pag-didattica'; $('cat').scrollTop = 0;
+  const PERC = [
+    ['protetta', 'La Sicilia protetta', '#2D6A4F', 'natura/scogliere', [['Guarda tutte le aree protette sulla mappa', '#/natura/mappa/parchi'], ['Apri la scheda del Parco dell\'Etna e leggi le sue regole', '#/zona/EUAP0227'], ['Scopri la rete europea Natura 2000', '#/natura/mappa/natura2000'], ['Mettiti alla prova con il quiz sulla natura', '#qz-natura']]],
+    ['alberi', 'Alberi e boschi', '#5c7a2e', 'natura/agave-montagne', [['Trova gli alberi monumentali vicino a te', '#/natura/mappa/alberi'], ['I boschi vetusti: foreste lasciate crescere per secoli', '#/natura/mappa/vetusti'], ['Il calendario delle fioriture', '#/natura/calendario'], ['Il quiz sulla natura', '#qz-natura']]],
+    ['grano', 'Dal grano al pane', '#E8761A', 'pane-di-grano-duro', [['I grani antichi siciliani', '#/sapori/grano'], ['Il viaggio nel cuore dell\'isola, terra del grano', '#/sapori/itinerari/cuore'], ['Una ricetta povera: il pane cotto', '#/sapori/scheda/web-zuppa-di-pane-cotto'], ['Il quiz sui sapori', '#qz-sapori']]],
+    ['feste', 'Le feste e i loro dolci', '#C8102E', 'backcassatelle', [['Il calendario di sagre e feste', '#/sapori/calendario'], ['La cuccìa di Santa Lucia', '#/sapori/scheda/cuccia'], ['Le sfince di San Giuseppe', '#/sapori/scheda/sfincia'], ['Il quiz sui sapori', '#qz-sapori']]]
+  ];
+  const fatti = leggiFatti();
+  $('cat').innerHTML = `<div class="sh5 pag5 did6">
+    <section class="ap5 scuh" style="--tc:#2F7EA8"><div class="apf" style="background-image:url('foto/natura/fico.webp')"></div>
+      <div class="apt"><p class="kick5"><i></i>Scuole e ragazzi</p><h1>Impara la Sicilia <i>giocando.</i></h1><p class="lead">Quiz, percorsi da seguire sulla mappa e strumenti per le ricerche di classe. Per ragazzi delle medie e delle superiori, e per gli insegnanti che vogliono preparare una lezione o una gita.</p></div></section>
+    <section class="s5"><div class="t5"><h2>Mettiti alla prova</h2><p>Ogni quiz cambia ogni volta: alcune domande nascono dai dati del sito.</p></div>
+      <div class="qzg"><div id="qz-natura"></div><div id="qz-sapori"></div></div></section>
+    <section class="s5"><div class="t5"><h2>Percorsi di apprendimento</h2><p>Quattro passi per tema: si segue sulla mappa e nelle schede. Il sito ricorda i passi che hai già fatto.</p></div>
+      <div class="pc6">${PERC.map(([k, t2, c, f, passi]) => `<article style="--tc:${c}"><div class="eh" style="background-image:url('foto/${f}.webp')"><h3>${t2}</h3><span>${passi.filter((_, i) => fatti[k + i]).length}/${passi.length}</span></div><ol>${passi.map(([a, r], i) => `<li class="${fatti[k + i] ? 'fatto' : ''}"><button data-pcp="${k}:${i}" data-dest="${r}"><span class="ck">${fatti[k + i] ? '✓' : i + 1}</span><span>${esc(a)}</span></button></li>`).join('')}</ol></article>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Per la ricerca</h2><p>Gli strumenti per lavorare con i dati, citare le fonti e stampare.</p></div>
+      <div class="str8">${[['list-details', 'Strumenti e dati', 'Elenchi di specie, percorsi in GPX, schede da stampare.', '#/scuole', '#2F7EA8'], ['book', 'Glossario', 'Le parole difficili spiegate semplici.', '#/glossario', '#5B3A26'], ['map-2', 'Mappa per argomento', 'Parchi, alberi, boschi e sentieri, uno alla volta.', '#/natura/mappa/parchi', '#2D6A4F'], ['route', 'Organizza la gita', 'Cinque domande e un piano di viaggio per la classe.', '#/viaggio', '#E8761A']].map(([ic, t2, d, r, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  quizIn($('qz-natura'), 'natura', 'Quiz sulla natura'); quizIn($('qz-sapori'), 'sapori', 'Quiz sui sapori');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pcp]'); if (!b || $('cat').dataset.v !== 'pag-didattica') return; e.stopPropagation();
+  const [k, i] = b.dataset.pcp.split(':'), f = leggiFatti(); f[k + i] = 1; try { localStorage.setItem('sn_percorsi', JSON.stringify(f)); } catch (er) {}
+  const d = b.dataset.dest; if (d.startsWith('#qz-')) { $(d.slice(1)).scrollIntoView({ behavior: 'smooth', block: 'center' }); b.closest('li').classList.add('fatto'); b.querySelector('.ck').textContent = '✓'; return; } vaiRotta(d); }, true);
+/* ---------- Bambini: giochi e scoperte */
+function paginaBambini() {
+  $('cat').dataset.v = 'pag-bambini'; $('cat').scrollTop = 0;
+  const D = SAP.D, fot = mescola(Object.values(D.voci).filter(v => v.fo && v.t !== 'materia' && paroleN(v.n).some(w => norm(v.fo.f).includes(w.slice(0, 5))))).slice(0, 12);
+  const FATTI = [
+    ['natura', 'Sull\'Etna vive il Castagno dei Cento Cavalli: è uno degli alberi più vecchi d\'Europa, con migliaia di anni.'],
+    ['natura', 'L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine.'],
+    ['sapori', 'Il cappero è il bocciolo di un fiore: se non lo raccogli, fiorisce per un solo giorno.'],
+    ['sapori', 'La manna si raccoglie d\'estate incidendo la corteccia del frassino.'],
+    ['natura', 'Lo Stromboli è un vulcano che erutta quasi sempre: piccole esplosioni ogni pochi minuti.'],
+    ['sapori', 'Il pistacchio di Bronte cresce sulla lava dell\'Etna, dove pochi alberi riescono a vivere.'],
+    ['natura', 'Nelle saline di Trapani il vento faceva girare i mulini che macinavano il sale.'],
+    ['sapori', 'La frutta martorana è fatta di pasta di mandorle colorata a mano: sembra frutta vera!']
+  ];
+  const CACCIA = ['Una foglia di quercia', 'Una ghianda', 'Un sasso nero di lava', 'Una piuma', 'Una farfalla (solo da guardare)', 'Un albero più grande di tutti', 'Un fiore giallo (non si coglie!)', 'Le tracce di un animale', 'Un nido sui rami', 'Un ruscello', 'Una lucertola al sole', 'Una pigna'];
+  $('cat').innerHTML = `<div class="sh5 pag5 bim6">
+    <section class="bh6"><div class="dis">${['natura', 'sapori', 'mare', 'arte', 'storia'].map((k, i) => `<img src="illustrazioni/${k}-segno.svg" alt="" style="--i:${i}">`).join('')}</div>
+      <p class="sub">Per i più piccoli</p><h1>La Sicilia dei <i>bambini.</i></h1><p class="lead">Giochi, curiosità e una caccia al tesoro da fare all'aperto. Da scoprire insieme ai grandi.</p></section>
+    <section class="s5"><div class="t5"><h2>Il quiz dei piccoli esploratori</h2></div><div id="qz-bimbi"></div></section>
+    <section class="s5"><div class="t5"><h2>Indovina il sapore</h2><p>Guarda la foto e scegli il nome giusto.</p></div><div id="ind6"></div></section>
+    <section class="s5"><div class="t5"><h2>Lo sapevi?</h2><p>Tocca una carta per girarla.</p></div>
+      <div class="car6">${FATTI.map(([k, t2], i) => `<button class="cart" style="--tc:${TEMA[k][1]}"><span class="fr1"><img src="illustrazioni/${k}-segno.svg" alt=""><b>Curiosità n. ${i + 1}</b><small>Tocca per scoprirla</small></span><span class="fr2">${esc(t2)}</span></button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Caccia al tesoro nel bosco</h2><p>Stampala e portala nella prossima passeggiata. Si guarda, si fotografa, non si raccoglie nulla di vivo.</p></div>
+      <div class="cac6">${CACCIA.map(c => `<label><input type="checkbox"><span>${esc(c)}</span></label>`).join('')}</div>
+      <p><button class="vai" onclick="print()">${ico('printer', 'xs')} Stampa la caccia al tesoro</button></p></section>
+    <section class="s5"><div class="t5"><h2>Il calendario dei dolci delle feste</h2></div>
+      <div class="fes6">${Object.entries(D.feste).map(([k, f]) => { const v = Object.values(D.voci).find(x => (x.feste || []).includes(k)); return v ? `<button data-rotta="#/sapori/scheda/${nomeUrl(v.k)}"><small>${f.d === 'mobile' ? MESIL[f.m[0] - 1] : +f.d.slice(3) + ' ' + MESIL[+f.d.slice(0, 2) - 1]}</small><b>${esc(f.n)}</b><span>${esc(v.n)}</span></button>` : ''; }).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>Una gita in famiglia</h2></div><div class="str8">${[['sun', 'Dove andare oggi', 'Il posto con il cielo più bello di oggi e dei prossimi giorni.', '#/', '#E8761A'], ['route', 'Organizza il viaggio', 'Rispondi a cinque domande, scegli «con bambini».', '#/viaggio', '#2D6A4F'], ['tree', 'Gli alberi giganti', 'Gli alberi monumentali sulla mappa.', '#/natura/mappa/alberi', '#5c7a2e']].map(([ic, t2, d, r, c]) => `<button data-rotta="${r}" style="--tc:${c}"><span class="ic">${ico(ic)}</span><b>${t2}</b><span>${d}</span></button>`).join('')}</div></section>
+    ${COPY()}</div>`;
+  quizIn($('qz-bimbi'), 'bimbi', 'Quiz dei piccoli esploratori');
+  const ind = { i: 0 }, giro = () => { const v = fot[ind.i % fot.length], no = mescola(fot.filter(x => x !== v)).slice(0, 2), op = mescola([v, ...no]);
+    $('ind6').innerHTML = `<div class="ind"><span class="ph" style="background-image:url('foto/${v.fo.f}.webp')"></span><div class="op">${op.map(x => `<button data-ind="${x === v ? 1 : 0}">${esc(x.n)}</button>`).join('')}<p class="esito"></p></div></div>`; };
+  $('ind6').onclick = e => { const b = e.target.closest('[data-ind]'); if (!b) return; e.stopPropagation(); const ok = b.dataset.ind === '1'; b.classList.add(ok ? 'giusta' : 'sbagliata');
+    $('ind6').querySelector('.esito').innerHTML = ok ? '<b>Bravo!</b> <button class="vai" data-indn="1">Un\'altra foto</button>' : 'Quasi! Riprova.'; const n = e.target.closest('[data-indn]'); };
+  $('ind6').addEventListener('click', e => { if (e.target.closest('[data-indn]')) { ind.i++; giro(); } });
+  if (fot.length >= 3) giro(); else $('ind6').closest('section').remove();
+  $('cat').querySelectorAll('.cart').forEach(c => c.onclick = () => c.classList.toggle('gira'));
+}
 }
