@@ -3098,7 +3098,7 @@ function sapHome() {
 $('cat').addEventListener('click', e => {
   if (!SAP.on || $('cat').dataset.v !== 'sap-home') return;
   const gu = e.target.closest('[data-gusto]'), p = e.target.closest('[data-porta]'), fa = e.target.closest('[data-fam]'), fe = e.target.closest('.festa3,.festa5');
-  if (gu) { e.stopPropagation(); const k = gu.dataset.gusto; Object.assign(SAP.fil, { k, q: '', paese: '', festa: '', lr: '', fam: '', ric: '', n: 60 }); SAP.home = false; $('cat').dataset.v = ''; $('cat').scrollTop = 0; return vai('specie'); }
+  if (gu) { e.stopPropagation(); $('cat').scrollTop = 0; return sapFamiglia(gu.dataset.gusto); }
   if (e.target.closest('[data-sc]')) return;
   if (fa) { e.stopPropagation(); Object.assign(SAP.fil, { k: 'dolci', fam: fa.dataset.fam, q: '', paese: '', festa: '', lr: '', n: 60 }); $('cat').dataset.v = ''; return vai('specie'); }
   if (fe) { e.stopPropagation(); SAP.mese = +fe.dataset.hmese; SAP.cal = null; return vai('meteo'); }
@@ -3644,7 +3644,7 @@ function rottaAttuale() {
   if (v.startsWith('pag-')) return '#/metodo';
   if (SEZ === 'home') return v === 'gen-home' ? '#/' : null;
   if (!PRONTI.includes(SEZ)) return '#/' + SEZ;
-  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari' + (SAP.itk ? '/' + SAP.itk : ''), 'sap-fil': '#/sapori/' + SAP.fk }[v]
+  if (sapOn()) return { 'sap-home': '#/sapori', 'sap-cat': '#/sapori/catalogo' + (SAP.fil && SAP.fil.k && SAP.fil.k !== 'tutto' ? '/' + nomeUrl(SAP.fil.k) : ''), 'sap-cal': '#/sapori/calendario', 'sap-it': '#/sapori/itinerari' + (SAP.itk ? '/' + SAP.itk : ''), 'sap-fil': '#/sapori/' + SAP.fk, 'sap-fam': '#/sapori/tema/' + slugFam(FAMS.k || '') }[v]
     || (vista === 'mappa' && !SAP.home ? '#/sapori/mappa' : null);
   if (v === 'nat-home') return '#/natura';
   if (v === 'cal') return '#/natura/calendario';
@@ -3685,7 +3685,7 @@ async function applicaRotta(h) {
     } else if (a === 'sapori') {
       if (!sapOn()) entraSez('sapori'); else if (!b) entraSez('sapori');
       await aspetta(() => sapOn() && SAP.D);
-      if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') { vai('escursioni'); if (c) { await attesa(150); sapItinerario(c); } }
+      if (b === 'tema' && c && daSlug(c)) { await RICETTE(); sapFamiglia(daSlug(c)); } else if (b === 'catalogo') { if (SAP.fil) { SAP.fil.k = c && (GUSTO[c] || ['ingr', 'prod'].includes(c)) ? c : 'tutto'; } vai('specie'); } else if (b === 'calendario') vai('meteo'); else if (b === 'itinerari') { vai('escursioni'); if (c) { await attesa(150); sapItinerario(c); } }
       else if (b === 'mappa') { SAP.home = false; vai('mappa'); }
       else if (b === 'scheda' && c) { const k = c.replace(/ /g, '_'), D2 = SAP.D; const kk = D2.voci[k] || D2.paesi[k] || D2.produttori[k] ? k : c; await attesa(300); sapApri(kk); }
       else if (b) sapFiliera(b);
@@ -4288,16 +4288,17 @@ function puntoScheda() {
   return null;
 }
 /* ---------- briciole di pane: dove sono e come torno indietro */
-const BCN = { natura: 'Natura', sapori: 'Sapori', mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari', scuole: 'Scuole e studiosi', didattica: 'Scuole e ragazzi', bambini: 'Bambini', viaggio: 'Organizza il viaggio', glossario: 'Glossario', metodo: 'Metodo e fonti', grano: 'Grano', olio: 'Ulivo', vino: 'Vitigno', formaggio: 'Latte', mare: 'Mare', arte: 'Arte', storia: 'Storia' };
+const BCN = { tema: null, natura: 'Natura', sapori: 'Sapori', mappa: 'Mappa', percorsi: 'Percorsi', meteo: 'Meteo', funghi: 'Funghi', piante: 'Piante', calendario: 'Calendario', catalogo: 'Catalogo', itinerari: 'Itinerari', scuole: 'Scuole e studiosi', didattica: 'Scuole e ragazzi', bambini: 'Bambini', viaggio: 'Organizza il viaggio', glossario: 'Glossario', metodo: 'Metodo e fonti', grano: 'Grano', olio: 'Ulivo', vino: 'Vitigno', formaggio: 'Latte', mare: 'Mare', arte: 'Arte', storia: 'Storia' };
 function briciole() {
-  if (isApp) return; const c = $('cat'); if (!c.classList.contains('on') || c.querySelector('.bc8')) return;
+  if (isApp) return; const c = $('cat'); if (!c.classList.contains('on')) return; const vec = c.querySelector('.bc8'); if (vec && vec.dataset.h === location.hash) return; if (vec) vec.remove();
   const h = location.hash.replace(/^#\/?/, ''); if (!h) return; const pz = h.split('/').filter(Boolean); if (!pz.length) return;
   let acc = '#', parti = [`<a href="#/">Home</a>`];
   pz.forEach((x, i) => { acc += '/' + x; const it = pz[i - 1] === 'itinerari' && ITIN.find(y => y.k === x), nome = (it && it.n) || (i && pz[i - 1] === 'scheda' ? null : BCN[x]) || (i === pz.length - 1 ? (document.title.split(' · ')[0] || decodeURIComponent(x)) : null); if (!nome || x === 'scheda') return; parti.push(i === pz.length - 1 ? `<b>${esc(nome)}</b>` : `<a href="${acc}">${esc(nome)}</a>`); });
   const dove = c.querySelector('.in, .sh5') || c.firstElementChild; if (!dove) return;
-  dove.insertAdjacentHTML('afterbegin', `<nav class="bc8" aria-label="Sei qui">${history.length > 1 ? '<button onclick="history.back()">‹ Indietro</button>' : ''}<span>${parti.join('<i>›</i>')}</span></nav>`);
+  dove.insertAdjacentHTML('afterbegin', `<nav class="bc8" data-h="${esc(location.hash)}" aria-label="Sei qui">${history.length > 1 ? '<button onclick="history.back()">‹ Indietro</button>' : ''}<span>${parti.join('<i>›</i>')}</span></nav>`);
 }
-new MutationObserver(() => setTimeout(briciole, 60)).observe($('cat'), { attributes: true, attributeFilter: ['data-v'], childList: true });
+new MutationObserver(() => { setTimeout(briciole, 60); setTimeout(briciole, 900); }).observe($('cat'), { attributes: true, attributeFilter: ['data-v'], childList: true });
+addEventListener('popstate', () => setTimeout(briciole, 900));
 document.addEventListener('click', e => { const a = e.target.closest('.bc8 a'); if (!a) return; e.preventDefault(); e.stopPropagation(); vaiRotta(a.getAttribute('href')); }, true);
 /* ---------- percorsi degli itinerari sulle strade vere (OSRM, OpenStreetMap) */
 const STRADE = {};
@@ -4309,4 +4310,59 @@ async function stradaItin(it) {
   return STRADE[it.k];
 }
 const mapsItin = it => { const P = it.p.map(p => SAP.D.paesi[p]).filter(Boolean).map(x => x.c[1].toFixed(5) + ',' + x.c[0].toFixed(5)); return `https://www.google.com/maps/dir/?api=1&origin=${P[0]}&destination=${P[P.length - 1]}${P.length > 2 ? '&waypoints=' + P.slice(1, -1).join('%7C') : ''}&travelmode=driving`; };
+
+/* ---------- pagina dedicata a una famiglia di sapori (Dolci, Formaggi, …): prima le cose importanti, poi l'elenco */
+const RACC_FAM = {
+  dolci: ['Ogni paese ha il suo dolce, e quasi ogni festa.', 'Nei monasteri le monache impastavano mandorle e zucchero; nelle case si friggeva per Carnevale e San Giuseppe; per i Morti arrivavano la frutta martorana e i pupi di zucchero. Molti di questi dolci li conoscono ormai poche persone: questo atlante prova a non perderli.'],
+  formaggi: ['Dal latte dei pascoli alti, una storia che si fa ogni mattina.', 'Pecore, capre e vacche di razze antiche; il latte lavorato crudo nella tina di legno; la ricotta che nasce dal siero. Dal pecorino alla vastedda, dal ragusano alla provola dei Nebrodi.'],
+  'frutta e ortaggi': ['Agrumi, ficodindia, legumi: la Sicilia che cresce nei campi.', 'Le arance dell\'Etna, i limoni della costa, le fave e le lenticchie dell\'interno, i pomodori seccati al sole. Varietà locali che sopravvivono grazie a pochi contadini.'],
+  'pane e pasta': ['Il grano è la storia più lunga dell\'isola.', 'Pani rituali per le feste, pani di semola dei forni a legna, paste fatte a mano con i grani antichi.'],
+  gastronomia: ['La cucina di casa e quella di strada.', 'Piatti nati dalla povertà e dall\'ingegno, dalle contaminazioni arabe, normanne e spagnole: arancine, caponata, pasta con le sarde, sfincione.'],
+  vini: ['Dalla costa ai mille metri dell\'Etna.', 'Vitigni antichi e denominazioni che raccontano suoli diversi: la lava, il calcare, la sabbia delle isole.'],
+  salumi: ['Razze locali e saperi di montagna.', 'Il suino nero dei Nebrodi, le carni dei pascoli interni, i salumi stagionati nell\'aria delle colline.'],
+  pesce: ['Il mare che arriva in tavola.', 'Tonno, pesce spada, sarde, acciughe salate: le tonnare, le saline, i pescatori dello Stretto.'],
+  miele: ['Il lavoro delle api tra zagara, timo e castagno.', 'Mieli di zagara, di sulla, di timo ibleo, e l\'ape nera sicula salvata dall\'estinzione.'],
+  'conserve e condimenti': ['Olio, sale, capperi: i sapori che durano.', 'Le conserve nascevano per attraversare l\'inverno: estratto di pomodoro, capperi sotto sale, olive in salamoia, sale delle saline.'],
+  bevande: ['Liquori e rosoli delle case siciliane.', 'Rosoli di agrumi e di erbe, preparati in famiglia per le feste e gli ospiti.']
+};
+const INGR = [['ricotta', /ricott/], ['mandorle', /mandorl|mennul|minnul|pasta reale/], ['pistacchio', /pistacch|fastuc/], ['miele', /miele|meli\b/], ['fichi', /fich|ficu|ficu/], ['cioccolato', /cioccol|cacao/], ['nocciole', /nocciol|nucidd/], ['zucca', /zucca|cucuzz/], ['mosto e vino cotto', /mosto|vino cotto|vinu cottu|mustazz/], ['sesamo', /sesamo|giuggiulen/], ['agrumi', /arancia|aranc|limon|cedro|mandarin/], ['carrube', /carrub/]];
+const FAMS = { k: null, f: { gr: '', ing: '', pv: '' }, n: 24 };
+const slugFam = k => k.replace(/ /g, '-'), daSlug = s2 => GUSTI.map(g => g[0]).find(k => slugFam(k) === s2);
+function sapFamiglia(k) {
+  const D = SAP.D, g = GUSTO[k]; if (!g) return vai('specie');
+  if (FAMS.k !== k) { FAMS.k = k; FAMS.f = { gr: '', ing: '', pv: '' }; FAMS.n = 24; }
+  SAP.home = false; $('cat').dataset.v = 'sap-fam'; 
+  const V = Object.values(D.voci).filter(v => catDi(v) === k), testo = v => norm(v.n + ' ' + (v.nd || '') + ' ' + (v.breve || ''));
+  const comuni = new Set(V.flatMap(v => v.paesi || [])), dop = V.filter(v => (v.ric || []).some(r => r === 'DOP' || r === 'IGP')), cfr = (RACC_FAM[k] || ['', '']);
+  const voto = v => ((v.ric || []).some(r => r === 'DOP' || r === 'IGP') ? 8 : 0) + ((v.ric || []).includes('Presidio') ? 6 : 0) + (v.fo ? 5 : 0) + ((v.feste || []).length ? 4 : 0) + (SAP.R && SAP.R.v && SAP.R.v[v.k] ? 3 : 0) + (v.wk ? 2 : 0) + Math.min(3, (v.paesi || []).length / 3);
+  const top = [...V].sort((a, b) => voto(b) - voto(a)).slice(0, 8);
+  const gruppi = Object.entries(V.reduce((a, v) => { if (v.fam && v.fam !== 'Altri dolci') a[v.fam] = (a[v.fam] || 0) + 1; return a; }, {})).sort((a, b) => b[1] - a[1]).slice(0, 12);
+  const ingr = INGR.map(([n, re]) => [n, V.filter(v => re.test(testo(v))).length, re]).filter(x => x[1] >= 2);
+  const prov = Object.entries(V.reduce((a, v) => { const pv = new Set((v.paesi || []).map(p => D.paesi[p] && D.paesi[p].pv).filter(Boolean)); pv.forEach(x => a[x] = (a[x] || 0) + 1); return a; }, {})).sort((a, b) => b[1] - a[1]);
+  const f = FAMS.f, re = f.ing && (INGR.find(x => x[0] === f.ing) || [])[1];
+  const L = V.filter(v => (!f.gr || v.fam === f.gr) && (!re || re.test(testo(v))) && (!f.pv || (v.paesi || []).some(p => D.paesi[p] && D.paesi[p].pv === f.pv))).sort((a, b) => (!!b.fo - !!a.fo) || (!!b.wk - !!a.wk) || a.n.localeCompare(b.n));
+  const conti = {}; for (const v of V) for (const p of v.paesi || []) conti[p] = (conti[p] || 0) + 1;
+  const punti = Object.entries(conti).filter(([p]) => D.paesi[p]).map(([p, n]) => ({ a: 'sc', id: p, xy: D.paesi[p].c, t: 'sagra', on: true, r: Math.min(7, 2 + n), tit: D.paesi[p].n + ': ' + n }));
+  const fotoA = (fotoMie().find(x => x.g === k) || {}).f, chip = (tipo, val, lab, n, ic) => `<button data-ff="${tipo}:${esc(val)}" class="${f[tipo] === val ? 'on' : ''}">${ic ? ico(ic, 'xs') : ''}${esc(lab)}${n != null ? ` <small>${n}</small>` : ''}</button>`;
+  $('cat').innerHTML = `<div class="sh5 pag5 fam8" style="--tc:#E8761A">
+    <section class="ap5 famh"><div class="apf"${fotoA ? ` style="background-image:url('foto/${fotoA}.webp')"` : top[0] && top[0].wk ? ` data-gwk="${esc(top[0].wk)}"` : ''}></div>
+      <div class="apt"><p class="kick5"><i></i>Sapori · ${esc(g[1])}</p><h1>${esc(cfr[0])}</h1><p class="lead">${esc(cfr[1])}</p>
+        <p class="num8"><b>${fmt(V.length)}</b> ${esc(g[1].toLowerCase())} documentati in <b>${comuni.size}</b> comuni${dop.length ? `, <b>${dop.length}</b> con denominazione DOP o IGP` : ''}.</p></div>
+      <div class="apm"><div class="cmap">${mappaSicilia({ w: 420, nomi: true, punti })}</div></div></section>
+    <section class="s5"><div class="t5"><h2>Da conoscere per primi</h2><p>Le denominazioni, i presìdi, quelli con foto, storia o ricetta.</p></div><div class="tess5 g4">${top.map(v => tessera(v, (v.ric || []).filter(r => r !== 'PAT')[0] || ((v.feste || [])[0] && D.feste[v.feste[0]] ? D.feste[v.feste[0]].n : '') || (v.paesi && D.paesi[v.paesi[0]] ? D.paesi[v.paesi[0]].n : ''))).join('')}</div></section>
+    <section class="s5 fil8"><div class="t5"><h2>Trova ${k === 'dolci' ? 'il tuo dolce' : 'quello che cerchi'}</h2><p>Tocca per filtrare l'elenco qui sotto. Si possono combinare.</p></div>
+      ${gruppi.length ? `<div class="fr8"><span class="lb">${ico('category', 'xs')} Tipo</span>${gruppi.map(([n, c]) => chip('gr', n, n, c)).join('')}</div>` : ''}
+      ${ingr.length ? `<div class="fr8"><span class="lb">${ico('salt', 'xs')} Ingrediente</span>${ingr.map(([n, c]) => chip('ing', n, n, c)).join('')}</div>` : ''}
+      <div class="fr8"><span class="lb">${ico('map-pin', 'xs')} Provincia</span>${prov.map(([pv, c]) => chip('pv', pv, PROVN[pv] || pv, c)).join('')}</div>
+      ${f.gr || f.ing || f.pv ? '<button class="lk" data-ff="reset:">Togli i filtri</button>' : ''}
+      ${ingr.length ? '<p class="note">Gli ingredienti si riconoscono dal nome e dalla descrizione: per molti sapori la lista degli ingredienti è ancora da completare.</p>' : ''}</section>
+    <section class="s5"><div class="t5"><h2>${f.gr || f.ing || f.pv ? `${L.length} risultati` : `Tutti ${k === 'dolci' ? 'i dolci' : 'i sapori'}`}</h2></div>
+      <div class="tess5 g4">${L.slice(0, FAMS.n).map(v => tessera(v, v.paesi && D.paesi[v.paesi[0]] ? D.paesi[v.paesi[0]].n : (v.prov ? v.prov.map(x => PROVN[x]).join(', ') : ''))).join('')}</div>
+      ${L.length > FAMS.n ? `<p class="altri8"><button class="vai8" data-ff="piu:">Mostra altri ${Math.min(24, L.length - FAMS.n)} di ${L.length - FAMS.n}</button></p>` : ''}</section>
+    ${COPY()}</div>`;
+  sapFoto($('cat')); for (const el of $('cat').querySelectorAll('.famh [data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-ff]'); if (!b || $('cat').dataset.v !== 'sap-fam') return; e.stopPropagation();
+  const [t2, v] = b.dataset.ff.split(':'); if (t2 === 'reset') FAMS.f = { gr: '', ing: '', pv: '' }; else if (t2 === 'piu') FAMS.n += 24; else { FAMS.f[t2] = FAMS.f[t2] === v ? '' : v; FAMS.n = 24; }
+  const y = t2 === 'piu' ? $('cat').scrollTop : null; sapFamiglia(FAMS.k); if (y != null) $('cat').scrollTop = y; }, true);
 }
