@@ -1709,10 +1709,13 @@ function meteo() {
   caricaMeteo().then(() => {
     if (vista !== 'meteo') return;
     if (!MET) { dove.innerHTML = `<div class="ph-top"><h2>${t('tMeteo')}</h2>${sw()}</div><p class="avviso">${t('errMeteo')}</p>`; return; }
+    if (!MC.dati) meteoComuni().then(() => { if (vista === 'meteo') { if (MC.sez !== 'natura') meteo(); mostraComuni(); } });
+    else setTimeout(mostraComuni, 0);
+    if (MC.sez !== 'natura') { evidenzia(null); return meteoSezione(dove, MET[LUOGHI()[0][0]].G); }
     const ks = LUOGHI().map(x => x[0]).filter(k => mt0.area === 'tutte' || areaDi(k) === mt0.area);
     const giorni = MET[ks[0] || LUOGHI()[0][0]].G;
     const top = [...ks].sort((a, b) => valDi(b, mt0.day) - valDi(a, mt0.day));
-    const ctrl = `<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
+    const ctrl = `${sezMeteo()}<div class="switch sw2">${[['e', 'perEsc'], ['f', 'perFun']].map(([v, l]) => `<button data-mk="${v}" class="${mt0.k === v ? 'on' : ''}">${t(l)}</button>`).join('')}</div>
       <div class="days">${giorni.map((g, n) => `<button data-day="${n}" class="${mt0.day === n ? 'on' : ''}"><small>${n === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>
       <div class="aree">${ORD_AREE.map(a => `<button data-area="${a}" class="${mt0.area === a ? 'on' : ''}">${t('AR')[a]}</button>`).join('')}</div>
       <select class="tendina aree-sel" id="mt-area">${ORD_AREE.map(a => `<option value="${a}"${mt0.area === a ? ' selected' : ''}>${t('AR')[a]}</option>`).join('')}</select>
@@ -2841,6 +2844,7 @@ function mappaSicilia(o) {
     ${(o.punti || []).filter(p => p.xy[0] > L0 && p.xy[0] < L1 && p.xy[1] > A0 && p.xy[1] < A1).map(p => `<circle data-${p.a || 'cev'}="${p.id}" cx="${X(p.xy[0])}" cy="${Y(p.xy[1])}" r="${((p.on ? 6 : 4.2) * Math.min(s, 1.6)).toFixed(1)}" class="ev t-${p.t}${p.on ? ' on2' : ''}"><title>${esc(p.tit)}</title></circle>`).join('')}
     ${o.nomi ? cap.map(c => { const f = 11 * Math.min(s, 1.35), dx = ['Trapani', 'Agrigento', 'Ragusa', 'Caltanissetta', 'Messina'].includes(c[0]) ? -1 : 1, x = +X(c[1]) + dx * 7 * Math.min(s, 1.35), y = +Y(c[2]) + (c[0] === 'Messina' ? -7 * s : c[0] === 'Enna' ? -3 * s : 4 * s);
       return `<g class="cap"><circle cx="${X(c[1])}" cy="${Y(c[2])}" r="${(2.2 * s).toFixed(1)}"/><text x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="${dx < 0 ? 'end' : 'start'}" style="font-size:${f.toFixed(1)}px">${c[0]}</text></g>`; }).join('') : ''}
+    ${o.extra ? o.extra(X, Y, s) : ''}
   </svg>`;
 }
 function sapHome() {
@@ -3099,12 +3103,7 @@ async function genHome(fo) {
       <div class="sln"><button class="slp" aria-label="Sezione precedente">‹</button>${sl.map(([k, x], i) => `<button class="sdot${i === 0 ? ' on' : ''}" data-go="${i}" aria-label="${x.t}" style="--tc:${TEMA[k][1]}"></button>`).join('')}<button class="sls" aria-label="Sezione successiva">›</button></div>
       ${strisciaSez('natura')}
     </section>
-    <section class="s5"><div class="t5"><h2>Da dove cominciare</h2><p>Tre modi per entrare, a seconda di quanto tempo hai e di cosa ti incuriosisce.</p></div>
-      <div class="vie5">
-        <button data-via="sentiero"><span class="n">1</span><b>Ho mezza giornata</b><span>Un sentiero in un parco, e dopo cosa si mangia nei paesi vicini.</span><em>Natura, poi Sapori ${freccia}</em></button>
-        <button data-via="dolce"><span class="n">2</span><b>Cerco un sapore della tradizione</b><span>Un dolce, un formaggio, un pane: dove nasce e quando si prepara.</span><em>Sapori ${freccia}</em></button>
-        <button data-via="mese"><span class="n">3</span><b>Cosa succede questo mese</b><span>Sagre e feste in calendario, e quello che fiorisce in campagna.</span><em>Calendario ${freccia}</em></button>
-      </div></section>
+    <section class="s5 og5" id="og5"><div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div><p class="note">Carico il meteo…</p></section>
     <section class="s5"><div class="t5"><h2>Per chi è Sicilia Naturale</h2><p>Per chi viaggia, per chi studia, per chi insegna e per chi ricorda. Scegli da dove partire.</p></div>
       <div class="chi5">
         <button data-via="sentiero" style="--tc:#2D6A4F"><b>Chi viaggia</b><span>Cosa vedere oggi, un sentiero adatto, cosa si mangia nel paese vicino e la sagra del fine settimana.</span><em>Percorsi e sagre</em></button>
@@ -3128,6 +3127,7 @@ async function genHome(fo) {
     ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
+  oggiSicilia();
   for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
   scorri5();
 }
@@ -3552,4 +3552,150 @@ if (!isApp) {
     const r = rottaAttuale(); if (r) { if (!HASH_ROTTA && !location.hash.startsWith('#it=')) try { history.replaceState(null, '', r === '#/' ? location.pathname : r); } catch (e) {} document.title = titoloRotta(r); }
   });
 }
+
+/* ---------- Oggi in Sicilia (home) e meteo dei comuni (pagina Meteo, per tutte le sezioni) ---------- */
+Object.assign(ICO, {
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M3 12h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7-.7.7m0 11.4.7.7m-12.1-.7-.7.7"/>',
+  'cloud-sun': '<path d="M6.5 18a4 4 0 0 1 0-8 4.5 4 0 0 1 8.7 1.5h.3a3.25 3.25 0 0 1 0 6.5z"/><path d="M13.5 6.2a4 4 0 0 1 6 4.3M16 3v1m4.6 1.4-.7.7"/>',
+  'cloud-rain': '<path d="M7 17a4.6 4.4 0 0 1 0-9 5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7"/><path d="M11 13v2m0 3v2m4-5v2m0 3v2"/>',
+  'cloud-storm': '<path d="M7 17a4.6 4.4 0 0 1 0-9 5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="m13 13-2 4h3l-2 4"/>'
+});
+const wxIco = c => c >= 95 ? 'cloud-storm' : c >= 51 ? 'cloud-rain' : c >= 3 ? 'cloud' : c >= 1 ? 'cloud-sun' : 'sun';
+const wxParola = c => c >= 95 ? 'temporali' : c >= 61 ? 'pioggia' : c >= 51 ? 'pioviggine' : c >= 45 ? 'nebbia' : c === 3 ? 'coperto' : c >= 1 ? 'poco nuvoloso' : 'sereno';
+const icoXY = (n, x, y, z, cl) => ico(n, cl).replace('<svg ', `<svg x="${(x - z / 2).toFixed(1)}" y="${(y - z / 2).toFixed(1)}" width="${z}" height="${z}" `);
+const URLD = (la, lo) => `https://api.open-meteo.com/v1/forecast?latitude=${la}&longitude=${lo}&daily=precipitation_sum,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,weather_code,precipitation_probability_max&forecast_days=14&timezone=Europe%2FRome`;
+const dist2 = (a, b) => ((a[0] - b[0]) * 0.79) ** 2 + (a[1] - b[1]) ** 2;
+const vaiRotta = r => { if (!isApp) try { history.pushState(null, '', r); } catch (e) {} applicaRotta(r); };
+const capoluoghi = () => SAP.D.sic.comuni.filter(c => CAPO[c[0]]);
+// meteo dei nove capoluoghi con i 61 giorni passati: serve anche la stima dei funghi
+let CAPM = null;
+const meteoCapoluoghi = () => CAPM || (CAPM = SAPD().then(async () => {
+  const C = capoluoghi(), j = await getJ(URLM(C.map(c => c[2].toFixed(3)).join(','), C.map(c => c[1].toFixed(3)).join(',')));
+  const arr = Array.isArray(j) ? j : j ? [j] : [];
+  if (arr.length !== C.length || !arr[0].daily) { CAPM = null; return null; }
+  return C.map((c, i) => ({ c, s: serieMeteo(arr[i].daily) }));
+}));
+const giornoN = n => { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
+const nomeGiorno = n => n === 0 ? 'Oggi' : n === 1 ? 'Domani' : giorno(giornoN(n), { weekday: 'long' }).replace(/^./, x => x.toUpperCase());
+const OG = { n: 0 };
+// i consigli del giorno: dove camminare, i funghi, le sagre, un sapore di stagione
+function consigliGiorno(CM, n) {
+  const g = x => x.s.G[n], M = x => x.s.M, d = giornoN(n), mese = +d.slice(5, 7), out = [];
+  const meteoDi = x => { const i = g(x).i; return { c: M(x).weather_code[i], tn: Math.round(M(x).temperature_2m_min[i]), tx: Math.round(M(x).temperature_2m_max[i]), w: Math.round(M(x).wind_speed_10m_max[i] || 0), r: M(x).precipitation_sum[i] || 0 }; };
+  const vicino = xy => CM.reduce((a, b) => dist2(a.c.slice(1, 3), xy) <= dist2(b.c.slice(1, 3), xy) ? a : b);
+  const best = [...CM].sort((a, b) => g(b).e.v - g(a).e.v)[0];
+  const parchi = Object.entries(S).filter(([, x]) => ['pn', 'pr', 'rn'].includes(x.t) && x.bb && dist2(centro(x), best.c.slice(1, 3)) < 0.55 ** 2).sort((a, b) => b[1].ha - a[1].ha);
+  if (parchi.length) { const [k, z] = parchi[n % Math.min(3, parchi.length)], m = meteoDi(best);
+    out.push({ t: 'natura', ic: 'mountain', tit: 'Camminare', nome: z.n, xy: centro(z), sub: `Il cielo migliore della giornata è intorno a ${best.c[0]}: ${wxParola(m.c)}, ${m.tn}–${m.tx}°, vento ${m.w} km/h.`, r: '#/zona/' + nomeUrl(k) }); }
+  const fb = [...CM].sort((a, b) => g(b).f.est - g(a).f.est)[0];
+  if (g(fb).f.est >= 4.5) out.push({ t: 'natura', ic: 'mushroom', tit: 'Funghi', nome: 'Boschi intorno a ' + fb.c[0], xy: fb.c.slice(1, 3), sub: `Stima per i funghi: ${g(fb).f.parola}, dopo le piogge delle ultime settimane. Ricorda: la raccolta ha regole e i funghi vanno sempre fatti controllare.`, r: '#/natura/funghi' });
+  const ev = ((OG.sg || {}).eventi || []).filter(e => e.d.includes(d) && e.xy).slice(0, 2);
+  for (const e of ev) { const m = meteoDi(vicino(e.xy)); out.push({ t: 'sapori', ic: 'calendar-event', tit: e.t === 'sagra' ? 'Sagra' : 'Festa', nome: e.n, xy: e.xy, sub: `${e.c}. ${e.desc} Cielo: ${wxParola(m.c)}, ${m.tx}°.`, cev: e.id }); }
+  const st = inEvidenza().filter(([v]) => v.paesi && SAP.D.paesi[v.paesi[0]]).slice(0, 4);
+  if (st.length) { const [v, perche] = st[n % st.length], xy = SAP.D.paesi[v.paesi[0]].c;
+    out.push({ t: 'sapori', ic: 'basket', tit: perche, nome: v.n, xy, sub: `${v.breve ? v.breve + ' ' : ''}Nasce a ${SAP.D.paesi[v.paesi[0]].n}.`, r: '#/sapori/scheda/' + nomeUrl(v.k), f: v.fo ? `foto/${v.fo.f}.webp` : '', wk: v.wk || '', vk: v.k }); }
+  return { out, meteoDi };
+}
+async function oggiSicilia() {
+  const box = $('og5'); if (!box) return;
+  OG.sg = await SAGRE(); const CM = await meteoCapoluoghi(); if (!$('og5')) return;
+  if (!CM) { box.querySelector('.note').textContent = 'Il meteo non risponde in questo momento. Riprova tra poco.'; return; }
+  const disegna = () => {
+    const n = OG.n, { out, meteoDi } = consigliGiorno(CM, n), MW = innerWidth > 860 ? 620 : 430;
+    const extra = (X, Y, s) => { const messi = []; return CM.map(x => { const m = meteoDi(x), cx = +X(x.c[1]), cy = +Y(x.c[2]), wd = 52 + x.c[0].length * 6.4, px = Math.min(Math.max(cx, wd / 2 + 2), MW - 2 - wd / 2);
+      const su = out.some(o => (+X(o.xy[0]) - cx) ** 2 + (+Y(o.xy[1]) - cy) ** 2 < 34 * 34), urta = y => messi.some(q => Math.abs(q[0] - px) < (q[2] + wd) / 2 + 4 && Math.abs(q[1] - y) < 27);
+      let py = su ? cy - 30 : cy + 17; if (urta(py)) py = py > cy ? cy - 30 : cy + 17; messi.push([px, py, wd]);
+      return `<g class="wxp"><circle class="pt" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="2.6"/><rect x="${(px - wd / 2).toFixed(1)}" y="${(py - 12).toFixed(1)}" width="${wd.toFixed(1)}" height="24" rx="12"/>${icoXY(wxIco(m.c), px - wd / 2 + 15, py, 15)}<text x="${(px - wd / 2 + 27).toFixed(1)}" y="${(py + 4.5).toFixed(1)}"><tspan class="tp">${m.tx}°</tspan> ${x.c[0]}</text></g>`; }).join('') + out.map((o, i) => `<g class="ogp t-${o.t}" data-og="${i}"><circle cx="${X(o.xy[0])}" cy="${Y(o.xy[1])}" r="11"/><text x="${X(o.xy[0])}" y="${(+Y(o.xy[1]) + 4).toFixed(1)}" text-anchor="middle">${i + 1}</text></g>`).join(''); };
+    box.innerHTML = `<div class="t5"><h2>Oggi in Sicilia</h2><p>Dove andare oggi e nei prossimi tre giorni, secondo il cielo, la stagione e le feste in calendario.</p></div>
+      <div class="ogd" role="tablist">${[0, 1, 2, 3].map(i => `<button role="tab" data-ogn="${i}" class="${i === n ? 'on' : ''}" aria-selected="${i === n}"><b>${nomeGiorno(i)}</b><small>${giorno(giornoN(i), { day: 'numeric', month: 'short' })}</small></button>`).join('')}</div>
+      <div class="ogb"><div class="ogm">${mappaSicilia({ w: MW, nomi: false, punti: [], extra })}</div>
+        <div class="ogl">${out.map((o, i) => `<button class="ogc t-${o.t}" data-og="${i}" ${o.r ? `data-ogr="${o.r}"` : ''}${o.cev ? ` data-ogev="${o.cev}"` : ''} style="--tc:${TEMA[o.t][1]}"><span class="n">${i + 1}</span>${o.f ? `<span class="ph" style="background-image:url('${o.f}')"></span>` : o.wk ? `<span class="ph" data-wk="${esc(o.wk)}"></span>` : o.vk ? `<span class="ph" data-vk="${o.vk}"></span>` : `<span class="ic">${ico(o.ic)}</span>`}<span class="tx"><small>${o.tit}</small><b>${esc(o.nome)}</b><span>${esc(o.sub)}</span></span></button>`).join('')}
+          <button class="ogmet" data-ogr="#/natura/meteo">${ico('cloud')} <span><b>Il meteo di tutta la Sicilia</b><small>Comune per comune, per ogni sezione, fino a 14 giorni</small></span><span class="fr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button></div></div>
+      <p class="src">Meteo: Open-Meteo (CC BY 4.0), previsioni per i nove capoluoghi. Sagre: calendari pubblici, da verificare con gli organizzatori.</p>`;
+    sapFoto(box);
+  };
+  disegna();
+  if (!box.dataset.on) { box.dataset.on = 1; box.addEventListener('click', e => {
+    const d = e.target.closest('[data-ogn]'); if (d) { OG.n = +d.dataset.ogn; return disegna(); }
+    const r = e.target.closest('[data-ogr]'); if (r) { if (r.dataset.ogr === '#/natura/meteo') mt0.day = OG.n; return vaiRotta(r.dataset.ogr); }
+    const v = e.target.closest('[data-ogev]'); if (v) { const ev = (OG.sg.eventi || []).find(x => x.id === v.dataset.ogev); if (ev) { SAP.cal = { y: +ev.d[0].slice(0, 4), m: +ev.d[0].slice(5, 7), sel: giornoN(OG.n), tipo: '', pv: '' }; SEZ = 'sapori'; versoSapori(() => vai('meteo')); } return; }
+    const p = e.target.closest('g[data-og]'); if (p) { const c = box.querySelector(`.ogc[data-og="${p.dataset.og}"]`); if (c) { c.classList.add('lampo'); c.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); setTimeout(() => c.classList.remove('lampo'), 1200); } }
+  });
+  box.addEventListener('mouseover', e => { const c = e.target.closest('.ogc, g[data-og]'); box.querySelectorAll('.hov').forEach(x => x.classList.remove('hov')); if (c) box.querySelectorAll(`[data-og="${c.dataset.og}"]`).forEach(x => x.classList.add('hov')); }); }
+}
+
+/* meteo dei comuni sulla mappa: i capoluoghi sempre, gli altri comuni compaiono avvicinandosi */
+const MC = { dati: null, p: null, mk: [], sez: 'natura', mare: null, pm: null };
+function rangoComuni() {
+  const C = SAP.D.sic.comuni, scelti = C.filter(c => CAPO[c[0]]).map(c => ({ c, z: 0 })), resto = C.filter(c => !CAPO[c[0]]);
+  for (const [z, d] of [[7.6, 0.28], [8.4, 0.16], [9.2, 0.085], [10, 0.045], [10.8, 0]]) for (const c of resto) {
+    if (scelti.some(x => x.c === c)) continue;
+    if (scelti.every(x => dist2(x.c.slice(1, 3), c.slice(1, 3)) >= d * d)) scelti.push({ c, z });
+  }
+  return scelti;
+}
+const meteoComuni = () => MC.p || (MC.p = SAPD().then(async () => {
+  const R = rangoComuni(), out = [];
+  for (let i = 0; i < R.length; i += 120) {
+    const b = R.slice(i, i + 120), j = await getJ(URLD(b.map(x => x.c[2].toFixed(3)).join(','), b.map(x => x.c[1].toFixed(3)).join(',')));
+    const arr = Array.isArray(j) ? j : j ? [j] : [];
+    b.forEach((x, k) => out.push(Object.assign({ M: arr[k] && arr[k].daily }, x)));
+  }
+  MC.dati = out.filter(x => x.M); return MC.dati;
+}));
+// comuni sul mare: il centro del paese è vicino alla costa
+const costieri = () => { const pts = SAP.D.sic.contorno.flat(); return (MC.dati || []).filter(x => pts.some(q => dist2(q, x.c.slice(1, 3)) < 0.03 ** 2)); };
+const meteoMare = () => MC.pm || (MC.pm = meteoComuni().then(async () => {
+  const L = costieri(), out = {};
+  for (let i = 0; i < L.length; i += 120) {
+    const b = L.slice(i, i + 120), j = await getJ(`https://marine-api.open-meteo.com/v1/marine?latitude=${b.map(x => x.c[2].toFixed(3)).join(',')}&longitude=${b.map(x => x.c[1].toFixed(3)).join(',')}&daily=wave_height_max&forecast_days=14&timezone=Europe%2FRome`);
+    const arr = Array.isArray(j) ? j : j ? [j] : [];
+    b.forEach((x, k) => { const w = arr[k] && arr[k].daily && arr[k].daily.wave_height_max; if (w && w.some(v => v != null)) out[x.c[0]] = w; });
+  }
+  MC.mare = out; return out;
+}));
+const statoMare = h => h == null ? '' : h < 0.1 ? 'calmo' : h < 0.5 ? 'quasi calmo' : h < 1.25 ? 'poco mosso' : h < 2.5 ? 'mosso' : 'molto mosso';
+function togliComuni() { for (const m of MC.mk) m.remove(); MC.mk = []; }
+function mostraComuni() {
+  togliComuni();
+  if (vista !== 'meteo' || modo.meteo !== 'mappa' || sapOn() || !MC.dati) return;
+  const z = map.getZoom(), b = map.getBounds(), n = mt0.day;
+  for (const x of MC.dati) {
+    if ((x.z ? x.z + (innerWidth < 700 ? 0.6 : 0) : 0) > z || !b.contains([x.c[1], x.c[2]]) || n >= x.M.time.length) continue;
+    const M = x.M, w = MC.sez === 'mare' && MC.mare && MC.mare[x.c[0]] ? MC.mare[x.c[0]][n] : null;
+    if (MC.sez === 'mare' && w == null && !CAPO[x.c[0]]) continue;
+    const el = document.createElement('div'); el.className = 'cmet' + (x.z === 0 ? ' capo' : '');
+    el.innerHTML = `<b>${ico(wxIco(M.weather_code[n]), 'xs')}${esc(x.c[0])}</b><span>${ico('temperature', 'xs')}${Math.round(M.temperature_2m_max[n])}°${ico('wind', 'xs')}${Math.round(M.wind_speed_10m_max[n] || 0)}<small>km/h</small>${ico('droplet', 'xs')}${num1(M.precipitation_sum[n] || 0)}<small>mm</small></span>${w != null ? `<span class="mare">${ico('ripple', 'xs')}${num1(w)} m · ${statoMare(w)}</span>` : ''}`;
+    el.title = `${x.c[0]}: ${wxParola(M.weather_code[n])}, ${Math.round(M.temperature_2m_min[n])}–${Math.round(M.temperature_2m_max[n])}°, vento ${Math.round(M.wind_speed_10m_max[n] || 0)} km/h, pioggia ${num1(M.precipitation_sum[n] || 0)} mm`;
+    MC.mk.push(new maplibregl.Marker({ element: el, anchor: 'center' }).setLngLat([x.c[1], x.c[2]]).addTo(map));
+  }
+}
+let MCt = null; map.on('moveend', () => { clearTimeout(MCt); MCt = setTimeout(mostraComuni, 80); });
+new MutationObserver(() => { if (!document.body.classList.contains('vm-met')) togliComuni(); }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+// interruttori delle sezioni in cima al meteo
+const sezMeteo = () => `<div class="msez" role="tablist" aria-label="Meteo per sezione">${Object.keys(TEMA).map(k => `<button role="tab" data-msez="${k}" class="${MC.sez === k ? 'on' : ''}" aria-selected="${MC.sez === k}" style="--tc:${TEMA[k][1]}"><img src="illustrazioni/${k}-segno.svg" alt=""><span>${TEMA[k][0]}</span></button>`).join('')}</div>`;
+function meteoSezione(dove, giorni) {
+  const n = mt0.day, D2 = MC.dati || [], d = giorni[n] ? giorni[n].d : giornoN(n);
+  const daysH = `<div class="days">${giorni.map((g, i) => `<button data-day="${i}" class="${n === i ? 'on' : ''}"><small>${i === 0 ? t('oggi') : giorno(g.d, { weekday: 'short' })}</small><b>${giorno(g.d, { day: 'numeric' })}</b></button>`).join('')}</div>`;
+  const vicino = xy => D2.reduce((a, b) => !a || dist2(b.c.slice(1, 3), xy) < dist2(a.c.slice(1, 3), xy) ? b : a, null);
+  const riga = (x, extra) => { const M = x.M; return `<button data-mcom="${x.c[1]},${x.c[2]}"><span class="ring" style="--v:100;--c:${M.precipitation_sum[n] > 2 ? '#d9a066' : '#2d6a4f'}">${ico(wxIco(M.weather_code[n]))}</span><span class="mzt"><b>${esc(x.c[0])}</b><small>${wxParola(M.weather_code[n])}${extra ? ' · ' + extra : ''}</small></span>${cella(M, n)}</button>`; };
+  let h = '';
+  if (!D2.length) h = `<p class="note">${t('carico')}</p>`;
+  else if (MC.sez === 'sapori') {
+    const ev = ((OG.sg || {}).eventi || []).filter(e => e.d.includes(d) && e.xy);
+    h = `<h3>Sagre e feste del giorno</h3>${ev.length ? `<div class="mz">${ev.map(e => { const x = vicino(e.xy); return x ? riga(Object.assign({}, x, { c: [e.n, e.xy[0], e.xy[1]] }), esc(e.c)) : ''; }).join('')}</div>` : '<p class="note">Nessuna sagra in calendario per questo giorno.</p>'}
+      <h3>Mercati e giri all'aperto</h3><p class="note">I capoluoghi con il tempo più adatto per stare fuori.</p><div class="mz">${D2.filter(x => x.z === 0).sort((a, b) => (a.M.precipitation_sum[n] || 0) - (b.M.precipitation_sum[n] || 0) || (a.M.wind_speed_10m_max[n] || 0) - (b.M.wind_speed_10m_max[n] || 0)).slice(0, 5).map(x => riga(x)).join('')}</div>`;
+  } else if (MC.sez === 'mare') {
+    const L = Object.entries(MC.mare || {}).map(([nome, w]) => [D2.find(x => x.c[0] === nome), w[n]]).filter(([x, w]) => x && w != null).sort((a, b) => a[1] - b[1]);
+    h = MC.mare ? `<h3>Dove il mare è più calmo</h3><div class="mz">${L.slice(0, 6).map(([x, w]) => riga(x, `onde ${num1(w)} m, ${statoMare(w)}`)).join('')}</div><h3>Dove è più mosso</h3><div class="mz">${L.slice(-3).reverse().map(([x, w]) => riga(x, `onde ${num1(w)} m, ${statoMare(w)}`)).join('')}</div><p class="note">La sezione Mare è in preparazione. Onde: altezza massima prevista davanti al paese.</p>` : `<p class="note">${t('carico')}</p>`;
+  } else {
+    h = `<h3>Visite all'aperto</h3><p class="note">La sezione ${TEMA[MC.sez][0]} è in preparazione: per ora i capoluoghi dove il tempo aiuta di più.</p><div class="mz">${D2.filter(x => x.z === 0).sort((a, b) => ((a.M.precipitation_sum[n] || 0) * 3 + Math.abs(a.M.temperature_2m_max[n] - 22) + (a.M.wind_speed_10m_max[n] || 0) / 10) - ((b.M.precipitation_sum[n] || 0) * 3 + Math.abs(b.M.temperature_2m_max[n] - 22) + (b.M.wind_speed_10m_max[n] || 0) / 10)).map(x => riga(x)).join('')}</div>`;
+  }
+  dove.innerHTML = `<div class="ph-top"><h2>Meteo · ${TEMA[MC.sez][0]}</h2>${sw()}</div>${sezMeteo()}${daysH}<p class="pl">Avvicinati alla mappa: compaiono i comuni con temperatura, vento e pioggia.</p>${h}<p class="src">${t('fonte')}: Open-Meteo (CC BY 4.0)${MC.sez === 'mare' ? ', Open-Meteo Marine' : ''}</p>`;
+  if (!dove.classList.contains('in') && dove.id === 'cat') dove.innerHTML = `<div class="in">${dove.innerHTML}</div>`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-msez]'); if (b && vista === 'meteo') { MC.sez = b.dataset.msez; if (MC.sez === 'mare') meteoMare().then(() => { meteo(); mostraComuni(); }); meteo(); mostraComuni(); return; }
+  const c = e.target.closest('[data-mcom]'); if (c && vista === 'meteo') { const [lo, la] = c.dataset.mcom.split(',').map(Number); if (modo.meteo !== 'mappa') { modo.meteo = 'mappa'; vai('meteo'); } map.flyTo({ center: [lo, la], zoom: 10.2, padding: padMappa(), duration: 800 }); }
+});
 }
