@@ -3154,8 +3154,8 @@ async function natHome() {
       <div class="storie5">${storie.map(([k, wk, t, d]) => `<button class="st5" data-nk="${k}" data-nwk="${esc(wk)}"><span class="tag">Parchi e riserve</span><span class="tt"><b>${t}</b><small>${d}</small></span>${freccia}</button>`).join('')}</div></section>
     ${ora.length ? `<section class="s5"><div class="t5"><h2>Di stagione in ${MESIL[mese]}</h2><button class="lk" data-np="calendario">Tutto il calendario</button><p>Le specie più osservate in questo mese, secondo i dati delle osservazioni.</p></div>
       <div class="rail5">${ora.map(([tp, i]) => { const r = (tp === 'funghi' ? FUN : PIA).s[i]; return `<button class="pz5" data-sp="${tp}:${i}">${tp === 'funghi' && r[8].length ? `<span class="img conf" style="background-image:url('${BASEF + r[8][0]}')">` : `<span class="img" data-nwk="${esc(binomio(r[0]) || r[0])}">`}${ico(tp === 'funghi' ? 'mushroom' : 'flower')}</span><b>${esc(nomeC(tp, i) || r[0])}</b><small><i>${esc(r[0])}</i>, ${stagione(tp, i, mese, S2).lab}</small></button>`; }).join('')}</div></section>` : ''}
-    <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>${parchi.length} parchi, dal mare alle montagne. Tocca per aprire la scheda con zone, regole e sentieri.</p></div>
-      <div class="chips5">${parchi.map(([k, x]) => `<button data-nk="${k}">${esc(x.n)}</button>`).join('')}</div></section>
+    <section class="s5"><div class="t5"><h2>I parchi della Sicilia</h2><p>Sei parchi, dal vulcano più alto d'Europa all'isola più vicina all'Africa. Ognuno ha la sua scheda con zone, regole, sentieri e come arrivare.</p></div>
+      <div class="pk9">${parchi.map(([k, x]) => { const d = PARCHI9[k] || ['', x.n, '']; return `<button data-nk="${k}"><span class="img" data-nwk="${esc(d[1])}">${ico('trees')}</span><span class="tx"><b>${esc(x.n)}</b><small>${d[0]}</small><span>${d[2]}</span><em>Apri la scheda del parco</em></span></button>`; }).join('')}</div></section>
     <section class="s5"><button class="pross5" data-tema="sapori" style="--tc:#E8761A"><span class="img" style="background-image:url('foto/backcassatelle.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Dopo il sentiero, la tavola</b><span>Ogni parco ha i suoi paesi e ogni paese i suoi sapori. Scopri cosa si mangia dove hai camminato.</span><em>Entra in Sapori</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Dati: EEA Natura 2000, Regione Siciliana SIF, Elenco degli alberi monumentali, OpenStreetMap, GBIF. Foto di Oscar Cangelosi e da Wikipedia. Nessuna indicazione sulla commestibilità di funghi e piante.</p>${COPY()}</div>`;
@@ -3270,20 +3270,20 @@ async function genHome(fo) {
       </div></section>
     <section class="s5" id="sapevi"><div class="t5"><h2>Lo sapevi?</h2><p>Piccole scoperte da leggere insieme, grandi e piccoli.</p></div>
       <div class="sap5">${[
-        ['Sull\'Etna vive il Castagno dei Cento Cavalli: è considerato uno degli alberi più vecchi d\'Europa, con migliaia di anni.', 'natura', 'Alberi monumentali'],
-        ['L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine di alberi.', 'natura', 'Specie rare'],
-        ['Il cappero che mangiamo è il bocciolo di un fiore: se non lo raccogli, si apre e fiorisce per un solo giorno.', 'sapori', 'Capperi'],
-        ['La manna si raccoglie d\'estate incidendo la corteccia del frassino: la linfa esce e si indurisce al sole.', 'sapori', 'Manna delle Madonie'],
-        ['Il pistacchio di Bronte cresce sulle colate di lava dell\'Etna, dove pochi altri alberi riescono a vivere.', 'sapori', 'Pistacchio'],
-        ['In Sicilia sono state segnalate più di ' + fmt(Math.floor(FUN.s.length / 100) * 100) + ' specie di funghi. Molte si riconoscono solo al microscopio.', 'natura', 'Funghi']
-      ].map(([t, k, x]) => `<div class="sp5" style="--tc:${TEMA[k][1]}"><small>${x}</small><p>${t}</p></div>`).join('')}</div></section>
+        ['Sull\'Etna vive il Castagno dei Cento Cavalli: è considerato uno degli alberi più vecchi d\'Europa, con migliaia di anni.', 'natura', 'Alberi monumentali', 'Castagno dei Cento Cavalli', '#/natura/mappa/alberi', 'Vedi gli alberi monumentali sulla mappa'],
+        ['L\'abete dei Nebrodi esiste solo sulle Madonie: in natura ne restano poche decine di alberi.', 'natura', 'Specie rare', 'Abies nebrodensis', '#/zona/EUAP0228', 'Entra nel Parco delle Madonie'],
+        ['Il cappero che mangiamo è il bocciolo di un fiore: se non lo raccogli, si apre e fiorisce per un solo giorno.', 'sapori', 'Capperi', 'Capparis spinosa', vk9(/^cappero|^capperi/i), 'Apri la scheda dei capperi'],
+        ['La manna si raccoglie d\'estate incidendo la corteccia del frassino: la linfa esce e si indurisce al sole.', 'sapori', 'Manna delle Madonie', 'Manna (resina)', vk9(/^manna/i), 'Apri la scheda della manna'],
+        ['Il pistacchio di Bronte cresce sulle colate di lava dell\'Etna, dove pochi altri alberi riescono a vivere.', 'sapori', 'Pistacchio', 'Pistacchio verde di Bronte', vk9(/pistacchio verde di bronte/i), 'Apri la scheda del pistacchio'],
+        ['In Sicilia sono state segnalate più di ' + fmt(Math.floor(FUN.s.length / 100) * 100) + ' specie di funghi. Molte si riconoscono solo al microscopio.', 'natura', 'Funghi', 'Amanita caesarea', '#/natura/funghi', 'Sfoglia il catalogo dei funghi']
+      ].map(([t, k, x, wk, r, cta]) => `<button class="sp5 sp9" style="--tc:${TEMA[k][1]}" data-rotta="${r}"><span class="img" data-gwk="${esc(wk)}"></span><span class="tx"><small>${x}</small><p>${t}</p><em>${cta} →</em></span></button>`).join('')}</div></section>
     <section class="s5"><aside class="altre5 home5" aria-label="Le cinque sezioni"><p class="t">Continua a scoprire la Sicilia</p><div>${sl.map(([k, x]) => `<button data-tema="${k}" class="${PRONTI.includes(k) ? '' : 'presto'}" style="--tc:${TEMA[k][1]}"><span class="bg"${x.f ? ` style="background-image:url('foto/${x.f}.webp')"` : ` data-gwk="${esc(x.wk)}"`}></span><img class="sg" src="illustrazioni/${k}-segno.svg" alt=""><b>${x.t}</b><small>${PRONTI.includes(k) ? x.s : 'In preparazione'}</small>${PRONTI.includes(k) ? '' : '<em>presto</em>'}</button>`).join('')}</div>
       <p class="inv5">Cinque porte sulla stessa isola. La <b>Natura</b> racconta parchi, boschi e specie; i <b>Sapori</b> i paesi, le feste e ciò che cresce nella terra. Presto arriveranno il <b>Mare</b>, l'<b>Arte</b> e la <b>Storia</b>. Entra da quella che ti somiglia: portano tutte allo stesso posto.</p></aside></section>
     ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
   oggiSicilia();
-  for (const el of $('cat').querySelectorAll('.home5 [data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; });
+  for (const el of $('cat').querySelectorAll('.home5 [data-gwk], .sp9 [data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; });
   for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
   scorri5();
 }
@@ -4401,4 +4401,17 @@ document.addEventListener('click', e => {
   if (d === 'ap') F.ap = !F.ap; else { F[d] = F[d] === val ? '' : val; F.n = 60; }
   const y = $('cat').scrollTop; sapCatalogo(); $('cat').scrollTop = y;
 }, true);
+
+/* ---- schede dei parchi nella home Natura: foto e racconto */
+const PARCHI9 = {
+  EUAP0227: ['Il vulcano', 'Etna', 'Colate di lava di ogni età, boschi di faggio e betulla ai limiti della vegetazione, crateri che cambiano forma di anno in anno.'],
+  EUAP0228: ['Le montagne del nord', 'Parco naturale regionale delle Madonie', 'Le cime più alte dopo l\'Etna, gli ultimi abeti dei Nebrodi, borghi di pietra e pascoli dove nasce la provola.'],
+  EUAP0226: ['Il grande bosco', 'Parco dei Nebrodi', 'La foresta più estesa della Sicilia: faggete, laghi d\'altura, cavalli sanfratellani e suini neri al pascolo.'],
+  EUAP0859: ['Il fiume e le gole', 'Gole dell\'Alcantara', 'Un fiume che ha scavato la lava fino a formare pareti di basalto a colonne, tra agrumeti e paesi sull\'acqua.'],
+  EUAP1300: ['L\'isola di vento', 'Parco nazionale Isola di Pantelleria', 'Terrazze di pietra, capperi e zibibbo, il lago Specchio di Venere e un mare profondo a pochi metri dalla riva.'],
+  SIF_SICANI: ['Le montagne nascoste', 'Monti Sicani', 'Boschi e rocce calcaree nell\'interno, poco battuti: grotte, querce, sorgenti e paesi di pastori.']
+};
+
+/* chiave della prima voce Sapori che corrisponde, per i link di «Lo sapevi?» */
+function vk9(re) { const D = SAP.D; if (!D) return '#/sapori/catalogo'; const v = Object.values(D.voci).find(x => re.test(x.n)); return v ? '#/sapori/scheda/' + v.k : '#/sapori/catalogo'; }
 }
