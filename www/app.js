@@ -3115,6 +3115,9 @@ async function genHome(fo) {
 let SLT = null;
 function scorri5() {
   clearInterval(SLT); const box = $('cat').querySelector('.sl5'); if (!box) return;
+  // sul telefono il riquadro è alto quanto la slide più lunga: niente fascia vuota sopra il titolo
+  const alto = () => { if (innerWidth > 860) { box.style.height = ''; return; } let h = 0; for (const t of box.querySelectorAll('.sld .apt')) h = Math.max(h, t.offsetHeight); box.style.height = (h + 64 + 62) + 'px'; };
+  alto(); setTimeout(alto, 400); if (!box.dataset.rs) { box.dataset.rs = 1; addEventListener('resize', () => box.isConnected && alto()); }
   const sl = [...box.querySelectorAll('.sld')], dots = [...box.querySelectorAll('.sdot')]; let i = 0, ferma = false;
   const va = j => { i = (j + sl.length) % sl.length; sl.forEach((x, n) => { x.classList.toggle('on', n === i); x.setAttribute('aria-hidden', n !== i); }); dots.forEach((x, n) => x.classList.toggle('on', n === i)); };
   box.querySelector('.slp').onclick = () => va(i - 1); box.querySelector('.sls').onclick = () => va(i + 1);
