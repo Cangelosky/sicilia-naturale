@@ -700,7 +700,7 @@ async function arricchisci(k) {
   const lon = (s.bb[0] + s.bb[2]) / 2, lat = (s.bb[1] + s.bb[3]) / 2;
   const diag = Math.hypot((s.bb[2] - s.bb[0]) * 88000, (s.bb[3] - s.bb[1]) * 111000);
   const rag = s.t === 'am' ? 600 : Math.round(Math.min(10000, Math.max(1500, diag / 2)));
-  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=320&format=json&origin=*`);
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${lat.toFixed(5)}|${lon.toFixed(5)}&ggsradius=${rag}&ggsnamespace=6&ggslimit=40&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=330&format=json&origin=*`);
   if (cur !== k || !$('gal')) return;
   // via immagini da satellite, mappe, carte e foto dallo spazio: non mostrano il luogo come lo vede chi ci va
   const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
@@ -975,7 +975,7 @@ const POIC = { rifugio: '#c2570c', riparo: '#c2570c', picnic: '#2b8a3e', campegg
 const POIN = { rifugio: ['Rifugio', 'Hut'], riparo: ['Riparo', 'Shelter'], picnic: ['Area picnic', 'Picnic area'], panorama: ['Panorama', 'Viewpoint'], campeggio: ['Campeggio', 'Campsite'], fontana: ['Fontana', 'Fountain'], sorgente: ['Sorgente', 'Spring'], vetta: ['Vetta', 'Summit'], grotta: ['Grotta', 'Cave'], cascata: ['Cascata', 'Waterfall'], castello: ['Castello', 'Castle'], chiesa: ['Chiesa, monastero', 'Church, monastery'], torre: ['Torre', 'Tower'], rovine: ['Rovine, sito archeologico', 'Ruins, archaeological site'], segnaletica: ['Segnaletica', 'Signpost'], pannello: ['Pannello informativo', 'Information board'] };
 // foto del punto di interesse da Wikimedia Commons (entro 150 m), senza immagini da satellite o mappe
 async function fotoPunto(c) {
-  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${(+c[1]).toFixed(5)}|${(+c[0]).toFixed(5)}&ggsradius=150&ggsnamespace=6&ggslimit=15&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=240&format=json&origin=*`);
+  const g = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&generator=geosearch&ggscoord=${(+c[1]).toFixed(5)}|${(+c[0]).toFixed(5)}&ggsradius=150&ggsnamespace=6&ggslimit=15&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=330&format=json&origin=*`);
   const el = document.querySelector('.maplibregl-popup .poiph'); if (!el) return;
   const ph = Object.values((g && g.query && g.query.pages) || {}).filter(p => { if (!p.imageinfo || !/\.(jpe?g|webp)$/i.test(p.title)) return false; const m = p.imageinfo[0].extmetadata || {};
     return !NOFOTO.test([p.title, pulito((m.ImageDescription || {}).value), pulito((m.Categories || {}).value)].join(' ')); }).sort((a, b) => (a.index || 0) - (b.index || 0)).slice(0, 3);
@@ -2335,7 +2335,7 @@ function natCarta(k) {
     ${dati.length ? `<div class="cstat">${dati.map(x => `<div>${x}</div>`).join('')}</div>` : ''}
     ${frase ? `<p>${esc(frase)}</p>` : ''}${bosco ? `<p class="cmeta">Bosco più esteso: ${esc(bosco)}</p>` : ''}
     <div class="ca"><button class="pri" data-cn="${k}">Apri la scheda completa</button></div></div></div>`);
-  if (typeof wikiVoce === 'function') wikiVoce(z.n).then(w => { const el = $('ncf'); if (!el) return; if (w && w.thumbnail && !(typeof NOFOTO !== 'undefined' && NOFOTO.test(w.thumbnail.source))) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/600px-')}')`; else el.remove(); }).catch(() => { const el = $('ncf'); if (el) el.remove(); });
+  if (typeof wikiVoce === 'function') wikiVoce(z.n).then(w => { const el = $('ncf'); if (!el) return; if (w && w.thumbnail && !(typeof NOFOTO !== 'undefined' && NOFOTO.test(w.thumbnail.source))) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; else el.remove(); }).catch(() => { const el = $('ncf'); if (el) el.remove(); });
   else $('ncf').remove();
 }
 var PRCA = null; // elenco dei percorsi, per i suggerimenti
@@ -2506,7 +2506,7 @@ function sapVoce(k) {
   h += `<p class="src">Il racconto è costruito dai dati delle fonti: ${fonti.length ? fonti.map(f => f.web ? `<a href="${esc(f.u[0])}" target="_blank" rel="noopener">${esc(f.a)}</a>` : esc(f.a) + ', <i>' + esc(f.t) + '</i>').join(' · ') : 'da inserire'}. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapWiki(v, cur); sapFoto($('sb'));
   if (!v.fo) { const metti = (u, c) => { if (cur !== 'SAP:' + k || !$('sve')) return; $('sve').style.backgroundImage = `url('${u}')`; $('svec').innerHTML = c; };
-    if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/800px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
+    if (v.wk) sapImg(v.wk).then(w => { if (w) metti(w.thumbnail.source.replace(/\/\d+px-/, '/960px-'), `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`); });
     else sapImgV(k).then(r => { if (r) metti(r.u, `${esc(r.a ? r.a + ', ' : '')}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a>`); }); }
   sagreDi(v.paesi || [], v.n).then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Da segnare in calendario</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}</small></span></button>`).join('')}</section>`; });
   if (v.paesi && vista === 'mappa' && !SAP.home) sapVola(D.paesi[v.paesi[0]].c, 9);
@@ -2561,7 +2561,7 @@ function sapPaese(k) {
     <p class="src">Il racconto è costruito dai dati: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. ${esc(D.nota)}</p></article>`;
   $('sb').innerHTML = h; mostra(); sapFoto($('sb'));
   wikiVoce(p.n + (['Licata', 'Ribera'].includes(p.n) ? '' : '')).then(w => { if (!w || cur !== 'SAP:' + k || !$('spe') || !w.thumbnail || NOFOTO.test(w.thumbnail.source)) return;
-    $('spe').style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/800px-')}')`; $('spec').innerHTML = `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`; });
+    $('spe').style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; $('spec').innerHTML = `Foto da Wikipedia: <a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">${esc(w.title)}</a>, CC BY-SA`; });
   sagreDi([k], '').then(l => { if (!l.length || cur !== 'SAP:' + k || !$('ssag')) return; $('ssag').innerHTML = `<section class="ns5 sag5"><h3>Prossimamente a ${esc(p.n)}</h3>${l.slice(0, 3).map(e => `<button data-scal="${e.id}"><b>${+e.d[0].slice(8)} ${MESIL[+e.d[0].slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.desc)}</small></span></button>`).join('')}</section>`; });
   if (vista === 'mappa' && !SAP.home) sapVola(p.c, 10);
 }
@@ -2765,11 +2765,11 @@ function sapImgV(k) {
     let r = null;
     const nomi = [...new Set([v.n, ...v.n.split('/').map(x => x.trim()), v.nd || ''].filter(x => x && paroleN(x).length))].slice(0, 3);
     for (const n of nomi) {
-      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages|extracts&exintro=1&explaintext=1&exchars=700&piprop=thumbnail&pithumbsize=640`);
+      const j = await getJ(`https://it.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrsearch=${encodeURIComponent(n)}&gsrlimit=5&prop=pageimages|extracts&exintro=1&explaintext=1&exchars=700&piprop=thumbnail&pithumbsize=500`);
       const pg = Object.values((j && j.query && j.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
       for (const x of pg) if (x.thumbnail && titoloOk(n, x.title) && (v.t === 'materia' || /sicil|palerm|catan|messin|siracus|trapan|agrigent|ragus|nissen|enna|etna|egadi|eolie|pantelleria/.test(norm(x.extract || ''))) && !BRUTTE.test(x.thumbnail.source)) { r = { u: x.thumbnail.source, p: 'https://it.wikipedia.org/wiki/' + encodeURIComponent(x.title.replace(/ /g, '_')), t: x.title, src: 'Wikipedia' }; break; }
       if (r) break;
-      const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=640`);
+      const c = await getJ(`https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrsearch=${encodeURIComponent(n + ' filetype:bitmap')}&gsrlimit=8&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=500`);
       const cp = Object.values((c && c.query && c.query.pages) || {}).sort((a, b) => (a.index || 9) - (b.index || 9));
       for (const x of cp) { const t = x.title.slice(5), ii = (x.imageinfo || [])[0] || {}, m = ii.extmetadata || {}, lic = (m.LicenseShortName || {}).value || '';
         if (!titoloOk(n, t, true) || BRUTTE.test(t) || !/CC|public domain|PD/i.test(lic) || !ii.thumburl) continue;
@@ -2782,12 +2782,12 @@ function sapImgV(k) {
 const VIS = 'IntersectionObserver' in window ? new IntersectionObserver(es => { for (const e of es) if (e.isIntersecting) { VIS.unobserve(e.target); caricaV(e.target); } }, { rootMargin: '300px' }) : null;
 function caricaV(el) { sapImgV(el.dataset.vk).then(r => { if (r) { el.style.backgroundImage = `url('${r.u}')`; el.classList.add('conf'); } }); }
 function sapFoto(root) { for (const el of root.querySelectorAll('[data-vk]:not(.fok)')) { el.classList.add('fok'); VIS ? VIS.observe(el) : caricaV(el); }
-  for (const el of root.querySelectorAll('[data-wk]:not(.fok)')) { el.classList.add('fok'); sapImg(el.dataset.wk).then(w => { if (w) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/480px-')}')`; el.classList.add('conf'); } }); } }
+  for (const el of root.querySelectorAll('[data-wk]:not(.fok)')) { el.classList.add('fok'); sapImg(el.dataset.wk).then(w => { if (w) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } }); } }
 function sapWiki(v, k) {
   if (!v.wk) { if (!v.fo) sapImgV(v.k).then(r => { if (!r || cur !== k || !$('swk')) return;
     $('swk').innerHTML = `<figure class="fmia"><img src="${esc(r.u)}" alt="${esc(v.n)}" loading="lazy"><figcaption>${esc(r.t)}. ${r.a ? esc(r.a) + ', ' : ''}${esc(r.l || 'CC BY-SA')}, da <a href="${esc(r.p)}" target="_blank" rel="noopener">${esc(r.src)}</a></figcaption></figure>`; }); return; }
   sapImg(v.wk).then(w => { if (!w || cur !== k || !$('swk')) return;
-    $('swk').innerHTML = `<div class="wiki${v.fo ? ' noimg' : ''}"><img src="${esc(w.thumbnail.source.replace(/\/\d+px-/, '/640px-'))}" alt="${esc(v.n)}" loading="lazy"><div class="wt"><b>Da Wikipedia: ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">Leggi su Wikipedia</a>, CC BY-SA</div></div></div>`; });
+    $('swk').innerHTML = `<div class="wiki${v.fo ? ' noimg' : ''}"><img src="${esc(w.thumbnail.source.replace(/\/\d+px-/, '/500px-'))}" alt="${esc(v.n)}" loading="lazy"><div class="wt"><b>Da Wikipedia: ${esc(w.title)}</b>${esc(w.extract)}<div class="cr"><a href="${esc(w.content_urls.desktop.page)}" target="_blank" rel="noopener">Leggi su Wikipedia</a>, CC BY-SA</div></div></div>`; });
 }
 function prossimaFesta() {
   const oggi = new Date(), y = oggi.getFullYear(), D = SAP.D, o = new Date(y, oggi.getMonth(), oggi.getDate());
@@ -2915,7 +2915,7 @@ function sapHome() {
   if (fine) for (const b of $('cat').querySelectorAll('.indice button')) {
     b.onmouseenter = e => { fl.classList.remove('vis'); fl.style.transform = `translate(${e.clientX + 24}px,${e.clientY - 140}px) rotate(-3deg)`;
       if (b.dataset.fo) { fl.style.backgroundImage = `url('foto/${b.dataset.fo}.webp')`; fl.classList.add('vis'); return; }
-      const wk = b.dataset.ex; if (!wk) return; sapImg(wk).then(w => { if (w && b.matches(':hover')) { fl.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/480px-')}')`; fl.classList.add('vis'); } }); };
+      const wk = b.dataset.ex; if (!wk) return; sapImg(wk).then(w => { if (w && b.matches(':hover')) { fl.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; fl.classList.add('vis'); } }); };
     b.onmousemove = e => { fl.style.transform = `translate(${e.clientX + 24}px,${e.clientY - 140}px) rotate(-3deg)`; };
     b.onmouseleave = () => fl.classList.remove('vis');
   }
@@ -2994,7 +2994,7 @@ async function natHome() {
     <section class="s5"><button class="pross5" data-tema="sapori" style="--tc:#E8761A"><span class="img" style="background-image:url('foto/backcassatelle.webp')"></span><span class="tx"><small>Prossima tappa</small><b>Dopo il sentiero, la tavola</b><span>Ogni parco ha i suoi paesi e ogni paese i suoi sapori. Scopri cosa si mangia dove hai camminato.</span><em>Entra in Sapori</em></span></button></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Dati: EEA Natura 2000, Regione Siciliana SIF, Elenco degli alberi monumentali, OpenStreetMap, GBIF. Foto di Oscar Cangelosi e da Wikipedia. Nessuna indicazione sulla commestibilità di funghi e piante.</p>${COPY()}</div>`;
-  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/640px-')}')`; el.classList.add('conf'); } });
+  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } });
   const cerca = () => { const q = $('nq').value.trim(); natMappa(); if (q) setTimeout(() => { $('q').value = q; $('q').dispatchEvent(new Event('input', { bubbles: true })); $('q').focus(); }, 300); };
   $('nq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('ngo').onclick = e => { e.preventDefault(); cerca(); };
   $('nmap').onclick = natMappa;
@@ -3123,7 +3123,7 @@ async function genHome(fo) {
     ${prossime.length ? `<section class="s5"><div class="t5"><h2>Nei prossimi giorni</h2><button class="lk" data-via="mese">Tutto il calendario</button></div><div class="sag5 row">${prossime.map(e => `<button data-via="mese"><b>${+e.d.find(d => d >= oi).slice(8)} ${MESIL[+e.d.find(d => d >= oi).slice(5, 7) - 1]}</b><span>${esc(e.n)}<small>${esc(e.c)}. ${esc(e.desc)}</small></span></button>`).join('')}</div></section>` : ''}
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Foto di Oscar Cangelosi e da Wikipedia. Dati: EEA Natura 2000, Regione Siciliana, elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi.</p>${COPY()}</div>`;
-  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1200px-')}')`; });
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
   scorri5();
 }
 let SLT = null;
@@ -3191,7 +3191,7 @@ async function prestoHome(k, fo) {
     <section class="s5"><div class="t5"><h2>Intanto puoi entrare qui</h2></div>
       <div class="sez5">${PRONTI.map(q => `<button data-tema="${q}" style="--tc:${TEMA[q][1]}"><span class="img" style="background-image:url('foto/${SEZT[q].f}.webp')"></span><span class="tx"><b><i></i>${SEZT[q].t}</b><small>${SEZT[q].s}.</small></span>${freccia}</button>`).join('')}</div></section>
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>${COPY()}</div>`;
-  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1200px-')}')`; });
+  for (const el of $('cat').querySelectorAll('[data-gwk]')) wikiVoce(el.dataset.gwk).then(w => { if (w && w.thumbnail) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/1280px-')}')`; });
 }
 // comuni dei sapori sulla mappa di Natura quando i temi sono uniti
 function mixLivelli(v) {
@@ -3249,7 +3249,7 @@ async function mixHome(fo) {
     <p class="firma5">Un solo patrimonio.<br><i>Infinite storie da scoprire.</i></p>
     <p class="note n5">Natura: EEA Natura 2000, Regione Siciliana SIF, GBIF. Sapori: elenchi PAT, DOP e IGP, elenco dei dolci di Oscar Cangelosi. Foto di Oscar Cangelosi e da Wikipedia.</p>${COPY()}</div>`;
   sapFoto($('cat'));
-  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/640px-')}')`; el.classList.add('conf'); } });
+  for (const el of $('cat').querySelectorAll('[data-nwk]')) wikiVoce(el.dataset.nwk).then(w => { if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) { el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/500px-')}')`; el.classList.add('conf'); } });
   const cerca = () => { const q = $('mq').value.trim(); natMappa(); if (q) setTimeout(() => { $('q').value = q; $('q').dispatchEvent(new Event('input', { bubbles: true })); $('q').focus(); }, 300); };
   $('mq').onkeydown = e => { if (e.key === 'Enter') cerca(); }; $('mgo').onclick = e => { e.preventDefault(); cerca(); };
   if ($('mmap')) $('mmap').onclick = natMappa;
@@ -3366,7 +3366,7 @@ function dopoScheda() {
   if (isApp) return; const sb = $('sb'); if (!sb || sb.querySelector('.altre5m')) return;
   // schede di Natura: una foto in apertura e il racconto più leggibile
   if (cur && S[cur] && !sb.querySelector('.eroeN')) { const k = cur; sb.insertAdjacentHTML('afterbegin', `<div class="eroe5 eroeN" id="nre"></div>`); $('sheet').classList.add('natn');
-    wikiVoce(S[k].n.replace(/^(Riserva naturale (orientata|integrale|speciale)?|Parco (regionale|nazionale)?)\s*/i, m => m) ).then(w => { const el = $('nre'); if (!el || cur !== k) return; if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/800px-')}')`; else el.remove(); }); }
+    wikiVoce(S[k].n.replace(/^(Riserva naturale (orientata|integrale|speciale)?|Parco (regionale|nazionale)?)\s*/i, m => m) ).then(w => { const el = $('nre'); if (!el || cur !== k) return; if (w && w.thumbnail && !NOFOTO.test(w.thumbnail.source)) el.style.backgroundImage = `url('${w.thumbnail.source.replace(/\/\d+px-/, '/960px-')}')`; else el.remove(); }); }
   sb.insertAdjacentHTML('beforeend', `<div class="altre5m">${altreSez()}</div>`);
 }
 // mappa di Natura: un tasto per tornare all'inizio della sezione
